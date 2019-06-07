@@ -48,7 +48,7 @@ steps:
   displayName: 'Publish API'
   inputs:
     command: publish
-    publishWebProjects: true
+    projects: 'src/Recruit.Api/Recruit.Api.csproj'
     arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
 
 - task: CopyFiles@2
