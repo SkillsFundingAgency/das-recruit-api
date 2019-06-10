@@ -12,7 +12,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests
         [Fact]
         public void GetCall_ReturnsTwoTestStrings()
         {
-            var ctrlr = new ValuesController();
+            var ctrlr = new ValuesController(null);
             var result = ctrlr.Get();
             result.Value.Count().Should().Be(2);
         }

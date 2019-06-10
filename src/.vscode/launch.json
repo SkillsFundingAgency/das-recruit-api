@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Recruit.Api/bin/Debug/netcoreapp2.2/Recruit.Api.dll",
+            "program": "${workspaceFolder}/Recruit.Api/bin/Debug/netcoreapp2.2/SFA.DAS.Recruit.Api.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Recruit.Api",
             "stopAtEntry": false,

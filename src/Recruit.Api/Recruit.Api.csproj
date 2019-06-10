@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <UserSecretsId>recruit-api</UserSecretsId>
     <RootNamespace>SFA.DAS.Recruit.Api</RootNamespace>
-    <!-- <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel> -->
+    <AssemblyName>SFA.DAS.Recruit.Api</AssemblyName>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
   <ItemGroup>
