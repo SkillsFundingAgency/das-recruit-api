@@ -18,9 +18,7 @@ namespace SFA.DAS.Recruit.Api
         {
             services.AddOptions();
             services.Configure<RecruitConfiguration>(Configuration.GetSection("Recruit"));
-            services.AddSingleton(cfg => cfg.GetService<IOptions<RecruitConfiguration>>().Value);
             services.Configure<AzureActiveDirectoryConfiguration>(Configuration.GetSection("AzureAd"));
-            services.AddSingleton(cfg => cfg.GetService<IOptions<AzureActiveDirectoryConfiguration>>().Value);
 
             var serviceProvider = services.BuildServiceProvider();
             var recruitConfig = serviceProvider.GetService<IOptions<RecruitConfiguration>>();
