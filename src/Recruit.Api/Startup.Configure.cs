@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Recruit.Api.Helpers;
 using Microsoft.Extensions.DependencyInjection;
+using Recruit.Api.Extensions;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace SFA.DAS.Recruit.Api
 {
@@ -22,7 +24,7 @@ namespace SFA.DAS.Recruit.Api
             {
                 var configuration = (TelemetryConfiguration)app.ApplicationServices.GetService(typeof(TelemetryConfiguration));
                 configuration.DisableTelemetry = true;
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -30,6 +32,8 @@ namespace SFA.DAS.Recruit.Api
                 app.UseHsts();
                 app.UseAuthentication();
             }
+
+            app.ConfigureExceptionHandler(app.ApplicationServices.GetService<ILogger<ExceptionHandlerFeature>>());
 
             app.UseHttpsRedirection();
             app.UseMvc();

@@ -14,8 +14,8 @@
             "cwd": "${workspaceFolder}/Recruit.Api",
             "stopAtEntry": false,
             "launchBrowser": {
-                "enabled": true,
-                "args": "${auto-detect-url}/api/values",
+                "enabled": false,
+                "args": "${auto-detect-url}/api/vacancies",
                 "windows": {
                     "command": "cmd.exe",
                     "args": "/C start ${auto-detect-url}/api/vacancies"
@@ -28,7 +28,8 @@
                 }
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "APPSETTING_ConfigurationStorageConnectionString": "UseDevelopmentStorage=true"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

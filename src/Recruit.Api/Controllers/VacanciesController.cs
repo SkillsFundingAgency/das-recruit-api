@@ -1,27 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using SFA.DAS.Recruit.Api.Configuration;
+using SFA.DAS.Recruit.Api.Queries;
 
 namespace SFA.DAS.Recruit.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class VacanciesController : ControllerBase
+    public class VacanciesController : ApiControllerBase
     {
-        public VacanciesController(IOptions<RecruitConfiguration> x)
+        private readonly IMediator _mediator;
+
+        public VacanciesController(IMediator mediator)
         {
-            
+            _mediator = mediator;
         }
 
-        // GET api/values
+        // GET api/vacancies
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<IActionResult> Get([FromQuery]string employerAccountId, uint? legalEntityId, ulong? ukprn, uint pageSize = 25, uint pageNo = 1)
         {
-            return new string[] { "value1", "value2" };
+            var resp = await _mediator.Send(new GetVacanciesQuery(employerAccountId?.Trim().ToUpper(), (int?)legalEntityId, (long?)ukprn, (int)pageSize, (int)pageNo));
+            return GetApiResponse(resp);
         }
     }
 }
