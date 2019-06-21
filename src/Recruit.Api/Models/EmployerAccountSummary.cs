@@ -5,7 +5,8 @@ namespace SFA.DAS.Recruit.Api.Models
     public class EmployerAccountSummary
     {
         public string EmployerAccountId { get; set; }
-        public int NoOfVacancies { get; set; }
+        public int TotalNoOfVacancies { get; set; }
+        public IDictionary<string, int> TotalVacancyStatusCounts { get; set; }
         public IEnumerable<LegalEntityVacancySummary> LegalEntityVacancySummaries { get; set; }
     }
 
