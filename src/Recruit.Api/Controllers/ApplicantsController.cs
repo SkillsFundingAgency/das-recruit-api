@@ -15,11 +15,11 @@ namespace SFA.DAS.Recruit.Api.Controllers
             _mediator = mediator;
         }
 
-        // GET api/vacancies/{vacancyReference}/applicants?applicantApplicationOutcomeFilter
+        // GET api/vacancies/{vacancyReference}/applicants?outcome
         [HttpGet]
-        public async Task<IActionResult> Get([FromRoute]ulong vacancyReference, [FromQuery]string applicantApplicationOutcomeFilter)
+        public async Task<IActionResult> Get([FromRoute]ulong vacancyReference, [FromQuery]string outcome)
         {
-            var resp = await _mediator.Send(new GetApplicantsQuery((long)vacancyReference, applicantApplicationOutcomeFilter?.Trim()));
+            var resp = await _mediator.Send(new GetApplicantsQuery((long)vacancyReference, outcome?.Trim()));
             return GetApiResponse(resp);
         }
     }
