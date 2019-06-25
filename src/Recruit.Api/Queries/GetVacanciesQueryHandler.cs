@@ -40,7 +40,10 @@ namespace SFA.DAS.Recruit.Api.Queries
             if (isRequestingProviderOwnedVacancies)
             {
                 var dashboard = await _queryStoreReader.GetProviderDashboardAsync(request.Ukprn.Value);
-                vacancies = dashboard?.Vacancies.ToList();
+                vacancies = dashboard?
+                            .Vacancies
+                            .Where(vs => vs.EmployerAccountId.Equals(request.EmployerAccountId))
+                            .ToList();
             }
             else
             {
@@ -104,7 +107,7 @@ namespace SFA.DAS.Recruit.Api.Queries
             var responseVacancies = vacancies
                 .Skip(skip)
                 .Take(pageSize)
-                .Select(vs => _mapper.MapFromVacancySummaryProjection(vs, employerAccountId, isRequestingProviderOwnedVacancies))
+                .Select(vs => _mapper.MapFromVacancySummaryProjection(vs, isRequestingProviderOwnedVacancies))
                 .ToList();
 
             return responseVacancies;

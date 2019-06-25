@@ -19,7 +19,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery]string employerAccountId, uint? legalEntityId, ulong? ukprn, uint pageSize = 25, uint pageNo = 1)
         {
-            var resp = await _mediator.Send(new GetVacanciesQuery(employerAccountId?.Trim().ToUpper(), (int?)legalEntityId, (long?)ukprn, (int)pageSize, (int)pageNo));
+            var resp = await _mediator.Send(new GetVacanciesQuery(employerAccountId.Trim().ToUpper(), (int?)legalEntityId, (long?)ukprn, (int)pageSize, (int)pageNo));
             return GetApiResponse(resp);
         }
     }

@@ -14,14 +14,14 @@ namespace SFA.DAS.Recruit.Api.Mappers
             _recruitConfig = recruitConfig.Value;
         }
 
-        public VacancySummary MapFromVacancySummaryProjection(VacancySummaryProjection vsp, string employerAccountId, bool isForProviderOwnedVacancies)
+        public VacancySummary MapFromVacancySummaryProjection(VacancySummaryProjection vsp, bool isForProviderOwnedVacancies)
         {
             var raaManageVacancyFormattedUrl = isForProviderOwnedVacancies
                                                 ? _recruitConfig.ProviderRecruitAnApprenticeManageVacancyFormattedUrl
                                                 : _recruitConfig.EmployerRecruitAnApprenticeManageVacancyFormattedUrl;
             return new VacancySummary
             {
-                EmployerAccountId = employerAccountId,
+                EmployerAccountId = vsp.EmployerAccountId,
                 Title = vsp.Title,
                 VacancyReference = vsp.VacancyReference,
                 LegalEntityId = vsp.LegalEntityId,
@@ -46,7 +46,7 @@ namespace SFA.DAS.Recruit.Api.Mappers
                 FaaVacancyDetailUrl = $"{_recruitConfig.FindAnApprenticeshipDetailPrefixUrl}{vsp.VacancyReference}",
                 RaaManageVacancyUrl = isForProviderOwnedVacancies
                                         ? string.Format(raaManageVacancyFormattedUrl, vsp.Ukprn, vsp.Id)
-                                        : string.Format(raaManageVacancyFormattedUrl, employerAccountId, vsp.Id)
+                                        : string.Format(raaManageVacancyFormattedUrl, vsp.EmployerAccountId, vsp.Id)
             };
         }
     }

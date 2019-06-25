@@ -19,6 +19,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Mappers
             var vacancySummaryFixture = new Fixture();
             _vacancySummaryProjection = vacancySummaryFixture
                                         .Build<VacancySummaryProjection>()
+                                        .With(vsp => vsp.EmployerAccountId, ValidEmployerAccountId)
                                         .Create();
 
             var config = new RecruitConfiguration
@@ -34,7 +35,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Mappers
         public void GivenEmployerVacancies_ShouldSetRaaManageVacancyUrlToEmployerManageVacancyUrl()
         {
 
-            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, ValidEmployerAccountId, isForProviderOwnedVacancies: false);
+            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, isForProviderOwnedVacancies: false);
 
             vacancySummary.RaaManageVacancyUrl.StartsWith("https://employer-recruit/accounts").Should().BeTrue();
         }
@@ -42,7 +43,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Mappers
         [Fact]
         public void GivenProviderVacancies_ShouldSetRaaManageVacancyUrlToProviderManageVacancyUrl()
         {
-            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, ValidEmployerAccountId, isForProviderOwnedVacancies: true);
+            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, isForProviderOwnedVacancies: true);
 
             vacancySummary.RaaManageVacancyUrl.StartsWith("https://provider-recruit/").Should().BeTrue();
         }
@@ -50,7 +51,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Mappers
         [Fact]
         public void GivenAEmployerVacancy_ShouldSetEmployerAccountAndVacancyIdInRaaManageVacancyUrl()
         {
-            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, ValidEmployerAccountId, isForProviderOwnedVacancies: false);
+            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, isForProviderOwnedVacancies: false);
             var expectedEnd = $"accounts/{ValidEmployerAccountId}/vacancies/{_vacancySummaryProjection.Id.ToString()}/manage/";
             vacancySummary.RaaManageVacancyUrl.EndsWith(expectedEnd).Should().BeTrue();
         }
@@ -58,7 +59,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Mappers
         [Fact]
         public void GivenAProviderVacancy_ShouldSetUkprnAndVacancyIdInRaaManageVacancyUrl()
         {
-            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, ValidEmployerAccountId, isForProviderOwnedVacancies: true);
+            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, isForProviderOwnedVacancies: true);
             var expectedEnd = $"{_vacancySummaryProjection.Ukprn}/vacancies/{_vacancySummaryProjection.Id.ToString()}/manage/";
             vacancySummary.RaaManageVacancyUrl.EndsWith(expectedEnd).Should().BeTrue();
         }
@@ -66,7 +67,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Mappers
         [Fact]
         public void GivenAVacancy_ShouldSetFaaDetailUrlWithVacancyReference()
         {
-            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, ValidEmployerAccountId, isForProviderOwnedVacancies: true);
+            var vacancySummary = _sut.MapFromVacancySummaryProjection(_vacancySummaryProjection, isForProviderOwnedVacancies: true);
             var expectedEnd = $"apprenticeship/{_vacancySummaryProjection.VacancyReference}";
             vacancySummary.FaaVacancyDetailUrl.EndsWith(expectedEnd).Should().BeTrue();
         }

@@ -103,6 +103,7 @@ namespace SFA.DAS.Recruit.Api.Services
         public long? VacancyReference { get; set; }
         public long? LegalEntityId { get; set; }
         public string LegalEntityName { get; set; }
+        public string EmployerAccountId { get; set; }
         public string EmployerName { get; set; }
         public long? Ukprn { get; set; }
         public DateTime? CreatedDate { get; set; }
