@@ -22,7 +22,7 @@ namespace SFA.DAS.Recruit.Api
                 .AddAzureTableStorage(
                     options => {
                         options.ConfigurationKeys = new[] { assemblyName };
-                        options.EnvironmentNameEnvironmentVariableName = "ASPNETCORE_Environment";
+                        options.EnvironmentNameEnvironmentVariableName = "APPSETTING_ASPNETCORE_Environment";
                         options.StorageConnectionStringEnvironmentVariableName = "APPSETTING_ConfigurationStorageConnectionString";
                         options.PreFixConfigurationKeys = false;
                     }

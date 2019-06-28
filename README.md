@@ -38,7 +38,7 @@ The URIs in the table below are relative to *https://localhost* for example purp
 
 Endpoint | HTTP request | Description
 ------------ | ------------- | -------------
-*Vacancy Summaries* | **GET**<br>/api/vacancies/?employerAccountId=?&legalEntityId=?&ukprn=?pageSize=25&page=1 | EmployerAccountId is required, other parameters are optional. PageSize defaults to 25 and Page to 1.<br><br>Gets all summaries (paged where applicable) of Employer created apprenticeship vacancies for the Employer Account Id provided, optionally filtered by Legal Entity Id.<br>If specifying Ukprn then returns Provider created vacancies associated with the Provider and for the Employer Account Id specified, optionally filtered by Legal Entity Id.
+*Vacancy Summaries* | **GET**<br>/api/vacancies/?employerAccountId=?&legalEntityId=?&ukprn=?pageSize=25&pageNo=1 | EmployerAccountId is required, other parameters are optional. PageSize defaults to 25 and PageNo to 1.<br><br>Gets all summaries (paged where applicable) of Employer created apprenticeship vacancies for the Employer Account Id provided, optionally filtered by Legal Entity Id.<br><br>If specifying Ukprn then returns Provider created vacancies associated with the Provider and for the Employer Account Id specified, optionally filtered by Legal Entity Id.<br><br>The vacancies returned from this endpoint are ordered from oldest first.
 *Applicant Summaries* | **GET**<br>/api/vacancies/{vacancyReference}/applicants?outcome=? | VacancyReference is required. Outcome is optional and possible valid values for that parameter are 'Successful' or 'Unsuccessful'.<br><br>Gets all applicant summaries for the vacancy specified, optionally filtered by outcome. If no outcome is specified and there exists an applicant where the outcome is still to be decided, 'N/A' is returned as part of the `status` field.
 *Employer Summary* | **GET**<br>/api/employers/{employerAccountId} | EmployerAccountId is required.<br><br>Gets a breakdown of apprenticeship vacancies created by the Employer Account Id specified, broken down with a summary status count per legal entity.
 
@@ -219,6 +219,7 @@ If using `launchSettings.json` file from Visual Studio or VS Code the following 
       "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "APPSETTING_ASPNETCORE_ENVIRONMENT": "Development",
         "APPSETTING_ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;"
       },
       "applicationUrl": "http://localhost:5040/"
