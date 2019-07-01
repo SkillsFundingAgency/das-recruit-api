@@ -1,7 +1,11 @@
-[![Build Status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status/das-recruit-api)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build/latest?definitionId=1631)
-
-
 # SFA.DAS.Recruit.Api
+
+|       |     |
+| :---: | --- |
+|![crest](https://assets.publishing.service.gov.uk/government/assets/crests/org_crest_27px-916806dcf065e7273830577de490d5c7c42f36ddec83e907efe62086785f24fb.png)|SFA.DAS.Recruit.Api|
+| Build | [![Build Status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status/das-recruit-api)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build/latest?definitionId=1631) |
+
+&nbsp;
 
 This repository represents the codebase for an API designed for internal use within the Digital Apprenticeship Service. The API will be used by other Digital Apprenticeship Service systems to retrieve data related to apprenticeship vacancies sourced from the system known as [Recruit an Apprentice](https://github.com/SkillsFundingAgency/das-recruit). Recruit an Apprentice is used by employers and approved training providers to post apprenticeship opportunities across England. The code in this repository is to be maintained by the ESFA Vacancy Services team.
 
@@ -21,6 +25,10 @@ This repository represents the codebase for an API designed for internal use wit
     * [Add configuration to Azure Storage Emulator](#localConfig)
     * [Logging](#logging)
     * [Running](#runningLocally)
+        * [From terminal/command prompt](#fromTerminal)
+        * [From within VSCode](#fromVsCode)
+        * [From within Visual Studio](#fromVisualStudio)
+        * [Once running](#onceRunning)
 * [License](#license)
 
 &nbsp;
@@ -185,7 +193,7 @@ In order to run this project locally you will need the following:
 
 > The two repositories above are private. If the links appear to be dead make sure that you are logged into GitHub with an account that has access to these i.e. that you are part of the [Skills Funding Agency Team](https://github.com/SkillsFundingAgency) organization.
 
-Note that if you have used Azurite v2.7.0 or below, there is an issue in that you will be unable to edit values in a TableStorage row unless you update the row using code. It is for this reason that
+Note that if you have used Azurite v2.7.0 or below, there is an issue in that you will be unable to edit values in a TableStorage row unless you update the row using code. It is for this reason that you use the branch created in step 2 above with the values specific to your local environment that you want and re-run the `das-employer-config-updater` as needed to replace the configurations stored in the `Configuration` storage table of your local storage account emulator.
 
 <a id="logging"></a>
 ### Logging
@@ -195,7 +203,10 @@ The API logs messages to multiple targets. The primary target being logging to a
 <a id="runningLocally"></a>
 ### Running
 
-There are various ways of running the project. Here are with instructions per platform below:
+There are various ways of running the project. Here are with instructions per platform below.
+
+<a id="fromTerminal"></a>
+#### From terminal/command prompt
 
 macOS
 ```
@@ -209,7 +220,68 @@ set ConfigurationStorageConnectionString=UseDevelopmentStorage=true
 dotnet run
 ```
 
-If using `launchSettings.json` file from Visual Studio or VS Code the following would do:
+<a id="fromVsCode"></a>
+#### From within VS Code
+
+If running from VS Code only, then the `launch.json` should be made to look like the following:
+
+```json
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (web)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Recruit.Api/bin/Debug/netcoreapp2.2/SFA.DAS.Recruit.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Recruit.Api",
+            "stopAtEntry": false,
+            "launchBrowser": {
+                "enabled": false,
+                "args": "${auto-detect-url}/api/vacancies",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start ${auto-detect-url}/api/vacancies"
+                },
+                "osx": {
+                    "command": "open"
+                },
+                "linux": {
+                    "command": "xdg-open"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "APPSETTING_ASPNETCORE_ENVIRONMENT": "Development",
+                "APPSETTING_ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ]
+}
+```
+
+> Note the above JSON is not valid as you can see by the commented out text at the top being highlighted red. VS Code handles this so it is okay.
+
+&nbsp;
+
+<a id="fromVisualStudio"></a>
+#### From within Visual Studio
+
+If using Visual Studio then the `launchSettings.json` file from Visual Studio or VS Code with the following would do:
 
 ```json
 {
@@ -228,11 +300,22 @@ If using `launchSettings.json` file from Visual Studio or VS Code the following 
 }
 ```
 
-Then make sure you select the Recruit.Api selection from the debug drop down as show below:
+If wanting to debug from within Visual Studio then make sure you select the `Recruit.Api` profile selection from the debug drop down as show below:
 
 ![launchDebugOption](docs/img/vsLaunchDebugOptionScreenshot_982x482.png)
 
-The browser will not launch but the app should be running and you can start making requests to the API using [cURL](https://curl.haxx.se/), [Postman](https://www.getpostman.com/), web browser or any other http request making tools. If you want a browser to launch you will need to modify your `launchSettings.json` file to do so.
+If launching from outside Visual Studio and there exists the `Properties/launchSettings.json` file, from a terminal in the project working directory you can run the following to launch the API project:
+
+> dotnet run --launch-profile "Recruit.Api"
+
+<a id="onceRunning"></a>
+#### Once running
+
+The browser will not launch but the app should be running and you can start making requests to the API using [cURL](https://curl.haxx.se/), [Postman](https://www.getpostman.com/), web browser or any other http request making tools. If you want a browser to launch you will need to modify your `launchSettings.json`/`launch.json` file to do so.
+
+To verify that the project is running with all its dependencies reachable, you can call the visit/call the https://localhost:5040/health url and expect a 200 HTTP response code. If for some reason, configuration or otherwise, the dependencies are not reachable the endpoint will return a 503 HTTP response code.
+
+&nbsp;
 
 <a id="license"></a>
 ## License
