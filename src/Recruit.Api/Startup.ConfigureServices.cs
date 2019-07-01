@@ -36,6 +36,10 @@ namespace SFA.DAS.Recruit.Api
 
             MongoDbConventions.RegisterMongoConventions();
 
+            services.AddHealthChecks()
+                    .AddMongoDb(recruitConfig.Value.ConnectionString)
+                    .AddApplicationInsightsPublisher();
+
             services
                 .AddMvc(o =>
                 {

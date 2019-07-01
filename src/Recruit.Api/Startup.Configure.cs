@@ -6,6 +6,7 @@ using SFA.DAS.Recruit.Api.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Recruit.Api.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace SFA.DAS.Recruit.Api
 {
@@ -24,7 +25,7 @@ namespace SFA.DAS.Recruit.Api
             {
                 var configuration = (TelemetryConfiguration)app.ApplicationServices.GetService(typeof(TelemetryConfiguration));
                 configuration.DisableTelemetry = true;
-                //app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -36,6 +37,10 @@ namespace SFA.DAS.Recruit.Api
             app.ConfigureExceptionHandler(app.ApplicationServices.GetService<ILogger<ExceptionHandlerFeature>>());
 
             app.UseHttpsRedirection();
+            app.UseHealthChecks("/health", new HealthCheckOptions
+            {
+                Predicate = _ => true
+            });
             app.UseMvc();
         }
     }
