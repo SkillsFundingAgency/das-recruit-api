@@ -70,7 +70,7 @@ namespace SFA.DAS.Recruit.Api.Queries
             var pageNo = PagingHelper.GetRequestedPageNo(request.PageNo, request.PageSize, totalVacancies);
             var totalPages = PagingHelper.GetTotalNoOfPages(request.PageSize, totalVacancies);
 
-            var responseVacancies = GetVacanciesForPage(vacancies, pageNo, request.PageSize, request.EmployerAccountId, isRequestingProviderOwnedVacancies);
+            var responseVacancies = GetVacanciesForPage(vacancies, pageNo, request.PageSize, isRequestingProviderOwnedVacancies);
 
             return new GetVacanciesResponse
             {
@@ -100,7 +100,7 @@ namespace SFA.DAS.Recruit.Api.Queries
             return validationErrors;
         }
 
-        private List<VacancySummary> GetVacanciesForPage(IList<VacancySummaryProjection> vacancies, int pageNo, int pageSize, string employerAccountId, bool isRequestingProviderOwnedVacancies)
+        private List<VacancySummary> GetVacanciesForPage(IList<VacancySummaryProjection> vacancies, int pageNo, int pageSize, bool isRequestingProviderOwnedVacancies)
         {
             var skip = (pageNo - 1) * pageSize;
 
