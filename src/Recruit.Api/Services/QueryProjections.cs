@@ -42,6 +42,8 @@ namespace SFA.DAS.Recruit.Api.Services
         public static QueryViewType QaDashboard => new QueryViewType(nameof(QaDashboard), "QaDashboard");
         public static QueryViewType ClosedVacancy => new QueryViewType(nameof(ClosedVacancy), "ClosedVacancy_{0}");
         public static QueryViewType VacancyAnalyticsSummary => new QueryViewType(nameof(VacancyAnalyticsSummary), "VacancyAnalyticsSummary_{0}");
+        public static QueryViewType BlockedEmployerOrganisations => new QueryViewType(nameof(BlockedEmployerOrganisations), "BlockedEmployerOrganisations");
+        public static QueryViewType BlockedProviderOrganisations => new QueryViewType(nameof(BlockedProviderOrganisations), "BlockedProviderOrganisations");
     }
 
     public abstract class QueryProjectionBase
@@ -176,5 +178,21 @@ namespace SFA.DAS.Recruit.Api.Services
 
         public long VacancyReference { get; set; }
         public List<VacancyApplication> Applications { get; set; }
+    }
+
+    public class BlockedEmployerOrganisations : QueryProjectionBase
+    {
+        public BlockedEmployerOrganisations() : base(QueryViewType.BlockedEmployerOrganisations.TypeName)
+        {}
+
+        public IEnumerable<string> Data { get; set; }
+    }
+
+    public class BlockedProviderOrganisations : QueryProjectionBase
+    {
+        public BlockedProviderOrganisations() : base(QueryViewType.BlockedProviderOrganisations.TypeName)
+        {}
+
+        public IEnumerable<long> Data { get; set; }
     }
 }

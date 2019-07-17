@@ -41,12 +41,22 @@ namespace SFA.DAS.Recruit.Api.Services
 
             return GetAsync<ProviderDashboard>(QueryViewType.ProviderDashboard.TypeName, key);
         }
-        
+
         public Task<VacancyApplications> GetVacancyApplicationsAsync(string vacancyReference)
         {
             var key = QueryViewType.VacancyApplications.GetIdValue(vacancyReference);
 
             return GetAsync<VacancyApplications>(QueryViewType.VacancyApplications.TypeName, key);
+        }
+
+        public Task<BlockedProviderOrganisations> GetBlockedProviders()
+        {
+            return GetAsync<BlockedProviderOrganisations>(QueryViewType.BlockedProviderOrganisations.TypeName, QueryViewType.BlockedProviderOrganisations.GetIdValue());
+        }
+
+        public Task<BlockedEmployerOrganisations> GetBlockedEmployers()
+        {
+            return GetAsync<BlockedEmployerOrganisations>(QueryViewType.BlockedEmployerOrganisations.TypeName, QueryViewType.BlockedEmployerOrganisations.GetIdValue());
         }
 
         private IMongoDatabase GetDatabase()
@@ -79,7 +89,7 @@ namespace SFA.DAS.Recruit.Api.Services
 
             var collection = GetCollection<T>();
 
-            var result = await RetryPolicy.ExecuteAsync(_ => 
+            var result = await RetryPolicy.ExecuteAsync(_ =>
                 collection.Find(filter).FirstOrDefaultAsync(),
                 new Context(nameof(GetAsync)));
 
