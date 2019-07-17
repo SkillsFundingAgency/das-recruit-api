@@ -5,7 +5,7 @@ using SFA.DAS.Recruit.Api.Queries;
 
 namespace SFA.DAS.Recruit.Api.Controllers
 {
-    [Route("api/status")]
+    [Route("api")]
     public class OrganisationStatusController : ApiControllerBase
     {
         private readonly IMediator _mediator;
@@ -16,7 +16,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
         }
 
         // GET api/status/provider/11111111
-        [HttpGet("provider/{ukprn:long:min(10000000)}")]
+        [HttpGet("provider/{ukprn:long:min(10000000)}/status")]
         public async Task<IActionResult> Get(long ukprn)
         {
             var resp = await _mediator.Send(new GetOrganisationStatusQuery(ukprn));

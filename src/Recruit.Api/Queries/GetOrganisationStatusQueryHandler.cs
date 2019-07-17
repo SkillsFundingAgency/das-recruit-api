@@ -39,7 +39,7 @@ namespace SFA.DAS.Recruit.Api.Queries
                 return new GetOrganisationStatusResponse { ResultCode = ResponseCode.NotFound };
             }
 
-            var status = blockedProviders.Data.Contains(request.Ukprn) ? "Blocked" : "Unblocked";
+            var status = blockedProviders.Data.Contains(request.Ukprn) ? "Blocked" : "Not blocked";
             return new GetOrganisationStatusResponse { ResultCode = ResponseCode.Success, Data = new { Status = status } };
         }
 
