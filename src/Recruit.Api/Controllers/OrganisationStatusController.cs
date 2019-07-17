@@ -17,9 +17,9 @@ namespace SFA.DAS.Recruit.Api.Controllers
 
         // GET api/status/provider/11111111
         [HttpGet("provider/{ukprn:long:min(10000000)}")]
-        public async Task<IActionResult> Get(ulong ukprn)
+        public async Task<IActionResult> Get(long ukprn)
         {
-            var resp = await _mediator.Send(new GetOrganisationStatusQuery((long)ukprn));
+            var resp = await _mediator.Send(new GetOrganisationStatusQuery(ukprn));
             return GetApiResponse(resp);
         }
     }
