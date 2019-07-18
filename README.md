@@ -50,7 +50,8 @@ Endpoint | HTTP request | Description
 *Vacancy Summaries* | **GET**<br>/api/vacancies/?employerAccountId=?&legalEntityId=?&ukprn=?pageSize=25&pageNo=1 | EmployerAccountId is required, other parameters are optional. PageSize defaults to 25 and PageNo to 1.<br><br>Gets all summaries (paged where applicable) of Employer created apprenticeship vacancies for the Employer Account Id provided, optionally filtered by Legal Entity Id.<br><br>If specifying Ukprn then returns Provider created vacancies associated with the Provider and for the Employer Account Id specified, optionally filtered by Legal Entity Id.<br><br>The vacancies returned from this endpoint are ordered from oldest first.
 *Applicant Summaries* | **GET**<br>/api/vacancies/{vacancyReference}/applicants?outcome=? | VacancyReference is required. Outcome is optional and possible valid values for that parameter are 'Successful' or 'Unsuccessful'.<br><br>Gets all applicant summaries for the vacancy specified, optionally filtered by outcome. If no outcome is specified and there exists an applicant where the outcome is still to be decided, 'N/A' is returned as part of the `status` field.
 *Employer Summary* | **GET**<br>/api/employers/{employerAccountId} | EmployerAccountId is required.<br><br>Gets a breakdown of apprenticeship vacancies created by the Employer Account Id specified, broken down with a summary status count per legal entity.
-*Organisation Status* | **GET**<br>/api/providers/{ukprn}/status | Ukprn is required.<br><br>If supplied a valid Ukprn, will return if the Ukprn is currently blocked from being able to operate on the Digital Apprenticeship Service Recruitment sub-system.
+*Organisation Status (Provider)* | **GET**<br>/api/providers/{ukprn}/status | Ukprn is required.<br><br>If supplied a valid Ukprn, will return if the Ukprn is currently blocked from being able to operate on the Digital Apprenticeship Service Recruitment sub-system.
+*Organisation Status (Employer)* | **GET**<br>/api/employers/{employerAccountId}/status | EmployerAccountId is required.<br><br>If supplied a valid EmployerAccountId, will return if the employer account is currently blocked from being able to operate on the Digital Apprenticeship Service Recruitment sub-system.
 
 <a id="sampleApiResponses"></a>
 ### Sample API Responses (not real data)
@@ -171,6 +172,7 @@ Requests to the API need to be authenticated and authorization is proved by subm
 ### Known consumers of this API:
  - [Manage Apprenticeships](https://github.com/SkillsFundingAgency/das-employerapprenticeshipsservice)
  - [Provider Apprenticeships](https://github.com/SkillsFundingAgency/das-providercommitments)
+ - [Provider Relationships](https://github.com/SkillsFundingAgency/das-provider-relationships)
 
 &nbsp;
 

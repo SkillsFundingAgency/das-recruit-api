@@ -15,11 +15,19 @@ namespace SFA.DAS.Recruit.Api.Controllers
             _mediator = mediator;
         }
 
-        // GET api/status/provider/11111111
-        [HttpGet("provider/{ukprn:long:min(10000000)}/status")]
+        // GET api/providers/11111111/status
+        [HttpGet("providers/{ukprn:long:min(10000000)}/status")]
         public async Task<IActionResult> Get(long ukprn)
         {
-            var resp = await _mediator.Send(new GetOrganisationStatusQuery(ukprn));
+            var resp = await _mediator.Send(new GetProviderOrganisationStatusQuery(ukprn));
+            return GetApiResponse(resp);
+        }
+
+        // GET api/employers/ABC123/status
+        [HttpGet("employers/{employerAccountId:minlength(6)}/status")]
+        public async Task<IActionResult> Get(string employerAccountId)
+        {
+            var resp = await _mediator.Send(new GetEmployerOrganisationStatusQuery(employerAccountId.Trim().ToUpper()));
             return GetApiResponse(resp);
         }
     }

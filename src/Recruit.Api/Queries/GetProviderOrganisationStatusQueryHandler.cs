@@ -12,18 +12,18 @@ using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.Queries
 {
-    public class GetOrganisationStatusQueryHandler : IRequestHandler<GetOrganisationStatusQuery, GetOrganisationStatusResponse>
+    public class GetProviderOrganisationStatusQueryHandler : IRequestHandler<GetProviderOrganisationStatusQuery, GetOrganisationStatusResponse>
     {
-        private readonly ILogger<GetOrganisationStatusQueryHandler> _logger;
+        private readonly ILogger<GetProviderOrganisationStatusQueryHandler> _logger;
         private readonly IQueryStoreReader _queryStoreReader;
 
-        public GetOrganisationStatusQueryHandler(ILogger<GetOrganisationStatusQueryHandler> logger, IQueryStoreReader queryStoreReader)
+        public GetProviderOrganisationStatusQueryHandler(ILogger<GetProviderOrganisationStatusQueryHandler> logger, IQueryStoreReader queryStoreReader)
         {
             _logger = logger;
             _queryStoreReader = queryStoreReader;
         }
 
-        public async Task<GetOrganisationStatusResponse> Handle(GetOrganisationStatusQuery request, CancellationToken cancellationToken)
+        public async Task<GetOrganisationStatusResponse> Handle(GetProviderOrganisationStatusQuery request, CancellationToken cancellationToken)
         {
             var validationErrors = ValidateRequest(request);
 
@@ -39,11 +39,11 @@ namespace SFA.DAS.Recruit.Api.Queries
                 return new GetOrganisationStatusResponse { ResultCode = ResponseCode.NotFound };
             }
 
-            var status = blockedProviders.Data.Contains(request.Ukprn) ? "Blocked" : "Not blocked";
+            var status = blockedProviders.Data.Contains(request.Ukprn) ? BlockStatus.Blocked : BlockStatus.NotBlocked;
             return new GetOrganisationStatusResponse { ResultCode = ResponseCode.Success, Data = new { Status = status } };
         }
 
-        private List<string> ValidateRequest(GetOrganisationStatusQuery request)
+        private List<string> ValidateRequest(GetProviderOrganisationStatusQuery request)
         {
             const string ukprnFieldName = nameof(request.Ukprn);
             const string ukprnRegex = @"^\d{8}$";
