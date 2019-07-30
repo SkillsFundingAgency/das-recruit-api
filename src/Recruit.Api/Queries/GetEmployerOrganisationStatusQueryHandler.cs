@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -39,8 +38,8 @@ namespace SFA.DAS.Recruit.Api.Queries
                 return new GetOrganisationStatusResponse { ResultCode = ResponseCode.NotFound };
             }
 
-            var status = blockedEmployers.Data.Contains(request.EmployerAccountId) ? BlockStatus.Blocked : BlockStatus.NotBlocked;
-            return new GetOrganisationStatusResponse { ResultCode = ResponseCode.Success, Data = new { Status = status } };
+            var status = blockedEmployers.Data.Any(bo => bo.BlockedOrganisationId.Equals(request.EmployerAccountId)) ? BlockStatus.Blocked : BlockStatus.NotBlocked;
+            return new GetOrganisationStatusResponse { ResultCode = ResponseCode.Success, Data = new OrganisationStatus(status) };
         }
 
         private List<string> ValidateRequest(GetEmployerOrganisationStatusQuery request)

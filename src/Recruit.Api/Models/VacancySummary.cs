@@ -22,9 +22,9 @@ namespace SFA.DAS.Recruit.Api.Models
         public string TrainingTitle { get; set; }
         public string TrainingType { get; set; }
         public string TrainingLevel { get; set; }
-        public int NoOfNewApplications { get; set; }
-        public int NoOfSuccessfulApplications { get; set; }
-        public int NoOfUnsuccessfulApplications { get; set; }
+        public int? NoOfNewApplications { get; set; }
+        public int? NoOfSuccessfulApplications { get; set; }
+        public int? NoOfUnsuccessfulApplications { get; set; }
 
         public string FaaVacancyDetailUrl { get; set; }
         public string RaaManageVacancyUrl  { get; set; }

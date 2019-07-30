@@ -98,6 +98,13 @@ namespace SFA.DAS.Recruit.Api.Services
         Year
     }
 
+    public class BlockedOrganisationSummary
+    {
+        public string BlockedOrganisationId { get; set; }
+        public DateTime BlockedDate { get; set; }
+        public string BlockedByUser { get; set; }
+    }
+
     public class VacancySummaryProjection
     {
         public Guid Id { get; set; }
@@ -185,7 +192,7 @@ namespace SFA.DAS.Recruit.Api.Services
         public BlockedEmployerOrganisations() : base(QueryViewType.BlockedEmployerOrganisations.TypeName)
         {}
 
-        public IEnumerable<string> Data { get; set; }
+        public IEnumerable<BlockedOrganisationSummary> Data { get; set; }
     }
 
     public class BlockedProviderOrganisations : QueryProjectionBase
@@ -193,6 +200,6 @@ namespace SFA.DAS.Recruit.Api.Services
         public BlockedProviderOrganisations() : base(QueryViewType.BlockedProviderOrganisations.TypeName)
         {}
 
-        public IEnumerable<long> Data { get; set; }
+        public IEnumerable<BlockedOrganisationSummary> Data { get; set; }
     }
 }

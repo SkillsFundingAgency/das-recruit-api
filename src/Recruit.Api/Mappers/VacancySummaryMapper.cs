@@ -19,6 +19,9 @@ namespace SFA.DAS.Recruit.Api.Mappers
             var raaManageVacancyFormattedUrl = isForProviderOwnedVacancies
                                                 ? _recruitConfig.ProviderRecruitAnApprenticeManageVacancyFormattedUrl
                                                 : _recruitConfig.EmployerRecruitAnApprenticeManageVacancyFormattedUrl;
+
+            var shouldAssignApplicationStats = vsp.ApplicationMethod == ApplicationMethod.ThroughFindAnApprenticeship
+                                                && (vsp.Status == VacancyStatus.Live || vsp.Status == VacancyStatus.Closed);
             return new VacancySummary
             {
                 EmployerAccountId = vsp.EmployerAccountId,
@@ -39,11 +42,13 @@ namespace SFA.DAS.Recruit.Api.Mappers
                 TrainingTitle = vsp.TrainingTitle,
                 TrainingType = vsp.TrainingType.ToString(),
                 TrainingLevel = vsp.TrainingLevel.ToString(),
-                NoOfNewApplications = vsp.NoOfNewApplications,
-                NoOfSuccessfulApplications = vsp.NoOfSuccessfulApplications,
-                NoOfUnsuccessfulApplications = vsp.NoOfUnsuccessfulApplications,
+                NoOfNewApplications = shouldAssignApplicationStats ? vsp.NoOfNewApplications : default(int),
+                NoOfSuccessfulApplications = shouldAssignApplicationStats ? vsp.NoOfSuccessfulApplications : default(int),
+                NoOfUnsuccessfulApplications = shouldAssignApplicationStats ? vsp.NoOfUnsuccessfulApplications : default(int),
 
-                FaaVacancyDetailUrl = $"{_recruitConfig.FindAnApprenticeshipDetailPrefixUrl}{vsp.VacancyReference}",
+                FaaVacancyDetailUrl = vsp.VacancyReference.HasValue
+                                        ? $"{_recruitConfig.FindAnApprenticeshipDetailPrefixUrl}{vsp.VacancyReference}"
+                                        : null,
                 RaaManageVacancyUrl = isForProviderOwnedVacancies
                                         ? string.Format(raaManageVacancyFormattedUrl, vsp.Ukprn, vsp.Id)
                                         : string.Format(raaManageVacancyFormattedUrl, vsp.EmployerAccountId, vsp.Id)
