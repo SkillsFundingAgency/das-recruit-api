@@ -39,8 +39,8 @@ namespace SFA.DAS.Recruit.Api.Queries
                 return new GetOrganisationStatusResponse { ResultCode = ResponseCode.NotFound };
             }
 
-            var status = blockedProviders.Data.Contains(request.Ukprn) ? BlockStatus.Blocked : BlockStatus.NotBlocked;
-            return new GetOrganisationStatusResponse { ResultCode = ResponseCode.Success, Data = new { Status = status } };
+            var status = blockedProviders.Data.Any(bo => bo.BlockedOrganisationId == request.Ukprn.ToString()) ? BlockStatus.Blocked : BlockStatus.NotBlocked;
+            return new GetOrganisationStatusResponse { ResultCode = ResponseCode.Success, Data = new OrganisationStatus(status) };
         }
 
         private List<string> ValidateRequest(GetProviderOrganisationStatusQuery request)
