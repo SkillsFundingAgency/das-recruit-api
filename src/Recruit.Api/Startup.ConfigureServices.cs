@@ -40,6 +40,8 @@ namespace SFA.DAS.Recruit.Api
                     .AddMongoDb(recruitConfig.Value.ConnectionString)
                     .AddApplicationInsightsPublisher();
 
+            services.AddApplicationInsightsTelemetry();
+
             services
                 .AddMvc(o =>
                 {
@@ -52,8 +54,6 @@ namespace SFA.DAS.Recruit.Api
                 .AddJsonOptions(options => {
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });
-
-            services.AddApplicationInsightsTelemetry(Configuration.GetValue<string>("APPINSIGHTS_INSTRUMENTATIONKEY"));
         }
 
         private void SetupAuthorization(IServiceCollection services, ServiceProvider serviceProvider)
