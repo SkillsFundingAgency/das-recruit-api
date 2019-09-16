@@ -42,9 +42,9 @@ namespace SFA.DAS.Recruit.Api.Mappers
                 TrainingTitle = vsp.TrainingTitle,
                 TrainingType = vsp.TrainingType.ToString(),
                 TrainingLevel = vsp.TrainingLevel.ToString(),
-                NoOfNewApplications = shouldAssignApplicationStats ? vsp.NoOfNewApplications : default(int),
-                NoOfSuccessfulApplications = shouldAssignApplicationStats ? vsp.NoOfSuccessfulApplications : default(int),
-                NoOfUnsuccessfulApplications = shouldAssignApplicationStats ? vsp.NoOfUnsuccessfulApplications : default(int),
+                NoOfNewApplications = shouldAssignApplicationStats ? vsp.NoOfNewApplications : default(int?),
+                NoOfSuccessfulApplications = shouldAssignApplicationStats ? vsp.NoOfSuccessfulApplications : default(int?),
+                NoOfUnsuccessfulApplications = shouldAssignApplicationStats ? vsp.NoOfUnsuccessfulApplications : default(int?),
 
                 FaaVacancyDetailUrl = vsp.VacancyReference.HasValue
                                         ? $"{_recruitConfig.FindAnApprenticeshipDetailPrefixUrl}{vsp.VacancyReference}"
