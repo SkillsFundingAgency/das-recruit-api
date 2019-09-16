@@ -37,7 +37,7 @@ This repository represents the codebase for an API designed for internal use wit
 <a id="endpoints"></a>
 ## Endpoints
 
-Initially there are 3 endpoints that this API provides and they are all for retrieving data.
+Initially there are 5 endpoints that this API provides and they are all for retrieving data.
 
 If you work on the Digital Apprenticeship Service, you can view the following [Environments](https://skillsfundingagency.atlassian.net/wiki/spaces/RAAV2/pages/200245289/Environments) page for the Recruit system to find the environment url's for the Recruit API:
 
