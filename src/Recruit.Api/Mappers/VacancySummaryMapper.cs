@@ -34,6 +34,7 @@ namespace SFA.DAS.Recruit.Api.Mappers
                 CreatedDate = vsp.CreatedDate,
                 Status = vsp.Status.ToString(),
                 ClosingDate = vsp.ClosingDate,
+                ClosedDate = vsp.ClosedDate,
                 Duration = vsp.Duration,
                 DurationUnit = vsp.DurationUnit.ToString(),
                 ApplicationMethod = vsp.ApplicationMethod?.ToString(),
