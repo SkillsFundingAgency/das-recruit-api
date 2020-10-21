@@ -24,7 +24,7 @@
         "certificateName": {
             "type": "string"
         },
-        "keyVaultName": {
+        "sharedKeyVaultName": {
             "type": "string"
         },
         "sharedManagementResourceGroup": {
@@ -80,7 +80,7 @@
                         "value": "[parameters('certificateName')]"
                     },
                     "keyVaultName": {
-                        "value": "[parameters('keyVaultName')]"
+                        "value": "[parameters('sharedKeyVaultName')]"
                     },
                     "keyVaultResourceGroup": {
                         "value": "[parameters('sharedManagementResourceGroup')]"
@@ -92,6 +92,7 @@
             "apiVersion": "2020-06-01",
             "name": "application-insights",
             "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -112,6 +113,7 @@
             "apiVersion": "2020-06-01",
             "name": "app-service",
             "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -173,7 +175,7 @@
         }
     ],
     "outputs": {
-        "appServiceName": {
+        "AppServiceName": {
             "type": "string",
             "value": "[variables('appServiceName')]"
         }
