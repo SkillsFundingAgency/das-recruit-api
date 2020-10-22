@@ -179,6 +179,10 @@
         "AppServiceName": {
             "type": "string",
             "value": "[variables('appServiceName')]"
-        }
+        },
+        "ResourceGroupName": {
+            "type": "string",
+            "value": "[variables('resourceGroupName')]"
+        }        
     }
 }
