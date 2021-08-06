@@ -61,6 +61,8 @@ namespace SFA.DAS.Recruit.Api.Services
     public enum VacancyStatus
     {
         Draft,
+        Review,
+        Rejected,
         Submitted,
         Referred,
         Live,
