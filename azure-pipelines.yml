@@ -6,9 +6,9 @@ trigger:
 
 variables:
 - group: Release Management Resources
-- group: RELEASE das-forecasting-api
+- group: RELEASE das-recruit-api
 - name: SolutionBaseName
-  value: SFA.DAS.Forecasting
+  value: Recruit.Api
 - name: BuildConfiguration
   value: release
 - name: BuildPlatform
@@ -47,7 +47,6 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
-  - group: AT das-forecasting-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -62,7 +61,6 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: TEST DevTest Shared Resources
-  - group: TEST das-forecasting-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -77,11 +75,24 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: TEST2 DevTest Shared Resources
-  - group: TEST2 das-forecasting-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: TEST2
+      ServiceConnection: SFA-DAS-DevTest-ARM
+      SolutionBaseName: $(SolutionBaseName)
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+
+- stage: Deploy_DEMO
+  dependsOn: Build
+  displayName: Deploy to DEMO
+  variables:
+  - group: DevTest Management Resources
+  - group: DEMO DevTest Shared Resources
+  jobs:
+  - template: pipeline-templates/job/deploy.yml
+    parameters:
+      Environment: DEMO
       ServiceConnection: SFA-DAS-DevTest-ARM
       SolutionBaseName: $(SolutionBaseName)
       AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
@@ -92,27 +103,11 @@ stages:
   variables:
   - group: PREPROD Management Resources
   - group: PREPROD Shared Resources
-  - group: PREPROD das-forecasting-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: PP
       ServiceConnection: SFA-DIG-PreProd-ARM
-      SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
-
-- stage: Deploy_PROD
-  dependsOn: Build
-  displayName: Deploy to PROD
-  variables:
-  - group: PROD Management Resources
-  - group: PROD Shared Resources
-  - group: PROD das-forecasting-api
-  jobs:
-  - template: pipeline-templates/job/deploy.yml
-    parameters:
-      Environment: PROD
-      ServiceConnection: SFA-DIG-Prod-ARM
       SolutionBaseName: $(SolutionBaseName)
       AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
 
@@ -122,26 +117,24 @@ stages:
   variables:
   - group: MO Management Resources
   - group: MO Shared Resources
-  - group: MO das-forecasting-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
       Environment: MO
       ServiceConnection: SFA-ASM-ModelOffice-ARM
       SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS      
 
-- stage: Deploy_DEMO
+- stage: Deploy_PROD
   dependsOn: Build
-  displayName: Deploy to DEMO
+  displayName: Deploy to PROD
   variables:
-  - group: DevTest Management Resources
-  - group: DEMO DevTest Shared Resources
-  - group: DEMO das-forecasting-api
+  - group: PROD Management Resources
+  - group: PROD Shared Resources
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
-      Environment: DEMO
-      ServiceConnection: SFA-DAS-DevTest-ARM
+      Environment: PROD
+      ServiceConnection: SFA-DIG-Prod-ARM
       SolutionBaseName: $(SolutionBaseName)
-      AppRoleAssignmentsServiceConnection: das-app-role-assignments-CDS
+      AppRoleAssignmentsServiceConnection: das-app-role-assignments-FCS
