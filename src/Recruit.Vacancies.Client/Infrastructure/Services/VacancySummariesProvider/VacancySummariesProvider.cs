@@ -17,100 +17,15 @@ namespace Esfa.Recruit.Vacancies.Client.Infrastructure.Services.VacancySummaries
 {
     internal sealed class VacancySummariesProvider : MongoDbCollectionBase, IVacancySummariesProvider
     {
-        private readonly IVacancyTaskListStatusService _vacancyTaskListStatusService;
         private const string TransferInfoUkprn = "transferInfo.ukprn";
         private const string TransferInfoReason = "transferInfo.reason";
         private const int ClosingSoonDays = 5;
 
         public VacancySummariesProvider(
             ILoggerFactory loggerFactory, 
-            IOptions<MongoDbConnectionDetails> details, 
-            IVacancyTaskListStatusService vacancyTaskListStatusService)
+            IOptions<MongoDbConnectionDetails> details)
             : base(loggerFactory, MongoDbNames.RecruitDb, MongoDbCollectionNames.Vacancies, details)
         {
-            _vacancyTaskListStatusService = vacancyTaskListStatusService;
-        }
-       
-        public async Task<VacancyDashboard> GetProviderOwnedVacancyDashboardByUkprnAsync(long ukprn)
-        {
-            var bsonArray = new BsonArray
-            {
-                VacancyType.Apprenticeship.ToString(),
-                BsonNull.Value
-            };
-
-            var match = new BsonDocument
-            {
-                {
-                    "$match",
-                    BuildBsonDocumentFilterValues(ukprn, null, null, bsonArray)
-                }
-            };
-            var builder = new VacancySummaryAggQueryBuilder();
-            var aggPipelines = builder.GetAggregateQueryPipelineDashboard(match);
-            var applicationAggPipeline = builder.GetAggregateQueryPipelineDashboardApplications(match);
-            var closingSoonAggPipeline = builder.GetAggregateQueryPipelineVacanciesClosingSoonDashboard(match);
-            var dashboardValuesTask =  RunDashboardAggPipelineQuery(aggPipelines);
-            var applicationDashboardValuesTask = RunApplicationsDashboardAggPipelineQuery(applicationAggPipeline);
-            var closingSoonDashboardValuesTask = RunApplicationsDashboardAggPipelineQuery(closingSoonAggPipeline);
-
-            await Task.WhenAll(dashboardValuesTask, applicationDashboardValuesTask, closingSoonDashboardValuesTask);
-            
-            return new VacancyDashboard
-            {
-                VacancyStatusDashboard = dashboardValuesTask.Result,
-                VacancyApplicationsDashboard = applicationDashboardValuesTask.Result,
-                VacanciesClosingSoonWithNoApplications = closingSoonDashboardValuesTask.Result.FirstOrDefault(c => c.ClosingSoon)?.StatusCount ?? 0
-            };
-        }
-        public async Task<VacancyDashboard> GetEmployerOwnedVacancyDashboardByEmployerAccountIdAsync(string employerAccountId)
-        {
-            var bsonArray = new BsonArray
-            {
-                VacancyType.Apprenticeship.ToString(),
-                BsonNull.Value
-            };
-            
-            var match = new BsonDocument
-            {
-                {
-                    "$match",
-                    BuildBsonDocumentFilterValues(null, employerAccountId, null, bsonArray)
-                }
-            };
-            var employerReviewMatch = new BsonDocument
-            {
-                {
-                    "$match",
-                    BuildEmployerReviewMatch()
-                }
-            };
-            var liveVacanciesMatch = new BsonDocument
-            {
-                {
-                    "$match",
-                    BuildSharedApplicationsVacanciesMatch()
-                }
-            };
-            var builder = new VacancySummaryAggQueryBuilder();
-            var aggPipelines = builder.GetAggregateQueryPipelineDashboard(match,employerReviewMatch);
-            var applicationAggPipeline = builder.GetAggregateQueryPipelineDashboardApplications(match, employerReviewMatch);
-            var sharedApplicationAggPipeline = builder.GetAggregateQueryPipelineDashboardApplications(match, liveVacanciesMatch);
-            var closingSoonAggPipeline = builder.GetAggregateQueryPipelineVacanciesClosingSoonDashboard(match, employerReviewMatch);
-            
-            var dashboardValuesTask = RunDashboardAggPipelineQuery(aggPipelines);
-            var applicationDashboardValuesTask = RunApplicationsDashboardAggPipelineQuery(applicationAggPipeline);
-            var sharedApplicationDashboardValuesTask = RunSharedApplicationsDashboardAggPipelineQuery(sharedApplicationAggPipeline);
-            var closingSoonDashboardValuesTask = RunApplicationsDashboardAggPipelineQuery(closingSoonAggPipeline);
-            
-            await Task.WhenAll(dashboardValuesTask, applicationDashboardValuesTask, sharedApplicationDashboardValuesTask, closingSoonDashboardValuesTask);
-            return new VacancyDashboard
-            {
-                VacancyStatusDashboard = dashboardValuesTask.Result,
-                VacancyApplicationsDashboard = applicationDashboardValuesTask.Result,
-                VacancySharedApplicationsDashboard = sharedApplicationDashboardValuesTask.Result,
-                VacanciesClosingSoonWithNoApplications = closingSoonDashboardValuesTask.Result.FirstOrDefault()?.StatusCount ?? 0
-            };
         }
         
         public async Task<IList<VacancySummary>> GetProviderOwnedVacancySummariesByUkprnAsync(long ukprn, int page, FilteringOptions? status, string searchTerm)
@@ -244,53 +159,6 @@ namespace Esfa.Recruit.Vacancies.Client.Infrastructure.Services.VacancySummaries
             var aggPipeline = VacancySummaryAggQueryBuilder.GetAggregateQueryPipelineDocumentCount(match,secondaryMath, string.IsNullOrEmpty(employerAccountId) ? null: employerReviewMatch);
 
             return await RunAggPipelineCountQuery(aggPipeline);
-        }
-
-        private async Task<List<VacancyStatusDashboard>> RunDashboardAggPipelineQuery(BsonDocument[] pipeline)
-        {
-            var db = GetDatabase();
-            var collection = db.GetCollection<BsonDocument>(MongoDbCollectionNames.Vacancies);
-            
-            var vacancyDashboard = await RetryPolicy.Execute(async context =>
-                {
-                    var aggResults = await collection.AggregateAsync<VacancyDashboardAggQueryResponseDto>(pipeline);
-                    return await aggResults.ToListAsync();
-                },
-                new Context(nameof(RunDashboardAggPipelineQuery)));
-
-            return vacancyDashboard.Select(VacancyDashboardMapper.MapFromVacancyDashboardSummaryResponseDto).ToList();
-        }
-
-        private async Task<List<VacancyApplicationsDashboard>> RunApplicationsDashboardAggPipelineQuery(
-            BsonDocument[] pipeline)
-        {
-            var db = GetDatabase();
-            var collection = db.GetCollection<BsonDocument>(MongoDbCollectionNames.Vacancies);
-            
-            var vacancyDashboard = await RetryPolicy.Execute(async context =>
-                {
-                    var aggResults = await collection.AggregateAsync<VacancyApplicationsDashboardResponseDto>(pipeline);
-                    return await aggResults.ToListAsync();
-                },
-                new Context(nameof(RunApplicationsDashboardAggPipelineQuery)));
-
-            return vacancyDashboard.Select(VacancyDashboardApplicationsMapper.MapFromVacancyApplicationsDashboardResponseDto).ToList();
-        }
-
-        private async Task<List<VacancySharedApplicationsDashboard>> RunSharedApplicationsDashboardAggPipelineQuery(
-           BsonDocument[] pipeline)
-        {
-            var db = GetDatabase();
-            var collection = db.GetCollection<BsonDocument>(MongoDbCollectionNames.Vacancies);
-
-            var vacancyDashboard = await RetryPolicy.Execute(async context =>
-            {
-                var aggResults = await collection.AggregateAsync<VacancySharedApplicationsDashboardResponseDto>(pipeline);
-                return await aggResults.ToListAsync();
-            },
-                new Context(nameof(RunSharedApplicationsDashboardAggPipelineQuery)));
-
-            return vacancyDashboard.Select(VacancyDashboardSharedApplicationsMapper.MapFromVacancySharedApplicationsDashboardResponseDto).ToList();
         }
 
         private async Task<long> RunAggPipelineCountQuery(BsonDocument[] pipeline)

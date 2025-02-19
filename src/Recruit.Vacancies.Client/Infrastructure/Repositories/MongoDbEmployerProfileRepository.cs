@@ -17,13 +17,6 @@ namespace Esfa.Recruit.Vacancies.Client.Infrastructure.Repositories
         {
         }
 
-        public async Task CreateAsync(EmployerProfile profile)
-        {
-            var collection = GetCollection<EmployerProfile>();
-            await RetryPolicy.Execute(_ => 
-                collection.InsertOneAsync(profile),
-                new Context(nameof(CreateAsync)));
-        }
 
         public async Task<EmployerProfile> GetAsync(string employerAccountId, string accountLegalEntityPublicHashedId)
         {
@@ -36,19 +29,6 @@ namespace Esfa.Recruit.Vacancies.Client.Infrastructure.Repositories
                 collection.Find(filter).SingleOrDefaultAsync(),
                 new Context(nameof(GetAsync)));
             
-            return result;
-        }
-
-        public async Task<IList<EmployerProfile>> GetEmployerProfilesForEmployerAsync(string employerAccountId)
-        {
-            var filter = Builders<EmployerProfile>.Filter.Eq(x => x.EmployerAccountId, employerAccountId);
-
-            var collection = GetCollection<EmployerProfile>();
-
-            var result = await RetryPolicy.Execute(_ => 
-                collection.Find(filter).ToListAsync(),
-                new Context(nameof(GetEmployerProfilesForEmployerAsync)));
-    
             return result;
         }
 

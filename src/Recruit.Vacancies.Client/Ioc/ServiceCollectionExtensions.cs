@@ -7,7 +7,6 @@ using Esfa.Recruit.Vacancies.Client.Application.Providers;
 using Esfa.Recruit.Vacancies.Client.Application.Queues;
 using Esfa.Recruit.Vacancies.Client.Application.Rules.Engine;
 using Esfa.Recruit.Vacancies.Client.Application.Services;
-using Esfa.Recruit.Vacancies.Client.Application.Services.VacancyComparer;
 using Esfa.Recruit.Vacancies.Client.Application.Validation;
 using Esfa.Recruit.Vacancies.Client.Application.Validation.Fluent;
 using Esfa.Recruit.Vacancies.Client.Domain.Entities;
@@ -32,9 +31,6 @@ using Esfa.Recruit.Vacancies.Client.Infrastructure.Repositories;
 using Esfa.Recruit.Vacancies.Client.Infrastructure.SequenceStore;
 using Esfa.Recruit.Vacancies.Client.Infrastructure.Services;
 using Esfa.Recruit.Vacancies.Client.Infrastructure.Services.EmployerAccount;
-using Esfa.Recruit.Vacancies.Client.Infrastructure.Services.Geocode;
-using Esfa.Recruit.Vacancies.Client.Infrastructure.Services.PasAccount;
-using Esfa.Recruit.Vacancies.Client.Infrastructure.Services.Projections;
 using Esfa.Recruit.Vacancies.Client.Infrastructure.Services.ProviderRelationship;
 using Esfa.Recruit.Vacancies.Client.Infrastructure.Services.TrainingProvider;
 using Esfa.Recruit.Vacancies.Client.Infrastructure.Services.TrainingProviderSummaryProvider;
@@ -101,7 +97,6 @@ namespace Esfa.Recruit.Vacancies.Client.Ioc
         {
             // Configuration
             services.AddSingleton(configuration);
-            services.Configure<PasAccountApiConfiguration>(configuration.GetSection("PasAccountApiConfiguration"));
             services.Configure<OuterApiConfiguration>(configuration.GetSection("OuterApiConfiguration"));
 
             // Domain services
@@ -109,10 +104,6 @@ namespace Esfa.Recruit.Vacancies.Client.Ioc
 
             // Application Service
             services.AddTransient<IGenerateVacancyNumbers, MongoSequenceStore>();
-            services.AddTransient<ISlaService, SlaService>();
-            services.AddTransient<IVacancyTransferService, VacancyTransferService>();
-            services.AddTransient<IVacancyReviewTransferService, VacancyReviewTransferService>();
-            services.AddTransient<IVacancyComparerService, VacancyComparerService>();
             services.AddTransient<ICache, Cache>();
             services.AddTransient<IHtmlSanitizerService, HtmlSanitizerService>();
             services.AddTransient<IEmployerService, EmployerService>();
@@ -121,21 +112,11 @@ namespace Esfa.Recruit.Vacancies.Client.Ioc
             services.AddTransient<IEmployerAccountProvider, EmployerAccountProvider>();
             services.AddTransient<ITrainingProviderService, TrainingProviderService>();
             services.AddTransient<ITrainingProviderSummaryProvider, TrainingProviderSummaryProvider>();
-            services.AddTransient<IPasAccountProvider, PasAccountProvider>();
             services.AddHttpClient<IOuterApiClient, OuterApiClient>();
-            services.AddTransient<IOuterApiGeocodeService, OuterApiGeocodeService>();
-            services.AddSingleton<IVacancyTaskListStatusService, VacancyTaskListStatusService>();
-
-            // Projection services
-            
-            services.AddTransient<IEditVacancyInfoProjectionService, EditVacancyInfoProjectionService>();
-            services.AddTransient<IPublishedVacancyProjectionService, PublishedVacancyProjectionService>();
-            services.AddTransient<IVacancyApplicationsProjectionService, VacancyApplicationsProjectionService>();
 
             // Reference Data Providers
             services.AddTransient<IMinimumWageProvider, NationalMinimumWageProvider>();
             services.AddTransient<IApprenticeshipProgrammeProvider, ApprenticeshipProgrammeProvider>();
-            services.AddTransient<IApprenticeshipRouteProvider, ApprenticeshipRouteProvider>();
             services.AddTransient<IQualificationsProvider, QualificationsProvider>();
             services.AddTransient<ICandidateSkillsProvider, CandidateSkillsProvider>();
             services.AddTransient<IProfanityListProvider, ProfanityListProvider>();
@@ -157,27 +138,20 @@ namespace Esfa.Recruit.Vacancies.Client.Ioc
 
             MongoDbConventions.RegisterMongoConventions();
 
-            services.AddTransient<MongoDbCollectionChecker>();
-
             //Repositories
             services.AddTransient<IVacancyRepository, MongoDbVacancyRepository>();
-            services.AddTransient<IVacancyReviewRepository, MongoDbVacancyReviewRepository>();
-            services.AddTransient<IUserRepository, MongoDbUserRepository>();
             services.AddTransient<IApplicationReviewRepository, MongoDbApplicationReviewRepository>();
             services.AddTransient<IEmployerProfileRepository, MongoDbEmployerProfileRepository>();
             
 
             //Queries
             services.AddTransient<IVacancyQuery, MongoDbVacancyRepository>();
-            services.AddTransient<IVacancyReviewQuery, MongoDbVacancyReviewRepository>();
-            services.AddTransient<IApplicationReviewQuery, MongoDbApplicationReviewRepository>();
             services.AddTransient<IBlockedOrganisationQuery, MongoDbBlockedOrganisationRepository>();
 
             services.AddTransient<IQueryStoreReader, QueryStoreClient>();
             services.AddTransient<IQueryStoreWriter, QueryStoreClient>();
 
             services.AddTransient<IReferenceDataReader, MongoDbReferenceDataRepository>();
-            services.AddTransient<IReferenceDataWriter, MongoDbReferenceDataRepository>();
         }
 
         private static void RegisterOutOfProcessEventDelegatorDeps(IServiceCollection services, IConfiguration configuration)
@@ -207,7 +181,6 @@ namespace Esfa.Recruit.Vacancies.Client.Ioc
             else
             {
                 services.AddTransient<IQueryStore, MongoQueryStore>();
-                services.AddTransient<IQueryStoreHouseKeepingService, MongoQueryStore>();
             }
         }
 
@@ -233,9 +206,7 @@ namespace Esfa.Recruit.Vacancies.Client.Ioc
             services
                 .AddTransient<IRecruitVacancyClient, VacancyClient>()
                 .AddTransient<IEmployerVacancyClient, VacancyClient>()
-                .AddTransient<IProviderVacancyClient, VacancyClient>()
-                .AddTransient<IGetAddressesClient, OuterApiGetAddressesClient>()
-                .AddTransient<IGetProviderStatusClient, OuterApiGetProviderStatusClient>();
+                .AddTransient<IProviderVacancyClient, VacancyClient>();
         }
 
 

@@ -30,13 +30,5 @@ namespace Esfa.Recruit.Vacancies.Client.Application.Services
             return vacancy.LegalEntityName;
         }
 
-        public async Task<string> GetEmployerDescriptionAsync(Vacancy vacancy)
-        {
-            if (!vacancy.CanGetEmployerProfileAboutOrganisation)
-                return vacancy.EmployerDescription;
-
-            var profile = await _employerProfileRepository.GetAsync(vacancy.EmployerAccountId, vacancy.AccountLegalEntityPublicHashedId);
-            return profile?.AboutOrganisation ?? string.Empty;
-        }
     }
 }

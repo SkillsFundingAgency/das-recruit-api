@@ -21,17 +21,6 @@ namespace Esfa.Recruit.Vacancies.Client.Infrastructure.Services.TrainingProvider
             _trainingProviderService = trainingProviderService;
         }
 
-        public async Task<IEnumerable<TrainingProviderSummary>> FindAllAsync()
-        {
-            var response = await _trainingProviderService.FindAllAsync();
-
-            return response.Select(r => new TrainingProviderSummary
-            {
-                Ukprn = r.Ukprn.Value,
-                ProviderName = r.Name
-            });
-        }
-
         public async Task<TrainingProviderSummary> GetAsync(long ukprn)
         {
             if (ukprn == EsfaTestTrainingProvider.Ukprn)

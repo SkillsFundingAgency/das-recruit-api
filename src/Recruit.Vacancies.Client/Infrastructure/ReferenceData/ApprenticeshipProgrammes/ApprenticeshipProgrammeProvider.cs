@@ -30,11 +30,6 @@ namespace Esfa.Recruit.Vacancies.Client.Infrastructure.ReferenceData.Apprentices
             return apprenticeships?.SingleOrDefault(x => x.Id == programmeId);
         }
 
-        public async Task<ApprenticeshipStandard> GetApprenticeshipStandardVacancyPreviewData(int programmedId)
-        {
-            return await _outerApiClient.Get<GetVacancyPreviewApiResponse>(new GetVacancyPreviewApiRequest(programmedId));
-        }
-
         public async Task<IEnumerable<IApprenticeshipProgramme>> GetApprenticeshipProgrammesAsync(bool includeExpired = false)
         {
             var queryItem = await GetApprenticeshipProgrammes();

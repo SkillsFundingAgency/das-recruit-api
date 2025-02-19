@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Esfa.Recruit.Vacancies.Client.Application.Providers;
 using Esfa.Recruit.Vacancies.Client.Infrastructure.Mongo;
 using Esfa.Recruit.Vacancies.Client.Infrastructure.ReferenceData.Skills;
 using Microsoft.Extensions.Logging;
@@ -13,16 +12,14 @@ using Quals = Esfa.Recruit.Vacancies.Client.Infrastructure.ReferenceData.Qualifi
 
 namespace Esfa.Recruit.Vacancies.Client.Infrastructure.ReferenceData
 {
-    internal sealed class MongoDbReferenceDataRepository : MongoDbCollectionBase, IReferenceDataReader, IReferenceDataWriter
+    internal sealed class MongoDbReferenceDataRepository : MongoDbCollectionBase, IReferenceDataReader
     {
         private const string Id = "_id";
         private readonly IDictionary<Type, string> _itemIdLookup;
-        private readonly ITimeProvider _timeProvider;
 
-        public MongoDbReferenceDataRepository(ILoggerFactory loggerFactory, IOptions<MongoDbConnectionDetails> details, ITimeProvider timeProvider)
+        public MongoDbReferenceDataRepository(ILoggerFactory loggerFactory, IOptions<MongoDbConnectionDetails> details)
             : base(loggerFactory, MongoDbNames.RecruitDb, MongoDbCollectionNames.ReferenceData, details)
         {
-            _timeProvider = timeProvider;
             _itemIdLookup = BuildLookup();
         }
 
@@ -46,25 +43,7 @@ namespace Esfa.Recruit.Vacancies.Client.Infrastructure.ReferenceData
                 throw new ArgumentOutOfRangeException($"{typeof(T).Name} is not a recognised reference data type", ex);
             }
         }
-
-        public Task UpsertReferenceData<T>(T referenceData) where T : class, IReferenceDataItem
-        {
-            var id = _itemIdLookup[typeof(T)];
-            referenceData.Id = id;
-            referenceData.LastUpdatedDate = _timeProvider.Now;
-            
-            var collection = GetCollection<T>();
-
-            var filter = Builders<T>.Filter.Eq(Id, id);
-
-            return RetryPolicy.Execute(context => 
-                collection.ReplaceOneAsync(
-                    filter, 
-                    referenceData, 
-                    new ReplaceOptions { IsUpsert = true }), 
-                new Context(nameof(IReferenceDataWriter.UpsertReferenceData)));
-        }
-
+        
         private IDictionary<Type, string> BuildLookup()
         {
             return new Dictionary<Type, string> 
@@ -72,7 +51,6 @@ namespace Esfa.Recruit.Vacancies.Client.Infrastructure.ReferenceData
                 { typeof(CandidateSkills), "CandidateSkills" },
                 { typeof(Quals.Qualifications), "QualificationTypes" },
                 { typeof(Programmes.ApprenticeshipProgrammes), "ApprenticeshipProgrammes" },
-                { typeof(Programmes.ApprenticeshipRoutes), "ApprenticeshipRoutes" },
                 { typeof(Profanities.ProfanityList), "Profanities" },
                 { typeof(BannedPhrases.BannedPhraseList), "BannedPhrases" },
                 { typeof(TrainingProviders.TrainingProviders), "Providers" }

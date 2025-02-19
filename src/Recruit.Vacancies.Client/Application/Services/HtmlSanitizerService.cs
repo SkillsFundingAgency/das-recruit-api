@@ -16,13 +16,6 @@ namespace Esfa.Recruit.Vacancies.Client.Application.Services
             _logger = logger;
         }
 
-        public string Sanitize(string html)
-        {
-            return string.IsNullOrWhiteSpace(html) ? 
-                html : 
-                Sanitize(html, null);
-        }
-
         public bool IsValid(string html)
         {
             if (string.IsNullOrWhiteSpace(html))
