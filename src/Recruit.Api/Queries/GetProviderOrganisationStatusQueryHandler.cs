@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -29,7 +28,7 @@ namespace SFA.DAS.Recruit.Api.Queries
 
             if (validationErrors.Any())
             {
-                return new GetOrganisationStatusResponse { ResultCode = ResponseCode.InvalidRequest, ValidationErrors = validationErrors };
+                return new GetOrganisationStatusResponse { ResultCode = ResponseCode.InvalidRequest, ValidationErrors = validationErrors.Cast<object>().ToList() };
             }
 
             var blockedProviders = await _queryStoreReader.GetBlockedProviders();

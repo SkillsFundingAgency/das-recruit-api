@@ -20,7 +20,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers
             _mockMediator = new Mock<IMediator>();
             _mockMediator.Setup(x => x.Send(It.IsAny<GetApplicantsQuery>(), CancellationToken.None))
                         .ReturnsAsync(new GetApplicantsResponse())
-                        .Callback<GetApplicantsQuery, CancellationToken>((q, _) => _queryPassed = q);
+                        .Callback<IRequest<GetApplicantsResponse>, CancellationToken>((q, _) => _queryPassed = (GetApplicantsQuery)q);
             _sut = new ApplicantsController(_mockMediator.Object);
         }
 

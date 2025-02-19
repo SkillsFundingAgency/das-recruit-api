@@ -17,9 +17,9 @@ namespace SFA.DAS.Recruit.Api.Services
         private string ConnectionString { get; }
         private AsyncRetryPolicy RetryPolicy { get; }
 
-        public QueryStoreClient(IOptions<RecruitConfiguration> config, ILogger<QueryStoreClient> logger)
+        public QueryStoreClient(IOptions<ConnectionStrings> config, ILogger<QueryStoreClient> logger)
         {
-            ConnectionString = config.Value.ConnectionString;
+            ConnectionString = config.Value.MongoDb;
             RetryPolicy = Policy
                 .Handle<MongoException>()
                 .WaitAndRetryAsync(Enumerable.Repeat(TimeSpan.FromSeconds(1), MaxNoOfRetries)

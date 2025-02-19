@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
@@ -9,26 +8,31 @@ namespace SFA.DAS.Recruit.Api
 	public partial class Startup
     {
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment HostingEnvironment { get; }
+        public IWebHostEnvironment HostingEnvironment { get; }
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            var assemblyName = Assembly.GetEntryAssembly().GetName().Name;
-
-            Configuration = new ConfigurationBuilder()
+            var config = new ConfigurationBuilder()
+                .AddConfiguration(configuration)
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile("appsettings.Development.json", optional: true)
-                .AddAzureTableStorage(
+                .AddEnvironmentVariables();
+#if DEBUG
+            config
+                .AddJsonFile("appsettings.json", optional:true)
+                .AddJsonFile("appsettings.Development.json", optional: true);   
+#endif                
+         
+            config.AddAzureTableStorage(
                     options => {
-                        options.ConfigurationKeys = new[] { assemblyName };
-                        options.EnvironmentNameEnvironmentVariableName = "APPSETTING_ASPNETCORE_Environment";
-                        options.StorageConnectionStringEnvironmentVariableName = "APPSETTING_ConfigurationStorageConnectionString";
+                        options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
+                        options.EnvironmentName = configuration["Environment"];
+                        options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
                         options.PreFixConfigurationKeys = false;
                     }
-                )
-                .Build();
+                );
 
+            Configuration = config.Build();
+            
             HostingEnvironment = env;
         }
     }
