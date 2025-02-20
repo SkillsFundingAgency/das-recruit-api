@@ -1,3 +1,10 @@
+#REMEMBER: set the ApproveProdOverrideBlockOnPossibleDataLoss pipeline variable when connecting this pipeline, see Approve-SqlDacpacDeploymentDataLoss.ps1 docs for more info.
+parameters:
+- name: OverrideBlockOnPossibleDataLoss
+  displayName: Add /p:BlockOnPossibleDataLoss=false argument to DACPAC deployment
+  type: boolean
+  default: false
+  
 trigger:
   batch: true
   branches:
@@ -5,14 +12,14 @@ trigger:
       - "master"
 
 variables:
-- group: Release Management Resources
-- group: RELEASE das-recruit-api
 - name: SolutionBaseName
   value: Recruit.Api
 - name: BuildConfiguration
   value: release
 - name: BuildPlatform
-  value: any cpu
+  value: any cpu  
+- group: Release Management Resources
+- group: RELEASE das-recruit-api
 
 resources:
   repositories:
