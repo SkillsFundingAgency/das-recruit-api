@@ -13,14 +13,21 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers
     {
         private readonly Mock<IMediator> _mockMediator;
         private readonly EmployersController _sut;
-        private GetEmployerSummaryQuery _queryPassed;
+        private GetEmployerSummaryQuery _queryPassed = null;
 
         public EmployersControllerTests()
         {
             _mockMediator = new Mock<IMediator>();
-            _mockMediator.Setup(x => x.Send(It.IsAny<GetEmployerSummaryQuery>(), CancellationToken.None))
-                        .ReturnsAsync(new GetEmployerSummaryResponse())
-                        .Callback<GetEmployerSummaryQuery, CancellationToken>((q, _) => _queryPassed = q);
+            _mockMediator
+                .Setup(x => x.Send(
+                    It.IsAny<GetEmployerSummaryQuery>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetEmployerSummaryResponse())
+                .Callback<IRequest<GetEmployerSummaryResponse>, CancellationToken>((request, cancellationToken) =>
+                {
+                    _queryPassed = (GetEmployerSummaryQuery) request;
+                });
+            
             _sut = new EmployersController(_mockMediator.Object);
         }
 
@@ -30,8 +37,9 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers
         [InlineData(" myjR4X ")]
         public async Task GetCall_EnsuresEmployerAccountIdPassedInQueryPassedToMediatorIsTrimmedAndUppercased(string input)
         {
-            var result = await _sut.Get(input);
-            string.Compare(_queryPassed.EmployerAccountId, "MYJR4X", false).Should().Be(0);
+            await _sut.Get(input);
+            
+            string.CompareOrdinal(_queryPassed.EmployerAccountId, "MYJR4X").Should().Be(0);
         }
     }
 }
