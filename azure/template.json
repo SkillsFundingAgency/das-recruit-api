@@ -80,10 +80,10 @@
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
-        "resourceGroupName": "[concat(variables('resourceNamePrefix'), 'api-rg')]",
+        "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
-        "apiAppServiceName": "[concat(variables('resourceNamePrefix'), 'api-as')]",
-        "configNames": "SFA.DAS.EducationalOrganisations.Api"
+        "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
+        "configNames": "SFA.DAS.Recruit.Api"
     },
     "resources": [
         {
@@ -96,7 +96,7 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "[concat(variables('apiAppServiceName'), '-app-service-certificate-', parameters('utcValue'))]",
+            "name": "[concat(variables('appServiceName'), '-app-service-certificate-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
             "properties": {
@@ -120,7 +120,7 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "[concat(variables('apiAppServiceName'), '-application-insights-', parameters('utcValue'))]",
+            "name": "[concat(variables('appServiceName'), '-application-insights-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
@@ -131,10 +131,10 @@
                 },
                 "parameters": {
                     "appInsightsName": {
-                        "value": "[variables('apiAppServiceName')]"
+                        "value": "[variables('appServiceName')]"
                     },
                     "attachedService": {
-                        "value": "[variables('apiAppServiceName')]"
+                        "value": "[variables('appServiceName')]"
                     },
                     "logAnalyticsWorkspaceId": {
                         "value": "[resourceId(parameters('logAnalyticsSubscriptionId'),parameters('sharedManagementResourceGroup'),'Microsoft.OperationalInsights/workspaces',parameters('logAnalyticsWorkspaceName'))]"
@@ -147,7 +147,7 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "[concat(variables('apiAppServiceName'), '-', parameters('utcValue'))]",
+            "name": "[concat(variables('appServiceName'), '-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
@@ -158,7 +158,7 @@
                 },
                 "parameters": {
                     "appServiceName": {
-                        "value": "[variables('apiAppServiceName')]"
+                        "value": "[variables('appServiceName')]"
                     },
                     "appServicePlanName": {
                         "value": "[parameters('sharedBackEndAppServicePlanName')]"
@@ -190,7 +190,7 @@
                             },
                             {
                               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                              "value": "[reference(concat(variables('apiAppServiceName'), '-application-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
+                              "value": "[reference(concat(variables('appServiceName'), '-application-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
                             },
                             {
                               "name": "LoggingRedisConnectionString",
@@ -207,7 +207,7 @@
                         "value": "[parameters('customHostname')]"
                     },
                     "certificateThumbprint": {
-                        "value": "[reference(concat(variables('apiAppServiceName'), '-app-service-certificate-', parameters('utcValue'))).outputs.certificateThumbprint.value]"
+                        "value": "[reference(concat(variables('appServiceName'), '-app-service-certificate-', parameters('utcValue'))).outputs.certificateThumbprint.value]"
                     },
                     "ipSecurityRestrictions": {
                         "value": "[parameters('backEndAccessRestrictions')]"
@@ -261,7 +261,7 @@
     "outputs": {
         "AppServiceName": {
             "type": "string",
-            "value": "[variables('apiAppServiceName')]"
+            "value": "[variables('appServiceName')]"
         },
         "ResourceGroupName": {
             "type": "string",
