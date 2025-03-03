@@ -19,7 +19,7 @@ variables:
 - name: BuildPlatform
   value: any cpu  
 - group: Release Management Resources
-- group: RELEASE das-recruit-alt-api
+- group: RELEASE das-recruit-api
 
 resources:
   repositories:
@@ -58,6 +58,7 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
+  - group: AT das-recruit-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -72,6 +73,7 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: TEST DevTest Shared Resources
+  - group: TEST das-recruit-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -86,6 +88,7 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: TEST2 DevTest Shared Resources
+  - group: TEST2 das-recruit-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -100,6 +103,7 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: DEMO DevTest Shared Resources
+  - group: DEMO das-recruit-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -114,6 +118,7 @@ stages:
   variables:
   - group: PREPROD Management Resources
   - group: PREPROD Shared Resources
+  - group: PREPROD das-recruit-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -128,6 +133,7 @@ stages:
 #   variables:
 #   - group: MO Management Resources
 #   - group: MO Shared Resources
+#   - group: MO das-recruit-api
 #   jobs:
 #   - template: pipeline-templates/job/deploy.yml
 #     parameters:
@@ -142,6 +148,7 @@ stages:
 #   variables:
 #   - group: PROD Management Resources
 #   - group: PROD Shared Resources
+#   - group: PROD das-recruit-api
 #   jobs:
 #   - template: pipeline-templates/job/deploy.yml
 #     parameters:
