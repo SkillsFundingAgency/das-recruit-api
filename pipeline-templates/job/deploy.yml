@@ -52,6 +52,8 @@ jobs:
             ConfigurationSecrets:
               RecruitApimSubscriptionKey: $(RecruitApimSubscriptionKey)
               AccountsApiClientSecret: $(AccountsApiClientSecret)
+              RecruitCosmosConnectionString: $(RecruitCosmosConnectionString)
+              RecruitStorageConnectionString: $(RecruitStorageConnectionString)
         - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
           parameters:
             AzureSubscription: ${{ parameters.ServiceConnection }}
