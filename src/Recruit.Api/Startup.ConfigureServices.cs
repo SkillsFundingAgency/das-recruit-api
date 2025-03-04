@@ -1,13 +1,21 @@
+using System;
 using System.Collections.Generic;
-using MediatR;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Text.Json.Serialization;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Esfa.Recruit.Vacancies.Client.Application.Configuration;
+using Esfa.Recruit.Vacancies.Client.Application.FeatureToggle;
+using Esfa.Recruit.Vacancies.Client.Domain.Entities;
+using Esfa.Recruit.Vacancies.Client.Ioc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using SFA.DAS.Api.Common.AppStart;
+using SFA.DAS.Api.Common.Configuration;
+using SFA.DAS.Api.Common.Infrastructure;
+using SFA.DAS.Encoding;
+using SFA.DAS.Recruit.Api.Commands;
 using SFA.DAS.Recruit.Api.Configuration;
 using SFA.DAS.Recruit.Api.Mappers;
 using SFA.DAS.Recruit.Api.Services;
@@ -20,70 +28,72 @@ namespace SFA.DAS.Recruit.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
+            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<RecruitConfiguration>(Configuration.GetSection("Recruit"));
             services.Configure<AzureActiveDirectoryConfiguration>(Configuration.GetSection("AzureAd"));
 
-            var serviceProvider = services.BuildServiceProvider();
-            var recruitConfig = serviceProvider.GetService<IOptions<RecruitConfiguration>>();
+            var azureAdConfig = Configuration
+                .GetSection("AzureAd")
+                .Get<AzureActiveDirectoryConfiguration>();
+            
+            var policies = new Dictionary<string, string>
+            {
+                {PolicyNames.Default, "Default"},
+            };
+            services.AddAuthentication(azureAdConfig, policies);
 
-            SetupAuthorization(services, serviceProvider);
-
-            services.AddMediatR(typeof(Startup).Assembly);
+            services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(CreateVacancyCommand).Assembly));
 
             services.AddSingleton<IVacancySummaryMapper, VacancySummaryMapper>();
             services.AddSingleton<IQueryStoreReader, QueryStoreClient>();
+            services.AddSingleton<IFeature, Feature>();
+            RegisterDasEncodingService(services, Configuration);
 
+            services.AddRecruitStorageClient(Configuration);
+            
             MongoDbConventions.RegisterMongoConventions();
 
             services.AddHealthChecks()
-                    .AddMongoDb(recruitConfig.Value.ConnectionString)
+                    .AddMongoDb(Configuration.GetConnectionString("MongoDb"))
                     .AddApplicationInsightsPublisher();
 
-            services.AddApplicationInsightsTelemetry();
+            services.AddApplicationInsightsTelemetry(Configuration);
+            if (!string.IsNullOrEmpty(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!))
+            {
+                // This service will collect and send telemetry data to Azure Monitor.
+                services.AddOpenTelemetry().UseAzureMonitor(options =>
+                {
+                    options.ConnectionString = Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!;
+                });
+            }
 
             services
                 .AddMvc(o =>
                 {
                     if (HostingEnvironment.IsDevelopment() == false)
                     {
-                        o.Filters.Add(new AuthorizeFilter("default"));
+                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
                     }
+                    o.Conventions.Add(new ApiExplorerGroupPerVersionConvention());
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(options => {
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                });
-        }
-
-        private void SetupAuthorization(IServiceCollection services, ServiceProvider serviceProvider)
-        {
-            if (HostingEnvironment.IsDevelopment() == false)
-            {
-                var azureActiveDirectoryConfiguration =
-                    serviceProvider.GetService<IOptions<AzureActiveDirectoryConfiguration>>();
-
-                services.AddAuthorization(o =>
+                .AddJsonOptions(options =>
                 {
-                    o.AddPolicy("default", policy => { policy.RequireAuthenticatedUser(); });
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 });
-
-                services.AddAuthentication(auth => { auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
-                    .AddJwtBearer(auth =>
-                    {
-                        auth.Authority =
-                            $"https://login.microsoftonline.com/{azureActiveDirectoryConfiguration.Value.Tenant}";
-                        auth.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                        {
-                            ValidAudiences = new List<string>
-                            {
-                                azureActiveDirectoryConfiguration.Value.Identifier,
-                                azureActiveDirectoryConfiguration.Value.Id
-                            }
-                        };
-                    });
-
-                services.AddSingleton<IClaimsTransformation, AzureAdScopeClaimTransformation>();
-            }
+            
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RecruitAPI", Version = "v1" });
+                
+            });
+        }
+        
+        private static void RegisterDasEncodingService(IServiceCollection services, IConfiguration configuration)
+        {
+            var dasEncodingConfig = new EncodingConfig { Encodings = [] };
+            configuration.GetSection(nameof(dasEncodingConfig.Encodings)).Bind(dasEncodingConfig.Encodings);
+            services.AddSingleton(dasEncodingConfig);
+            services.AddSingleton<IEncodingService, EncodingService>();
         }
     }
 }

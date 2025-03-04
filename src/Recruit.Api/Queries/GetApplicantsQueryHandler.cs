@@ -5,8 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using SFA.DAS.Recruit.Api.Configuration;
 using SFA.DAS.Recruit.Api.Helpers;
 using SFA.DAS.Recruit.Api.Mappers;
 using SFA.DAS.Recruit.Api.Models;
@@ -34,7 +32,7 @@ namespace SFA.DAS.Recruit.Api.Queries
 
             if (validationErrors.Any())
             {
-                return new GetApplicantsResponse { ResultCode = ResponseCode.InvalidRequest, ValidationErrors = validationErrors };
+                return new GetApplicantsResponse { ResultCode = ResponseCode.InvalidRequest, ValidationErrors = validationErrors.Cast<object>().ToList() };
             }
 
             var vacancyApplications = await _queryStoreReader.GetVacancyApplicationsAsync(request.VacancyReference.ToString());
