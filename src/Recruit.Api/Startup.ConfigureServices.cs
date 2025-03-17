@@ -2,10 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
-using Esfa.Recruit.Vacancies.Client.Application.Configuration;
-using Esfa.Recruit.Vacancies.Client.Application.FeatureToggle;
-using Esfa.Recruit.Vacancies.Client.Domain.Entities;
-using Esfa.Recruit.Vacancies.Client.Ioc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,11 +10,6 @@ using Microsoft.OpenApi.Models;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
-using SFA.DAS.Encoding;
-using SFA.DAS.Recruit.Api.Commands;
-using SFA.DAS.Recruit.Api.Configuration;
-using SFA.DAS.Recruit.Api.Mappers;
-using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api
 {
@@ -28,8 +19,7 @@ namespace SFA.DAS.Recruit.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddOptions();
-            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
-            services.Configure<RecruitConfiguration>(Configuration.GetSection("Recruit"));
+            
             services.Configure<AzureActiveDirectoryConfiguration>(Configuration.GetSection("AzureAd"));
 
             var azureAdConfig = Configuration
@@ -42,16 +32,9 @@ namespace SFA.DAS.Recruit.Api
             };
             services.AddAuthentication(azureAdConfig, policies);
 
-            services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(CreateVacancyCommand).Assembly));
+            //services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(CreateApplicationCommand).Assembly));
 
-            services.AddSingleton<IVacancySummaryMapper, VacancySummaryMapper>();
-            services.AddSingleton<IQueryStoreReader, QueryStoreClient>();
-            services.AddSingleton<IFeature, Feature>();
-            RegisterDasEncodingService(services, Configuration);
-
-            services.AddRecruitStorageClient(Configuration);
-            
-            MongoDbConventions.RegisterMongoConventions();
+            //RegisterDasEncodingService(services, Configuration);
 
             services.AddHealthChecks()
                     .AddMongoDb(Configuration.GetConnectionString("MongoDb"))
@@ -88,12 +71,5 @@ namespace SFA.DAS.Recruit.Api
             });
         }
         
-        private static void RegisterDasEncodingService(IServiceCollection services, IConfiguration configuration)
-        {
-            var dasEncodingConfig = new EncodingConfig { Encodings = [] };
-            configuration.GetSection(nameof(dasEncodingConfig.Encodings)).Bind(dasEncodingConfig.Encodings);
-            services.AddSingleton(dasEncodingConfig);
-            services.AddSingleton<IEncodingService, EncodingService>();
-        }
     }
 }
