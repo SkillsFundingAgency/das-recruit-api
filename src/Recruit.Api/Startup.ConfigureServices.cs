@@ -36,10 +36,6 @@ namespace SFA.DAS.Recruit.Api
 
             //RegisterDasEncodingService(services, Configuration);
 
-            services.AddHealthChecks()
-                    .AddMongoDb(Configuration.GetConnectionString("MongoDb"))
-                    .AddApplicationInsightsPublisher();
-
             services.AddApplicationInsightsTelemetry(Configuration);
             if (!string.IsNullOrEmpty(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!))
             {

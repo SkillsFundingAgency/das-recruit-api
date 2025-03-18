@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.Recruit.Api.Helpers;
 using Microsoft.Extensions.DependencyInjection;
-using Recruit.Api.Extensions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using SFA.DAS.Recruit.Api.Extensions;
 
 namespace SFA.DAS.Recruit.Api
 {
@@ -16,11 +16,11 @@ namespace SFA.DAS.Recruit.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime, ILogger<Startup> logger)
         {
-            var instance = HostingHelper.GetWebsiteInstanceId();
+            string instance = HostingHelper.GetWebsiteInstanceId();
 
-            applicationLifetime.ApplicationStarted.Register(() => logger.LogInformation($"Host fully started: ({instance})"));
-            applicationLifetime.ApplicationStopping.Register(() => logger.LogInformation($"Host shutting down...waiting to complete requests: ({instance})"));
-            applicationLifetime.ApplicationStopped.Register(() => logger.LogInformation($"Host fully stopped. All requests processed: ({instance})"));
+            applicationLifetime.ApplicationStarted.Register(() => logger.LogInformation("Host fully started: ({instance})", instance));
+            applicationLifetime.ApplicationStopping.Register(() => logger.LogInformation("Host shutting down...waiting to complete requests: ({instance})", instance));
+            applicationLifetime.ApplicationStopped.Register(() => logger.LogInformation("Host fully stopped. All requests processed: ({instance})", instance));
             
             app.UseSwagger();
             app.UseSwaggerUI(c =>

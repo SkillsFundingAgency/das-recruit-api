@@ -1,4 +1,4 @@
-﻿<Project Sdk="MsBuild.Sdk.SqlProj/2.6.1">
+﻿<Project Sdk="MsBuild.Sdk.SqlProj/3.1.0">
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAureV12DatabaseSchemaProvider</DSP>
@@ -8,5 +8,8 @@
         <None Include="Database.publish.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Tables\" />
     </ItemGroup>
 </Project>

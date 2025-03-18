@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Recruit.Api.Models;
 
-namespace Recruit.Api.Extensions
+namespace SFA.DAS.Recruit.Api.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {
