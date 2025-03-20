@@ -1,10 +1,10 @@
 CREATE TABLE dbo.[ApplicationReview] (
     [Id]					        uniqueidentifier NOT NULL,
     [Ukprn]                         int NOT NULL,
-    [EmployerAccountId]             bigint NOT NULL,
+    [AccountId]             bigint NOT NULL,
     [Owner]                         tinyint NOT NULL,
     [CandidateFeedback]             nvarchar(max) NULL,
-    [CandidateId]                   GUID not NULL,
+    [CandidateId]                   uniqueidentifier not NULL,
     [CreatedDate]                   DATETIME NOT NULL,
     [DateSharedWithEmployer]        DATETIME NULL,
     [HasEverBeenEmployerInterviewing] BIT NOT NULL DEFAULT 0,
@@ -12,13 +12,13 @@ CREATE TABLE dbo.[ApplicationReview] (
     [ReviewedDate]                   DATETIME NOT NULL,   
     [SubmittedDate]                  DATETIME NOT NULL,   
     [Status]                        tinyint NOT NULL,
-    [StatusUpdatedByUserId]         GUID NULL,
+    [StatusUpdatedByUserId]         uniqueidentifier NULL,
     [StatusUpdatedBy]               tinyint NULL, -- To determine if updated by employer or provider,
     [VacancyReference]              BIGINT NOT NULL,
-    [LegacyApplicationId]           GUID NULL,
+    [LegacyApplicationId]           uniqueidentifier NULL,
     CONSTRAINT [PK_ApplicationReview] PRIMARY KEY (Id),
     INDEX [IX_ApplicationReview_Ukprn] NONCLUSTERED(Ukprn, Owner),
     INDEX [IX_ApplicationReview_AccountId] NONCLUSTERED(AccountId, Owner),
     INDEX [IX_ApplicationReview_CandidateId] NONCLUSTERED(CandidateId),
-    INDEX [IX_ApplicationReview_VacancyRef] NONCLUSTERED(VacancyRef)
+    INDEX [IX_ApplicationReview_VacancyRef] NONCLUSTERED(VacancyReference)
 )

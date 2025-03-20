@@ -5,8 +5,6 @@ VisualStudioVersion = 17.13.35825.156 d17.13
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recruit.Api", "Recruit.Api\Recruit.Api.csproj", "{F55902B1-287A-47F3-97FB-FF683D2910BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recruit.Api.UnitTests", "Recruit.Api.UnitTests\Recruit.Api.UnitTests.csproj", "{F92FBC6C-74FC-46D6-9668-8A449E965E7D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recruit.Api.Database", "Recruit.Api.Database\Recruit.Api.Database.csproj", "{6EE24C64-FA95-4E0A-ACEF-61A3D40222CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recruit.Api.Domain", "Recruit.Api.Domain\Recruit.Api.Domain.csproj", "{8872AFE7-C2CB-403C-8127-D07D229D135D}"
@@ -14,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recruit.Api.Data", "Recruit.Api.Data\Recruit.Api.Data.csproj", "{513F81D8-695F-4110-AAFE-582D605BF722}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recruit.Api.Application", "Recruit.Api.Application\Recruit.Api.Application.csproj", "{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,18 +37,6 @@ Global
 		{F55902B1-287A-47F3-97FB-FF683D2910BB}.Release|x64.Build.0 = Release|Any CPU
 		{F55902B1-287A-47F3-97FB-FF683D2910BB}.Release|x86.ActiveCfg = Release|Any CPU
 		{F55902B1-287A-47F3-97FB-FF683D2910BB}.Release|x86.Build.0 = Release|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Debug|x64.Build.0 = Debug|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Debug|x86.Build.0 = Debug|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Release|x64.ActiveCfg = Release|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Release|x64.Build.0 = Release|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Release|x86.ActiveCfg = Release|Any CPU
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D}.Release|x86.Build.0 = Release|Any CPU
 		{6EE24C64-FA95-4E0A-ACEF-61A3D40222CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6EE24C64-FA95-4E0A-ACEF-61A3D40222CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EE24C64-FA95-4E0A-ACEF-61A3D40222CA}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -85,12 +73,21 @@ Global
 		{513F81D8-695F-4110-AAFE-582D605BF722}.Release|x64.Build.0 = Release|Any CPU
 		{513F81D8-695F-4110-AAFE-582D605BF722}.Release|x86.ActiveCfg = Release|Any CPU
 		{513F81D8-695F-4110-AAFE-582D605BF722}.Release|x86.Build.0 = Release|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Debug|x64.Build.0 = Debug|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Debug|x86.Build.0 = Debug|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Release|x64.ActiveCfg = Release|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Release|x64.Build.0 = Release|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{5FF413AA-8C42-4116-AB5E-8422DBB08EDF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{F92FBC6C-74FC-46D6-9668-8A449E965E7D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {997FABE8-6348-485E-8AEE-A8E3812146BE}

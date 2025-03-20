@@ -1,49 +1,61 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Options;
 using Recruit.Api.Data.ApplicationReview;
 using Recruit.Api.Domain.Configuration;
 using Recruit.Api.Domain.Entities;
 
-namespace Recruit.Api.Data
+namespace Recruit.Api.Data;
+
+public interface IRecruitDataContext
 {
-    public interface IRecruitDataContext
+    DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
+    DatabaseFacade Database { get; }
+    Task Ping(CancellationToken cancellationToken);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+}
+
+[ExcludeFromCodeCoverage]
+public class RecruitDataContext : DbContext, IRecruitDataContext
+{
+    public DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
+
+    private readonly RecruitApiConfiguration? _configuration;
+    public RecruitDataContext() {}
+    public RecruitDataContext(DbContextOptions options) : base(options) {}
+    public RecruitDataContext(IOptions<RecruitApiConfiguration> config, DbContextOptions options) : base(options)
     {
-        DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
+        _configuration = config.Value;
     }
 
-    public class RecruitDataContext : DbContext, IRecruitDataContext
+    public async Task Ping(CancellationToken cancellationToken)
     {
-        public DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
+        await Database
+            .ExecuteSqlRawAsync("SELECT 1;", cancellationToken)
+            .ConfigureAwait(false);
+    }
 
-        private readonly RecruitDatabaseConfiguration? _configuration;
-        public RecruitDataContext() {}
-        public RecruitDataContext(DbContextOptions options) : base(options) {}
-        public RecruitDataContext(IOptions<RecruitDatabaseConfiguration> config, DbContextOptions options) : base(options)
-        {
-            _configuration = config.Value;
-        }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLazyLoadingProxies();
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseLazyLoadingProxies();
+        var connection = new SqlConnection {
+            ConnectionString = _configuration!.SqlConnectionString,
+        };
 
-            var connection = new SqlConnection {
-                ConnectionString = _configuration!.SqlConnectionString,
-            };
-
-            optionsBuilder.UseSqlServer(connection, options =>
-                options.EnableRetryOnFailure(
-                    5,
-                    TimeSpan.FromSeconds(20),
-                    null
-                ));
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new ApplicationReviewEntityConfiguration());
+        optionsBuilder.UseSqlServer(connection, options =>
+            options.EnableRetryOnFailure(
+                5,
+                TimeSpan.FromSeconds(20),
+                null
+            ));
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new ApplicationReviewEntityConfiguration());
             
-            base.OnModelCreating(modelBuilder);
-        }
+        base.OnModelCreating(modelBuilder);
     }
 }

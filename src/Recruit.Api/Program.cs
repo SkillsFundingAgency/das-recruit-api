@@ -1,20 +1,24 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using SFA.DAS.Recruit.Api;
 
-namespace SFA.DAS.Recruit.Api
+namespace Recruit.Api;
+
+[ExcludeFromCodeCoverage]
+public static class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
+        CreateHostBuilder(args).Build().Run();
+    }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                    .ConfigureKestrel(c => c.AddServerHeader = false)
-                    .UseKestrel()
-                    .UseUrls("https://localhost:5040")
-                    .UseStartup<Startup>();
+    public static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }
