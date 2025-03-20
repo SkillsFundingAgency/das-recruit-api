@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,7 +31,7 @@ public class Startup
     private readonly string _environmentName;
     private IConfiguration Configuration { get; }
 
-    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+    public Startup(IConfiguration configuration)
     {
         _environmentName = configuration["EnvironmentName"]!;
         var config = new ConfigurationBuilder()
@@ -113,6 +114,7 @@ public class Startup
             opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
             opt.DefaultApiVersion = new ApiVersion(1, 0);
         });
+        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
