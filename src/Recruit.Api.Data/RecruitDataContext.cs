@@ -22,10 +22,10 @@ public class RecruitDataContext : DbContext, IRecruitDataContext
 {
     public DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
 
-    private readonly RecruitApiConfiguration? _configuration;
+    private readonly ConnectionStrings? _configuration;
     public RecruitDataContext() {}
     public RecruitDataContext(DbContextOptions options) : base(options) {}
-    public RecruitDataContext(IOptions<RecruitApiConfiguration> config, DbContextOptions options) : base(options)
+    public RecruitDataContext(IOptions<ConnectionStrings> config, DbContextOptions options) : base(options)
     {
         _configuration = config.Value;
     }

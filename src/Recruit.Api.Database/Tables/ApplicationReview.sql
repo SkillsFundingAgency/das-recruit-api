@@ -9,7 +9,7 @@ CREATE TABLE dbo.[ApplicationReview] (
     [DateSharedWithEmployer]        DATETIME NULL,
     [HasEverBeenEmployerInterviewing] BIT NOT NULL DEFAULT 0,
     [IsWithdrawn]                    BIT NOT NULL DEFAULT 0,
-    [ReviewedDate]                   DATETIME NOT NULL,   
+    [ReviewedDate]                   DATETIME NULL,   
     [SubmittedDate]                  DATETIME NOT NULL,   
     [Status]                        tinyint NOT NULL,
     [StatusUpdatedByUserId]         uniqueidentifier NULL,

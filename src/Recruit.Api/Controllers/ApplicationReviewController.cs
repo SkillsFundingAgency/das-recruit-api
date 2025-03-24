@@ -23,7 +23,7 @@ public class ApplicationReviewController(
     [FromServices] IApplicationReviewsProvider provider,
     ILogger<ApplicationReviewController> logger) : ControllerBase
 {
-    internal record ApplicationReviewsResponse(PageInfo PageInfo, IEnumerable<ApplicationReviewResponse> ApplicationReviews);
+    public record ApplicationReviewsResponse(PageInfo PageInfo, IEnumerable<ApplicationReviewResponse> ApplicationReviews);
 
     [HttpGet, Route(""),
      ProducesResponseType(StatusCodes.Status500InternalServerError),
@@ -62,13 +62,21 @@ public class ApplicationReviewController(
         [FromQuery] bool isAscending = false,
         CancellationToken token = default)
     {
-        logger.LogInformation("Recruit API: Received query to get all application reviews by account id : {AccountId}", accountId);
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get all application reviews by account id : {AccountId}", accountId);
 
-        var response = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
+            var response = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
-        var mappedResults = response.Items.Select(app => app.ToResponse());
+            var mappedResults = response.Items.Select(app => app.ToResponse());
 
-        return TypedResults.Ok(new ApplicationReviewsResponse(response.ToPageInfo(), mappedResults));
+            return TypedResults.Ok(new ApplicationReviewsResponse(response.ToPageInfo(), mappedResults));
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get all application reviews by account Id : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
     }
 
     [HttpGet, Route("~/api/provider/{ukprn:int}/[controller]s"),
@@ -83,13 +91,21 @@ public class ApplicationReviewController(
         [FromQuery] bool isAscending = false,
         CancellationToken token = default)
     {
-        logger.LogInformation("Recruit API: Received query to get all application reviews by ukprn : {ukprn}", ukprn);
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get all application reviews by ukprn : {ukprn}", ukprn);
 
-        var response = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
+            var response = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
 
-        var mappedResults = response.Items.Select(app => app.ToResponse());
+            var mappedResults = response.Items.Select(app => app.ToResponse());
 
-        return TypedResults.Ok(new ApplicationReviewsResponse(response.ToPageInfo(), mappedResults));
+            return TypedResults.Ok(new ApplicationReviewsResponse(response.ToPageInfo(), mappedResults));
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get all application reviews by ukprn : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
     }
 
     [HttpPut,

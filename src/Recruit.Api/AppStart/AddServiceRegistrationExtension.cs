@@ -27,7 +27,7 @@ public static class AddServiceRegistrationExtension
 
     public static void AddDatabaseRegistration(
         this IServiceCollection services,
-        RecruitApiConfiguration config,
+        ConnectionStrings config,
         string environmentName = null)
     {
         services.AddHttpContextAccessor();

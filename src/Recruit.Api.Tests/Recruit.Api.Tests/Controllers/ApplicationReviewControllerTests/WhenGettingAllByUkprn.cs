@@ -13,11 +13,11 @@ using SFA.DAS.Testing.AutoFixture;
 namespace Recruit.Api.Tests.Controllers.ApplicationReviewControllerTests;
 
 [TestFixture]
-public class WhenGettingAllByAccountId
+public class WhenGettingAllByUkprn
 {
     [Test, MoqAutoData]
-    public async Task GetAllByAccountId_ReturnsOk_WhenApplicationReviewsExist(
-        long accountId,
+    public async Task GetAllByUkprn_ReturnsOk_WhenApplicationReviewsExist(
+        int ukprn,
         int pageNumber,
         int pageSize,
         string sortColumn,
@@ -29,11 +29,11 @@ public class WhenGettingAllByAccountId
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>(mockResponse.ToList(), 1, pageNumber, pageSize);
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
+        providerMock.Setup(p => p.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
                     .ReturnsAsync(pagedResult);
 
         // Act
-        var result = await controller.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
+        var result = await controller.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
 
         // Assert
         result.Should().BeOfType<Ok<ApplicationReviewController.ApplicationReviewsResponse>>();
@@ -44,8 +44,8 @@ public class WhenGettingAllByAccountId
     }
 
     [Test, MoqAutoData]
-    public async Task GetAllByAccountId_Returns_Empty_WhenNoApplicationReviewsExist(
-        long accountId,
+    public async Task GetAllByUkprn_Returns_Empty_WhenNoApplicationReviewsExist(
+        int ukprn,
         int pageNumber,
         int pageSize,
         string sortColumn,
@@ -57,11 +57,11 @@ public class WhenGettingAllByAccountId
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
+        providerMock.Setup(p => p.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
                     .ReturnsAsync(pagedResult);
 
         // Act
-        var result = await controller.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
+        var result = await controller.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
 
         // Assert
         result.Should().BeOfType<Ok<ApplicationReviewController.ApplicationReviewsResponse>>();
@@ -73,7 +73,7 @@ public class WhenGettingAllByAccountId
 
     [Test, MoqAutoData]
     public async Task GetAllByAccountId_Returns_Exception_WhenInvalidAccountId(
-        long accountId,
+        int ukprn,
         int pageNumber,
         int pageSize,
         string sortColumn,
@@ -84,11 +84,11 @@ public class WhenGettingAllByAccountId
     {
         // Arrange
         // Arrange
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
+        providerMock.Setup(p => p.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
             .ThrowsAsync(new Exception());
 
         // Act
-        var result = await controller.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
+        var result = await controller.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
 
         // Assert
         result.Should().BeOfType<ProblemHttpResult>();

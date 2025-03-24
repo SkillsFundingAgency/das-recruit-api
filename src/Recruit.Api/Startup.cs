@@ -72,9 +72,9 @@ public class Startup
                 .AddDbContextCheck<RecruitDataContext>();
         }
 
-        services.Configure<RecruitApiConfiguration>(Configuration.GetSection(nameof(RecruitApiConfiguration)));
-        services.AddSingleton(cfg => cfg.GetService<IOptions<RecruitApiConfiguration>>()!.Value);
-        var candidateAccountConfiguration = Configuration.GetSection(nameof(RecruitApiConfiguration)).Get<RecruitApiConfiguration>();
+        services.Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)));
+        services.AddSingleton(cfg => cfg.GetService<IOptions<ConnectionStrings>>()!.Value);
+        var candidateAccountConfiguration = Configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
 
         services
             .AddMvc(o =>

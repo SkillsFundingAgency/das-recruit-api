@@ -1,6 +1,6 @@
 ﻿namespace Recruit.Api.Domain.Configuration;
 
-public class RecruitApiConfiguration
+public class ConnectionStrings
 {
     public required string SqlConnectionString { get; set; }
 }

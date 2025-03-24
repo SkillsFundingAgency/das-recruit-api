@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace SFA.DAS.Recruit.Api.Infrastructure;
 
 [ExcludeFromCodeCoverage]
-public abstract class JsonPatchDocumentFilter: IDocumentFilter
+public class JsonPatchDocumentFilter: IDocumentFilter
 {
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {

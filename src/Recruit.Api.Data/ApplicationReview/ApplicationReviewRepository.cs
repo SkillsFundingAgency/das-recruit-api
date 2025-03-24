@@ -45,8 +45,12 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
-    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, int pageNumber = 1, int pageSize = 10, string sortColumn = "",
-        bool isAscending = false, CancellationToken token = default)
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = "",
+        bool isAscending = false,
+        CancellationToken token = default)
     {
         var query = recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
