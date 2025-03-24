@@ -18,28 +18,36 @@ using SFA.DAS.Recruit.Api.Models.Responses;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
-[Route("api/[controller]s"), ApiController]
+[Route("api/[controller]s/{id:guid}"), ApiController]
 public class ApplicationReviewController(
     [FromServices] IApplicationReviewsProvider provider,
     ILogger<ApplicationReviewController> logger) : ControllerBase
 {
     internal record ApplicationReviewsResponse(PageInfo PageInfo, IEnumerable<ApplicationReviewResponse> ApplicationReviews);
 
-    [HttpGet, Route("{id:guid}"),
-     ProducesResponseType(StatusCodes.Status400BadRequest),
+    [HttpGet, Route(""),
+     ProducesResponseType(StatusCodes.Status500InternalServerError),
      ProducesResponseType(typeof(string), StatusCodes.Status404NotFound),
      ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
     public async Task<IResult> Get(
         [FromRoute, Required] Guid id, 
         CancellationToken token)
     {
-        logger.LogInformation("Recruit API: Received query to get application review by id : {id}", id);
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get application review by id : {Id}", id);
 
-        var response = await provider.GetById(id, token);
+            var response = await provider.GetById(id, token);
 
-        return response == null
-            ? Results.NotFound()
-            : TypedResults.Ok(response.ToResponse());
+            return response == null
+                ? Results.NotFound()
+                : TypedResults.Ok(response.ToResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get application review : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
     }
 
     [HttpGet, Route("~/api/employer/{accountId:long}/[controller]s"),
@@ -54,7 +62,7 @@ public class ApplicationReviewController(
         [FromQuery] bool isAscending = false,
         CancellationToken token = default)
     {
-        logger.LogInformation("Recruit API: Received query to get all application reviews by account id : {accountId}", accountId);
+        logger.LogInformation("Recruit API: Received query to get all application reviews by account id : {AccountId}", accountId);
 
         var response = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
@@ -85,7 +93,7 @@ public class ApplicationReviewController(
     }
 
     [HttpPut,
-     Route("{id:guid}"),
+     Route(""),
      ProducesResponseType(StatusCodes.Status400BadRequest),
      ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
     public async Task<IResult> Put(
@@ -117,7 +125,7 @@ public class ApplicationReviewController(
         }
     }
 
-    [HttpPatch, Route("{id:guid}"), ProducesResponseType(StatusCodes.Status400BadRequest),
+    [HttpPatch, Route(""), ProducesResponseType(StatusCodes.Status400BadRequest),
     ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
     public async Task<IResult> Patch([FromRoute] Guid id, [FromBody] JsonPatchDocument<PatchApplicationReview> applicationRequest)
     {

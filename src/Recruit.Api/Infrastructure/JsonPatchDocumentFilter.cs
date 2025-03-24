@@ -1,10 +1,12 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SFA.DAS.Recruit.Api.Infrastructure;
 
-public class JsonPatchDocumentFilter: IDocumentFilter
+[ExcludeFromCodeCoverage]
+public abstract class JsonPatchDocumentFilter: IDocumentFilter
 {
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
