@@ -51,9 +51,9 @@ namespace Recruit.Api.Database.Tests.DatabaseMock
             IQueryable<TEntity> data) where TEntity : class
         {
             mock.Setup(m => m.Provider).Returns(queryProvider);
-            mock.Setup(m => m.Expression).Returns(data?.Expression);
-            mock.Setup(m => m.ElementType).Returns(data?.ElementType);
-            mock.Setup(m => m.GetEnumerator()).Returns(() => data?.GetEnumerator());
+            mock.Setup(m => m.Expression).Returns(data.Expression);
+            mock.Setup(m => m.ElementType).Returns(data.ElementType);
+            mock.Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator);
         }
 
         private static void ConfigureAsyncEnumerableCalls<TEntity>(

@@ -16,15 +16,15 @@ namespace Recruit.Api.Database.Tests.DatabaseMock
         public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
             var expectedResultType = typeof(TResult).GetGenericArguments()[0];
-            var executionResult = typeof(IQueryProvider)
+            object? executionResult = typeof(IQueryProvider)
                 .GetMethods()
                 .First(method => method.Name == nameof(IQueryProvider.Execute) && method.IsGenericMethod)
                 .MakeGenericMethod(expectedResultType)
-                .Invoke(this, new object[] { expression });
+                .Invoke(this, [expression]);
 
             return (TResult)typeof(Task).GetMethod(nameof(Task.FromResult))
                 .MakeGenericMethod(expectedResultType)
-                .Invoke(null, new[] { executionResult });
+                .Invoke(null, [executionResult]);
         }
 
         public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)

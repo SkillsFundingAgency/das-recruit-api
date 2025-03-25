@@ -25,7 +25,7 @@ public class WhenApplicationReviewResponseToResponse
     {
         ApplicationReviewEntity? entity = null;
 
-        Action act = () => entity.ToResponse();
+        Action act = () => entity?.ToResponse();
 
         act.Should().Throw<NullReferenceException>();
     }

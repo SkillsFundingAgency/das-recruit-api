@@ -18,19 +18,20 @@ using SFA.DAS.Recruit.Api.Models.Responses;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
-[Route("api/[controller]s/{id:guid}"), ApiController]
-public class ApplicationReviewController(
-    [FromServices] IApplicationReviewsProvider provider,
+[Route("api/[controller]s/{id:guid}")]
+[ApiController]
+public class ApplicationReviewController([FromServices] IApplicationReviewsProvider provider,
     ILogger<ApplicationReviewController> logger) : ControllerBase
 {
     public record ApplicationReviewsResponse(PageInfo PageInfo, IEnumerable<ApplicationReviewResponse> ApplicationReviews);
 
-    [HttpGet, Route(""),
-     ProducesResponseType(StatusCodes.Status500InternalServerError),
-     ProducesResponseType(typeof(string), StatusCodes.Status404NotFound),
-     ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
+    [HttpGet]
+    [Route("")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
     public async Task<IResult> Get(
-        [FromRoute, Required] Guid id, 
+        [FromRoute] [Required] Guid id, 
         CancellationToken token)
     {
         try
@@ -50,12 +51,13 @@ public class ApplicationReviewController(
         }
     }
 
-    [HttpGet, Route("~/api/employer/{accountId:long}/[controller]s"),
-     ProducesResponseType(StatusCodes.Status400BadRequest),
-     ProducesResponseType(typeof(string), StatusCodes.Status404NotFound),
-     ProducesResponseType(typeof(ApplicationReviewsResponse), StatusCodes.Status200OK)]
+    [HttpGet]
+    [Route("~/api/employer/{accountId:long}/[controller]s")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApplicationReviewsResponse), StatusCodes.Status200OK)]
     public async Task<IResult> GetAllByAccountId(
-        [FromRoute, Required] long accountId,
+        [FromRoute] [Required] long accountId,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string sortColumn = "CreatedDate",
@@ -79,12 +81,13 @@ public class ApplicationReviewController(
         }
     }
 
-    [HttpGet, Route("~/api/provider/{ukprn:int}/[controller]s"),
-     ProducesResponseType(StatusCodes.Status400BadRequest),
-     ProducesResponseType(typeof(string), StatusCodes.Status404NotFound),
-     ProducesResponseType(typeof(ApplicationReviewsResponse), StatusCodes.Status200OK)]
+    [HttpGet]
+    [Route("~/api/provider/{ukprn:int}/[controller]s")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApplicationReviewsResponse), StatusCodes.Status200OK)]
     public async Task<IResult> GetAllByUkprn(
-        [FromRoute, Required] int ukprn,
+        [FromRoute] [Required] int ukprn,
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,
         [FromQuery] string sortColumn = "CreatedDate",
@@ -108,13 +111,14 @@ public class ApplicationReviewController(
         }
     }
 
-    [HttpPut,
-     Route(""),
-     ProducesResponseType(StatusCodes.Status400BadRequest),
-     ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
+    [HttpPut]
+    [Route("")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
     public async Task<IResult> Put(
-        [FromRoute, Required] Guid id,
-        [FromBody, Required] ApplicationReviewRequest request,
+        [FromRoute] [Required] Guid id,
+        [FromBody] [Required] ApplicationReviewRequest request,
         CancellationToken token)
     {
         try
@@ -141,8 +145,11 @@ public class ApplicationReviewController(
         }
     }
 
-    [HttpPatch, Route(""), ProducesResponseType(StatusCodes.Status400BadRequest),
-    ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
+    [HttpPatch]
+    [Route("")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
     public async Task<IResult> Patch([FromRoute] Guid id, [FromBody] JsonPatchDocument<PatchApplicationReview> applicationRequest)
     {
         try
