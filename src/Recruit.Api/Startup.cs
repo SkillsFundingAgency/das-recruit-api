@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
@@ -115,6 +116,7 @@ public class Startup
             opt.DefaultApiVersion = new ApiVersion(1, 0);
         });
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+        services.AddFluentValidationAutoValidation();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -74,14 +74,24 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
             return Tuple.Create(entity, true);
         }
 
+        applicationReview.CandidateId = entity.CandidateId;
+        applicationReview.Owner = entity.Owner;
+        applicationReview.Ukprn = entity.Ukprn;
+        applicationReview.AccountId = entity.AccountId;
+        applicationReview.AccountLegalEntityId = entity.AccountLegalEntityId;
+        applicationReview.VacancyReference = entity.VacancyReference;
+        applicationReview.ApplicationId = entity.ApplicationId;
+        applicationReview.AdditionalQuestion1 = entity.AdditionalQuestion1;
+        applicationReview.AdditionalQuestion2 = entity.AdditionalQuestion2;
+        applicationReview.EmployerFeedback = entity.EmployerFeedback;
         applicationReview.CandidateFeedback = entity.CandidateFeedback;
         applicationReview.DateSharedWithEmployer = entity.DateSharedWithEmployer;
         applicationReview.HasEverBeenEmployerInterviewing = entity.HasEverBeenEmployerInterviewing;
-        applicationReview.IsWithdrawn = entity.IsWithdrawn;
+        applicationReview.WithdrawnDate = entity.WithdrawnDate;
         applicationReview.ReviewedDate = entity.ReviewedDate;
         applicationReview.Status = entity.Status;
-        applicationReview.StatusUpdatedBy = entity.StatusUpdatedBy;
-        applicationReview.StatusUpdatedByUserId = entity.StatusUpdatedByUserId;
+        applicationReview.StatusUpdatedDate = entity.StatusUpdatedDate;
+        applicationReview.VacancyTitle = entity.VacancyTitle;
         applicationReview.SubmittedDate = entity.SubmittedDate;
         applicationReview.LegacyApplicationId = entity.LegacyApplicationId;
 

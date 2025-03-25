@@ -14,8 +14,6 @@ public class WhenEntityToApplicationReviewObject
     {
         var entity = request.ToEntity();
 
-        entity.Should().BeEquivalentTo(request, options => 
-            options.Excluding(x => x.Status));
-        entity.Status.Should().Be((short)request.Status);
+        entity.Should().BeEquivalentTo(request);
     }
 }

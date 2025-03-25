@@ -5,16 +5,21 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Recruit.Api.Application.Models.ApplicationReview;
 using Recruit.Api.Application.Providers;
 using Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Responses;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -150,7 +155,8 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
-    public async Task<IResult> Patch([FromRoute] Guid id, [FromBody] JsonPatchDocument<PatchApplicationReview> applicationRequest)
+    public async Task<IResult> Patch([FromRoute] Guid id,
+        [FromBody] JsonPatchDocument<ApplicationReview> applicationRequest)
     {
         try
         {

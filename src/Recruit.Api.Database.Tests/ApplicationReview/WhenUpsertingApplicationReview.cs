@@ -56,8 +56,8 @@ public class WhenUpsertingApplicationReview
         ApplicationReviewRepository repository)
     {
         //Arrange
-        updateEntity.Status = 2;
-        applicationEntity.Status = 0;
+        updateEntity.Status = "2";
+        applicationEntity.Status = "0";
         
         context.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(new List<ApplicationReviewEntity>{applicationEntity});
         
@@ -65,7 +65,7 @@ public class WhenUpsertingApplicationReview
         var actual = await repository.Upsert(updateEntity);
         
         //Assert
-        actual.Item1.Status.Should().Be(0);
+        actual.Item1.Status.Should().Be("0");
         actual.Item2.Should().BeFalse();
     }
 }

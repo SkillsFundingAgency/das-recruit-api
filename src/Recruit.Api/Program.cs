@@ -1,9 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using SFA.DAS.Recruit.Api;
 
-namespace Recruit.Api;
+namespace SFA.DAS.Recruit.Api;
 
 [ExcludeFromCodeCoverage]
 public static class Program

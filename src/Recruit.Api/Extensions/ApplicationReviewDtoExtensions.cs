@@ -1,5 +1,4 @@
 ﻿using Recruit.Api.Domain.Entities;
-using Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Responses;
 
@@ -12,20 +11,25 @@ public static class ApplicationReviewDtoExtensions
         return new ApplicationReviewResponse(entity.Id,
             entity.Ukprn,
             entity.AccountId,
+            entity.AccountLegalEntityId,
             entity.Owner,
             entity.CandidateFeedback,
+            entity.EmployerFeedback,
             entity.CandidateId,
             entity.CreatedDate,
             entity.DateSharedWithEmployer,
             entity.HasEverBeenEmployerInterviewing,
-            entity.IsWithdrawn,
+            entity.WithdrawnDate,
             entity.ReviewedDate,
             entity.SubmittedDate,
-            (ApplicationStatus)entity.Status,
-            entity.StatusUpdatedByUserId,
-            entity.StatusUpdatedBy,
+            entity.Status,
+            entity.StatusUpdatedDate,
             entity.VacancyReference,
-            entity.LegacyApplicationId);
+            entity.LegacyApplicationId,
+            entity.ApplicationId,
+            entity.AdditionalQuestion1,
+            entity.AdditionalQuestion2,
+            entity.VacancyTitle);
     }
 
     public static ApplicationReviewEntity ToEntity(this ApplicationReviewRequest request)
@@ -33,23 +37,27 @@ public static class ApplicationReviewDtoExtensions
         return new ApplicationReviewEntity
         {
             Id = request.Id,
+            Ukprn = request.Ukprn,
             AccountId = request.AccountId,
+            Owner = request.Owner,
             CandidateFeedback = request.CandidateFeedback,
             CandidateId = request.CandidateId,
             CreatedDate = request.CreatedDate,
             DateSharedWithEmployer = request.DateSharedWithEmployer,
             HasEverBeenEmployerInterviewing = request.HasEverBeenEmployerInterviewing,
-            IsWithdrawn = request.IsWithdrawn,
-            Owner = request.Owner,
             ReviewedDate = request.ReviewedDate,
-            Status = (short)request.Status,
-            StatusUpdatedBy = request.StatusUpdatedBy,
-            StatusUpdatedByUserId = request.StatusUpdatedByUserId,
+            Status = request.Status,
+            StatusUpdatedDate = request.StatusUpdatedDate,
             SubmittedDate = request.SubmittedDate,
-            Ukprn = request.Ukprn,
             VacancyReference = request.VacancyReference,
-            LegacyApplicationId = request.LegacyApplicationId
-
+            LegacyApplicationId = request.LegacyApplicationId,
+            ApplicationId = request.ApplicationId,
+            AdditionalQuestion1 = request.AdditionalQuestion1,
+            AdditionalQuestion2 = request.AdditionalQuestion2,
+            VacancyTitle = request.VacancyTitle,
+            AccountLegalEntityId = request.AccountLegalEntityId,
+            EmployerFeedback = request.EmployerFeedback,
+            WithdrawnDate = request.WithdrawnDate
         };
     }
 }

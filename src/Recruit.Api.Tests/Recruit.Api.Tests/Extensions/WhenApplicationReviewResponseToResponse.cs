@@ -1,7 +1,6 @@
 using FluentAssertions;
 using NUnit.Framework;
 using Recruit.Api.Domain.Entities;
-using Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -15,9 +14,7 @@ public class WhenApplicationReviewResponseToResponse
     {
         var response = entity.ToResponse();
 
-        response.Should().BeEquivalentTo(entity, options => 
-            options.Excluding(x => x.Status));
-        response.Status.Should().Be((ApplicationStatus)entity.Status);
+        response.Should().BeEquivalentTo(entity);
     }
 
     [Test]
@@ -25,8 +22,8 @@ public class WhenApplicationReviewResponseToResponse
     {
         ApplicationReviewEntity? entity = null;
 
-        Action act = () => entity?.ToResponse();
+        var result  = entity?.ToResponse();
 
-        act.Should().Throw<NullReferenceException>();
+        result.Should().BeNull();
     }
 }

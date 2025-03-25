@@ -11,13 +11,15 @@ using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Models.Responses;
 using SFA.DAS.Testing.AutoFixture;
 
+namespace Recruit.Api.Tests.Controllers.ApplicationReviewControllerTests;
+
 [TestFixture]
 public class WhenPatchingApplicationReview
 {
     [Test, MoqAutoData]
     public async Task Patch_ReturnsOk_WhenApplicationReviewIsPatched(
         Guid id,
-        JsonPatchDocument<PatchApplicationReview> patchDocument,
+        JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
         CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
@@ -39,7 +41,7 @@ public class WhenPatchingApplicationReview
     [Test, MoqAutoData]
     public async Task Patch_ReturnsNotFound_WhenApplicationReviewDoesNotExist(
         Guid id,
-        JsonPatchDocument<PatchApplicationReview> patchDocument,
+        JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
         CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
@@ -58,7 +60,7 @@ public class WhenPatchingApplicationReview
     [Test, MoqAutoData]
     public async Task Patch_ReturnsInternalServerException_WhenApplicationReview_Throws_Exception(
         Guid id,
-        JsonPatchDocument<PatchApplicationReview> patchDocument,
+        JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
         CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,

@@ -1,24 +1,27 @@
 ﻿using System;
-using Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.Models.Responses;
 
-public sealed record ApplicationReviewResponse(
-    Guid Id,
+public sealed record ApplicationReviewResponse(Guid Id,
     int Ukprn,
     long AccountId,
+    long AccountLegalEntityId,
     short Owner,
     string? CandidateFeedback,
+    string? EmployerFeedback,
     Guid CandidateId,
     DateTime CreatedDate,
     DateTime? DateSharedWithEmployer,
     bool HasEverBeenEmployerInterviewing,
-    bool IsWithdrawn,
+    DateTime? WithdrawnDate,
     DateTime? ReviewedDate,
     DateTime SubmittedDate,
-    ApplicationStatus Status,
-    Guid StatusUpdatedByUserId,
-    short? StatusUpdatedBy,
+    string Status,
+    DateTime? StatusUpdatedDate,
     long VacancyReference,
-    Guid LegacyApplicationId
+    Guid? LegacyApplicationId,
+    Guid? ApplicationId,
+    string? AdditionalQuestion1,
+    string? AdditionalQuestion2,
+    string VacancyTitle
 );

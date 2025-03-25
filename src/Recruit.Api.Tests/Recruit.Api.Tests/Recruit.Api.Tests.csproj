@@ -23,4 +23,8 @@
 		<ProjectReference Include="..\..\Recruit.Api\Recruit.Api.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Validators\" />
+	</ItemGroup>
+
 </Project>

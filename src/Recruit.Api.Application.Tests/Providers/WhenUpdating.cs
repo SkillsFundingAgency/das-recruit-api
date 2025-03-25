@@ -26,13 +26,13 @@ namespace Recruit.Api.Application.Tests.Providers
             // Arrange
             var patchDocument = new PatchApplication {
                 Id = id,
-                Patch = new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<PatchApplicationReview>()
+                Patch = new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<ApplicationReview>()
             };
             existingEntity.Id = id;
-            existingEntity.Status = 1;
+            existingEntity.Status = "1";
 
             updatedEntity.Id = id;
-            updatedEntity.Status = 2;
+            updatedEntity.Status = "2";
 
             repositoryMock.Setup(r => r.GetById(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existingEntity);
@@ -56,7 +56,7 @@ namespace Recruit.Api.Application.Tests.Providers
             // Arrange
             var patchDocument = new PatchApplication {
                 Id = id,
-                Patch = new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<PatchApplicationReview>()
+                Patch = new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<ApplicationReview>()
             };
             repositoryMock.Setup(r => r.GetById(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((ApplicationReviewEntity)null!);

@@ -2,23 +2,26 @@
 
 public class ApplicationReviewEntity
 {
-    public required Guid Id { get; set; }
-    public required int Ukprn { get; set; }
-    public required long AccountId { get; set; }
-    public required short Owner { get; set; }
-    public string? CandidateFeedback { get; set; }
-    public Guid CandidateId { get; set; }
-    public required DateTime CreatedDate { get; set; }
+    public bool HasEverBeenEmployerInterviewing { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public DateTime SubmittedDate { get; set; }
+    public DateTime WithdrawnDate { get; set; }
     public DateTime? DateSharedWithEmployer { get; set; }
-    public required bool HasEverBeenEmployerInterviewing { get; set; }
-    public required bool IsWithdrawn { get; set; }
-
     public DateTime? ReviewedDate { get; set; }
-    public required DateTime SubmittedDate { get; set; }
-
-    public required short Status { get; set; }
-    public Guid StatusUpdatedByUserId { get; set; }
-    public short? StatusUpdatedBy { get; set; }
-    public required long VacancyReference { get; set; }
-    public Guid LegacyApplicationId { get; set; }
+    public DateTime? StatusUpdatedDate { get; set; }
+    public Guid CandidateId { get; set; }
+    public Guid Id { get; set; }
+    public Guid? ApplicationId { get; set; }
+    public Guid? LegacyApplicationId { get; set; }
+    public int Ukprn { get; set; }
+    public long AccountId { get; set; }
+    public long AccountLegalEntityId { get; set; }
+    public long VacancyReference { get; set; }
+    public required string VacancyTitle { get; set; }
+    public short Owner { get; set; }
+    public string? AdditionalQuestion1 { get; set; }
+    public string? AdditionalQuestion2 { get; set; }
+    public string? CandidateFeedback { get; set; }
+    public string? EmployerFeedback { get; set; }
+    public required string Status { get; set; }
 }

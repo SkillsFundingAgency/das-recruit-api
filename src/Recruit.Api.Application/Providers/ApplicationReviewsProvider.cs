@@ -59,10 +59,8 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
         var entity = await repository.GetById(patchDocument.Id, token);
         if (entity == null) return null;
 
-        var patchedDoc = (PatchApplicationReview)entity;
-
+        var patchedDoc = (ApplicationReview)entity;
         patchDocument.Patch.ApplyTo(patchedDoc);
-        entity.Status = (short)patchedDoc.Status;
         return await repository.Update(entity, token);
     }
 

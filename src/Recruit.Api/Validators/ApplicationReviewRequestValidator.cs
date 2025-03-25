@@ -8,7 +8,6 @@ public class ApplicationReviewRequestValidator : AbstractValidator<ApplicationRe
     public ApplicationReviewRequestValidator()
     {
         RuleFor(req => req.Id).NotNull().NotEmpty();
-        RuleFor(req => req.Id).NotNull().NotEmpty();
         RuleFor(req => req.Ukprn).NotNull().NotEmpty();
         RuleFor(req => req.AccountId).NotNull().NotEmpty();
         RuleFor(req => req.Owner).NotNull().NotEmpty();
@@ -16,8 +15,11 @@ public class ApplicationReviewRequestValidator : AbstractValidator<ApplicationRe
         RuleFor(req => req.CreatedDate).NotNull().NotEmpty();
         RuleFor(req => req.SubmittedDate).NotNull().NotEmpty();
         RuleFor(req => req.Status).NotNull().NotEmpty();
-        RuleFor(req => req.StatusUpdatedByUserId).NotNull().NotEmpty();
         RuleFor(req => req.VacancyReference).NotNull().NotEmpty();
         RuleFor(req => req.LegacyApplicationId).NotNull().NotEmpty();
+        RuleFor(req => req.VacancyTitle).NotNull().NotEmpty();
+        RuleFor(req => req.AccountLegalEntityId).NotNull().
+            WithMessage("AccountLegalEntityId must be provided");
+        RuleFor(req => req.HasEverBeenEmployerInterviewing).NotNull().NotEmpty();
     }
 }
