@@ -25,6 +25,9 @@ namespace Recruit.Api.Database.Tests.ApplicationReview
             [Frozen] Mock<IRecruitDataContext> context,
             [Greedy] ApplicationReviewRepository repository)
         {
+            sortColumn = "CreatedDate";
+            pageNumber = 1;
+            pageSize = 10;
             foreach (var application in applicationsReviews)
             {
                 application.Ukprn = ukprn;

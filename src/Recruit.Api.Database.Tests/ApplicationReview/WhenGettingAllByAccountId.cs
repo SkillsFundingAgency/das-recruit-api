@@ -25,6 +25,9 @@ namespace Recruit.Api.Database.Tests.ApplicationReview
             [Frozen] Mock<IRecruitDataContext> context,
             [Greedy] ApplicationReviewRepository repository)
         {
+            sortColumn = "CreatedDate";
+            pageNumber = 1;
+            pageSize = 10;
             foreach (var application in applicationsReviews)
             {
                 application.AccountId = accountId;
@@ -38,7 +41,7 @@ namespace Recruit.Api.Database.Tests.ApplicationReview
 
             var actual = await repository.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
-            actual.Should().BeEquivalentTo(applicationsReviews);
+            actual.Items.Should().BeEquivalentTo(applicationsReviews);
         }
     }
 }
