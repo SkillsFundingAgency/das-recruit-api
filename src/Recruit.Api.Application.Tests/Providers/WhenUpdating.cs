@@ -30,9 +30,11 @@ namespace Recruit.Api.Application.Tests.Providers
             };
             existingEntity.Id = id;
             existingEntity.Status = "1";
+            existingEntity.EmployerFeedback = "";
 
             updatedEntity.Id = id;
             updatedEntity.Status = "2";
+            updatedEntity.EmployerFeedback = "Approved by Employer";
 
             repositoryMock.Setup(r => r.GetById(id, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(existingEntity);

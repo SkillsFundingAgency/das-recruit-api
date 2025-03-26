@@ -17,11 +17,11 @@ public class ApplicationReviewEntity
     public long AccountId { get; set; }
     public long AccountLegalEntityId { get; set; }
     public long VacancyReference { get; set; }
-    public required string VacancyTitle { get; set; }
+    public string VacancyTitle { get; set; }
     public short Owner { get; set; }
     public string? AdditionalQuestion1 { get; set; }
     public string? AdditionalQuestion2 { get; set; }
     public string? CandidateFeedback { get; set; }
     public string? EmployerFeedback { get; set; }
-    public required string Status { get; set; }
+    public string Status { get; set; }
 }

@@ -61,6 +61,12 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
 
         var patchedDoc = (ApplicationReview)entity;
         patchDocument.Patch.ApplyTo(patchedDoc);
+        
+        entity.Status = patchedDoc.Status;
+        entity.CandidateFeedback = patchedDoc.CandidateFeedback;
+        entity.EmployerFeedback = patchedDoc.EmployerFeedback;
+        entity.StatusUpdatedDate = patchedDoc.StatusUpdatedDate;
+
         return await repository.Update(entity, token);
     }
 
