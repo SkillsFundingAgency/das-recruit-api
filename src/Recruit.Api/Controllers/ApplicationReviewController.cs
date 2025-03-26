@@ -1,24 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Recruit.Api.Application.Models.ApplicationReview;
 using Recruit.Api.Application.Providers;
 using Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Responses;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace SFA.DAS.Recruit.Api.Controllers;

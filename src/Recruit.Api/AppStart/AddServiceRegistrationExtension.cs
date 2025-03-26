@@ -1,7 +1,5 @@
-﻿using System;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Recruit.Api.Application.Providers;
 using Recruit.Api.Data;
 using Recruit.Api.Data.ApplicationReview;

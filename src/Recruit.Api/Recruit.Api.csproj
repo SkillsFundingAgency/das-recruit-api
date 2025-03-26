@@ -7,6 +7,7 @@
     <AssemblyName>SFA.DAS.Recruit.Api</AssemblyName>
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
