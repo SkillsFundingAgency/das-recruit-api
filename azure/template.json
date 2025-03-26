@@ -83,7 +83,7 @@
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
-        "configNames": "SFA.DAS.Recruit.Api"
+        "configNames": "SFA.DAS.Recruit.Api_2.0"
     },
     "resources": [
         {
