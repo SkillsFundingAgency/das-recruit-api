@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.Recruit.Api.Models.Responses;
+﻿namespace SFA.DAS.Recruit.Api.Models.Responses;
 
 public sealed record ApplicationReviewResponse(Guid Id,
     int Ukprn,

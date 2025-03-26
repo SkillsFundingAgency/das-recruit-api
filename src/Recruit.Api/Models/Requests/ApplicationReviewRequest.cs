@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.Recruit.Api.Models.Requests;
+﻿namespace SFA.DAS.Recruit.Api.Models.Requests;
 
 public record ApplicationReviewRequest
 {
