@@ -12,7 +12,7 @@ CREATE TABLE dbo.[ApplicationReview] (
     [HasEverBeenEmployerInterviewing] BIT NOT NULL DEFAULT 0,
     [WithdrawnDate]                 DATETIME NULL,
     [ReviewedDate]                  DATETIME NULL,   
-    [SubmittedDate]                 DATETIME NOT NULL,   
+    [SubmittedDate]                 DATETIME NULL,   
     [Status]                        NVARCHAR(50) NOT NULL,
     [StatusUpdatedDate]             DATETIME NULL,
     [VacancyReference]              BIGINT NOT NULL,

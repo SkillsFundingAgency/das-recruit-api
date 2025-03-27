@@ -24,7 +24,7 @@ public class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<App
         builder.Property(x => x.HasEverBeenEmployerInterviewing).HasColumnName("HasEverBeenEmployerInterviewing").HasColumnType("bit").IsRequired().HasDefaultValue(0);
         builder.Property(x => x.WithdrawnDate).HasColumnName("WithdrawnDate").HasColumnType("DateTime");
         builder.Property(x => x.ReviewedDate).HasColumnName("ReviewedDate").HasColumnType("DateTime");
-        builder.Property(x => x.SubmittedDate).HasColumnName("SubmittedDate").HasColumnType("DateTime").IsRequired();
+        builder.Property(x => x.SubmittedDate).HasColumnName("SubmittedDate").HasColumnType("DateTime");
         builder.Property(x => x.Status).HasColumnName("Status").HasColumnType("nvarchar(50)").IsRequired();
         builder.Property(x => x.StatusUpdatedDate).HasColumnName("StatusUpdatedDate").HasColumnType("DateTime");
         builder.Property(x => x.VacancyReference).HasColumnName("VacancyReference").HasColumnType("bigint").IsRequired();
