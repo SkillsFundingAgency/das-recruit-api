@@ -1,10 +1,12 @@
+using Recruit.Api.Domain.Models;
+
 namespace SFA.DAS.Recruit.Api.Models.Requests;
 
 public class PutApplicationReviewRequest
 {
     public DateTime CreatedDate { get; set; }
-    public DateTime SubmittedDate { get; init; }
-    public DateTime WithdrawnDate { get; set; }
+    public DateTime? SubmittedDate { get; init; }
+    public DateTime? WithdrawnDate { get; set; }
     public DateTime? DateSharedWithEmployer { get; init; }
     public DateTime? ReviewedDate { get; init; }
     public DateTime? StatusUpdatedDate { get; init; }
@@ -16,7 +18,7 @@ public class PutApplicationReviewRequest
     public long AccountId { get; set; }
     public long AccountLegalEntityId { get; set; }
     public long VacancyReference { get; init; }
-    public short Owner { get; init; }
+    public OwnerType Owner { get; init; }
     public string Status { get; init; }
     public string VacancyTitle { get; init; }
     public string? AdditionalQuestion1 { get; init; }

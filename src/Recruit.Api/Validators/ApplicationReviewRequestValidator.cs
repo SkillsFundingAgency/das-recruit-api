@@ -15,13 +15,10 @@ public class PutApplicationReviewRequestValidator : AbstractValidator<PutApplica
         RuleFor(req => req.Owner).NotNull();
         RuleFor(req => req.CandidateId).NotNull().NotEmpty();
         RuleFor(req => req.CreatedDate).NotNull().NotEmpty();
-        RuleFor(req => req.SubmittedDate).NotNull().NotEmpty();
         RuleFor(req => req.Status).NotNull().NotEmpty();
         RuleFor(req => req.VacancyReference).NotNull().NotEmpty();
-        RuleFor(req => req.LegacyApplicationId).NotNull().NotEmpty();
         RuleFor(req => req.VacancyTitle).NotNull().NotEmpty();
-        RuleFor(req => req.AccountLegalEntityId).NotNull().
-            WithMessage("AccountLegalEntityId must be provided");
-        RuleFor(req => req.HasEverBeenEmployerInterviewing).NotNull().NotEmpty();
+        RuleFor(req => req.AccountLegalEntityId).NotNull().NotEmpty();
+        RuleFor(req => req.HasEverBeenEmployerInterviewing).NotNull();
     }
 }

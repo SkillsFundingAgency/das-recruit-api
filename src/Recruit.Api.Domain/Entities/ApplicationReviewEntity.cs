@@ -1,11 +1,13 @@
-﻿namespace Recruit.Api.Domain.Entities;
+﻿using Recruit.Api.Domain.Models;
+
+namespace Recruit.Api.Domain.Entities;
 
 public class ApplicationReviewEntity
 {
     public bool HasEverBeenEmployerInterviewing { get; set; }
     public DateTime CreatedDate { get; set; }
-    public DateTime SubmittedDate { get; set; }
-    public DateTime WithdrawnDate { get; set; }
+    public DateTime? SubmittedDate { get; set; }
+    public DateTime? WithdrawnDate { get; set; }
     public DateTime? DateSharedWithEmployer { get; set; }
     public DateTime? ReviewedDate { get; set; }
     public DateTime? StatusUpdatedDate { get; set; }
@@ -18,7 +20,7 @@ public class ApplicationReviewEntity
     public long AccountLegalEntityId { get; set; }
     public long VacancyReference { get; set; }
     public string VacancyTitle { get; set; }
-    public short Owner { get; set; }
+    public OwnerType Owner { get; set; }
     public string? AdditionalQuestion1 { get; set; }
     public string? AdditionalQuestion2 { get; set; }
     public string? CandidateFeedback { get; set; }

@@ -1,9 +1,11 @@
+using Recruit.Api.Domain.Models;
+
 namespace SFA.DAS.Recruit.Api.Models;
 
 public record ApplicationReview
 {
     public DateTime CreatedDate {get; init; }
-    public DateTime SubmittedDate {get; init; } 
+    public DateTime? SubmittedDate {get; init; } 
     public DateTime? DateSharedWithEmployer {get; init; }
     public DateTime? ReviewedDate {get; init; } 
     public DateTime? StatusUpdatedDate {get; init; } 
@@ -17,7 +19,7 @@ public record ApplicationReview
     public long AccountId {get; init; }
     public long AccountLegalEntityId {get; init; }
     public long VacancyReference {get; init; }
-    public short Owner {get; init; }
+    public OwnerType Owner {get; init; }
     public string Status {get; init; } 
     public string VacancyTitle {get; init; }
     public string? AdditionalQuestion1 {get; init; }
