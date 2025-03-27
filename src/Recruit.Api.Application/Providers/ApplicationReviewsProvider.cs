@@ -1,7 +1,7 @@
 ﻿using Recruit.Api.Data.ApplicationReview;
 using Recruit.Api.Domain.Entities;
 using Recruit.Api.Domain.Models;
-using Recruit.Api.Application.Models.ApplicationReview;
+using Recruit.Api.Data.Models;
 
 namespace Recruit.Api.Application.Providers;
 
@@ -23,9 +23,9 @@ public interface IApplicationReviewsProvider
         bool isAscending = false,
         CancellationToken token = default);
 
-    Task<ApplicationReviewEntity?> Update(PatchApplication patchDocument, CancellationToken token = default);
+    Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
 
-    Task<Tuple<ApplicationReviewEntity, bool>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
+    Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
 }
 
 public class ApplicationReviewsProvider(IApplicationReviewRepository repository) : IApplicationReviewsProvider
@@ -54,23 +54,12 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
         return await repository.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
-    public async Task<ApplicationReviewEntity?> Update(PatchApplication patchDocument, CancellationToken token = default)
+    public async Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default)
     {
-        var entity = await repository.GetById(patchDocument.Id, token);
-        if (entity == null) return null;
-
-        var patchedDoc = (ApplicationReview)entity;
-        patchDocument.Patch.ApplyTo(patchedDoc);
-        
-        entity.Status = patchedDoc.Status;
-        entity.CandidateFeedback = patchedDoc.CandidateFeedback;
-        entity.EmployerFeedback = patchedDoc.EmployerFeedback;
-        entity.StatusUpdatedDate = patchedDoc.StatusUpdatedDate;
-
         return await repository.Update(entity, token);
     }
 
-    public async Task<Tuple<ApplicationReviewEntity, bool>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default)
+    public async Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default)
     {
         return await repository.Upsert(entity, token);
     }

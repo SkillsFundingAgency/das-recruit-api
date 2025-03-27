@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SFA.DAS.Recruit.Api.Infrastructure;
+namespace SFA.DAS.Recruit.Api.Filters;
 
 [ExcludeFromCodeCoverage]
 public class JsonPatchDocumentFilter: IDocumentFilter

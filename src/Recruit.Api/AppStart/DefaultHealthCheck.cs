@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Recruit.Api.Data;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
+[ExcludeFromCodeCoverage]
 public class DefaultHealthCheck(IRecruitDataContext dbContext) : IHealthCheck
 {
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)

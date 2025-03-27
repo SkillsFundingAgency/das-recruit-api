@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
+using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Recruit.Api.Application.Models.ApplicationReview;
 using Recruit.Api.Application.Providers;
-using Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Extensions;
+using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Responses;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -17,13 +16,13 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 public class ApplicationReviewController([FromServices] IApplicationReviewsProvider provider,
     ILogger<ApplicationReviewController> logger) : ControllerBase
 {
-    public record ApplicationReviewsResponse(PageInfo PageInfo, IEnumerable<ApplicationReviewResponse> ApplicationReviews);
+    public record ApplicationReviewsResponse(PageInfo PageInfo, IEnumerable<ApplicationReview> ApplicationReviews);
 
     [HttpGet]
     [Route("")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetApplicationReviewResponse), StatusCodes.Status200OK)]
     public async Task<IResult> Get(
         [FromRoute] [Required] Guid id, 
         CancellationToken token)
@@ -36,7 +35,7 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
 
             return response == null
                 ? Results.NotFound()
-                : TypedResults.Ok(response.ToResponse());
+                : TypedResults.Ok(response.ToGetResponse());
         }
         catch (Exception e)
         {
@@ -64,7 +63,7 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
 
             var response = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
-            var mappedResults = response.Items.Select(app => app.ToResponse());
+            var mappedResults = response.Items.Select(app => app.ToApplicationReview());
 
             return TypedResults.Ok(new ApplicationReviewsResponse(response.ToPageInfo(), mappedResults));
         }
@@ -94,7 +93,7 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
 
             var response = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
 
-            var mappedResults = response.Items.Select(app => app.ToResponse());
+            var mappedResults = response.Items.Select(app => app.ToApplicationReview());
 
             return TypedResults.Ok(new ApplicationReviewsResponse(response.ToPageInfo(), mappedResults));
         }
@@ -109,61 +108,60 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
     [Route("")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PutApplicationReviewResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PutApplicationReviewResponse), StatusCodes.Status201Created)]
     public async Task<IResult> Put(
         [FromRoute] [Required] Guid id,
-        [FromBody] [Required] ApplicationReviewRequest request,
-        CancellationToken token)
+        [FromBody] [Required] PutApplicationReviewRequest request,
+        [FromServices] IValidator<PutApplicationReviewRequest> requestValidator,
+        CancellationToken cancellationToken)
     {
+        logger.LogInformation("Recruit API: Received command to put application review for Id : {id}", id);
         try
         {
-            logger.LogInformation("Recruit API: Received command to put application review for Id : {id}", id);
-
-            var response = await provider.Upsert(request.ToEntity(), token);
-
-            if (response.Item2)
+            var validationResult = await requestValidator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
             {
-                return TypedResults.Created($"{response.Item1.Id}", response.Item1.ToResponse());
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
 
-            return TypedResults.Ok(response.Item1.ToResponse());
-        }
-        catch (ValidationException e)
-        {
-            return Results.BadRequest(e.ValidationResult.ErrorMessage);
+            var result = await provider.Upsert(request.ToEntity(id), cancellationToken);
+            return result.Created
+                ? TypedResults.Created($"{result.Entity.Id}", result.Entity.ToPutResponse())
+                : TypedResults.Ok(result.Entity.ToPutResponse());
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Upsert ApplicationReview : An error occurred");
-            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+            logger.LogError(e, "Upsert ApplicationReview: An error occurred");
+            return TypedResults.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
 
     [HttpPatch]
     [Route("")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApplicationReviewResponse), StatusCodes.Status200OK)]
-    public async Task<IResult> Patch([FromRoute] Guid id,
-        [FromBody] JsonPatchDocument<ApplicationReview> applicationRequest)
+    [ProducesResponseType(typeof(PatchApplicationReviewResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> Patch(
+        [FromRoute] Guid id,
+        [FromBody] JsonPatchDocument<ApplicationReview> patchRequest,
+        CancellationToken cancellationToken)
     {
         try
         {
             logger.LogInformation("Recruit API: Received command to patch application review for Id : {id}", id);
 
-            var result = await provider.Update(new PatchApplication
+            var applicationReview = await provider.GetById(id, cancellationToken);
+            if (applicationReview is null)
             {
-                Id = id,
-                Patch = applicationRequest
-            });
-
-            return result == null 
-                ? Results.NotFound() 
-                : TypedResults.Ok(result.ToResponse());
-        }
-        catch (ValidationException e)
-        {
-            return Results.BadRequest(e.ValidationResult.ErrorMessage);
+                return TypedResults.NotFound();
+            }
+            
+            var entityPatchDocument = patchRequest.ToEntity();
+            entityPatchDocument.ApplyTo(applicationReview);
+            
+            await provider.Update(applicationReview, cancellationToken);
+            return TypedResults.Ok(applicationReview.ToPatchResponse());
         }
         catch (Exception e)
         {

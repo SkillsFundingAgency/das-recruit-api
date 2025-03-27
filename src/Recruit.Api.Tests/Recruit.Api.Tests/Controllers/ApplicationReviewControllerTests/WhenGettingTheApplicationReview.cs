@@ -30,9 +30,9 @@ public class WhenGettingTheApplicationReview
         var result = await controller.Get(id, token);
 
         // Assert
-        result.Should().BeOfType<Ok<ApplicationReviewResponse>>();
-        var okResult = result as Ok<ApplicationReviewResponse>;
-        okResult!.Value.Should().BeEquivalentTo(mockResponse.ToResponse());
+        result.Should().BeOfType<Ok<GetApplicationReviewResponse>>();
+        var okResult = result as Ok<GetApplicationReviewResponse>;
+        okResult!.Value.Should().BeEquivalentTo(mockResponse.ToPutResponse());
     }
 
     [Test, MoqAutoData]

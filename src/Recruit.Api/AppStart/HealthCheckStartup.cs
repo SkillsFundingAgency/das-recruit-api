@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using SFA.DAS.Api.Common.Infrastructure;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
+[ExcludeFromCodeCoverage]
 public static class HealthCheckStartup
 {
     public static IApplicationBuilder UseHealthChecks(this IApplicationBuilder app)

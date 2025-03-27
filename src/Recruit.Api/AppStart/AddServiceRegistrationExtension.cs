@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Diagnostics.CodeAnalysis;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Recruit.Api.Application.Providers;
 using Recruit.Api.Data;
@@ -9,12 +10,13 @@ using SFA.DAS.Recruit.Api.Validators;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
+[ExcludeFromCodeCoverage]
 public static class AddServiceRegistrationExtension
 {
     public static void AddApplicationDependencies(this IServiceCollection services)
     {
         // validators
-        services.AddScoped<IValidator<ApplicationReviewRequest>, ApplicationReviewRequestValidator>();
+        services.AddScoped<IValidator<PutApplicationReviewRequest>, PutApplicationReviewRequestValidator>();
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();

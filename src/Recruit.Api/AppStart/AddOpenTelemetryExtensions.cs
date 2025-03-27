@@ -1,7 +1,9 @@
-﻿using Azure.Monitor.OpenTelemetry.AspNetCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
+[ExcludeFromCodeCoverage]
 public static class AddOpenTelemetryExtensions
 {
     /// <summary>

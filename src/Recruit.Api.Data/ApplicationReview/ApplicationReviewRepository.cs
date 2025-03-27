@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Recruit.Api.Data.Models;
 using Recruit.Api.Domain.Entities;
 using Recruit.Api.Domain.Extensions;
 using Recruit.Api.Domain.Models;
@@ -20,8 +21,8 @@ public interface IApplicationReviewRepository
         string sortColumn = "",
         bool isAscending = false,
         CancellationToken token = default);
-    Task<Tuple<ApplicationReviewEntity, bool>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
-    Task<ApplicationReviewEntity> Update(ApplicationReviewEntity entity, CancellationToken token = default);
+    Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
+    Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
 }
 public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
 {
@@ -58,50 +59,30 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
-    public async Task<Tuple<ApplicationReviewEntity, bool>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default)
+    public async Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default)
     {
-        var applicationReview = await recruitDataContext.ApplicationReviewEntities
-            .SingleOrDefaultAsync(fil =>
-                fil.VacancyReference == entity.VacancyReference &&
-                fil.AccountId == entity.AccountId &&
-                fil.CandidateId == entity.CandidateId &&
-                fil.Owner == entity.Owner, token);
-
+        var applicationReview = await recruitDataContext.ApplicationReviewEntities.FirstOrDefaultAsync(fil => fil.Id == entity.Id, token);
         if (applicationReview == null)
         {
             await recruitDataContext.ApplicationReviewEntities.AddAsync(entity, token);
             await recruitDataContext.SaveChangesAsync(token);
-            return Tuple.Create(entity, true);
+            return UpsertResult.Create(entity, true);
         }
-
-        applicationReview.CandidateId = entity.CandidateId;
-        applicationReview.Owner = entity.Owner;
-        applicationReview.Ukprn = entity.Ukprn;
-        applicationReview.AccountId = entity.AccountId;
-        applicationReview.AccountLegalEntityId = entity.AccountLegalEntityId;
-        applicationReview.VacancyReference = entity.VacancyReference;
-        applicationReview.ApplicationId = entity.ApplicationId;
-        applicationReview.AdditionalQuestion1 = entity.AdditionalQuestion1;
-        applicationReview.AdditionalQuestion2 = entity.AdditionalQuestion2;
-        applicationReview.EmployerFeedback = entity.EmployerFeedback;
-        applicationReview.CandidateFeedback = entity.CandidateFeedback;
-        applicationReview.DateSharedWithEmployer = entity.DateSharedWithEmployer;
-        applicationReview.HasEverBeenEmployerInterviewing = entity.HasEverBeenEmployerInterviewing;
-        applicationReview.WithdrawnDate = entity.WithdrawnDate;
-        applicationReview.ReviewedDate = entity.ReviewedDate;
-        applicationReview.Status = entity.Status;
-        applicationReview.StatusUpdatedDate = entity.StatusUpdatedDate;
-        applicationReview.VacancyTitle = entity.VacancyTitle;
-        applicationReview.SubmittedDate = entity.SubmittedDate;
-        applicationReview.LegacyApplicationId = entity.LegacyApplicationId;
-
+        
+        recruitDataContext.Entry(applicationReview).CurrentValues.SetValues(entity);
         await recruitDataContext.SaveChangesAsync(token);
-        return Tuple.Create(applicationReview, false);
+        return UpsertResult.Create(entity, false);
     }
 
-    public async Task<ApplicationReviewEntity> Update(ApplicationReviewEntity entity, CancellationToken token = default)
+    public async Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default)
     {
-        recruitDataContext.ApplicationReviewEntities.Update(entity);
+        var applicationReview = await recruitDataContext.ApplicationReviewEntities.FirstOrDefaultAsync(fil => fil.Id == entity.Id, token);
+        if (applicationReview is null)
+        {
+            return null;
+        }
+        
+        recruitDataContext.Entry(applicationReview).CurrentValues.SetValues(entity);
         await recruitDataContext.SaveChangesAsync(token);
         return entity;
     }

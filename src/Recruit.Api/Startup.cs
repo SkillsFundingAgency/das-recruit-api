@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
-using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -14,7 +13,6 @@ using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Recruit.Api.AppStart;
 using SFA.DAS.Recruit.Api.Filters;
-using SFA.DAS.Recruit.Api.Infrastructure;
 
 namespace SFA.DAS.Recruit.Api;
 
@@ -109,7 +107,6 @@ public class Startup
             opt.DefaultApiVersion = new ApiVersion(1, 0);
         });
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-        services.AddFluentValidationAutoValidation();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
