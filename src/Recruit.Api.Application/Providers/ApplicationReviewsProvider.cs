@@ -1,7 +1,8 @@
 ﻿using Recruit.Api.Data.ApplicationReview;
-using Recruit.Api.Domain.Entities;
-using Recruit.Api.Domain.Models;
 using Recruit.Api.Data.Models;
+using Recruit.Api.Domain.Entities;
+using Recruit.Api.Domain.Enums;
+using Recruit.Api.Domain.Models;
 
 namespace Recruit.Api.Application.Providers;
 
@@ -22,6 +23,10 @@ public interface IApplicationReviewsProvider
         string sortColumn = "CreatedDate",
         bool isAscending = false,
         CancellationToken token = default);
+
+    Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationStatus status, CancellationToken token = default);
+
+    Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationStatus status, CancellationToken token = default);
 
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
 
@@ -54,6 +59,20 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
         return await repository.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
+    public async Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationStatus status, CancellationToken token = default)
+    {
+        var applicationReviews = await repository.GetAllByAccountId(accountId, nameof(status), token);
+
+        return GetDashboardModel(applicationReviews);
+    }
+
+    public async Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationStatus status, CancellationToken token = default)
+    {
+        var applicationReviews = await repository.GetAllByUkprn(ukprn, nameof(status), token);
+
+        return GetDashboardModel(applicationReviews);
+    }
+
     public async Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default)
     {
         return await repository.Update(entity, token);
@@ -62,5 +81,14 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
     public async Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default)
     {
         return await repository.Upsert(entity, token);
+    }
+
+    private static DashboardModel GetDashboardModel(List<ApplicationReviewEntity> applicationReviews)
+    {
+        return new DashboardModel
+        {
+            NewApplicationsCount = applicationReviews.Count(fil => fil.ReviewedDate == null),
+            EmployerReviewedApplicationsCount = applicationReviews.Count(fil => fil is { ReviewedDate: not null }),
+        };
     }
 }

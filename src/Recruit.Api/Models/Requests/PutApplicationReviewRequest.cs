@@ -1,4 +1,4 @@
-using Recruit.Api.Domain.Models;
+using Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.Models.Requests;
 

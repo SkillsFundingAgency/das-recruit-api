@@ -7,18 +7,21 @@
 
 &nbsp;
 
-This repository represents the codebase for an API designed for internal use within the Digital Apprenticeship Service. The API will be used by other Digital Apprenticeship Service systems to retrieve data related to apprenticeship vacancies sourced from the system known as [Recruit an Apprentice](https://github.com/SkillsFundingAgency/das-recruit). Recruit an Apprentice is used by employers and approved training providers to post apprenticeship opportunities across England. The code in this repository is to be maintained by the ESFA Vacancy Services team.
+This repository represents the codebase for an API designed for internal use within the Digital Apprenticeship Service. The API will be used by other Digital Apprenticeship Service systems to retrieve data related to apprenticeship vacancies sourced from the system known as [Recruit an Apprentice](https://github.com/SkillsFundingAgency/das-recruit). Recruit an Apprentice is used by employers and approved training providers to post apprenticeship opportunities across England. The code in this repository is to be maintained by the DfE Apprenticeship Services team. Recruit.Api is a .NET 8 based web API designed to manage application reviews. It provides endpoints for retrieving, updating, and managing application reviews for different accounts and providers. The solution includes unit tests to ensure the reliability and correctness of the API.
 
 &nbsp;
+
+## Features
+•	Retrieve application reviews by account ID or UKPRN.
+•	Get dashboard counts for application reviews.
+•	Update and upsert application reviews.
+•	Comprehensive unit tests using NUnit and Moq.
 
 ## Contents
 
 * [Endpoints](#endpoints)
     * [Sample API Responses](#sampleApiResponses)
-        * [Vacancy Summaries](#vacancySummariesSample)
-        * [Applicant Summaries](#applicantSummariesSample)
-        * [Employer Account Summary](#employerAccountSummarySample)
-        * [Organisation Status](#blockedProviderStatusSample)
+        * [Application Reviews](#applicationReviews)        
     * [Authorization](#apiAuth)
     * [Known consumers of this API](#knownApiConsumers)
 * [Development](#development)
@@ -42,124 +45,61 @@ Initially there are 5 endpoints that this API provides and they are all for retr
 If you work on the Digital Apprenticeship Service, you can view the following [Environments](https://skillsfundingagency.atlassian.net/wiki/spaces/RAAV2/pages/200245289/Environments) page for the Recruit system to find the environment url's for the Recruit API:
 
 https://skillsfundingagency.atlassian.net/wiki/spaces/RAAV2/pages/200245289/Environments
+https://skillsfundingagency.atlassian.net/wiki/spaces/NDL/pages/4882923755/Application+Review+Migration
 
 The URIs in the table below are relative to *https://localhost* for example purposes.
 
 Endpoint | HTTP request | Description
 ------------ | ------------- | -------------
-*Vacancy Summaries* | **GET**<br>/api/vacancies/?employerAccountId=?&legalEntityId=?&ukprn=?pageSize=25&pageNo=1 | EmployerAccountId is required, other parameters are optional. PageSize defaults to 25 and PageNo to 1.<br><br>Gets all summaries (paged where applicable) of Employer created apprenticeship vacancies for the Employer Account Id provided, optionally filtered by Legal Entity Id.<br><br>If specifying Ukprn then returns Provider created vacancies associated with the Provider and for the Employer Account Id specified, optionally filtered by Legal Entity Id.<br><br>The vacancies returned from this endpoint are ordered from oldest first.
-*Applicant Summaries* | **GET**<br>/api/vacancies/{vacancyReference}/applicants?outcome=? | VacancyReference is required. Outcome is optional and possible valid values for that parameter are 'Successful' or 'Unsuccessful'.<br><br>Gets all applicant summaries for the vacancy specified, optionally filtered by outcome. If no outcome is specified and there exists an applicant where the outcome is still to be decided, 'N/A' is returned as part of the `status` field.
-*Employer Summary* | **GET**<br>/api/employers/{employerAccountId} | EmployerAccountId is required.<br><br>Gets a breakdown of apprenticeship vacancies created by the Employer Account Id specified, broken down with a summary status count per legal entity.
-*Organisation Status (Provider)* | **GET**<br>/api/providers/{ukprn}/status | Ukprn is required.<br><br>If supplied a valid Ukprn, will return if the Ukprn is currently blocked from being able to operate on the Digital Apprenticeship Service Recruitment sub-system.
-*Organisation Status (Employer)* | **GET**<br>/api/employers/{employerAccountId}/status | EmployerAccountId is required.<br><br>If supplied a valid EmployerAccountId, will return if the employer account is currently blocked from being able to operate on the Digital Apprenticeship Service Recruitment sub-system.
+*Get Application Review by Id* | **GET**<br>/api/applicationReviews/{id} | Application Review Id is required.<br><br>This endpoint is a GET method in the ApplicationReviewController class.
+*Get all Application Reviews by account Id* | **GET**<br>/api/employer/{accountId}/applicationReviews?pageSize=25&pageNo=1 | AccountId is required, other parameters are optional. PageSize defaults to 10 and PageNo to 1.<br><br>The application reviews are returned from this endpoint are ordered from newest first.
+*Get all Application Reviews by ukprn* | **GET**<br>/api/provider/{ukprn}/applicationReviews?pageSize=25&pageNo=1 | ukprn is required, other parameters are optional. PageSize defaults to 10 and PageNo to 1.<br><br>The application reviews are returned from this endpoint are ordered from newest first.
+*Insert new Application Review* | **PUT**<br>/api/applicationReviews/{id} | Application Review Id is required.<br><br>This endpoint is a PUT method in the ApplicationReviewController class used to add/insert new ApplicationReview.
+*Upsert Application Review* | **PATCH**<br>/api/applicationReviews/{id} | Application Review Id is required.<br><br>This endpoint is a PATCH method in the ApplicationReviewController class used to update a ApplicationReview.
 
 <a id="sampleApiResponses"></a>
 ### Sample API Responses (not real data)
 
 <a id="vacancySummariesSample"></a>
-#### Vacancy Summaries
+#### Application Reviews
 ```json
 {
-    "vacancies": [
+    {
+      "pageInfo": {
+        "totalCount": 1,
+        "pageIndex": 1,
+        "pageSize": 25,
+        "totalPages": 1,
+        "hasPreviousPage": false,
+        "hasNextPage": false
+      },
+      "applicationReviews": [
         {
-            "employerAccountId": "ABC1D3",
-            "title": "Seafarer apprenticeship",
-            "vacancyReference": 1000004431,
-            "legalEntityId": 1234,
-            "legalEntityName": "Rosie's Boats",
-            "employerName": "Rosie's Boats Company",
-            "ukprn": 12345678,
-            "createdDate": "2019-06-12T10:35:10.457Z",
-            "status": "Live",
-            "closingDate": "2020-10-10T00:00:00Z",
-            "duration": 2,
-            "durationUnit": "Year",
-            "applicationMethod": "ThroughFindAnApprenticeship",
-            "programmeId": "34",
-            "startDate": "2020-11-10T00:00:00Z",
-            "trainingTitle": "Able seafarer (deck)",
-            "trainingType": "Standard",
-            "trainingLevel": "Intermediate",
-            "noOfNewApplications": 0,
-            "noOfSuccessfulApplications": 1,
-            "noOfUnsuccessfulApplications": 0,
-            "faaVacancyDetailUrl": "https://findapprenticeship.service.gov.uk/apprenticeship/1000004431",
-            "raaManageVacancyUrl": "https://recruit.apprenticeships.education.gov.uk/12345678/vacancies/eb0d5d5b-6cb9-469e-9423-bdc9db1ef5b9/manage/"
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "applicationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "vacancyTitle": "string",
+          "createdDate": "2025-03-28T13:54:01.960Z",
+          "submittedDate": "2025-03-28T13:54:01.960Z",
+          "dateSharedWithEmployer": "2025-03-28T13:54:01.960Z",
+          "reviewedDate": "2025-03-28T13:54:01.960Z",
+          "statusUpdatedDate": "2025-03-28T13:54:01.960Z",
+          "withdrawnDate": "2025-03-28T13:54:01.960Z",
+          "candidateId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "legacyApplicationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "hasEverBeenEmployerInterviewing": true,
+          "ukprn": 0,
+          "accountId": 0,
+          "accountLegalEntityId": 0,
+          "vacancyReference": 0,
+          "owner": "Employer",
+          "status": "string",
+          "additionalQuestion1": "string",
+          "additionalQuestion2": "string",
+          "candidateFeedback": "string",
+          "employerFeedback": "string"
         }
-    ],
-    "pageSize": 25,
-    "pageNo": 1,
-    "totalResults": 1,
-    "totalPages": 1
-}
-```
-
-<a id="applicantSummariesSample"></a>
-#### Applicant Summaries
-```json
-[
-    {
-        "applicantId": "a148b1ee-8949-4ae4-9b4d-c687753a5058",
-        "firstName": "Billy",
-        "lastName": "Dante",
-        "dateOfBirth": "1998-01-03T00:00:00Z",
-        "applicationStatus": "Unsuccessful"
-    },
-    {
-        "applicantId": "569dfc5a-7292-45bf-b792-5cc7f26683cc",
-        "firstName": "John",
-        "lastName": "Tree",
-        "dateOfBirth": "1988-01-01T00:00:00Z",
-        "applicationStatus": "Successful"
-    },
-    {
-        "applicantId": "da90181c-333e-4159-8ee5-65c9b99c161d",
-        "firstName": "Jill",
-        "lastName": "Hargreave",
-        "dateOfBirth": "1986-11-11T00:00:00Z",
-        "applicationStatus": "N/A"
+      ]
     }
-]
-```
-
-<a id="employerAccountSummarySample"></a>
-#### Employer Account Summary
-```json
-{
-    "employerAccountId": "ABC1D3",
-    "totalNoOfVacancies": 5,
-    "totalVacancyStatusCounts": {
-        "closed": 1,
-        "referred": 1,
-        "live": 1,
-        "draft": 2
-    },
-    "legalEntityVacancySummaries": [
-        {
-            "legalEntityId": 1234,
-            "legalEntityName": "Rosie's Boats",
-            "vacancyStatusCounts": {
-                "closed": 1,
-                "referred": 1,
-                "live": 1
-            }
-        },
-        {
-            "legalEntityId": 9876,
-            "legalEntityName": "ASCOT LTD",
-            "vacancyStatusCounts": {
-                "draft": 1
-            }
-        }
-    ]
-}
-```
-
-<a id="blockedProviderStatusSample"></a>
-#### Organisation Status
-```json
-{
-    "status": "Blocked"
 }
 ```
 
@@ -167,12 +107,6 @@ Endpoint | HTTP request | Description
 ### Authorization
 
 Requests to the API need to be authenticated and authorization is proved by submitting an OAuth Bearer Token in the HTTP header of the request. If you work on the Digital Apprenticeship Service you can request access keys from the Operations team for the environment you need.
-
-<a id="knownApiConsumers"></a>
-### Known consumers of this API:
- - [Manage Apprenticeships](https://github.com/SkillsFundingAgency/das-employerapprenticeshipsservice)
- - [Provider Apprenticeships](https://github.com/SkillsFundingAgency/das-providercommitments)
- - [Provider Relationships](https://github.com/SkillsFundingAgency/das-provider-relationships)
 
 &nbsp;
 
@@ -186,7 +120,7 @@ Note that for local running of the API, the authorization is disabled so no auth
 
 In order to run this project locally you will need the following:
 
-* [.NET Core SDK >= 2.2](https://www.microsoft.com/net/download/)
+* [.NET Core SDK >= 8](https://www.microsoft.com/net/download/)
 * (VS Code Only) [C# Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
 * Access to an Azure Cosmos or MongoDb server (emulated or hosted) hosting the DAS Recruit database.
 * Azure Storage Emulator (or [Azurite](https://github.com/Azure/Azurite) as an alternative)
@@ -197,13 +131,11 @@ In order to run this project locally you will need the following:
 
 1. Clone the [das-employer-config](https://github.com/SkillsFundingAgency/das-employer-config) repository.
 2. For the above repository create your own branch based off of master. You should be rebasing this new branch on the origin master regularly as other teams within DAS will be updating the repository and configuration files contained within. **DO NOT** push this branch onto Github, it is for local use to your machine only.
-3. Depending on if you are using the Cosmos emulator or Mongo to host the Recruit database you may need to change the connection string for the database in the file `/das-recruit-api/SFA.DAS.Recruit.Api.json`, once again on the branch you created in the previous step.
-4. Clone the [das-employer-config-updater](https://github.com/SkillsFundingAgency/das-employer-config-updater) repository.
-5. Run your local Azure Storage Emulator or [Azurite](https://github.com/Azure/Azurite) (in a container or natively) if you are using macOS.
-6. Navigate to the `/das-employer-config-updater/das-employer-config-updater` directory in a new terminal session and run the command `dotnet run`.
-7. Follow the instructions to import the config from the directory that you cloned the `das-employer-config repository` to and set your environment to `Development`.
+3. Depending on if you are using the Cosmos emulator or Mongo to host the Recruit database you may need to change the connection string for the database in the file `/das-recruit-api/SFA.DAS.Recruit.Api_2.0.json`, once again on the branch you created in the previous step.
+4. Run your local Azure Storage Emulator or [Azurite](https://github.com/Azure/Azurite) (in a container or natively) if you are using macOS.
+5. Follow the instructions to import the config from the directory that you cloned the `das-employer-config repository` to and set your environment to `Development`.
 
-> The two repositories above are private. If the links appear to be dead make sure that you are logged into GitHub with an account that has access to these i.e. that you are part of the [Skills Funding Agency Team](https://github.com/SkillsFundingAgency) organization.
+> The above repositorie is private. If the links appear to be dead make sure that you are logged into GitHub with an account that has access to these i.e. that you are part of the [Skills Funding Agency Team](https://github.com/SkillsFundingAgency) organization.
 
 Note that if you have used Azurite v2.7.0 or below, there is an issue in that you will be unable to edit values in a TableStorage row unless you update the row using code. It is for this reason that you use the branch created in step 2 above with the values specific to your local environment that you want and re-run the `das-employer-config-updater` as needed to replace the configurations stored in the `Configuration` storage table of your local storage account emulator.
 
@@ -249,7 +181,7 @@ If running from VS Code only, then the `launch.json` should be made to look like
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Recruit.Api/bin/Debug/netcoreapp2.2/SFA.DAS.Recruit.Api.dll",
+            "program": "${workspaceFolder}/Recruit.Api/bin/Debug/net8.0/SFA.DAS.Recruit.Api.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Recruit.Api",
             "stopAtEntry": false,

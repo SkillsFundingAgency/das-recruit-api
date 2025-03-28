@@ -1,10 +1,6 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Moq;
-using NUnit.Framework;
 using Recruit.Api.Application.Providers;
 using Recruit.Api.Data.Models;
 using Recruit.Api.Domain.Entities;

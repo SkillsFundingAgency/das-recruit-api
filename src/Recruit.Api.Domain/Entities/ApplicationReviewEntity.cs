@@ -1,4 +1,4 @@
-﻿using Recruit.Api.Domain.Models;
+﻿using Recruit.Api.Domain.Enums;
 
 namespace Recruit.Api.Domain.Entities;
 

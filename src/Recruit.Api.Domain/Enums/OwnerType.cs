@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Recruit.Api.Domain.Models;
+namespace Recruit.Api.Domain.Enums;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum OwnerType

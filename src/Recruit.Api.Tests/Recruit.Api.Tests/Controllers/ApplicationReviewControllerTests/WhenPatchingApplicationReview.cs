@@ -1,9 +1,5 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
-using Moq;
-using NUnit.Framework;
 using Recruit.Api.Application.Providers;
 using Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Controllers;

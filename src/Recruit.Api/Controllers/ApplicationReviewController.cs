@@ -4,6 +4,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Recruit.Api.Application.Providers;
+using Recruit.Api.Domain.Enums;
+using Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests;
@@ -75,6 +77,30 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
     }
 
     [HttpGet]
+    [Route("~/api/employer/{accountId:long}/[controller]s/dashboard")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(DashboardModel), StatusCodes.Status200OK)]
+    public async Task<IResult> GetDashboardCountByAccountId(
+        [FromRoute][Required] long accountId,
+        [FromQuery][Required] ApplicationStatus status,
+        CancellationToken token = default)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get dashboard stats by account id : {AccountId}", accountId);
+
+            var response = await provider.GetCountByAccountId(accountId, status, token);
+
+            return TypedResults.Ok(response);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to get dashboard stats by account id : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
     [Route("~/api/provider/{ukprn:int}/[controller]s")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -104,6 +130,30 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
         }
     }
 
+    [HttpGet]
+    [Route("~/api/provider/{ukprn:int}/[controller]s/dashboard")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(DashboardModel), StatusCodes.Status200OK)]
+    public async Task<IResult> GetDashboardCountByUkprn(
+        [FromRoute][Required] int ukprn,
+        [FromQuery][Required] ApplicationStatus status,
+        CancellationToken token = default)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get dashboard stats by ukprn : {ukprn}", ukprn);
+
+            var response = await provider.GetCountByUkprn(ukprn, status, token);
+
+            return TypedResults.Ok(response);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get dashboard stats by ukprn : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+    
     [HttpPut]
     [Route("")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
