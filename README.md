@@ -1,5 +1,6 @@
 # SFA.DAS.Recruit.Api
 
+|       |     |
 | :---: | --- |
 | Service |SFA.DAS.Recruit.Api|
 | Build | [![Build Status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status/das-recruit-api)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build/latest?definitionId=1631) |
