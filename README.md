@@ -1,8 +1,7 @@
 # SFA.DAS.Recruit.Api
 
-|       |     |
 | :---: | --- |
-|![crest](https://assets.publishing.service.gov.uk/government/assets/crests/org_crest_27px-916806dcf065e7273830577de490d5c7c42f36ddec83e907efe62086785f24fb.png)|SFA.DAS.Recruit.Api|
+| Service |SFA.DAS.Recruit.Api|
 | Build | [![Build Status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status/das-recruit-api)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build/latest?definitionId=1631) |
 
 &nbsp;
@@ -122,7 +121,7 @@ In order to run this project locally you will need the following:
 
 * [.NET Core SDK >= 8](https://www.microsoft.com/net/download/)
 * (VS Code Only) [C# Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)
-* Access to an Azure Cosmos or MongoDb server (emulated or hosted) hosting the DAS Recruit database.
+* Access to a SQL server (emulated or hosted) hosting the DAS Recruit database.
 * Azure Storage Emulator (or [Azurite](https://github.com/Azure/Azurite) as an alternative)
 * Azure Storage Explorer (Optional)
 
@@ -137,12 +136,14 @@ In order to run this project locally you will need the following:
 
 > The above repositorie is private. If the links appear to be dead make sure that you are logged into GitHub with an account that has access to these i.e. that you are part of the [Skills Funding Agency Team](https://github.com/SkillsFundingAgency) organization.
 
+&nbsp;
+
 Note that if you have used Azurite v2.7.0 or below, there is an issue in that you will be unable to edit values in a TableStorage row unless you update the row using code. It is for this reason that you use the branch created in step 2 above with the values specific to your local environment that you want and re-run the `das-employer-config-updater` as needed to replace the configurations stored in the `Configuration` storage table of your local storage account emulator.
 
 <a id="logging"></a>
 ### Logging
 
-The API logs messages to multiple targets. The primary target being logging to a local ELK stack via Redis configured via the `appSettings.Development.json`, `appSettings.json` and `nlog.config` files. The secondary target is to local file which will appear dated in the `bin/Debug/netcoreapp2.2/logs` directory after running.
+The API logs messages to multiple targets. The primary target being logging to a local ELK stack via Redis configured via the `appSettings.Development.json` and `appSettings.json` files. The secondary target is to local file which will appear dated in the `bin/Debug/net8.0/logs` directory after running.
 
 <a id="runningLocally"></a>
 ### Running
@@ -229,16 +230,17 @@ If using Visual Studio then the `launchSettings.json` file from Visual Studio or
 
 ```json
 {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "Recruit.Api": {
+    "https": {
       "commandName": "Project",
-      "launchBrowser": false,
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "",
+      "applicationUrl": "https://localhost:7288;http://localhost:5188",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "APPSETTING_ASPNETCORE_ENVIRONMENT": "Development",
-        "APPSETTING_ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;"
-      },
-      "applicationUrl": "http://localhost:5040/"
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }
@@ -257,7 +259,7 @@ If launching from outside Visual Studio and there exists the `Properties/launchS
 
 The browser will not launch but the app should be running and you can start making requests to the API using [cURL](https://curl.haxx.se/), [Postman](https://www.getpostman.com/), web browser or any other http request making tools. If you want a browser to launch you will need to modify your `launchSettings.json`/`launch.json` file to do so.
 
-To verify that the project is running with all its dependencies reachable, you can call the visit/call the https://localhost:5040/health url and expect a 200 HTTP response code. If for some reason, configuration or otherwise, the dependencies are not reachable the endpoint will return a 503 HTTP response code.
+To verify that the project is running with all its dependencies reachable, you can call the visit/call the https://localhost:7288/health url and expect a 200 HTTP response code. If for some reason, configuration or otherwise, the dependencies are not reachable the endpoint will return a 503 HTTP response code.
 
 &nbsp;
 
