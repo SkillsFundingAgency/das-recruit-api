@@ -1,7 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
+﻿using Newtonsoft.Json;
 using Recruit.Api.Application.Providers;
 using Recruit.Api.Data.ApplicationReview;
 using Recruit.Api.Data.Models;
@@ -15,11 +12,14 @@ namespace Recruit.Api.Application.Tests.Providers
     {
         [Test, MoqAutoData]
         public async Task Upsert_Returns_Repository_Value(
+            List<ApplicationReviewEntity> entities,
             ApplicationReviewEntity existingEntity,
             [Frozen] Mock<IApplicationReviewRepository> repositoryMock,
             [Greedy] ApplicationReviewsProvider provider)
         {
             // Arrange
+            var json = JsonConvert.SerializeObject(entities);
+
             var expectedTuple = UpsertResult.Create(existingEntity, true);
 
             repositoryMock

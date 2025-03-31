@@ -23,6 +23,8 @@ public interface IApplicationReviewRepository
         CancellationToken token = default);
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, string status, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, string status, CancellationToken token = default);
 }
 public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
 {
@@ -85,5 +87,21 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
         recruitDataContext.Entry(applicationReview).CurrentValues.SetValues(entity);
         await recruitDataContext.SaveChangesAsync(token);
         return entity;
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, string status, CancellationToken token = default)
+    {
+        return await recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(fil => fil.AccountId == accountId && fil.Status == status)
+            .ToListAsync(token);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, string status, CancellationToken token = default)
+    {
+        return await recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(fil => fil.Ukprn == ukprn && fil.Status == status)
+            .ToListAsync(token);
     }
 }

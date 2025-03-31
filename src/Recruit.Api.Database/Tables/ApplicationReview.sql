@@ -24,5 +24,6 @@ CREATE TABLE dbo.[ApplicationReview] (
     INDEX [IX_ApplicationReview_Ukprn] NONCLUSTERED(Ukprn),
     INDEX [IX_ApplicationReview_AccountId] NONCLUSTERED(AccountId),
     INDEX [IX_ApplicationReview_CandidateId] NONCLUSTERED(CandidateId),
-    INDEX [IX_ApplicationReview_VacancyRef] NONCLUSTERED(VacancyReference)
+    INDEX [IX_ApplicationReview_VacancyRef] NONCLUSTERED(VacancyReference),
+    INDEX [IX_ApplicationReview_Status] NONCLUSTERED(Status)
 )

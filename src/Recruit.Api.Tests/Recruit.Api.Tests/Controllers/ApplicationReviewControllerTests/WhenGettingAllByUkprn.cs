@@ -1,9 +1,5 @@
 using System.Net;
-using AutoFixture.NUnit3;
-using FluentAssertions;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Moq;
-using NUnit.Framework;
 using Recruit.Api.Application.Providers;
 using Recruit.Api.Domain.Entities;
 using Recruit.Api.Domain.Models;
@@ -40,7 +36,7 @@ public class WhenGettingAllByUkprn
         var okResult = result as Ok<ApplicationReviewController.ApplicationReviewsResponse>;
 
         okResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-        okResult.Value!.ApplicationReviews.Count().Should().BeGreaterThan(1);
+        okResult.Value!.ApplicationReviews.Count().Should().Be(mockResponse.Count);
     }
 
     [Test, MoqAutoData]
