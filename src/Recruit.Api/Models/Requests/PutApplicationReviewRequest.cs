@@ -4,7 +4,6 @@ namespace SFA.DAS.Recruit.Api.Models.Requests;
 
 public class PutApplicationReviewRequest
 {
-    public DateTime CreatedDate { get; set; }
     public DateTime? SubmittedDate { get; init; }
     public DateTime? WithdrawnDate { get; set; }
     public DateTime? DateSharedWithEmployer { get; init; }

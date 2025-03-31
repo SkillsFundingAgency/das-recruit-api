@@ -41,6 +41,6 @@ public class WhenValidatingPutApplicationReviewRequest
         
         // assert
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().HaveCount(8);
+        result.Errors.Should().HaveCount(7);
     }
 }

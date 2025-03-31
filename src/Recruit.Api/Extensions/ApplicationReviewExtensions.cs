@@ -131,7 +131,6 @@ public static class ApplicationReviewExtensions
             Owner = request.Owner,
             CandidateFeedback = request.CandidateFeedback,
             CandidateId = request.CandidateId,
-            CreatedDate = request.CreatedDate,
             DateSharedWithEmployer = request.DateSharedWithEmployer,
             HasEverBeenEmployerInterviewing = request.HasEverBeenEmployerInterviewing,
             ReviewedDate = request.ReviewedDate,

@@ -71,6 +71,7 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
             return UpsertResult.Create(entity, true);
         }
         
+        applicationReview.CreatedDate = DateTime.UtcNow;
         recruitDataContext.Entry(applicationReview).CurrentValues.SetValues(entity);
         await recruitDataContext.SaveChangesAsync(token);
         return UpsertResult.Create(entity, false);
