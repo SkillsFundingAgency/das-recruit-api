@@ -15,7 +15,6 @@ public class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<App
         builder.Property(x => x.Ukprn).HasColumnName("Ukprn").HasColumnType("int").IsRequired();
         builder.Property(x => x.AccountId).HasColumnName("AccountId").HasColumnType("bigint").IsRequired();
         builder.Property(x => x.AccountLegalEntityId).HasColumnName("AccountLegalEntityId").HasColumnType("bigint").IsRequired();
-        builder.Property(x => x.Owner).HasColumnName("Owner").HasColumnType("tinyint").IsRequired().HasConversion<int>();
         builder.Property(x => x.CandidateFeedback).HasColumnName("CandidateFeedback").HasColumnType("nvarchar(max)");
         builder.Property(x => x.EmployerFeedback).HasColumnName("EmployerFeedback").HasColumnType("nvarchar(max)");
         builder.Property(x => x.CandidateId).HasColumnName("CandidateId").HasColumnType("uniqueidentifier").IsRequired();

@@ -3,7 +3,6 @@ CREATE TABLE dbo.[ApplicationReview] (
     [Ukprn]                         int NOT NULL,
     [AccountId]                     bigint NOT NULL,
     [AccountLegalEntityId]          bigint NOT NULL,
-    [Owner]                         tinyint NOT NULL,
     [CandidateFeedback]             nvarchar(max) NULL,
     [EmployerFeedback]              nvarchar(max) NULL,
     [CandidateId]                   uniqueidentifier not NULL,
@@ -22,8 +21,8 @@ CREATE TABLE dbo.[ApplicationReview] (
     [AdditionalQuestion2]           NVARCHAR(500) NULL,
     [VacancyTitle]                  NVARCHAR(500) NOT NULL,
     CONSTRAINT [PK_ApplicationReview] PRIMARY KEY (Id),
-    INDEX [IX_ApplicationReview_Ukprn] NONCLUSTERED(Ukprn, Owner),
-    INDEX [IX_ApplicationReview_AccountId] NONCLUSTERED(AccountId, Owner),
+    INDEX [IX_ApplicationReview_Ukprn] NONCLUSTERED(Ukprn),
+    INDEX [IX_ApplicationReview_AccountId] NONCLUSTERED(AccountId),
     INDEX [IX_ApplicationReview_CandidateId] NONCLUSTERED(CandidateId),
     INDEX [IX_ApplicationReview_VacancyRef] NONCLUSTERED(VacancyReference),
     INDEX [IX_ApplicationReview_Status] NONCLUSTERED(Status)

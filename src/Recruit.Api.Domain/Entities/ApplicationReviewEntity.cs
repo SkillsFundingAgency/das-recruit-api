@@ -20,7 +20,6 @@ public class ApplicationReviewEntity
     public long AccountLegalEntityId { get; set; }
     public long VacancyReference { get; set; }
     public string VacancyTitle { get; set; }
-    public OwnerType Owner { get; set; }
     public string? AdditionalQuestion1 { get; set; }
     public string? AdditionalQuestion2 { get; set; }
     public string? CandidateFeedback { get; set; }

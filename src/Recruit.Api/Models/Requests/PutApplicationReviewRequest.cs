@@ -1,5 +1,3 @@
-using Recruit.Api.Domain.Enums;
-
 namespace SFA.DAS.Recruit.Api.Models.Requests;
 
 public class PutApplicationReviewRequest
@@ -17,7 +15,6 @@ public class PutApplicationReviewRequest
     public long AccountId { get; set; }
     public long AccountLegalEntityId { get; set; }
     public long VacancyReference { get; init; }
-    public OwnerType Owner { get; init; }
     public string Status { get; init; }
     public string VacancyTitle { get; init; }
     public string? AdditionalQuestion1 { get; init; }

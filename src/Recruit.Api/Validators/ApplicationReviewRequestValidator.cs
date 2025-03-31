@@ -12,7 +12,6 @@ public class PutApplicationReviewRequestValidator : AbstractValidator<PutApplica
         
         RuleFor(req => req.Ukprn).NotNull().NotEmpty();
         RuleFor(req => req.AccountId).NotNull().NotEmpty();
-        RuleFor(req => req.Owner).NotNull();
         RuleFor(req => req.CandidateId).NotNull().NotEmpty();
         RuleFor(req => req.Status).NotNull().NotEmpty();
         RuleFor(req => req.VacancyReference).NotNull().NotEmpty();
