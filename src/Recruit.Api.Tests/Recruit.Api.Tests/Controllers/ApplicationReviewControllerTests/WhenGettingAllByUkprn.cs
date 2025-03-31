@@ -36,7 +36,7 @@ public class WhenGettingAllByUkprn
         var okResult = result as Ok<ApplicationReviewController.ApplicationReviewsResponse>;
 
         okResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-        okResult.Value!.ApplicationReviews.Count().Should().BeGreaterThan(1);
+        okResult.Value!.ApplicationReviews.Count().Should().Be(mockResponse.Count);
     }
 
     [Test, MoqAutoData]
