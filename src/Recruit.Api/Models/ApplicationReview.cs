@@ -19,7 +19,6 @@ public record ApplicationReview
     public long AccountId {get; init; }
     public long AccountLegalEntityId {get; init; }
     public long VacancyReference {get; init; }
-    public OwnerType Owner {get; init; }
     public string Status {get; init; } 
     public string VacancyTitle {get; init; }
     public string? AdditionalQuestion1 {get; init; }
