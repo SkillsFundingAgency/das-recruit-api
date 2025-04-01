@@ -74,7 +74,6 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [ProducesResponseType(typeof(ApplicationReviewsStats), StatusCodes.Status200OK)]
         public async Task<IResult> GetCountByVacancyReferences(
             [FromRoute][Required] int ukprn,
-            [FromQuery][Required] ApplicationStatus status,
             [FromBody][Required] List<long> vacancyReferences,
             CancellationToken token = default)
         {
@@ -82,7 +81,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get vacancy references count by ukprn : {ukprn}", ukprn);
 
-                var response = await provider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, status, token);
+                var response = await provider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, token);
 
                 return TypedResults.Ok(response);
             }

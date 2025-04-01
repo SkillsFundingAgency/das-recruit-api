@@ -32,8 +32,8 @@ public interface IApplicationReviewsProvider
 
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
 
-    Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences, ApplicationStatus status, CancellationToken token = default);
-    Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences, ApplicationStatus status, CancellationToken token = default);
+    Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
 }
 
 public class ApplicationReviewsProvider(IApplicationReviewRepository repository) : IApplicationReviewsProvider
@@ -64,14 +64,14 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
 
     public async Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationStatus status, CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByAccountId(accountId, Enum.GetName(status)!, token);
+        var applicationReviews = await repository.GetAllByAccountId(accountId, status.ToString(), token);
 
         return GetDashboardModel(applicationReviews);
     }
 
     public async Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationStatus status, CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByUkprn(ukprn, Enum.GetName(status)!, token);
+        var applicationReviews = await repository.GetAllByUkprn(ukprn, status.ToString(), token);
 
         return GetDashboardModel(applicationReviews);
     }
@@ -86,10 +86,10 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
         return await repository.Upsert(entity, token);
     }
 
-    public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences, ApplicationStatus status,
+    public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences,
         CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByAccountId(accountId, vacancyReferences, Enum.GetName(status)!, token);
+        var applicationReviews = await repository.GetAllByAccountId(accountId, vacancyReferences, ApplicationStatus.Submitted.ToString(), token);
 
         return applicationReviews.GroupBy(fil => fil.VacancyReference)
             .Select(fil => new ApplicationReviewsStats {
@@ -99,10 +99,10 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
             }).ToList();
     }
 
-    public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences, ApplicationStatus status,
+    public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences,
         CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByUkprn(ukprn, vacancyReferences, Enum.GetName(status)!, token);
+        var applicationReviews = await repository.GetAllByUkprn(ukprn, vacancyReferences, ApplicationStatus.Submitted.ToString(), token);
 
         return applicationReviews.GroupBy(fil => fil.VacancyReference)
             .Select(fil => new ApplicationReviewsStats {

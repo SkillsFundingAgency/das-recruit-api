@@ -15,18 +15,17 @@ namespace Recruit.Api.Tests.Controllers.EmployerAccountControllerTests
         public async Task Then_The_Count_ReturnsOk(
             long accountId,
             List<long> vacancyReferences,
-            ApplicationStatus status,
             List<ApplicationReviewsStats> mockResponse,
             CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
             [Greedy] EmployerAccountController controller)
         {
             // Arrange
-            providerMock.Setup(p => p.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, status, token))
+            providerMock.Setup(p => p.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token))
                 .ReturnsAsync(mockResponse);
 
             // Act
-            var result = await controller.GetCountByVacancyReferences(accountId, status, vacancyReferences, token);
+            var result = await controller.GetCountByVacancyReferences(accountId, vacancyReferences, token);
 
             // Assert
             result.Should().BeOfType<Ok<List<ApplicationReviewsStats>>>();
@@ -40,7 +39,6 @@ namespace Recruit.Api.Tests.Controllers.EmployerAccountControllerTests
         public async Task Then_Returns_Exception(
             long accountId,
             List<long> vacancyReferences,
-            ApplicationStatus status,
             List<ApplicationReviewsStats> mockResponse,
             CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
@@ -48,11 +46,11 @@ namespace Recruit.Api.Tests.Controllers.EmployerAccountControllerTests
         {
             // Arrange
             // Arrange
-            providerMock.Setup(p => p.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, status, token))
+            providerMock.Setup(p => p.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token))
                 .ThrowsAsync(new Exception());
 
             // Act
-            var result = await controller.GetCountByVacancyReferences(accountId, status, vacancyReferences, token);
+            var result = await controller.GetCountByVacancyReferences(accountId, vacancyReferences, token);
 
             // Assert
             result.Should().BeOfType<ProblemHttpResult>();
