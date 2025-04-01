@@ -1,6 +1,4 @@
-﻿using Recruit.Api.Domain.Enums;
-
-namespace Recruit.Api.Domain.Entities;
+﻿namespace Recruit.Api.Domain.Entities;
 
 public class ApplicationReviewEntity
 {
