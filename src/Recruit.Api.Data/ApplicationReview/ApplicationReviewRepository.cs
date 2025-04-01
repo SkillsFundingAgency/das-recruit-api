@@ -66,12 +66,12 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
         var applicationReview = await recruitDataContext.ApplicationReviewEntities.FirstOrDefaultAsync(fil => fil.Id == entity.Id, token);
         if (applicationReview == null)
         {
+            entity.CreatedDate = DateTime.UtcNow;
             await recruitDataContext.ApplicationReviewEntities.AddAsync(entity, token);
             await recruitDataContext.SaveChangesAsync(token);
             return UpsertResult.Create(entity, true);
         }
-        
-        applicationReview.CreatedDate = DateTime.UtcNow;
+
         recruitDataContext.Entry(applicationReview).CurrentValues.SetValues(entity);
         await recruitDataContext.SaveChangesAsync(token);
         return UpsertResult.Create(entity, false);
