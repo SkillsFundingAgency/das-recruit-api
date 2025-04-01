@@ -58,7 +58,7 @@ public class WhenPuttingApplicationReview
         validator
             .Setup(x => x.ValidateAsync(request, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
-
+        
         // Act
         var result = await controller.Put(id, request, validator.Object, CancellationToken.None);
 

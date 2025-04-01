@@ -6,26 +6,26 @@ using Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace Recruit.Api.Tests.Controllers.ApplicationReviewControllerTests
+namespace Recruit.Api.Tests.Controllers.EmployerAccountControllerTests
 {
     [TestFixture]
-    public class WhenGettingDashboardCountByUkprn
+    public class WhenGettingDashboardCountByAccountId
     {
         [Test, MoqAutoData]
         public async Task Then_The_Count_ReturnsOk(
-            int ukprn,
+            long accountId,
             ApplicationStatus status,
             DashboardModel mockResponse,
             CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-            [Greedy] ApplicationReviewController controller)
+            [Greedy] EmployerAccountController controller)
         {
             // Arrange
-            providerMock.Setup(p => p.GetCountByUkprn(ukprn, status , token))
+            providerMock.Setup(p => p.GetCountByAccountId(accountId, status , token))
                 .ReturnsAsync(mockResponse);
 
             // Act
-            var result = await controller.GetDashboardCountByUkprn(ukprn, status, token);
+            var result = await controller.GetDashboardCountByAccountId(accountId, status, token);
 
             // Assert
             result.Should().BeOfType<Ok<DashboardModel>>();
@@ -37,20 +37,20 @@ namespace Recruit.Api.Tests.Controllers.ApplicationReviewControllerTests
 
         [Test, MoqAutoData]
         public async Task Then_Returns_Exception(
-            int ukprn,
+            long accountId,
             ApplicationStatus status,
             DashboardModel mockResponse,
             CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-            [Greedy] ApplicationReviewController controller)
+            [Greedy] EmployerAccountController controller)
         {
             // Arrange
             // Arrange
-            providerMock.Setup(p => p.GetCountByUkprn(ukprn, status, token))
+            providerMock.Setup(p => p.GetCountByAccountId(accountId, status, token))
                 .ThrowsAsync(new Exception());
 
             // Act
-            var result = await controller.GetDashboardCountByUkprn(ukprn, status, token);
+            var result = await controller.GetDashboardCountByAccountId(accountId, status, token);
 
             // Assert
             result.Should().BeOfType<ProblemHttpResult>();

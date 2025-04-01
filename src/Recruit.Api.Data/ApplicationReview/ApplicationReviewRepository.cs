@@ -25,6 +25,8 @@ public interface IApplicationReviewRepository
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, string status, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, string status, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, List<long> vacancyReferences, string status, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, List<long> vacancyReferences, string status, CancellationToken token = default);
 }
 public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
 {
@@ -103,6 +105,32 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
         return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
             .Where(fil => fil.Ukprn == ukprn && fil.Status == status)
+            .ToListAsync(token);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+        List<long> vacancyReferences,
+        string status,
+        CancellationToken token = default)
+    {
+        return await recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(fil => fil.AccountId == accountId
+                          && fil.Status == status
+                          && vacancyReferences.Contains(fil.VacancyReference))
+            .ToListAsync(token);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+        List<long> vacancyReferences,
+        string status,
+        CancellationToken token = default)
+    {
+        return await recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(fil => fil.Ukprn == ukprn 
+                          && fil.Status == status 
+                          && vacancyReferences.Contains(fil.VacancyReference))
             .ToListAsync(token);
     }
 }

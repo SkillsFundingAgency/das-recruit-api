@@ -31,6 +31,9 @@ public interface IApplicationReviewsProvider
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
 
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
+
+    Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences, ApplicationStatus status, CancellationToken token = default);
+    Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences, ApplicationStatus status, CancellationToken token = default);
 }
 
 public class ApplicationReviewsProvider(IApplicationReviewRepository repository) : IApplicationReviewsProvider
@@ -61,14 +64,14 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
 
     public async Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationStatus status, CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByAccountId(accountId, nameof(status), token);
+        var applicationReviews = await repository.GetAllByAccountId(accountId, Enum.GetName(status)!, token);
 
         return GetDashboardModel(applicationReviews);
     }
 
     public async Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationStatus status, CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByUkprn(ukprn, nameof(status), token);
+        var applicationReviews = await repository.GetAllByUkprn(ukprn, Enum.GetName(status)!, token);
 
         return GetDashboardModel(applicationReviews);
     }
@@ -81,6 +84,32 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
     public async Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default)
     {
         return await repository.Upsert(entity, token);
+    }
+
+    public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences, ApplicationStatus status,
+        CancellationToken token = default)
+    {
+        var applicationReviews = await repository.GetAllByAccountId(accountId, vacancyReferences, Enum.GetName(status)!, token);
+
+        return applicationReviews.GroupBy(fil => fil.VacancyReference)
+            .Select(fil => new ApplicationReviewsStats {
+                VacancyReference = fil.Key,
+                NewApplications = fil.Count(entity => entity.ReviewedDate == null),
+                TotalApplication = fil.Count()
+            }).ToList();
+    }
+
+    public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences, ApplicationStatus status,
+        CancellationToken token = default)
+    {
+        var applicationReviews = await repository.GetAllByUkprn(ukprn, vacancyReferences, Enum.GetName(status)!, token);
+
+        return applicationReviews.GroupBy(fil => fil.VacancyReference)
+            .Select(fil => new ApplicationReviewsStats {
+                VacancyReference = fil.Key,
+                NewApplications = fil.Count(entity => entity.ReviewedDate == null),
+                TotalApplication = fil.Count()
+            }).ToList();
     }
 
     private static DashboardModel GetDashboardModel(List<ApplicationReviewEntity> applicationReviews)

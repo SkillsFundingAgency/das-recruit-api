@@ -57,7 +57,7 @@ public class WhenGettingAllByUkprn
         foreach (var application in applicationsReviews)
         {
             application.Ukprn = ukprn;
-            application.Status = nameof(status);
+            application.Status = status.ToString();
         }
 
         var allApplications = new List<ApplicationReviewEntity>();
@@ -66,7 +66,35 @@ public class WhenGettingAllByUkprn
         context.Setup(x => x.ApplicationReviewEntities)
             .ReturnsDbSet(allApplications);
 
-        var actual = await repository.GetAllByUkprn(ukprn, nameof(status), token);
+        var actual = await repository.GetAllByUkprn(ukprn, status.ToString(), token);
+
+        actual.Should().BeEquivalentTo(applicationsReviews);
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public async Task Then_The_ApplicationReviews_Are_Returned_By_Ukprn(
+        int ukprn,
+        ApplicationStatus status,
+        long vacancyReference,
+        CancellationToken token,
+        List<ApplicationReviewEntity> applicationsReviews,
+        [Frozen] Mock<IRecruitDataContext> context,
+        [Greedy] ApplicationReviewRepository repository)
+    {
+        foreach (var application in applicationsReviews)
+        {
+            application.Ukprn = ukprn;
+            application.VacancyReference = vacancyReference;
+            application.Status = status.ToString();
+        }
+
+        var allApplications = new List<ApplicationReviewEntity>();
+        allApplications.AddRange(applicationsReviews);
+
+        context.Setup(x => x.ApplicationReviewEntities)
+            .ReturnsDbSet(allApplications);
+
+        var actual = await repository.GetAllByUkprn(ukprn, [vacancyReference], status.ToString(), token);
 
         actual.Should().BeEquivalentTo(applicationsReviews);
     }

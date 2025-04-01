@@ -4,9 +4,10 @@ using Recruit.Api.Application.Providers;
 using Recruit.Api.Domain.Entities;
 using Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Controllers;
+using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace Recruit.Api.Tests.Controllers.ApplicationReviewControllerTests;
+namespace Recruit.Api.Tests.Controllers.EmployerAccountControllerTests;
 
 [TestFixture]
 public class WhenGettingAllByAccountId
@@ -21,7 +22,7 @@ public class WhenGettingAllByAccountId
         List<ApplicationReviewEntity> mockResponse,
         CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] ApplicationReviewController controller)
+        [Greedy] EmployerAccountController controller)
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>(mockResponse.ToList(), 1, pageNumber, pageSize);
@@ -32,8 +33,8 @@ public class WhenGettingAllByAccountId
         var result = await controller.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
         // Assert
-        result.Should().BeOfType<Ok<ApplicationReviewController.ApplicationReviewsResponse>>();
-        var okResult = result as Ok<ApplicationReviewController.ApplicationReviewsResponse>;
+        result.Should().BeOfType<Ok<ApplicationReviewsResponse>>();
+        var okResult = result as Ok<ApplicationReviewsResponse>;
 
         okResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
         okResult.Value!.ApplicationReviews.Count().Should().Be(mockResponse.Count);
@@ -49,7 +50,7 @@ public class WhenGettingAllByAccountId
         List<ApplicationReviewEntity> mockResponse,
         CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] ApplicationReviewController controller)
+        [Greedy] EmployerAccountController controller)
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
@@ -60,8 +61,8 @@ public class WhenGettingAllByAccountId
         var result = await controller.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
         // Assert
-        result.Should().BeOfType<Ok<ApplicationReviewController.ApplicationReviewsResponse>>();
-        var okResult = result as Ok<ApplicationReviewController.ApplicationReviewsResponse>;
+        result.Should().BeOfType<Ok<ApplicationReviewsResponse>>();
+        var okResult = result as Ok<ApplicationReviewsResponse>;
 
         okResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
         okResult.Value!.ApplicationReviews.Count().Should().Be(0);
@@ -76,7 +77,7 @@ public class WhenGettingAllByAccountId
         bool isAscending,
         CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] ApplicationReviewController controller)
+        [Greedy] EmployerAccountController controller)
     {
         // Arrange
         // Arrange

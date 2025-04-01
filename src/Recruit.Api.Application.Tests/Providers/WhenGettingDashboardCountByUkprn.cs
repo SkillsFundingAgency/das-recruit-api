@@ -22,10 +22,10 @@ namespace Recruit.Api.Application.Tests.Providers
             status = ApplicationStatus.Submitted;
             foreach (var entity in entities)
             {
-                entity.Status = nameof(status);
+                entity.Status = Enum.GetName(status)!;
                 entity.ReviewedDate = null;
             }
-            repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, nameof(status), token))
+            repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, status.ToString(), token))
                 .ReturnsAsync(entities);
             // Act
             var result = await provider.GetCountByUkprn(ukprn, status, token);
@@ -33,7 +33,7 @@ namespace Recruit.Api.Application.Tests.Providers
             // Assert
             result.NewApplicationsCount.Should().Be(entities.Count);
             result.EmployerReviewedApplicationsCount.Should().Be(0);
-            repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, nameof(status), token), Times.Once);
+            repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, status.ToString(), token), Times.Once);
         }
 
         [Test, MoqAutoData]
@@ -49,10 +49,10 @@ namespace Recruit.Api.Application.Tests.Providers
             status = ApplicationStatus.Submitted;
             foreach (var entity in entities)
             {
-                entity.Status = nameof(status);
+                entity.Status = status.ToString();
                 entity.ReviewedDate = DateTime.Now;
             }
-            repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, nameof(status), token))
+            repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, status.ToString(), token))
                 .ReturnsAsync(entities);
             // Act
             var result = await provider.GetCountByUkprn(ukprn, status, token);
@@ -60,7 +60,7 @@ namespace Recruit.Api.Application.Tests.Providers
             // Assert
             result.NewApplicationsCount.Should().Be(0);
             result.EmployerReviewedApplicationsCount.Should().Be(entities.Count);
-            repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, nameof(status), token), Times.Once);
+            repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, status.ToString(), token), Times.Once);
         }
     }
 }
