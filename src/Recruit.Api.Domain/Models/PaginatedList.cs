@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Recruit.Api.Domain.Models;
+namespace SFA.DAS.Recruit.Api.Domain.Models;
 
 public class PaginatedList<T>(List<T> items, int count, int pageIndex, int pageSize)
 {

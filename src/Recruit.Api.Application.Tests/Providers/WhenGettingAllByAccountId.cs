@@ -1,7 +1,7 @@
-﻿using Recruit.Api.Application.Providers;
-using Recruit.Api.Data.ApplicationReview;
-using Recruit.Api.Domain.Entities;
-using Recruit.Api.Domain.Models;
+﻿using SFA.DAS.Recruit.Api.Application.Providers;
+using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace Recruit.Api.Application.Tests.Providers;

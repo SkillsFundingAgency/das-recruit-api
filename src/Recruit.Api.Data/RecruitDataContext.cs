@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Options;
-using Recruit.Api.Data.ApplicationReview;
-using Recruit.Api.Domain.Configuration;
-using Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+using SFA.DAS.Recruit.Api.Domain.Configuration;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 
-namespace Recruit.Api.Data;
+namespace SFA.DAS.Recruit.Api.Data;
 
 public interface IRecruitDataContext
 {

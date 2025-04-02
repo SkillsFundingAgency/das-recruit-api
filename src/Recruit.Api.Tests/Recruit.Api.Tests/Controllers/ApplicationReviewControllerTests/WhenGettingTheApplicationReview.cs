@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Recruit.Api.Application.Providers;
-using Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Controllers;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Recruit.Api.Models.Responses;
 using SFA.DAS.Testing.AutoFixture;

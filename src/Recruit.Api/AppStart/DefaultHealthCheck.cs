@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Recruit.Api.Data;
+using SFA.DAS.Recruit.Api.Data;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 

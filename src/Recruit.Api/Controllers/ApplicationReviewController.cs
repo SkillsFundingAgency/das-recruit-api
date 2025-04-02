@@ -3,7 +3,7 @@ using System.Net;
 using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Recruit.Api.Application.Providers;
+using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.Language.Flow;
-using Recruit.Api.Data;
+using SFA.DAS.Recruit.Api.Data;
 
 namespace Recruit.Api.Database.Tests.DatabaseMock
 {

@@ -1,4 +1,4 @@
-﻿namespace Recruit.Api.Domain.Models
+﻿namespace SFA.DAS.Recruit.Api.Domain.Models
 {
     public record ApplicationReviewsStats
     {

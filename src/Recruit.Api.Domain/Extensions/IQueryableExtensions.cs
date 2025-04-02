@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
-namespace Recruit.Api.Domain.Extensions;
+namespace SFA.DAS.Recruit.Api.Domain.Extensions;
 
 public static class QueryableExtensions
 {

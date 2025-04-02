@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Recruit.Api.Data.Models;
-using Recruit.Api.Domain.Entities;
-using Recruit.Api.Domain.Extensions;
-using Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Api.Data.Models;
+using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
-namespace Recruit.Api.Data.ApplicationReview;
+namespace SFA.DAS.Recruit.Api.Data.ApplicationReview;
 
 public interface IApplicationReviewRepository
 {

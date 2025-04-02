@@ -1,4 +1,4 @@
-namespace Recruit.Api.Data.Models;
+namespace SFA.DAS.Recruit.Api.Data.Models;
 
 public record UpsertResult<T>(T Entity, bool Created);
 

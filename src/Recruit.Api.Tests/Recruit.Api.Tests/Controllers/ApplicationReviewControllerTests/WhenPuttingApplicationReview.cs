@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Recruit.Api.Application.Providers;
-using Recruit.Api.Data.Models;
-using Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Controllers;
+using SFA.DAS.Recruit.Api.Data.Models;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Responses;
 using SFA.DAS.Testing.AutoFixture;

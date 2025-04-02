@@ -1,4 +1,4 @@
-﻿namespace Recruit.Api.Domain.Configuration;
+﻿namespace SFA.DAS.Recruit.Api.Domain.Configuration;
 
 public class ConnectionStrings
 {

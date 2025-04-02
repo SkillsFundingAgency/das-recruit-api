@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>SFA.DAS.Recruit.Api.Data</RootNamespace>
+    <AssemblyName>SFA.DAS.Recruit.Api.Data</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

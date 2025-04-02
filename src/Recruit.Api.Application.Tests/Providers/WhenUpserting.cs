@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Recruit.Api.Application.Providers;
-using Recruit.Api.Data.ApplicationReview;
-using Recruit.Api.Data.Models;
-using Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Application.Providers;
+using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+using SFA.DAS.Recruit.Api.Data.Models;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace Recruit.Api.Application.Tests.Providers

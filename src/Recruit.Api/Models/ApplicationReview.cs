@@ -1,5 +1,3 @@
-using Recruit.Api.Domain.Enums;
-
 namespace SFA.DAS.Recruit.Api.Models;
 
 public record ApplicationReview

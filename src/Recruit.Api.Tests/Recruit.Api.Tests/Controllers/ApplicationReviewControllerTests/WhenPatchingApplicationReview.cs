@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
-using Recruit.Api.Application.Providers;
-using Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Controllers;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Responses;
 using SFA.DAS.Testing.AutoFixture;

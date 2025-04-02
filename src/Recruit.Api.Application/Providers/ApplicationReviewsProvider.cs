@@ -1,10 +1,10 @@
-﻿using Recruit.Api.Data.ApplicationReview;
-using Recruit.Api.Data.Models;
-using Recruit.Api.Domain.Entities;
-using Recruit.Api.Domain.Enums;
-using Recruit.Api.Domain.Models;
+﻿using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+using SFA.DAS.Recruit.Api.Data.Models;
+using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
-namespace Recruit.Api.Application.Providers;
+namespace SFA.DAS.Recruit.Api.Application.Providers;
 
 public interface IApplicationReviewsProvider
 {

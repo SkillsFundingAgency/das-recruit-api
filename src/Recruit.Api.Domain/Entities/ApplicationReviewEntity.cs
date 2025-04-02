@@ -1,4 +1,4 @@
-﻿namespace Recruit.Api.Domain.Entities;
+﻿namespace SFA.DAS.Recruit.Api.Domain.Entities;
 
 public class ApplicationReviewEntity
 {

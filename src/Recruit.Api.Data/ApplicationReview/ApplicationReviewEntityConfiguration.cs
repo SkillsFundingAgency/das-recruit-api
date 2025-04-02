@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 
-namespace Recruit.Api.Data.ApplicationReview;
+namespace SFA.DAS.Recruit.Api.Data.ApplicationReview;
 
 public class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<ApplicationReviewEntity>
 {

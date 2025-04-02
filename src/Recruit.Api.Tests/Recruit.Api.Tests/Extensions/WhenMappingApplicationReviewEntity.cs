@@ -1,4 +1,4 @@
-﻿using Recruit.Api.Domain.Entities;
+﻿using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Testing.AutoFixture;
 
