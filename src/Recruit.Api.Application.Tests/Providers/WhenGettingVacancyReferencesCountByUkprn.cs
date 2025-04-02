@@ -7,11 +7,11 @@ using SFA.DAS.Testing.AutoFixture;
 namespace Recruit.Api.Application.Tests.Providers
 {
     [TestFixture]
-    public class WhenGettingVacancyReferencesCountByAccountId
+    public class WhenGettingVacancyReferencesCountByUkprn
     {
         [Test, MoqAutoData]
-        public async Task GettingVacancyReferencesCountByAccountId_ShouldReturnStats(
-            long accountId,
+        public async Task GettingVacancyReferencesCountByUkprn_ShouldReturnStats(
+            int ukprn,
             CancellationToken token,
             List<ApplicationReviewEntity> entities,
             [Frozen] Mock<IApplicationReviewRepository> repositoryMock,
@@ -29,11 +29,11 @@ namespace Recruit.Api.Application.Tests.Providers
                 new() { VacancyReference = 4, Status = ApplicationStatus.Withdrawn.ToString() }
             };
 
-            repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token))
+            repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, vacancyReferences, token))
                 .ReturnsAsync(applicationReviews);
 
             // Act
-            var result = await provider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token);
+            var result = await provider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, token);
 
             // Assert
             result.Should().HaveCount(4);
@@ -62,7 +62,7 @@ namespace Recruit.Api.Application.Tests.Providers
             result[3].UnsuccessfulApplications.Should().Be(0);
             result[3].Applications.Should().Be(0);
 
-            repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token), Times.Once);
+            repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, vacancyReferences, token), Times.Once);
         }
     }
 }

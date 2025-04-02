@@ -22,7 +22,7 @@ namespace Recruit.Api.Application.Tests.Providers
             status = ApplicationStatus.Submitted;
             foreach (var entity in entities)
             {
-                entity.Status = Enum.GetName(status)!;
+                entity.Status = status.ToString();
                 entity.ReviewedDate = null;
             }
             repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, status.ToString(), token))

@@ -74,7 +74,6 @@ namespace Recruit.Api.Database.Tests.ApplicationReview
         [Test, RecursiveMoqAutoData]
         public async Task Then_The_ApplicationReviews_Are_Returned_By_AccountId(
             long accountId,
-            ApplicationStatus status,
             long vacancyReference,
             CancellationToken token,
             List<ApplicationReviewEntity> applicationsReviews,
@@ -85,7 +84,6 @@ namespace Recruit.Api.Database.Tests.ApplicationReview
             {
                 application.AccountId = accountId;
                 application.VacancyReference = vacancyReference;
-                application.Status = status.ToString();
             }
 
             var allApplications = new List<ApplicationReviewEntity>();
@@ -94,7 +92,7 @@ namespace Recruit.Api.Database.Tests.ApplicationReview
             context.Setup(x => x.ApplicationReviewEntities)
                 .ReturnsDbSet(allApplications);
 
-            var actual = await repository.GetAllByAccountId(accountId, [vacancyReference], status.ToString(), token);
+            var actual = await repository.GetAllByAccountId(accountId, [vacancyReference], token);
 
             actual.Should().BeEquivalentTo(applicationsReviews);
         }

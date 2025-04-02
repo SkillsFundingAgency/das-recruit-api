@@ -2,8 +2,10 @@
 {
     public record ApplicationReviewsStats
     {
-        public long VacancyReference { get; set; }
-        public int NewApplications { get; set; }
-        public int TotalApplication { get; set; }
+        public long VacancyReference { get; init; }
+        public int NewApplications { get; init; }
+        public int SuccessfulApplications { get; init; }
+        public int UnsuccessfulApplications { get; init; }
+        public int Applications { get; init; }
     }
 }

@@ -89,27 +89,17 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
     public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences,
         CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByAccountId(accountId, vacancyReferences, ApplicationStatus.Submitted.ToString(), token);
+        var applicationReviews = await repository.GetAllByAccountId(accountId, vacancyReferences, token);
 
-        return applicationReviews.GroupBy(fil => fil.VacancyReference)
-            .Select(fil => new ApplicationReviewsStats {
-                VacancyReference = fil.Key,
-                NewApplications = fil.Count(entity => entity.ReviewedDate == null),
-                TotalApplication = fil.Count()
-            }).ToList();
+        return GetApplicationReviewsStats(applicationReviews);
     }
 
     public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences,
         CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByUkprn(ukprn, vacancyReferences, ApplicationStatus.Submitted.ToString(), token);
+        var applicationReviews = await repository.GetAllByUkprn(ukprn, vacancyReferences, token);
 
-        return applicationReviews.GroupBy(fil => fil.VacancyReference)
-            .Select(fil => new ApplicationReviewsStats {
-                VacancyReference = fil.Key,
-                NewApplications = fil.Count(entity => entity.ReviewedDate == null),
-                TotalApplication = fil.Count()
-            }).ToList();
+        return GetApplicationReviewsStats(applicationReviews);
     }
 
     private static DashboardModel GetDashboardModel(List<ApplicationReviewEntity> applicationReviews)
@@ -119,5 +109,20 @@ public class ApplicationReviewsProvider(IApplicationReviewRepository repository)
             NewApplicationsCount = applicationReviews.Count(fil => fil.ReviewedDate == null),
             EmployerReviewedApplicationsCount = applicationReviews.Count(fil => fil is { ReviewedDate: not null }),
         };
+    }
+
+    private static List<ApplicationReviewsStats> GetApplicationReviewsStats(List<ApplicationReviewEntity> applicationReviews)
+    {
+        return applicationReviews
+            .GroupBy(fil => fil.VacancyReference)
+            .Select(fil => new ApplicationReviewsStats
+            {
+                VacancyReference = fil.Key,
+                NewApplications = fil.Count(entity => entity.Status == ApplicationStatus.Submitted.ToString() && entity.ReviewedDate == null),
+                SuccessfulApplications = fil.Count(entity => entity.Status == ApplicationStatus.Successful.ToString()),
+                UnsuccessfulApplications = fil.Count(entity => entity.Status == ApplicationStatus.UnSuccessful.ToString()),
+                Applications = fil.Count(entity => entity.Status != ApplicationStatus.Withdrawn.ToString())
+            })
+            .ToList();
     }
 }
