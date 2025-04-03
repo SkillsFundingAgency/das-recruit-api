@@ -4,14 +4,14 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace Recruit.Api.Application.Tests.Providers;
+namespace Recruit.Api.Application.Tests.Providers.ApplicationReviewsProviderTests;
 
 [TestFixture]
-public class WhenGettingAllByUkprn
+public class WhenGettingAllByAccountId
 {
     [Test, MoqAutoData]
-    public async Task GettingAllByUkprn_ShouldReturnPaginatedList_WhenCalledWithValidParameters(
-        int ukprn,
+    public async Task GetAllByAccountId_ShouldReturnPaginatedList_WhenCalledWithValidParameters(
+        long accountId,
         int pageNumber,
         int pageSize,
         string sortColumn,
@@ -26,20 +26,20 @@ public class WhenGettingAllByUkprn
         isAscending = false;
 
         var expectedList = new PaginatedList<ApplicationReviewEntity>(entities, 10, pageNumber, pageSize);
-        repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
+        repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
             .ReturnsAsync(expectedList);
 
         // Act
-        var result = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
+        var result = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
         // Assert
         result.Should().BeEquivalentTo(expectedList);
-        repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token), Times.Once);
+        repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void GettingAllByUkprn_ShouldThrowException_WhenRepositoryThrowsException(
-        int ukprn,
+    public void GetAllByAccountId_ShouldThrowException_WhenRepositoryThrowsException(
+        long accountId,
         int pageNumber,
         int pageSize,
         string sortColumn,
@@ -52,12 +52,12 @@ public class WhenGettingAllByUkprn
         sortColumn = "CreatedDate";
         isAscending = false;
 
-        repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
+        repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
             .ThrowsAsync(new Exception("Repository exception"));
 
         // Act & Assert
-        Assert.ThrowsAsync<Exception>(() => provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token));
+        Assert.ThrowsAsync<Exception>(() => provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token));
 
-        repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token), Times.Once);
+        repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token), Times.Once);
     }
 }

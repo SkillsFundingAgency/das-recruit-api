@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Moq;
 using Moq.Language.Flow;
 using SFA.DAS.Recruit.Api.Data;
 
