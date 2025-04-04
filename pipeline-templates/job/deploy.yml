@@ -49,6 +49,7 @@ jobs:
             StorageAccountResourceGroup: $(SharedEnvResourceGroup)
             TargetFileName: '*.schema.json'
             TableName: Configuration
+            Version: '2.0'
             ConfigurationSecrets:
               RecruitApimSubscriptionKey: $(RecruitApimSubscriptionKey)
               AccountsApiClientSecret: $(AccountsApiClientSecret)
