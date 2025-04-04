@@ -29,8 +29,8 @@ public class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<App
         builder.Property(x => x.VacancyReference).HasColumnName("VacancyReference").HasColumnType("bigint").IsRequired();
         builder.Property(x => x.LegacyApplicationId).HasColumnName("LegacyApplicationId").HasColumnType("uniqueidentifier");
         builder.Property(x => x.ApplicationId).HasColumnName("ApplicationId").HasColumnType("uniqueidentifier");
-        builder.Property(x => x.AdditionalQuestion1).HasColumnName("AdditionalQuestion1").HasColumnType("nvarchar(500)");
-        builder.Property(x => x.AdditionalQuestion2).HasColumnName("AdditionalQuestion2").HasColumnType("nvarchar(500)");
+        builder.Property(x => x.AdditionalQuestion1).HasColumnName("AdditionalQuestion1").HasColumnType("nvarchar(max)");
+        builder.Property(x => x.AdditionalQuestion2).HasColumnName("AdditionalQuestion2").HasColumnType("nvarchar(max)");
         builder.Property(x => x.VacancyTitle).HasColumnName("VacancyTitle").HasColumnType("nvarchar(500)").IsRequired();
     }
 }

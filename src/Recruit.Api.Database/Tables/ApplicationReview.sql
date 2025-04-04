@@ -17,8 +17,8 @@ CREATE TABLE dbo.[ApplicationReview] (
     [VacancyReference]              BIGINT NOT NULL,
     [LegacyApplicationId]           uniqueidentifier NULL,
     [ApplicationId]                 uniqueidentifier NULL, --For V2 Applications
-    [AdditionalQuestion1]           NVARCHAR(500) NULL,
-    [AdditionalQuestion2]           NVARCHAR(500) NULL,
+    [AdditionalQuestion1]           NVARCHAR(max) NULL,
+    [AdditionalQuestion2]           NVARCHAR(max) NULL,
     [VacancyTitle]                  NVARCHAR(500) NOT NULL,
     CONSTRAINT [PK_ApplicationReview] PRIMARY KEY (Id),
     INDEX [IX_ApplicationReview_Ukprn] NONCLUSTERED(Ukprn),
