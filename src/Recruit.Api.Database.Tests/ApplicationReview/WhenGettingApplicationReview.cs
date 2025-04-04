@@ -1,8 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
-using Moq;
-using NUnit.Framework;
-using Recruit.Api.Database.Tests.DatabaseMock;
+﻿using Recruit.Api.Database.Tests.DatabaseMock;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Domain.Entities;
