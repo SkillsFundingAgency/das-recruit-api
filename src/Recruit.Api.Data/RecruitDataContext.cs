@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 
@@ -13,6 +14,7 @@ namespace SFA.DAS.Recruit.Api.Data;
 public interface IRecruitDataContext
 {
     DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
+    DbSet<ProhibitedContentEntity> ProhibitedContentEntities { get; set; }
     DatabaseFacade Database { get; }
     Task Ping(CancellationToken cancellationToken);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
@@ -24,6 +26,7 @@ public interface IRecruitDataContext
 public class RecruitDataContext : DbContext, IRecruitDataContext
 {
     public DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
+    public DbSet<ProhibitedContentEntity> ProhibitedContentEntities { get; set; }
 
     private readonly ConnectionStrings? _configuration;
     public RecruitDataContext() {}
@@ -58,7 +61,8 @@ public class RecruitDataContext : DbContext, IRecruitDataContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ApplicationReviewEntityConfiguration());
-            
+        modelBuilder.ApplyConfiguration(new ProhibitedContentEntityConfiguration());
+
         base.OnModelCreating(modelBuilder);
     }
 }

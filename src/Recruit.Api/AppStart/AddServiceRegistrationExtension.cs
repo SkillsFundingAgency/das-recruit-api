@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Validators;
@@ -23,6 +24,7 @@ public static class AddServiceRegistrationExtension
 
         // repositories
         services.AddScoped<IApplicationReviewRepository, ApplicationReviewRepository>();
+        services.AddScoped<IProhibitedContentRepository, ProhibitedContentRepository>();
     }
 
     public static void AddDatabaseRegistration(
