@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Recruit.Api.Models;
-using SFA.DAS.Recruit.Api.Models.Requests;
-using SFA.DAS.Recruit.Api.Models.Responses;
+using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
+using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 

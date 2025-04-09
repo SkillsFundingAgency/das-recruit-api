@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -15,6 +16,8 @@ public interface IRecruitDataContext
 {
     DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
     DbSet<ProhibitedContentEntity> ProhibitedContentEntities { get; set; }
+    DbSet<EmployerProfileEntity> EmployerProfileEntities { get; set; }
+    DbSet<EmployerProfileAddressEntity> EmployerProfileAddressEntities { get; set; }
     DatabaseFacade Database { get; }
     Task Ping(CancellationToken cancellationToken);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
@@ -27,6 +30,8 @@ public class RecruitDataContext : DbContext, IRecruitDataContext
 {
     public DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
     public DbSet<ProhibitedContentEntity> ProhibitedContentEntities { get; set; }
+    public DbSet<EmployerProfileEntity> EmployerProfileEntities { get; set; }
+    public DbSet<EmployerProfileAddressEntity> EmployerProfileAddressEntities { get; set; }
 
     private readonly ConnectionStrings? _configuration;
     public RecruitDataContext() {}
@@ -62,6 +67,8 @@ public class RecruitDataContext : DbContext, IRecruitDataContext
     {
         modelBuilder.ApplyConfiguration(new ApplicationReviewEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ProhibitedContentEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new EmployerProfileEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new EmployerProfileAddressEntityConfiguration());
 
         base.OnModelCreating(modelBuilder);
     }

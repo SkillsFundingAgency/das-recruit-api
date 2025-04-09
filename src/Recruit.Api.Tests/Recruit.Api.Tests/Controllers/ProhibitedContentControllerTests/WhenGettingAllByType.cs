@@ -18,7 +18,7 @@ public class WhenGettingAllByType
         ProhibitedContentType prohibitedContentType,
         List<ProhibitedContentEntity> prohibitedContentEntities,
         Mock<IProhibitedContentRepository> repository, 
-        ProhibitedContentController sut)
+        [Greedy] ProhibitedContentController sut)
     {
         // arrange
         repository

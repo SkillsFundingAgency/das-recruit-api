@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Recruit.Api.Models.Requests;
+﻿using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 using SFA.DAS.Recruit.Api.Validators;
 using SFA.DAS.Testing.AutoFixture;
 

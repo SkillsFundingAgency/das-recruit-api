@@ -1,5 +1,5 @@
 using SFA.DAS.Recruit.Api.Extensions;
-using SFA.DAS.Recruit.Api.Models.Requests;
+using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace Recruit.Api.Tests.Extensions;

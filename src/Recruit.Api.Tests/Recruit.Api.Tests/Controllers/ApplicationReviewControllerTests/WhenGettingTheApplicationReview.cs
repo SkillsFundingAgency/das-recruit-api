@@ -3,7 +3,7 @@ using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Extensions;
-using SFA.DAS.Recruit.Api.Models.Responses;
+using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace Recruit.Api.Tests.Controllers.ApplicationReviewControllerTests;

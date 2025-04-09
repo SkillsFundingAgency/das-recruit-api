@@ -5,7 +5,7 @@ using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Extensions;
-using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
 namespace SFA.DAS.Recruit.Api.Controllers
 {

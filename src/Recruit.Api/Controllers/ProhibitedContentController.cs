@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Models.Mappers;
 namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController, Route("api/[controller]/{contentType}")]
-public class ProhibitedContentController
+public class ProhibitedContentController : ControllerBase
 {
     [HttpGet]
     [Route("")]
