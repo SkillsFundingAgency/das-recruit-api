@@ -34,4 +34,12 @@
     <ProjectReference Include="..\Recruit.Api.Data\Recruit.Api.Data.csproj" />
     <ProjectReference Include="..\Recruit.Api.Domain\Recruit.Api.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+    <Content Update="appsettings.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
