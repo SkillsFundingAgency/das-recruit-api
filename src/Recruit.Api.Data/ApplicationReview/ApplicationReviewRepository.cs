@@ -74,7 +74,7 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
             return UpsertResult.Create(entity, true);
         }
 
-        recruitDataContext.Entry(applicationReview).CurrentValues.SetValues(entity);
+        recruitDataContext.SetValues(applicationReview, entity);
         await recruitDataContext.SaveChangesAsync(token);
         return UpsertResult.Create(entity, false);
     }
@@ -87,7 +87,7 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
             return null;
         }
         
-        recruitDataContext.Entry(applicationReview).CurrentValues.SetValues(entity);
+        recruitDataContext.SetValues(applicationReview, entity);
         await recruitDataContext.SaveChangesAsync(token);
         return entity;
     }

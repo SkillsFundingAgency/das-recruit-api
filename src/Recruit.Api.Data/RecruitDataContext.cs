@@ -21,8 +21,7 @@ public interface IRecruitDataContext
     DatabaseFacade Database { get; }
     Task Ping(CancellationToken cancellationToken);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
-
-    EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
+    void SetValues<TEntity>(TEntity to, TEntity from) where TEntity : class;
 }
 
 [ExcludeFromCodeCoverage]
@@ -46,6 +45,11 @@ public class RecruitDataContext : DbContext, IRecruitDataContext
         await Database
             .ExecuteSqlRawAsync("SELECT 1;", cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    public void SetValues<TEntity>(TEntity to, TEntity from) where TEntity : class
+    {
+        Entry(to).CurrentValues.SetValues(from);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

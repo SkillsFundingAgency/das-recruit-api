@@ -16,7 +16,7 @@ public class WhenDeletingAnEmployerProfile
     {
         // arrange
         repository
-            .Setup(x => x.DeleteAsync(accountLegalEntityId, token))
+            .Setup(x => x.DeleteOneAsync(accountLegalEntityId, token))
             .ReturnsAsync(false);
 
         // act
@@ -35,7 +35,7 @@ public class WhenDeletingAnEmployerProfile
     {
         // arrange
         repository
-            .Setup(x => x.DeleteAsync(accountLegalEntityId, token))
+            .Setup(x => x.DeleteOneAsync(accountLegalEntityId, token))
             .ReturnsAsync(true);
 
         // act

@@ -40,7 +40,7 @@ public class WhenPatchingAnEmployerProfile
         var result = await sut.PatchOne(repository.Object, accountLegalEntityId, patchRequest, token);
         
         // assert
-        repository.Verify(x => x.UpsertAsync(It.IsAny<EmployerProfileEntity>(), It.IsAny<CancellationToken>()), Times.Never());
+        repository.Verify(x => x.UpsertOneAsync(It.IsAny<EmployerProfileEntity>(), It.IsAny<CancellationToken>()), Times.Never());
         result.Should().BeOfType<NotFound>();
     }
     
@@ -62,14 +62,14 @@ public class WhenPatchingAnEmployerProfile
 
         var entity = _fixture.Create<EmployerProfileEntity>();
         repository.Setup(x => x.GetOneAsync(accountLegalEntityId, token)).ReturnsAsync(() => entity);
-        repository.Setup(x => x.UpsertAsync(It.IsAny<EmployerProfileEntity>(), It.IsAny<CancellationToken>())).ReturnsAsync(UpsertResult.Create(entity, false));
+        repository.Setup(x => x.UpsertOneAsync(It.IsAny<EmployerProfileEntity>(), It.IsAny<CancellationToken>())).ReturnsAsync(UpsertResult.Create(entity, false));
 
         // act
         var result = await sut.PatchOne(repository.Object, accountLegalEntityId, patchRequest, token);
         var patchResult = result as Ok<PatchEmployerProfileResponse>;
         
         // assert
-        repository.Verify(x => x.UpsertAsync(entity, token), Times.Once());
+        repository.Verify(x => x.UpsertOneAsync(entity, token), Times.Once());
         entity.TradingName.Should().Be(tradingName);
         entity.AboutOrganisation.Should().Be(aboutOrganisation);
         patchResult.Should().NotBeNull();

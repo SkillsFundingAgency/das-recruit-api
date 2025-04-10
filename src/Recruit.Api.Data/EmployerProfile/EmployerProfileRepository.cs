@@ -16,7 +16,7 @@ public class EmployerProfileRepository(IRecruitDataContext dataContext): IEmploy
             .FirstOrDefaultAsync(x => x.AccountLegalEntityId == accountLegalEntityId, cancellationToken);
     }
 
-    public async Task<UpsertResult<EmployerProfileEntity>> UpsertAsync(EmployerProfileEntity entity, CancellationToken cancellationToken)
+    public async Task<UpsertResult<EmployerProfileEntity>> UpsertOneAsync(EmployerProfileEntity entity, CancellationToken cancellationToken)
     {
         var existingEntity = await GetOneAsync(entity.AccountLegalEntityId, cancellationToken);
         if (existingEntity is null)
@@ -26,12 +26,12 @@ public class EmployerProfileRepository(IRecruitDataContext dataContext): IEmploy
             return UpsertResult.Create(entity, true);
         }
 
-        dataContext.Entry(existingEntity).CurrentValues.SetValues(entity);
+        dataContext.SetValues(existingEntity, entity);
         await dataContext.SaveChangesAsync(cancellationToken);
         return UpsertResult.Create(entity, false);
     }
 
-    public async Task<bool> DeleteAsync(long accountLegalEntityId, CancellationToken cancellationToken)
+    public async Task<bool> DeleteOneAsync(long accountLegalEntityId, CancellationToken cancellationToken)
     {
         var entity = await GetOneAsync(accountLegalEntityId, cancellationToken);
         if (entity is null)

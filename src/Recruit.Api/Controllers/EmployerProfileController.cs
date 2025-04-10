@@ -37,7 +37,7 @@ public class EmployerProfileController: ControllerBase
         [FromBody] CreateEmployerProfileRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await repository.UpsertAsync(request.ToDomain(accountLegalEntityId), cancellationToken);
+        var result = await repository.UpsertOneAsync(request.ToDomain(accountLegalEntityId), cancellationToken);
         
         return result.Created
             ? TypedResults.Created($"/api/employerprofiles/{result.Entity.AccountLegalEntityId}", result.Entity.ToPutResponse())
@@ -70,7 +70,7 @@ public class EmployerProfileController: ControllerBase
             return Results.BadRequest();
         }
 
-        await repository.UpsertAsync(employerProfile, cancellationToken);
+        await repository.UpsertOneAsync(employerProfile, cancellationToken);
         return TypedResults.Ok(employerProfile.ToPatchResponse());
     }
     
@@ -82,7 +82,7 @@ public class EmployerProfileController: ControllerBase
         [FromRoute] long accountLegalEntityId,
         CancellationToken cancellationToken)
     {
-        bool deleted = await repository.DeleteAsync(accountLegalEntityId, cancellationToken);
+        bool deleted = await repository.DeleteOneAsync(accountLegalEntityId, cancellationToken);
         
         return deleted
             ? Results.NoContent()

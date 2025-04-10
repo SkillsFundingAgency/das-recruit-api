@@ -4,6 +4,6 @@ namespace SFA.DAS.Recruit.Api.Data;
 
 public interface IWriteRepository<TEntity, in TKey>
 {
-    Task<UpsertResult<TEntity>> UpsertAsync(TEntity entity, CancellationToken cancellationToken);
-    Task<bool> DeleteAsync(TKey key, CancellationToken cancellationToken);
+    Task<UpsertResult<TEntity>> UpsertOneAsync(TEntity entity, CancellationToken cancellationToken);
+    Task<bool> DeleteOneAsync(TKey key, CancellationToken cancellationToken);
 }

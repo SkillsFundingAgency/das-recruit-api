@@ -33,7 +33,7 @@ public class WhenPuttingAnEmployerProfile
         // arrange
         var entity = _fixture.Create<EmployerProfileEntity>();
         repository
-            .Setup(x => x.UpsertAsync(It.IsAny<EmployerProfileEntity>(), token))
+            .Setup(x => x.UpsertOneAsync(It.IsAny<EmployerProfileEntity>(), token))
             .ReturnsAsync(UpsertResult.Create(entity, false));
 
         // act
@@ -41,7 +41,7 @@ public class WhenPuttingAnEmployerProfile
         var payload = (result as Ok<PutEmployerProfileResponse>)?.Value;
         
         // assert
-        repository.Verify(x => x.UpsertAsync(ItIs.EquivalentTo(request.ToDomain(accountLegalEntityId)), token), Times.Once);
+        repository.Verify(x => x.UpsertOneAsync(ItIs.EquivalentTo(request.ToDomain(accountLegalEntityId)), token), Times.Once);
         payload.Should().NotBeNull();
         payload.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers());
     }
@@ -57,7 +57,7 @@ public class WhenPuttingAnEmployerProfile
         // arrange
         var entity = _fixture.Create<EmployerProfileEntity>();
         repository
-            .Setup(x => x.UpsertAsync(It.IsAny<EmployerProfileEntity>(), token))
+            .Setup(x => x.UpsertOneAsync(It.IsAny<EmployerProfileEntity>(), token))
             .ReturnsAsync(UpsertResult.Create(entity, true));
 
         // act
@@ -65,7 +65,7 @@ public class WhenPuttingAnEmployerProfile
         var createdResult = result as Created<PutEmployerProfileResponse>;
         
         // assert
-        repository.Verify(x => x.UpsertAsync(ItIs.EquivalentTo(request.ToDomain(accountLegalEntityId)), token), Times.Once);
+        repository.Verify(x => x.UpsertOneAsync(ItIs.EquivalentTo(request.ToDomain(accountLegalEntityId)), token), Times.Once);
         createdResult.Should().NotBeNull();
         createdResult.Value.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers());
         createdResult.Location.Should().Be($"/api/employerprofiles/{entity.AccountLegalEntityId}");

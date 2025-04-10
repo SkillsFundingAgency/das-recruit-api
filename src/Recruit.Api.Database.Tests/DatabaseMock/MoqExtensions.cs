@@ -29,6 +29,11 @@ namespace Recruit.Api.Database.Tests.DatabaseMock
         {
             return data.AsQueryable().BuildMockDbSet().Object;
         }
+        
+        public static Mock<DbSet<TEntity>> BuildDbSetMock<TEntity>(this IEnumerable<TEntity> data) where TEntity : class
+        {
+            return data.AsQueryable().BuildMockDbSet();
+        }
 
         public static IReturnsResult<IRecruitDataContext> ReturnsDbSet<TEntity>(
             this ISetup<IRecruitDataContext, DbSet<TEntity>> setupResult,

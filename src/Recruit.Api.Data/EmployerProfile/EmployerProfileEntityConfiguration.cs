@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 
 namespace SFA.DAS.Recruit.Api.Data.EmployerProfile;
 
+[ExcludeFromCodeCoverage]
 public class EmployerProfileEntityConfiguration : IEntityTypeConfiguration<EmployerProfileEntity>
 {
     public void Configure(EntityTypeBuilder<EmployerProfileEntity> builder)
