@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Extensions;
+using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfile;
 using SFA.DAS.Recruit.Api.Models.Responses.EmployerProfile;
@@ -13,7 +15,7 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 public class EmployerProfileController: ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(GetEmployerProfileResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(EmployerProfile), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> GetOne(
         [FromServices] IEmployerProfileRepository repository,
@@ -21,7 +23,7 @@ public class EmployerProfileController: ControllerBase
         CancellationToken cancellationToken)
     {
         var result = await repository.GetOneAsync(accountLegalEntityId, cancellationToken);
-        
+
         return result is null
             ? Results.NotFound()
             : TypedResults.Ok(result.ToGetResponse());
@@ -30,15 +32,15 @@ public class EmployerProfileController: ControllerBase
     [HttpPut]
     [ProducesResponseType(typeof(PutEmployerProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PutEmployerProfileResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]   
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]   
     public async Task<IResult> PutOne(
         [FromServices] IEmployerProfileRepository repository,
         [FromRoute] long accountLegalEntityId,
-        [FromBody] CreateEmployerProfileRequest request,
+        [FromBody] PutEmployerProfileRequest request,
         CancellationToken cancellationToken)
     {
         var result = await repository.UpsertOneAsync(request.ToDomain(accountLegalEntityId), cancellationToken);
-        
+
         return result.Created
             ? TypedResults.Created($"/api/employerprofiles/{result.Entity.AccountLegalEntityId}", result.Entity.ToPutResponse())
             : TypedResults.Ok(result.Entity.ToPutResponse());
@@ -46,7 +48,7 @@ public class EmployerProfileController: ControllerBase
     
     [HttpPatch]
     [ProducesResponseType(typeof(PatchEmployerProfileResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> PatchOne(
         [FromServices] IEmployerProfileRepository repository,
@@ -59,15 +61,16 @@ public class EmployerProfileController: ControllerBase
         {
             return Results.NotFound();
         }
-        
-        var entityPatchDocument = patchRequest.ToDomain<EmployerProfileEntity>();
+
+        var patchDocument = patchRequest.ToDomain<EmployerProfileEntity>();
         try
         {
-            entityPatchDocument.ApplyTo(employerProfile);
+            patchDocument.ThrowIfOperationsOn([nameof(EmployerProfileEntity.AccountId)]);
+            patchDocument.ApplyTo(employerProfile);
         }
-        catch (JsonPatchException)
+        catch (JsonPatchException ex)
         {
-            return Results.BadRequest();
+            return TypedResults.ValidationProblem(ex.ToProblemsDictionary());
         }
 
         await repository.UpsertOneAsync(employerProfile, cancellationToken);
@@ -83,7 +86,7 @@ public class EmployerProfileController: ControllerBase
         CancellationToken cancellationToken)
     {
         bool deleted = await repository.DeleteOneAsync(accountLegalEntityId, cancellationToken);
-        
+
         return deleted
             ? Results.NoContent()
             : Results.NotFound();

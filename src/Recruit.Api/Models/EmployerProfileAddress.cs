@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Recruit.Api.Models;
 
-public record struct Address(
+public record EmployerProfileAddress(
     int Id,
     string AddressLine1,
     string? AddressLine2,

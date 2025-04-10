@@ -27,6 +27,7 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IApplicationReviewRepository, ApplicationReviewRepository>();
         services.AddScoped<IProhibitedContentRepository, ProhibitedContentRepository>();
         services.AddScoped<IEmployerProfileRepository, EmployerProfileRepository>();
+        services.AddScoped<IEmployerProfileAddressRepository, EmployerProfileAddressRepository>();
     }
 
     public static void AddDatabaseRegistration(

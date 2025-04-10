@@ -25,7 +25,7 @@ public class WhenPuttingAnEmployerProfile
     public async Task Then_The_Profile_Is_Updated(
         long accountLegalEntityId,
         Mock<IEmployerProfileRepository> repository,
-        CreateEmployerProfileRequest request,
+        PutEmployerProfileRequest request,
         [Greedy] EmployerProfileController sut,
         CancellationToken token)
     {
@@ -49,7 +49,7 @@ public class WhenPuttingAnEmployerProfile
     public async Task Then_The_Profile_Is_Created(
         long accountLegalEntityId,
         Mock<IEmployerProfileRepository> repository,
-        CreateEmployerProfileRequest request,
+        PutEmployerProfileRequest request,
         [Greedy] EmployerProfileController sut,
         CancellationToken token)
     {

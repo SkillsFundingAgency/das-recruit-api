@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
@@ -18,5 +19,19 @@ public static class JsonPatchDocumentExtensions
             
         result.Operations.AddRange(operations);
         return result;
+    }
+
+    public static void ThrowIfOperationsOn<TEntity>(this JsonPatchDocument<TEntity> document, IEnumerable<string> paths) where TEntity : class
+    {
+        ArgumentNullException.ThrowIfNull(document, nameof(document));
+
+        foreach (string path in paths)
+        {
+            var operation = document.Operations.FirstOrDefault(x => x.path.Equals($"/{path}", StringComparison.OrdinalIgnoreCase));
+            if (operation is not null)
+            {
+                throw new JsonPatchException(new JsonPatchError(null, operation, $"Operations on the specified path '{operation.path}' are not permitted."));
+            }
+        }
     }
 }

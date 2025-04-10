@@ -2,7 +2,7 @@
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Models.Responses.EmployerProfile;
+using SFA.DAS.Recruit.Api.Models;
 
 namespace Recruit.Api.UnitTests.Controllers.EmployerProfileControllerTests;
 
@@ -33,7 +33,7 @@ public class WhenGettingAnEmployerProfile
 
         // act
         var result = await sut.GetOne(repository.Object, accountLegalEntityId, token);
-        var payload = (result as Ok<GetEmployerProfileResponse>)?.Value;
+        var payload = (result as Ok<EmployerProfile>)?.Value;
         
         // assert
         payload.Should().NotBeNull();

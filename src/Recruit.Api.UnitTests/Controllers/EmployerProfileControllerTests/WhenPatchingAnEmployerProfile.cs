@@ -55,8 +55,8 @@ public class WhenPatchingAnEmployerProfile
         // arrange
         var patchRequest = new JsonPatchDocument();
         patchRequest.Operations.AddRange([
-            new Operation<PatchEmployerProfileRequest>("replace", "/AboutOrganisation", null, aboutOrganisation),
-            new Operation<PatchEmployerProfileRequest>("replace", "/TradingName", null, tradingName),
+            new Operation("replace", "/AboutOrganisation", null, aboutOrganisation),
+            new Operation("replace", "/TradingName", null, tradingName),
         ]);
 
         var entity = _fixture.Create<EmployerProfileEntity>();
@@ -84,7 +84,7 @@ public class WhenPatchingAnEmployerProfile
     {
         // arrange
         var patchRequest = new JsonPatchDocument();
-        patchRequest.Operations.AddRange([new Operation<PatchEmployerProfileRequest>("replace", "/Foo", null, "A new value")]);
+        patchRequest.Operations.AddRange([new Operation("replace", "/Foo", null, "A new value")]);
 
         var entity = _fixture.Create<EmployerProfileEntity>();
         repository.Setup(x => x.GetOneAsync(accountLegalEntityId, token)).ReturnsAsync(() => entity);
@@ -93,6 +93,6 @@ public class WhenPatchingAnEmployerProfile
         var result = await sut.PatchOne(repository.Object, accountLegalEntityId, patchRequest, token);
         
         // assert
-        result.Should().BeOfType<BadRequest>();
+        result.Should().BeOfType<ValidationProblem>();
     }
 }

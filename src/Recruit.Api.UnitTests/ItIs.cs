@@ -11,7 +11,7 @@ public static class ItIs
         return assertionScope.Discard().Length == 0;
     }
 
-    public static T EquivalentTo<T>(T obj) where T : class
+    public static T EquivalentTo<T>(T obj)
     {
         return It.Is<T>(seq => MatchingAssertion(() => seq.Should().BeEquivalentTo(obj, "")));
     }
