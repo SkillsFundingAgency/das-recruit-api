@@ -10,7 +10,7 @@ using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfileAddress;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
-[ApiController, Route("api/[controller]s/{accountLegalEntityId:long}/")]
+[ApiController, Route("api/[controller]es/{accountLegalEntityId:long}/")]
 public class EmployerProfileAddressController: ControllerBase
 {
     [HttpGet]
