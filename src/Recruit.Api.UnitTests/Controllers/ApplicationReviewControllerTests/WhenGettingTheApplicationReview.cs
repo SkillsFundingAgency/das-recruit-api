@@ -5,10 +5,10 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
-namespace Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerTests;
 
 [TestFixture]
-public class WhenGettingTheApplicationReview
+internal class WhenGettingTheApplicationReview
 {
     [Test, MoqAutoData]
     public async Task Get_ReturnsOk_WhenApplicationReviewExists(

@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Recruit.Api.UnitTests" />
+    <InternalsVisibleTo Include="SFA.DAS.Recruit.Api.UnitTests" />
   </ItemGroup>
 
   <ItemGroup>

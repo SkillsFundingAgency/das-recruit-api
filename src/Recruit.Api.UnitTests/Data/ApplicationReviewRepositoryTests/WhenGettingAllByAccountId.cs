@@ -1,10 +1,10 @@
-﻿using Recruit.Api.UnitTests.Data.DatabaseMock;
-using SFA.DAS.Recruit.Api.Data;
+﻿using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
 
-namespace Recruit.Api.UnitTests.Data.ApplicationReviewRepositoryTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Data.ApplicationReviewRepositoryTests;
 
 [TestFixture]
 internal class WhenGettingAllByAccountId

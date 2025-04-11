@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Linq.Expressions;
 
-namespace Recruit.Api.UnitTests.Data.DatabaseMock
+namespace SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock
 {
     public abstract class TestQueryProvider<T> : IOrderedQueryable<T>, IQueryProvider
     {

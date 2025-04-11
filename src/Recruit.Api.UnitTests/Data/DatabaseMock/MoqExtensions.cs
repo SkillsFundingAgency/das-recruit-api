@@ -2,7 +2,7 @@
 using Moq.Language.Flow;
 using SFA.DAS.Recruit.Api.Data;
 
-namespace Recruit.Api.UnitTests.Data.DatabaseMock
+namespace SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock
 {
     public static class MoqExtensions
     {

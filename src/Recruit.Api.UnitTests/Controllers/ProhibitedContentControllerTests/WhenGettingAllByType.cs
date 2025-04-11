@@ -6,9 +6,9 @@ using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using DomainProhibitedContentType = SFA.DAS.Recruit.Api.Domain.Models.ProhibitedContentType;
 
-namespace Recruit.Api.UnitTests.Controllers.ProhibitedContentControllerTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProhibitedContentControllerTests;
 
-public class WhenGettingAllByType
+internal class WhenGettingAllByType
 {
     [Test]
     [MoqInlineAutoData(ProhibitedContentType.BannedPhrases)]

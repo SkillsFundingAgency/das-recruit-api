@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
-namespace Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTests;
 
 [TestFixture]
 public class WhenGettingAllByUkprn

@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
-namespace Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerTests;
 
 [TestFixture]
 public class WhenPatchingApplicationReview

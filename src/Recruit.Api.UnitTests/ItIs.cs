@@ -1,6 +1,6 @@
 ﻿using FluentAssertions.Execution;
 
-namespace Recruit.Api.UnitTests;
+namespace SFA.DAS.Recruit.Api.UnitTests;
 
 public static class ItIs
 {

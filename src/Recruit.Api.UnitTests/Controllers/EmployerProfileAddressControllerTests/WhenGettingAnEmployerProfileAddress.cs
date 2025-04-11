@@ -4,7 +4,7 @@ using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 
-namespace Recruit.Api.UnitTests.Controllers.EmployerProfileAddressControllerTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileAddressControllerTests;
 
 public class WhenGettingAnEmployerProfileAddress
 {

@@ -2,7 +2,7 @@
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 
-namespace Recruit.Api.UnitTests.Controllers.EmployerProfileControllerTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileControllerTests;
 
 public class WhenDeletingAnEmployerProfile
 {

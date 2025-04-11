@@ -1,10 +1,10 @@
 ﻿using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 using SFA.DAS.Recruit.Api.Validators;
 
-namespace Recruit.Api.UnitTests.Validators;
+namespace SFA.DAS.Recruit.Api.UnitTests.Validators;
 
 [TestFixture]
-public class WhenValidatingPutApplicationReviewRequest
+internal class WhenValidatingPutApplicationReviewRequest
 {
     [Test, MoqAutoData]
     public void Then_The_Request_Is_Valid(PutApplicationReviewRequest request)

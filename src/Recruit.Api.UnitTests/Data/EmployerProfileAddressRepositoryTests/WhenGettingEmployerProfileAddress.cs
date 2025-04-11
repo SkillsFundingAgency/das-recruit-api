@@ -1,9 +1,9 @@
-﻿using Recruit.Api.UnitTests.Data.DatabaseMock;
-using SFA.DAS.Recruit.Api.Data;
+﻿using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
 
-namespace Recruit.Api.UnitTests.Data.EmployerProfileAddressRepositoryTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Data.EmployerProfileAddressRepositoryTests;
 
 internal class WhenGettingEmployerProfileAddress
 {

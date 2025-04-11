@@ -2,9 +2,9 @@
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 
-namespace Recruit.Api.UnitTests.Extensions;
+namespace SFA.DAS.Recruit.Api.UnitTests.Extensions;
 
-public class WhenMappingPatchRequest
+internal class WhenMappingPatchRequest
 {
     [Test, MoqAutoData]
     public void To_Entity_Then_The_Entity_Is_Mapped(JsonPatchDocument<ApplicationReview> source)

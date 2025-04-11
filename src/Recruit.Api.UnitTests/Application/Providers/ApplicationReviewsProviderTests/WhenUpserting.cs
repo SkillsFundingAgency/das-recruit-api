@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using SFA.DAS.Recruit.Api.Application.Providers;
+﻿using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 
-namespace Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProviderTests
+namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProviderTests
 {
     [TestFixture]
     internal class WhenUpserting

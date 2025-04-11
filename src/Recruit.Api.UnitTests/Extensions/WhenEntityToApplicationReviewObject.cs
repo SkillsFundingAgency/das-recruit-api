@@ -1,10 +1,10 @@
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 
-namespace Recruit.Api.UnitTests.Extensions;
+namespace SFA.DAS.Recruit.Api.UnitTests.Extensions;
 
 [TestFixture]
-public class WhenEntityToApplicationReviewObject
+internal class WhenEntityToApplicationReviewObject
 {
     [Test, MoqAutoData]
     public void ToEntity_ReturnsCorrectResponse(PutApplicationReviewRequest request)

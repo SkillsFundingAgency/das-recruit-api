@@ -4,7 +4,7 @@ using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
-namespace Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTests
+namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTests
 {
     [TestFixture]
     public class WhenGettingCountByAccountId

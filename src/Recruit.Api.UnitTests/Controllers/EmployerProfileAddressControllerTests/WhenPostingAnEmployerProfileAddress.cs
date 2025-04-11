@@ -7,9 +7,9 @@ using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfileAddress;
 
-namespace Recruit.Api.UnitTests.Controllers.EmployerProfileAddressControllerTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileAddressControllerTests;
 
-public class WhenPostingAnEmployerProfileAddress
+internal class WhenPostingAnEmployerProfileAddress
 {
     private Fixture _fixture;
 

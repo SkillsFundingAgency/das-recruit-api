@@ -1,9 +1,9 @@
 ﻿using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 
-namespace Recruit.Api.UnitTests.Extensions;
+namespace SFA.DAS.Recruit.Api.UnitTests.Extensions;
 
-public class WhenMappingApplicationReviewEntity
+internal class WhenMappingApplicationReviewEntity
 {
     [Test, MoqAutoData]
     public void To_GetApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)

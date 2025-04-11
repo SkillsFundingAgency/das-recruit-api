@@ -6,10 +6,8 @@ using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
-using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfile;
-using SFA.DAS.Recruit.Api.Models.Responses.EmployerProfile;
 
-namespace Recruit.Api.UnitTests.Controllers.EmployerProfileAddressControllerTests;
+namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileAddressControllerTests;
 
 public class WhenPatchingAnEmployerProfileAddress
 {

@@ -7,6 +7,8 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <AssemblyName>SFA.DAS.Recruit.Api.UnitTests</AssemblyName>
+        <RootNamespace>SFA.DAS.Recruit.Api.UnitTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
