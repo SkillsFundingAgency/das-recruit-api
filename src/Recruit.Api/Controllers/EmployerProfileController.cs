@@ -26,8 +26,7 @@ public class EmployerProfileController: ControllerBase
 
         return TypedResults.Ok(result.ToGetResponse());
     }
-    
-    
+
     [HttpGet]
     [ProducesResponseType(typeof(EmployerProfile), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -59,7 +58,7 @@ public class EmployerProfileController: ControllerBase
             ? TypedResults.Created($"/{RouteNames.EmployerProfile}/{result.Entity.AccountLegalEntityId}", result.Entity.ToPutResponse())
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
-    
+
     [HttpPatch]
     [ProducesResponseType(typeof(PatchEmployerProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
@@ -90,7 +89,7 @@ public class EmployerProfileController: ControllerBase
         await repository.UpsertOneAsync(employerProfile, cancellationToken);
         return TypedResults.Ok(employerProfile.ToPatchResponse());
     }
-    
+
     [HttpDelete]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
