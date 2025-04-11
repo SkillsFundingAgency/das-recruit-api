@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 namespace SFA.DAS.Recruit.Api.Data.EmployerProfile;
 
 [ExcludeFromCodeCoverage]
-public class EmployerProfileEntityConfiguration : IEntityTypeConfiguration<EmployerProfileEntity>
+internal class EmployerProfileEntityConfiguration : IEntityTypeConfiguration<EmployerProfileEntity>
 {
     public void Configure(EntityTypeBuilder<EmployerProfileEntity> builder)
     {

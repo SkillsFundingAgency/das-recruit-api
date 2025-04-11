@@ -3,7 +3,7 @@ using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfileAddress;
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
-public static class EmployerProfileAddressExtensions
+internal static class EmployerProfileAddressExtensions
 {
     public static EmployerProfileAddress ToResponseDto(this EmployerProfileAddressEntity entity)
     {

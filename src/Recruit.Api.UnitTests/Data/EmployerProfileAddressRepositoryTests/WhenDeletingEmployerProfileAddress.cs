@@ -5,7 +5,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 
 namespace Recruit.Api.UnitTests.Data.EmployerProfileAddressRepositoryTests;
 
-public class WhenDeletingEmployerProfileAddress
+internal class WhenDeletingEmployerProfileAddress
 {
     [Test, MoqAutoData]
     public async Task DeleteOneAsync_Removes_Item_From_Context(

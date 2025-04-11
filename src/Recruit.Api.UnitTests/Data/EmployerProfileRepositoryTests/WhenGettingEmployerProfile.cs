@@ -5,7 +5,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 
 namespace Recruit.Api.UnitTests.Data.EmployerProfileRepositoryTests;
 
-public class WhenGettingEmployerProfile
+internal class WhenGettingEmployerProfile
 {
     [Test, MoqAutoData]
     public async Task GetOneAsync_Returns_The_Correct_Item(

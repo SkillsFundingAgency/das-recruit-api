@@ -7,7 +7,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 namespace Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProviderTests
 {
     [TestFixture]
-    public class WhenUpserting
+    internal class WhenUpserting
     {
         [Test, MoqAutoData]
         public async Task Upsert_Returns_Repository_Value(
@@ -17,8 +17,6 @@ namespace Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProvider
             [Greedy] ApplicationReviewsProvider provider)
         {
             // Arrange
-            var json = JsonConvert.SerializeObject(entities);
-
             var expectedTuple = UpsertResult.Create(existingEntity, true);
 
             repositoryMock

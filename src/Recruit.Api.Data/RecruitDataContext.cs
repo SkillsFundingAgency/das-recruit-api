@@ -25,7 +25,7 @@ public interface IRecruitDataContext
 }
 
 [ExcludeFromCodeCoverage]
-public class RecruitDataContext : DbContext, IRecruitDataContext
+internal class RecruitDataContext : DbContext, IRecruitDataContext
 {
     public DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
     public DbSet<ProhibitedContentEntity> ProhibitedContentEntities { get; set; }

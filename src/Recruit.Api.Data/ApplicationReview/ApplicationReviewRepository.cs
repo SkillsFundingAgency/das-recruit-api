@@ -28,7 +28,7 @@ public interface IApplicationReviewRepository
     Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
 }
-public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
+internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
 {
     public async Task<ApplicationReviewEntity?> GetById(Guid id, CancellationToken token = default)
     {

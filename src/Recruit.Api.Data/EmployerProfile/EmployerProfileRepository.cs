@@ -9,7 +9,7 @@ public interface IEmployerProfileRepository : IReadRepository<EmployerProfileEnt
     Task<List<EmployerProfileEntity>> GetManyForAccountAsync(long accountId, CancellationToken cancellationToken);
 }
 
-public class EmployerProfileRepository(IRecruitDataContext dataContext): IEmployerProfileRepository
+internal class EmployerProfileRepository(IRecruitDataContext dataContext): IEmployerProfileRepository
 {
     public Task<EmployerProfileEntity?> GetOneAsync(long accountLegalEntityId, CancellationToken cancellationToken)
     {

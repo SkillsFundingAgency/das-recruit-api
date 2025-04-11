@@ -5,7 +5,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 
 namespace Recruit.Api.UnitTests.Data.EmployerProfileRepositoryTests;
 
-public class WhenUpsertingEmployerProfile
+internal class WhenUpsertingEmployerProfile
 {
     private Fixture _fixture;
 

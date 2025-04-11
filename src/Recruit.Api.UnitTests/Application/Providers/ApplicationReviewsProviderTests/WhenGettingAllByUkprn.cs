@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Domain.Models;
 namespace Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProviderTests;
 
 [TestFixture]
-public class WhenGettingAllByUkprn
+internal class WhenGettingAllByUkprn
 {
     [Test, MoqAutoData]
     public async Task GettingAllByUkprn_ShouldReturnPaginatedList_WhenCalledWithValidParameters(

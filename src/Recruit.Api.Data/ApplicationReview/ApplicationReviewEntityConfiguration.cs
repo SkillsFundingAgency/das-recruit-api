@@ -4,7 +4,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 
 namespace SFA.DAS.Recruit.Api.Data.ApplicationReview;
 
-public class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<ApplicationReviewEntity>
+internal class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<ApplicationReviewEntity>
 {
     public void Configure(EntityTypeBuilder<ApplicationReviewEntity> builder)
     {

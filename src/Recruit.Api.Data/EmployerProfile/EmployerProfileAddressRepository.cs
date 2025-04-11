@@ -13,7 +13,7 @@ public interface IEmployerProfileAddressRepository :
     Task<List<EmployerProfileAddressEntity>> GetManyAsync(long accountLegalEntityId, CancellationToken cancellationToken);
 }
 
-public class EmployerProfileAddressRepository(IRecruitDataContext dataContext): IEmployerProfileAddressRepository
+internal class EmployerProfileAddressRepository(IRecruitDataContext dataContext): IEmployerProfileAddressRepository
 {
     public Task<EmployerProfileAddressEntity?> GetOneAsync(EmployerProfileAddressKey key, CancellationToken cancellationToken)
     {

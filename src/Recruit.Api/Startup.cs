@@ -17,7 +17,7 @@ using SFA.DAS.Recruit.Api.Filters;
 namespace SFA.DAS.Recruit.Api;
 
 [ExcludeFromCodeCoverage]
-public class Startup
+internal class Startup
 {
     private readonly string _environmentName;
     private IConfiguration Configuration { get; }

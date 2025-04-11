@@ -36,7 +36,7 @@ public interface IApplicationReviewsProvider
     Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
 }
 
-public class ApplicationReviewsProvider(IApplicationReviewRepository repository) : IApplicationReviewsProvider
+internal class ApplicationReviewsProvider(IApplicationReviewRepository repository) : IApplicationReviewsProvider
 {
     public async Task<ApplicationReviewEntity?> GetById(Guid id, CancellationToken token = default)
     {

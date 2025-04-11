@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
-public static class ApplicationReviewExtensions
+internal static class ApplicationReviewExtensions
 {
     public static ApplicationReview ToApplicationReview(this ApplicationReviewEntity entity)
     {

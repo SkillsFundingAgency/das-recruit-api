@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.JsonPatch.Operations;
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
-public static class JsonPatchDocumentExtensions
+internal static class JsonPatchDocumentExtensions
 {
     public static JsonPatchDocument<TEntity> ToDomain<TEntity>(this JsonPatchDocument source) where TEntity : class
     {

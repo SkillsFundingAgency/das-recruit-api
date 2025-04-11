@@ -4,7 +4,7 @@ using SFA.DAS.Recruit.Api.Models.Responses.EmployerProfile;
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
-public static class EmployerProfileExtensions
+internal static class EmployerProfileExtensions
 {
     private static EmployerProfile ToResponseDto(this EmployerProfileEntity entity)
     {

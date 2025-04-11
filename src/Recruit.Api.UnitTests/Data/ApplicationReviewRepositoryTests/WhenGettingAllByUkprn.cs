@@ -7,7 +7,7 @@ using SFA.DAS.Recruit.Api.Domain.Enums;
 namespace Recruit.Api.UnitTests.Data.ApplicationReviewRepositoryTests;
 
 [TestFixture]
-public class WhenGettingAllByUkprn
+internal class WhenGettingAllByUkprn
 {
     [Test, RecursiveMoqAutoData]
     public async Task Then_The_ApplicationReviews_Are_Returned_By_Ukprn(

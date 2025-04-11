@@ -5,7 +5,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 namespace Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProviderTests;
 
 [TestFixture]
-public class WhenGettingById
+internal class WhenGettingById
 {
     [Test, MoqAutoData]
     public async Task GetById_ShouldReturnEntity_WhenEntityExists(

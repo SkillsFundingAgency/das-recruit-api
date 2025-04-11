@@ -9,7 +9,7 @@ public interface IProhibitedContentRepository
     Task<List<ProhibitedContentEntity>> GetByContentTypeAsync(ProhibitedContentType prohibitedContentType, CancellationToken cancellationToken);
 }
 
-public class ProhibitedContentRepository(IRecruitDataContext dataContext) : IProhibitedContentRepository
+internal class ProhibitedContentRepository(IRecruitDataContext dataContext) : IProhibitedContentRepository
 {
     public Task<List<ProhibitedContentEntity>> GetByContentTypeAsync(ProhibitedContentType prohibitedContentType, CancellationToken cancellationToken)
     {

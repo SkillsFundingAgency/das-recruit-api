@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Domain.Enums;
 namespace Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProviderTests
 {
     [TestFixture]
-    public class WhenGettingVacancyReferencesCountByUkprn
+    internal class WhenGettingVacancyReferencesCountByUkprn
     {
         [Test, MoqAutoData]
         public async Task GettingVacancyReferencesCountByUkprn_ShouldReturnStats(

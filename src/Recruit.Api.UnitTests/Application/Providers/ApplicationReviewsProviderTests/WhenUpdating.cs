@@ -5,7 +5,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 namespace Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProviderTests;
 
 [TestFixture]
-public class WhenUpdating
+internal class WhenUpdating
 {
     [Test, MoqAutoData]
     public async Task Update_Returns_Repository_Value(

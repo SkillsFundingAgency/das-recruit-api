@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Recruit.Api.Core.Extensions;
 
-public static class JsonPatchExceptionExtensions
+internal static class JsonPatchExceptionExtensions
 {
     public static IDictionary<string, string[]> ToProblemsDictionary(this JsonPatchException exception)
     {

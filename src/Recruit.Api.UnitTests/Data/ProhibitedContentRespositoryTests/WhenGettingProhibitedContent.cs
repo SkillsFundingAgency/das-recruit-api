@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace Recruit.Api.UnitTests.Data.ProhibitedContentRespositoryTests;
 
-public class WhenGettingProhibitedContent
+internal class WhenGettingProhibitedContent
 {
     [Test]
     [MoqInlineAutoData(ProhibitedContentType.BannedPhrases)]

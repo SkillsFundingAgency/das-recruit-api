@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Domain.Enums;
 namespace Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProviderTests
 {
     [TestFixture]
-    public class WhenGettingDashboardCountByAccountId
+    internal class WhenGettingDashboardCountByAccountId
     {
         [Test, MoqAutoData]
         public async Task GettingDashboardByAccountId_Given_Status_Submitted_And_ReviewDate_Null_ShouldReturnDashboard(
