@@ -37,11 +37,13 @@ public class WhenPostingAnEmployerProfileAddress
 
         // act
         var result = await sut.PostOne(repository.Object, accountLegalEntityId, request, token);
-        var payload = (result as Created<EmployerProfileAddress>)?.Value;
+        var createdResult = result as Created<EmployerProfileAddress>; 
+        var payload = createdResult?.Value;
         
         // assert
         repository.Verify(x => x.UpsertOneAsync(ItIs.EquivalentTo(request.ToDomain(accountLegalEntityId)), token), Times.Once);
-        payload.Should().NotBeNull();
+        createdResult.Should().NotBeNull();
+        createdResult.Location.Should().BeEquivalentTo($"/api/employerprofiles/{entity.AccountLegalEntityId}/addresses/{entity.Id}");
         payload.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers());
     }
 }

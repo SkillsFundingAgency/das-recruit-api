@@ -10,7 +10,7 @@ using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfileAddress;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
-[ApiController, Route("api/[controller]es/{accountLegalEntityId:long}/")]
+[ApiController, Route("api/employerprofiles/{accountLegalEntityId:long}/addresses")]
 public class EmployerProfileAddressController: ControllerBase
 {
     [HttpGet]
@@ -52,7 +52,7 @@ public class EmployerProfileAddressController: ControllerBase
     {
         var result = await repository.UpsertOneAsync(request.ToDomain(accountLegalEntityId), cancellationToken);
 
-        return TypedResults.Created($"/api/employerprofiles/{result.Entity.AccountLegalEntityId}", result.Entity.ToPostResponse());
+        return TypedResults.Created($"/api/employerprofiles/{result.Entity.AccountLegalEntityId}/addresses/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
     
     [HttpPatch, Route("{id:int}")]
