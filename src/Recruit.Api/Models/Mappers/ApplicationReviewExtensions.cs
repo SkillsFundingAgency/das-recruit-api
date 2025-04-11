@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
-namespace SFA.DAS.Recruit.Api.Extensions;
+namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
 public static class ApplicationReviewExtensions
 {

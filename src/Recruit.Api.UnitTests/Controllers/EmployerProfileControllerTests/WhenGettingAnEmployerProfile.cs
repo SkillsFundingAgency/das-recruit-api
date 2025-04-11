@@ -58,4 +58,25 @@ public class WhenGettingAnEmployerProfile
         // assert
         result.Should().BeOfType<NotFound>();
     }
+    
+    [Test, MoqAutoData]
+    public async Task Then_The_Profiles_Are_Returned(
+        long accountId,
+        Mock<IEmployerProfileRepository> repository,
+        [Greedy] EmployerProfileController sut,
+        CancellationToken token)
+    {
+        // arrange
+        var entities = _fixture.Create<List<EmployerProfileEntity>>();
+        repository
+            .Setup(x => x.GetManyForAccountAsync(accountId, token))
+            .ReturnsAsync(entities);
+
+        // act
+        var result = await sut.GetMany(repository.Object, accountId, token);
+        var payload = (result as Ok<IEnumerable<EmployerProfile>>)?.Value;
+        
+        // assert
+        payload.Should().BeEquivalentTo(entities, options => options.ExcludingMissingMembers());
+    }
 }

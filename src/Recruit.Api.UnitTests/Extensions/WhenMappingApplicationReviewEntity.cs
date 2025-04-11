@@ -1,5 +1,5 @@
 ﻿using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Extensions;
+using SFA.DAS.Recruit.Api.Models.Mappers;
 
 namespace Recruit.Api.UnitTests.Extensions;
 

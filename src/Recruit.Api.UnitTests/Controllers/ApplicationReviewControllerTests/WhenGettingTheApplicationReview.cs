@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Extensions;
+using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
 namespace Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerTests;

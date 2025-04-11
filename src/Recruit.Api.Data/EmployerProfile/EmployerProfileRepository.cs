@@ -5,7 +5,9 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 namespace SFA.DAS.Recruit.Api.Data.EmployerProfile;
 
 public interface IEmployerProfileRepository : IReadRepository<EmployerProfileEntity, long>, IWriteRepository<EmployerProfileEntity, long>
-{ }
+{
+    Task<List<EmployerProfileEntity>> GetManyForAccountAsync(long accountId, CancellationToken cancellationToken);
+}
 
 public class EmployerProfileRepository(IRecruitDataContext dataContext): IEmployerProfileRepository
 {
@@ -42,5 +44,14 @@ public class EmployerProfileRepository(IRecruitDataContext dataContext): IEmploy
         dataContext.EmployerProfileEntities.Remove(entity);
         await dataContext.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    public Task<List<EmployerProfileEntity>> GetManyForAccountAsync(long accountId, CancellationToken cancellationToken)
+    {
+        return dataContext.EmployerProfileEntities
+            .Include(x => x.Addresses)
+            .Where(x => x.AccountId == accountId)
+            .OrderBy(x => x.AccountLegalEntityId)
+            .ToListAsync(cancellationToken);
     }
 }

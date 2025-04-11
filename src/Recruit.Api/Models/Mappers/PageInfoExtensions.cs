@@ -2,7 +2,7 @@
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Responses;
 
-namespace SFA.DAS.Recruit.Api.Extensions;
+namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
 public static class PageInfoExtensions
 {

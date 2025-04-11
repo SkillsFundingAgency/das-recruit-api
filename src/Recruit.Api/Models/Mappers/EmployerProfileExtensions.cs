@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
 public static class EmployerProfileExtensions
 {
-    public static EmployerProfile ToResponseDto(this EmployerProfileEntity entity)
+    private static EmployerProfile ToResponseDto(this EmployerProfileEntity entity)
     {
         ArgumentNullException.ThrowIfNull(entity, nameof(entity));
         
@@ -25,6 +25,13 @@ public static class EmployerProfileExtensions
     public static EmployerProfile ToGetResponse(this EmployerProfileEntity entity)
     {
         return entity.ToResponseDto();
+    }
+    
+    public static IEnumerable<EmployerProfile> ToGetResponse(this List<EmployerProfileEntity> entities)
+    {
+        ArgumentNullException.ThrowIfNull(entities, nameof(entities));
+
+        return entities.Select(x => x.ToResponseDto());
     }
 
     public static PutEmployerProfileResponse ToPutResponse(this EmployerProfileEntity entity)

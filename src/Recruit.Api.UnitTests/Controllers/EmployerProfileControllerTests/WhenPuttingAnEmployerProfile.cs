@@ -67,6 +67,6 @@ public class WhenPuttingAnEmployerProfile
         repository.Verify(x => x.UpsertOneAsync(ItIs.EquivalentTo(request.ToDomain(accountLegalEntityId)), token), Times.Once);
         createdResult.Should().NotBeNull();
         createdResult.Value.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers());
-        createdResult.Location.Should().Be($"/api/employerprofiles/{entity.AccountLegalEntityId}");
+        createdResult.Location.Should().Be($"/api/employer/profiles/{entity.AccountLegalEntityId}");
     }
 }

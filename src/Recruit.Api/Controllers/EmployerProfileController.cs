@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfile;
@@ -11,9 +12,22 @@ using SFA.DAS.Recruit.Api.Models.Responses.EmployerProfile;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
-[ApiController, Route("api/[controller]s/{accountLegalEntityId:long}")]
+[ApiController, Route($"{RouteNames.EmployerProfile}/{{accountLegalEntityId:long}}")]
 public class EmployerProfileController: ControllerBase
 {
+    [HttpGet, Route($"~/{RouteNames.Employer}/{{accountId:long}}/{RouteElements.EmployerProfiles}")]
+    [ProducesResponseType(typeof(IEnumerable<EmployerProfile>), StatusCodes.Status200OK)]
+    public async Task<IResult> GetMany(
+        [FromServices] IEmployerProfileRepository repository,
+        [FromRoute] long accountId,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetManyForAccountAsync(accountId, cancellationToken);
+
+        return TypedResults.Ok(result.ToGetResponse());
+    }
+    
+    
     [HttpGet]
     [ProducesResponseType(typeof(EmployerProfile), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -42,7 +56,7 @@ public class EmployerProfileController: ControllerBase
         var result = await repository.UpsertOneAsync(request.ToDomain(accountLegalEntityId), cancellationToken);
 
         return result.Created
-            ? TypedResults.Created($"/api/employerprofiles/{result.Entity.AccountLegalEntityId}", result.Entity.ToPutResponse())
+            ? TypedResults.Created($"/{RouteNames.EmployerProfile}/{result.Entity.AccountLegalEntityId}", result.Entity.ToPutResponse())
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
     

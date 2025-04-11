@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
-using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Mappers;
 
 namespace Recruit.Api.UnitTests.Extensions;
 

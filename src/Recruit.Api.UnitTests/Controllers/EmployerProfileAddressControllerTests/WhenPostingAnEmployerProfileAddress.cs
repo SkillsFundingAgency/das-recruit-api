@@ -43,7 +43,7 @@ public class WhenPostingAnEmployerProfileAddress
         // assert
         repository.Verify(x => x.UpsertOneAsync(ItIs.EquivalentTo(request.ToDomain(accountLegalEntityId)), token), Times.Once);
         createdResult.Should().NotBeNull();
-        createdResult.Location.Should().BeEquivalentTo($"/api/employerprofiles/{entity.AccountLegalEntityId}/addresses/{entity.Id}");
+        createdResult.Location.Should().BeEquivalentTo($"/api/employer/profiles/{entity.AccountLegalEntityId}/addresses/{entity.Id}");
         payload.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers());
     }
 }

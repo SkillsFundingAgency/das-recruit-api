@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch.Exceptions;
 
-namespace SFA.DAS.Recruit.Api.Extensions;
+namespace SFA.DAS.Recruit.Api.Core.Extensions;
 
 public static class JsonPatchExceptionExtensions
 {

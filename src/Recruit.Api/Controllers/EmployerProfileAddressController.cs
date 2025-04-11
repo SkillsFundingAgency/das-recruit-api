@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Extensions;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfileAddress;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
-[ApiController, Route("api/employerprofiles/{accountLegalEntityId:long}/addresses")]
+[ApiController, Route($"{RouteNames.EmployerProfile}/{{accountLegalEntityId:long}}/{RouteElements.EmployerProfileAddresses}")]
 public class EmployerProfileAddressController: ControllerBase
 {
     [HttpGet]
@@ -52,7 +53,7 @@ public class EmployerProfileAddressController: ControllerBase
     {
         var result = await repository.UpsertOneAsync(request.ToDomain(accountLegalEntityId), cancellationToken);
 
-        return TypedResults.Created($"/api/employerprofiles/{result.Entity.AccountLegalEntityId}/addresses/{result.Entity.Id}", result.Entity.ToPostResponse());
+        return TypedResults.Created($"/{RouteNames.EmployerProfile}/{result.Entity.AccountLegalEntityId}/{RouteElements.EmployerProfileAddresses}/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
     
     [HttpPatch, Route("{id:int}")]

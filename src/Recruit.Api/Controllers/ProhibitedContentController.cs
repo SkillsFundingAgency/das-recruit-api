@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
-[ApiController, Route("api/[controller]/{contentType}")]
+[ApiController, Route($"{RouteNames.ProhibitedContent}/{{contentType}}/")]
 public class ProhibitedContentController : ControllerBase
 {
     [HttpGet]

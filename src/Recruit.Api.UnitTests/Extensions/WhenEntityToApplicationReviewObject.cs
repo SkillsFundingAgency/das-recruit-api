@@ -1,4 +1,4 @@
-using SFA.DAS.Recruit.Api.Extensions;
+using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 
 namespace Recruit.Api.UnitTests.Extensions;
