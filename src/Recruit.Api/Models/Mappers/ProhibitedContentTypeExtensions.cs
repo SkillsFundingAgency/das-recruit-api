@@ -5,7 +5,7 @@ namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
 internal static class ProhibitedContentTypeExtensions
 {
-    public static DomainProhibitedContentType ToDomain(this DtoProhibitedContentType prohibitedContentType)
+    public static DomainProhibitedContentType ToDomain(this DtoProhibitedContentType? prohibitedContentType)
     {
         return prohibitedContentType switch {
             DtoProhibitedContentType.BannedPhrases => DomainProhibitedContentType.BannedPhrases,

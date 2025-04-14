@@ -25,6 +25,13 @@ internal class Startup
     public Startup(IConfiguration configuration)
     {
         _environmentName = configuration["EnvironmentName"]!;
+
+        if (_environmentName == "TEST")
+        {
+            Configuration = configuration;
+            return;
+        }
+        
         var config = new ConfigurationBuilder()
             .AddConfiguration(configuration)
             .AddAzureTableStorage(options =>
@@ -35,16 +42,17 @@ internal class Startup
                 options.EnvironmentName = _environmentName;
                 options.PreFixConfigurationKeys = false;
             });
-#if DEBUG
-        config.AddJsonFile("appsettings.Development.json", true);
-#endif
 
-        Configuration = config.Build();
+#if DEBUG
+            config.AddJsonFile("appsettings.Development.json", true);
+#endif
+            Configuration = config.Build();
     }
 
     private bool IsEnvironmentLocalOrDev =>
         _environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase)
-        || _environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase);
+        || _environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase)
+        || _environmentName.Equals("TEST", StringComparison.CurrentCultureIgnoreCase);
 
     public void ConfigureServices(IServiceCollection services)
     {

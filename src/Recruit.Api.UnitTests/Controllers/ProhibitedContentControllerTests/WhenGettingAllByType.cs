@@ -14,7 +14,7 @@ internal class WhenGettingAllByType
     [MoqInlineAutoData(ProhibitedContentType.BannedPhrases)]
     [MoqInlineAutoData(ProhibitedContentType.Profanity)]
     public async Task Data_Is_Returned(
-        ProhibitedContentType prohibitedContentType,
+        ProhibitedContentType? prohibitedContentType,
         List<ProhibitedContentEntity> prohibitedContentEntities,
         Mock<IProhibitedContentRepository> repository, 
         [Greedy] ProhibitedContentController sut)

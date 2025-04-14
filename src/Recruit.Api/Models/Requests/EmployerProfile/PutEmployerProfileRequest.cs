@@ -3,6 +3,6 @@
 namespace SFA.DAS.Recruit.Api.Models.Requests.EmployerProfile;
 
 public record struct PutEmployerProfileRequest(
-    [Required] long AccountId,
+    [property: Required] long? AccountId,
     string? AboutOrganisation,
     string? TradingName);

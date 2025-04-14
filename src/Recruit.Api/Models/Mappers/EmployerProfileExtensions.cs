@@ -63,7 +63,7 @@ internal static class EmployerProfileExtensions
 
         return new EmployerProfileEntity {
             AboutOrganisation = request.AboutOrganisation,
-            AccountId = request.AccountId,
+            AccountId = request.AccountId!.Value,
             AccountLegalEntityId = accountLegalEntityId,
             TradingName = request.TradingName,
         };
