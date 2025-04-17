@@ -3,9 +3,9 @@ using DomainProhibitedContentType = SFA.DAS.Recruit.Api.Domain.Models.Prohibited
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
-public static class ProhibitedContentTypeExtensions
+internal static class ProhibitedContentTypeExtensions
 {
-    public static DomainProhibitedContentType ToDomain(this DtoProhibitedContentType prohibitedContentType)
+    public static DomainProhibitedContentType ToDomain(this DtoProhibitedContentType? prohibitedContentType)
     {
         return prohibitedContentType switch {
             DtoProhibitedContentType.BannedPhrases => DomainProhibitedContentType.BannedPhrases,

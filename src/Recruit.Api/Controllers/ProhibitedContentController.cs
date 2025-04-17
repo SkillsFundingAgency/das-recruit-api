@@ -1,12 +1,14 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
-[ApiController, Route("api/[controller]/{contentType}")]
-public class ProhibitedContentController
+[ApiController, Route($"{RouteNames.ProhibitedContent}/{{contentType}}/")]
+public class ProhibitedContentController : ControllerBase
 {
     [HttpGet]
     [Route("")]
@@ -14,7 +16,7 @@ public class ProhibitedContentController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IResult> GetAllByType(
         [FromServices] IProhibitedContentRepository repository,
-        [FromRoute] ProhibitedContentType contentType,
+        [FromRoute, Required] ProhibitedContentType? contentType,
         CancellationToken cancellationToken)
     {
         var results = await repository.GetByContentTypeAsync(contentType.ToDomain(), cancellationToken);

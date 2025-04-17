@@ -28,7 +28,7 @@ public interface IApplicationReviewRepository
     Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
 }
-public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
+internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
 {
     public async Task<ApplicationReviewEntity?> GetById(Guid id, CancellationToken token = default)
     {
@@ -74,7 +74,7 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
             return UpsertResult.Create(entity, true);
         }
 
-        recruitDataContext.Entry(applicationReview).CurrentValues.SetValues(entity);
+        recruitDataContext.SetValues(applicationReview, entity);
         await recruitDataContext.SaveChangesAsync(token);
         return UpsertResult.Create(entity, false);
     }
@@ -87,7 +87,7 @@ public class ApplicationReviewRepository(IRecruitDataContext recruitDataContext)
             return null;
         }
         
-        recruitDataContext.Entry(applicationReview).CurrentValues.SetValues(entity);
+        recruitDataContext.SetValues(applicationReview, entity);
         await recruitDataContext.SaveChangesAsync(token);
         return entity;
     }

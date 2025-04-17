@@ -4,14 +4,15 @@ using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Application.Providers;
-using SFA.DAS.Recruit.Api.Extensions;
+using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Models;
-using SFA.DAS.Recruit.Api.Models.Requests;
-using SFA.DAS.Recruit.Api.Models.Responses;
+using SFA.DAS.Recruit.Api.Models.Mappers;
+using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
+using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
-[Route("api/[controller]s/{id:guid}")]
+[Route($"{RouteNames.ApplicationReview}/{{id:guid}}")]
 [ApiController]
 public class ApplicationReviewController([FromServices] IApplicationReviewsProvider provider,
     ILogger<ApplicationReviewController> logger) : ControllerBase

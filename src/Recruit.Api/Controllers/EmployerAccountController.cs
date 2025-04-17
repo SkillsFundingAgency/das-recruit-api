@@ -2,14 +2,15 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Application.Providers;
+using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
-using SFA.DAS.Recruit.Api.Extensions;
-using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Mappers;
+using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
 namespace SFA.DAS.Recruit.Api.Controllers
 {
-    [Route("api/employer/{accountId:long}/")]
+    [Route($"{RouteNames.Employer}/{{accountId:long}}/")]
     public class EmployerAccountController([FromServices]
     IApplicationReviewsProvider provider,
         ILogger<ApplicationReviewController> logger) : ControllerBase

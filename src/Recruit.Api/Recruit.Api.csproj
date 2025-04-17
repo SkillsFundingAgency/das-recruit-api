@@ -11,6 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="SFA.DAS.Recruit.Api.UnitTests" />
+  </ItemGroup>
+
+  <ItemGroup>
 
     <PackageReference Include="Azure.Monitor.OpenTelemetry.AspNetCore" Version="1.2.0" />
 
@@ -25,7 +29,7 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.10" />
     
     <PackageReference Include="SFA.DAS.Api.Common" Version="17.1.135" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
 
   </ItemGroup>
 
