@@ -19,9 +19,9 @@ public class WhenGettingAllByAccountId
         string sortColumn,
         bool isAscending,
         List<ApplicationReviewEntity> mockResponse,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] EmployerAccountController controller)
+        [Greedy] EmployerAccountController controller,
+        CancellationToken token)
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>(mockResponse.ToList(), 1, pageNumber, pageSize);
@@ -47,9 +47,9 @@ public class WhenGettingAllByAccountId
         string sortColumn,
         bool isAscending,
         List<ApplicationReviewEntity> mockResponse,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] EmployerAccountController controller)
+        [Greedy] EmployerAccountController controller,
+        CancellationToken token)
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
@@ -74,9 +74,9 @@ public class WhenGettingAllByAccountId
         int pageSize,
         string sortColumn,
         bool isAscending,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] EmployerAccountController controller)
+        [Greedy] EmployerAccountController controller,
+        CancellationToken token)
     {
         // Arrange
         // Arrange

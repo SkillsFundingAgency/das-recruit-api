@@ -23,7 +23,7 @@ internal static class JsonPatchDocumentExtensions
 
     public static void ThrowIfOperationsOn<TEntity>(this JsonPatchDocument<TEntity> document, IEnumerable<string> paths) where TEntity : class
     {
-        ArgumentNullException.ThrowIfNull(document, nameof(document));
+        ArgumentNullException.ThrowIfNull(document);
 
         foreach (string path in paths)
         {

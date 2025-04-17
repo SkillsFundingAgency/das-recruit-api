@@ -19,9 +19,9 @@ public class WhenGettingAllByUkprn
         string sortColumn,
         bool isAscending,
         List<ApplicationReviewEntity> mockResponse,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] ProviderAccountController controller)
+        [Greedy] ProviderAccountController controller,
+        CancellationToken token)
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>(mockResponse.ToList(), 1, pageNumber, pageSize);
@@ -47,9 +47,9 @@ public class WhenGettingAllByUkprn
         string sortColumn,
         bool isAscending,
         List<ApplicationReviewEntity> mockResponse,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] ProviderAccountController controller)
+        [Greedy] ProviderAccountController controller,
+        CancellationToken token)
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
@@ -74,11 +74,10 @@ public class WhenGettingAllByUkprn
         int pageSize,
         string sortColumn,
         bool isAscending,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] ProviderAccountController controller)
+        [Greedy] ProviderAccountController controller,
+        CancellationToken token)
     {
-        // Arrange
         // Arrange
         providerMock.Setup(p => p.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
             .ThrowsAsync(new Exception());

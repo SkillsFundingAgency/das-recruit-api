@@ -7,7 +7,7 @@ internal static class EmployerProfileAddressExtensions
 {
     public static EmployerProfileAddress ToResponseDto(this EmployerProfileAddressEntity entity)
     {
-        ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
 
         return new EmployerProfileAddress(
             entity.Id,
@@ -27,7 +27,7 @@ internal static class EmployerProfileAddressExtensions
     
     public static IEnumerable<EmployerProfileAddress> ToGetResponse(this IEnumerable<EmployerProfileAddressEntity> entities)
     {
-        ArgumentNullException.ThrowIfNull(entities, nameof(entities));
+        ArgumentNullException.ThrowIfNull(entities);
 
         return entities.Select(x => x.ToResponseDto());
     }
@@ -44,7 +44,7 @@ internal static class EmployerProfileAddressExtensions
 
     public static EmployerProfileAddressEntity ToDomain(this PostEmployerProfileAddressRequest request, long accountLegalEntityId)
     {
-        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
         
         return new EmployerProfileAddressEntity {
             AccountLegalEntityId = accountLegalEntityId,

@@ -16,9 +16,9 @@ public class WhenPatchingApplicationReview
         Guid id,
         JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] ApplicationReviewController controller)
+        [Greedy] ApplicationReviewController controller,
+        CancellationToken token)
     {
         // Arrange
         applicationReview.Id = id;
@@ -39,9 +39,9 @@ public class WhenPatchingApplicationReview
         Guid id,
         JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] ApplicationReviewController controller)
+        [Greedy] ApplicationReviewController controller,
+        CancellationToken token)
     {
         // Arrange
         providerMock.Setup(p => p.GetById(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((ApplicationReviewEntity?)null);
@@ -60,9 +60,9 @@ public class WhenPatchingApplicationReview
         Guid id,
         JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-        [Greedy] ApplicationReviewController controller)
+        [Greedy] ApplicationReviewController controller,
+        CancellationToken token)
     {
         // Arrange
         providerMock.Setup(p => p.Update(It.IsAny<ApplicationReviewEntity>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());

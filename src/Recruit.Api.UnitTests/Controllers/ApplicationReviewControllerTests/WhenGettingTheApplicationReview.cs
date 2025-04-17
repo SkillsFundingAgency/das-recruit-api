@@ -14,9 +14,9 @@ internal class WhenGettingTheApplicationReview
     public async Task Get_ReturnsOk_WhenApplicationReviewExists(
         Guid id,
         ApplicationReviewEntity mockResponse,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
-        [Greedy] ApplicationReviewController controller)
+        [Greedy] ApplicationReviewController controller,
+        CancellationToken token)
     {
         // Arrange
         provider.Setup(p => p.GetById(id, token)).ReturnsAsync(mockResponse);
@@ -33,9 +33,9 @@ internal class WhenGettingTheApplicationReview
     [Test, MoqAutoData]
     public async Task Get_ReturnsNotFound_WhenApplicationReviewDoesNotExist(Guid id,
         ApplicationReviewEntity mockResponse,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
-        [Greedy] ApplicationReviewController controller)
+        [Greedy] ApplicationReviewController controller,
+        CancellationToken token)
     {
         // Arrange
         provider.Setup(p => p.GetById(id, token)).ReturnsAsync((ApplicationReviewEntity)null!);
@@ -50,9 +50,9 @@ internal class WhenGettingTheApplicationReview
     [Test, MoqAutoData]
     public async Task Get_ReturnsInternalServerException_WhenException_Thrown(Guid id,
         ApplicationReviewEntity mockResponse,
-        CancellationToken token,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
-        [Greedy] ApplicationReviewController controller)
+        [Greedy] ApplicationReviewController controller,
+        CancellationToken token)
     {
         // Arrange
         provider.Setup(p => p.GetById(id, token)).ThrowsAsync(new Exception());

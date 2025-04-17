@@ -1,25 +1,26 @@
-﻿namespace SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock
+﻿namespace SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
+
+public sealed class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
 {
-    public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
+    private readonly IEnumerator<T> _enumerator;
+
+    public TestAsyncEnumerator(IEnumerator<T> enumerator)
     {
-        private readonly IEnumerator<T> _enumerator;
+        ArgumentNullException.ThrowIfNull(enumerator);
+            
+        _enumerator = enumerator;
+    }
 
-        public TestAsyncEnumerator(IEnumerator<T> enumerator)
-        {
-            _enumerator = enumerator ?? throw new ArgumentNullException();
-        }
+    public T Current => _enumerator.Current;
 
-        public T Current => _enumerator.Current;
+    public ValueTask DisposeAsync()
+    {
+        _enumerator.Dispose();
+        return new ValueTask();
+    }
 
-        public ValueTask DisposeAsync()
-        {
-            _enumerator.Dispose();
-            return new ValueTask();
-        }
-
-        public ValueTask<bool> MoveNextAsync()
-        {
-            return new ValueTask<bool>(_enumerator.MoveNext());
-        }
+    public ValueTask<bool> MoveNextAsync()
+    {
+        return new ValueTask<bool>(_enumerator.MoveNext());
     }
 }
