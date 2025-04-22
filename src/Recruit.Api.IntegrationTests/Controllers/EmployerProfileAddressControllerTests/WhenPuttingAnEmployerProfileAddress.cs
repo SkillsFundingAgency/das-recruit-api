@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfileAddress;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.EmployerProfileAddressControllerTests;
@@ -11,7 +12,7 @@ public class WhenPostingAnEmployerProfileAddress : BaseFixture
     public async Task Then_Without_Required_Fields_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.PostAsJsonAsync("/api/employer/profiles/1/addresses", new {});
+        var response = await Client.PostAsJsonAsync($"{RouteNames.EmployerProfile}/1/{RouteElements.EmployerProfileAddresses}", new {});
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert

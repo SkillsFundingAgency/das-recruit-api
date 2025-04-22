@@ -1,0 +1,22 @@
+CREATE TABLE dbo.[VacancyReview] (
+    [Id]	                                    uniqueidentifier	NOT NULL,
+    [VacancyReference]                          BIGINT              NOT NULL,
+    [VacancyTitle]                              nvarchar(500)       NOT NULL,
+    [CreatedDate]                               datetime            NOT NULL,
+    [SlaDeadLine]                               datetime            NOT NULL,
+    [ReviewedDate]                              datetime            NULL,
+    [Status]                                    nvarchar(100)       NOT NULL,
+    [SubmissionCount]                           tinyint             NOT NULL Default(1),
+    [ReviewedByUserEmail]                       nvarchar(255)   	NULL,
+    [SubmittedByUserEmail]                      nvarchar(255)	    NOT NULL,
+    [ClosedDate]                                datetime            NULL,
+    [ManualOutcome]                             nvarchar(50)        NULL,
+    [ManualQaComment]                           nvarchar(max)       NULL,
+    [ManualQaFieldIndicators]                   nvarchar(max)       NOT NULL Default('[]'),
+    [AutomatedQaOutcome]                        nvarchar(max)       NULL,
+    [AutomatedQaOutcomeIndicators]              nvarchar(20)        NULL,
+    [DismissedAutomatedQAOutcomeIndicators]     nvarchar(max)       NOT NULL Default('[]'),
+    [UpdatedFieldIdentifiers]                   nvarchar(max)       NOT NULL Default('[]'),
+    [VacancySnapshot]                           nvarchar(max)       NOT NULL,
+    CONSTRAINT [PK_VacancyReview] PRIMARY KEY (Id)
+)

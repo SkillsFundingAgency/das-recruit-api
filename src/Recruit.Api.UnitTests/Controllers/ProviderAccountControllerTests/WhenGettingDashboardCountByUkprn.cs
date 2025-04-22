@@ -15,9 +15,9 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
             int ukprn,
             ApplicationStatus status,
             DashboardModel mockResponse,
-            CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-            [Greedy] ProviderAccountController controller)
+            [Greedy] ProviderAccountController controller,
+            CancellationToken token)
         {
             // Arrange
             providerMock.Setup(p => p.GetCountByUkprn(ukprn, status , token))
@@ -39,9 +39,9 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
             int ukprn,
             ApplicationStatus status,
             DashboardModel mockResponse,
-            CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-            [Greedy] ProviderAccountController controller)
+            [Greedy] ProviderAccountController controller,
+            CancellationToken token)
         {
             // Arrange
             // Arrange

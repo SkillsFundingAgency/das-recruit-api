@@ -14,9 +14,9 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
             long accountId,
             List<long> vacancyReferences,
             List<ApplicationReviewsStats> mockResponse,
-            CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-            [Greedy] EmployerAccountController controller)
+            [Greedy] EmployerAccountController controller,
+            CancellationToken token)
         {
             // Arrange
             providerMock.Setup(p => p.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token))
@@ -38,9 +38,9 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
             long accountId,
             List<long> vacancyReferences,
             List<ApplicationReviewsStats> mockResponse,
-            CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-            [Greedy] EmployerAccountController controller)
+            [Greedy] EmployerAccountController controller,
+            CancellationToken token)
         {
             // Arrange
             // Arrange

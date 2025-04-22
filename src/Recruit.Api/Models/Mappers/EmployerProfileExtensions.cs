@@ -8,7 +8,7 @@ internal static class EmployerProfileExtensions
 {
     private static EmployerProfile ToResponseDto(this EmployerProfileEntity entity)
     {
-        ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
         
         var addresses = entity.Addresses
             .Select(x => x.ToResponseDto())
@@ -29,14 +29,14 @@ internal static class EmployerProfileExtensions
     
     public static IEnumerable<EmployerProfile> ToGetResponse(this List<EmployerProfileEntity> entities)
     {
-        ArgumentNullException.ThrowIfNull(entities, nameof(entities));
+        ArgumentNullException.ThrowIfNull(entities);
 
         return entities.Select(x => x.ToResponseDto());
     }
 
     public static PutEmployerProfileResponse ToPutResponse(this EmployerProfileEntity entity)
     {
-        ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
         
         return new PutEmployerProfileResponse(
             entity.AccountLegalEntityId,
@@ -47,7 +47,7 @@ internal static class EmployerProfileExtensions
 
     public static PatchEmployerProfileResponse ToPatchResponse(this EmployerProfileEntity entity)
     {
-        ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+        ArgumentNullException.ThrowIfNull(entity);
         
         return new PatchEmployerProfileResponse {
             AccountLegalEntityId = entity.AccountLegalEntityId,
@@ -59,7 +59,7 @@ internal static class EmployerProfileExtensions
 
     public static EmployerProfileEntity ToDomain(this PutEmployerProfileRequest request, long accountLegalEntityId)
     {
-        ArgumentNullException.ThrowIfNull(request, nameof(request));
+        ArgumentNullException.ThrowIfNull(request);
 
         return new EmployerProfileEntity {
             AboutOrganisation = request.AboutOrganisation,

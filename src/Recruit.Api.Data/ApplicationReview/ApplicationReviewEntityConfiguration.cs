@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 
 namespace SFA.DAS.Recruit.Api.Data.ApplicationReview;
 
+[ExcludeFromCodeCoverage]
 internal class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<ApplicationReviewEntity>
 {
     public void Configure(EntityTypeBuilder<ApplicationReviewEntity> builder)

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Recruit.Api.Core;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ProhibitedContentControllerTests;
 
@@ -9,7 +10,7 @@ public class WhenGettingProhibitedContent: BaseFixture
     public async Task Then_If_No_ContentType_Is_Specified_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.GetAsync("api/prohibitedcontent/foo");
+        var response = await Client.GetAsync($"{RouteNames.ProhibitedContent}/foo");
         var payload = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert
