@@ -7,7 +7,7 @@ CREATE TABLE dbo.[VacancyReview] (
     [ReviewedDate]                              datetime            NULL,
     [Status]                                    nvarchar(100)       NOT NULL,
     [SubmissionCount]                           tinyint             NOT NULL Default(1),
-    [ReviewedByUserId]                          nvarchar(255)   	NULL,
+    [ReviewedByUserEmail]                       nvarchar(255)   	NULL,
     [SubmittedByUserEmail]                      nvarchar(255)	    NOT NULL,
     [ClosedDate]                                datetime            NULL,
     [ManualOutcome]                             nvarchar(50)        NULL,
