@@ -26,7 +26,7 @@ internal class Startup
     {
         _environmentName = configuration["EnvironmentName"]!;
 
-        if (_environmentName == "TEST")
+        if (_environmentName == "INTEGRATION")
         {
             Configuration = configuration;
             return;
