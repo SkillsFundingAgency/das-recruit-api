@@ -13,7 +13,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
         [Test, MoqAutoData]
         public async Task Then_The_Count_ReturnsOk(
             long accountId,
-            ApplicationStatus status,
+            ApplicationReviewStatus status,
             DashboardModel mockResponse,
             CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
@@ -37,7 +37,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
         [Test, MoqAutoData]
         public async Task Then_Returns_Exception(
             long accountId,
-            ApplicationStatus status,
+            ApplicationReviewStatus status,
             DashboardModel mockResponse,
             CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,

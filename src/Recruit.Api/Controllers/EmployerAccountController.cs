@@ -3,6 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
@@ -24,7 +25,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             [FromRoute][Required] long accountId,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
-            [FromQuery] string sortColumn = "CreatedDate",
+            [FromQuery] string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
             [FromQuery] bool isAscending = false,
             CancellationToken token = default)
         {
@@ -51,7 +52,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [ProducesResponseType(typeof(DashboardModel), StatusCodes.Status200OK)]
         public async Task<IResult> GetDashboardCountByAccountId(
             [FromRoute][Required] long accountId,
-            [FromQuery][Required] ApplicationStatus status,
+            [FromQuery][Required] ApplicationReviewStatus status,
             CancellationToken token = default)
         {
             try

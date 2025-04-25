@@ -13,20 +13,20 @@ public interface IApplicationReviewsProvider
     Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
-        string sortColumn = "CreatedDate",
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default);
 
     Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
-        string sortColumn = "CreatedDate",
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default);
 
-    Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationStatus status, CancellationToken token = default);
+    Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationReviewStatus status, CancellationToken token = default);
 
-    Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationStatus status, CancellationToken token = default);
+    Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationReviewStatus status, CancellationToken token = default);
 
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
 
@@ -62,14 +62,14 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
         return await repository.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
-    public async Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationStatus status, CancellationToken token = default)
+    public async Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationReviewStatus status, CancellationToken token = default)
     {
         var applicationReviews = await repository.GetAllByAccountId(accountId, status.ToString(), token);
 
         return GetDashboardModel(applicationReviews);
     }
 
-    public async Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationStatus status, CancellationToken token = default)
+    public async Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationReviewStatus status, CancellationToken token = default)
     {
         var applicationReviews = await repository.GetAllByUkprn(ukprn, status.ToString(), token);
 
@@ -106,7 +106,7 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
     {
         return new DashboardModel
         {
-            NewApplicationsCount = applicationReviews.Count(fil => fil.ReviewedDate == null),
+            NewApplicationsCount = applicationReviews.Count(fil => fil.Status == ApplicationReviewStatus.New.ToString()),
             EmployerReviewedApplicationsCount = applicationReviews.Count(fil => fil is { ReviewedDate: not null }),
         };
     }
@@ -118,10 +118,10 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
             .Select(fil => new ApplicationReviewsStats
             {
                 VacancyReference = fil.Key,
-                NewApplications = fil.Count(entity => entity.Status == ApplicationStatus.Submitted.ToString() && entity.ReviewedDate == null),
-                SuccessfulApplications = fil.Count(entity => entity.Status == ApplicationStatus.Successful.ToString()),
-                UnsuccessfulApplications = fil.Count(entity => entity.Status == ApplicationStatus.UnSuccessful.ToString()),
-                Applications = fil.Count(entity => entity.Status != ApplicationStatus.Withdrawn.ToString())
+                NewApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.New.ToString()),
+                SuccessfulApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.Successful.ToString()),
+                UnsuccessfulApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.Unsuccessful.ToString()),
+                Applications = fil.Count(entity => entity.WithdrawnDate == null)
             })
             .ToList();
     }

@@ -11,14 +11,14 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
         [Test, MoqAutoData]
         public async Task GettingDashboardByUkprn_Given_Status_Submitted_And_ReviewDate_Null_ShouldReturnDashboard(
             int ukprn,
-            ApplicationStatus status,
+            ApplicationReviewStatus status,
             CancellationToken token,
             List<ApplicationReviewEntity> entities,
             [Frozen] Mock<IApplicationReviewRepository> repositoryMock,
             [Greedy] ApplicationReviewsProvider provider)
         {
             // Arrange
-            status = ApplicationStatus.Submitted;
+            status = ApplicationReviewStatus.New;
             foreach (var entity in entities)
             {
                 entity.Status = status.ToString();
@@ -38,14 +38,14 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
         [Test, MoqAutoData]
         public async Task GettingDashboardByUkprn_Given_Status_Submitted_And_ReviewDate__Not_Null_ShouldReturnDashboard(
             int ukprn,
-            ApplicationStatus status,
+            ApplicationReviewStatus status,
             CancellationToken token,
             List<ApplicationReviewEntity> entities,
             [Frozen] Mock<IApplicationReviewRepository> repositoryMock,
             [Greedy] ApplicationReviewsProvider provider)
         {
             // Arrange
-            status = ApplicationStatus.Submitted;
+            status = ApplicationReviewStatus.Interviewing;
             foreach (var entity in entities)
             {
                 entity.Status = status.ToString();
