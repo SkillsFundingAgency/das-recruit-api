@@ -21,11 +21,11 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
 
             var applicationReviews = new List<ApplicationReviewEntity>
             {
-                new() { VacancyReference = 1, Status = ApplicationStatus.Submitted.ToString(), ReviewedDate = null },
-                new() { VacancyReference = 1, Status = ApplicationStatus.Successful.ToString() },
-                new() { VacancyReference = 2, Status = ApplicationStatus.UnSuccessful.ToString() },
-                new() { VacancyReference = 3, Status = ApplicationStatus.Submitted.ToString(), ReviewedDate = DateTime.Now },
-                new() { VacancyReference = 4, Status = ApplicationStatus.Withdrawn.ToString() }
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.New.ToString(), ReviewedDate = null },
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.Successful.ToString() },
+                new() { VacancyReference = 2, Status = ApplicationReviewStatus.Unsuccessful.ToString() },
+                new() { VacancyReference = 3, Status = ApplicationReviewStatus.InReview.ToString(), ReviewedDate = DateTime.Now },
+                new() { VacancyReference = 4, Status = ApplicationReviewStatus.Interviewing.ToString() }
             };
 
             repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token))
@@ -59,7 +59,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             result[3].NewApplications.Should().Be(0);
             result[3].SuccessfulApplications.Should().Be(0);
             result[3].UnsuccessfulApplications.Should().Be(0);
-            result[3].Applications.Should().Be(0);
+            result[3].Applications.Should().Be(1);
 
             repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token), Times.Once);
         }

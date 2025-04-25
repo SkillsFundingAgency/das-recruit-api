@@ -43,7 +43,7 @@ internal class WhenGettingAllByAccountId
     [Test, RecursiveMoqAutoData]
     public async Task Then_The_ApplicationReviews_Are_Returned_By_AccountId(
         long accountId,
-        ApplicationStatus status,
+        ApplicationReviewStatus status,
         CancellationToken token,
         List<ApplicationReviewEntity> applicationsReviews,
         [Frozen] Mock<IRecruitDataContext> context,

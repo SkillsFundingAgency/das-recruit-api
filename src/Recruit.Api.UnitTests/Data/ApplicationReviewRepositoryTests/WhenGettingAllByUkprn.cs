@@ -43,7 +43,7 @@ internal class WhenGettingAllByUkprn
     [Test, RecursiveMoqAutoData]
     public async Task Then_The_ApplicationReviews_Are_Returned_By_Ukprn(
         int ukprn,
-        ApplicationStatus status,
+        ApplicationReviewStatus status,
         CancellationToken token,
         List<ApplicationReviewEntity> applicationsReviews,
         [Frozen] Mock<IRecruitDataContext> context,
@@ -69,7 +69,7 @@ internal class WhenGettingAllByUkprn
     [Test, RecursiveMoqAutoData]
     public async Task Then_The_ApplicationReviews_Are_Returned_By_Ukprn(
         int ukprn,
-        ApplicationStatus status,
+        ApplicationReviewStatus status,
         long vacancyReference,
         CancellationToken token,
         List<ApplicationReviewEntity> applicationsReviews,

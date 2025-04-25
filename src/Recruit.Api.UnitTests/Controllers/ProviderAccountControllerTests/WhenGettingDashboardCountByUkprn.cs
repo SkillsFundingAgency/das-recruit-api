@@ -13,7 +13,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
         [Test, MoqAutoData]
         public async Task Then_The_Count_ReturnsOk(
             int ukprn,
-            ApplicationStatus status,
+            ApplicationReviewStatus status,
             DashboardModel mockResponse,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
             [Greedy] ProviderAccountController controller,
@@ -37,7 +37,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
         [Test, MoqAutoData]
         public async Task Then_Returns_Exception(
             int ukprn,
-            ApplicationStatus status,
+            ApplicationReviewStatus status,
             DashboardModel mockResponse,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
             [Greedy] ProviderAccountController controller,
