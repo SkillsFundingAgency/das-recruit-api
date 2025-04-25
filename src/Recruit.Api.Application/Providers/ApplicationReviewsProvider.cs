@@ -106,22 +106,24 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
     {
         return new DashboardModel
         {
-            NewApplicationsCount = applicationReviews.Count(fil => fil.Status == ApplicationReviewStatus.New.ToString()),
-            EmployerReviewedApplicationsCount = applicationReviews.Count(fil => fil is { ReviewedDate: not null }),
+            NewApplicationsCount = applicationReviews.Count(fil => fil.Status == ApplicationReviewStatus.New.ToString() && fil.WithdrawnDate is null),
+            EmployerReviewedApplicationsCount = applicationReviews.Count(fil => fil is { ReviewedDate: not null, WithdrawnDate: null}),
         };
     }
 
     private static List<ApplicationReviewsStats> GetApplicationReviewsStats(List<ApplicationReviewEntity> applicationReviews)
     {
         return applicationReviews
+            .Where(fil => fil.WithdrawnDate is null)
             .GroupBy(fil => fil.VacancyReference)
             .Select(fil => new ApplicationReviewsStats
             {
                 VacancyReference = fil.Key,
                 NewApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.New.ToString()),
+                SharedApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.Shared.ToString()),
                 SuccessfulApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.Successful.ToString()),
                 UnsuccessfulApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.Unsuccessful.ToString()),
-                Applications = fil.Count(entity => entity.WithdrawnDate == null)
+                Applications = fil.Count()
             })
             .ToList();
     }

@@ -23,6 +23,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             {
                 entity.Status = status.ToString();
                 entity.ReviewedDate = null;
+                entity.WithdrawnDate = null;
             }
             repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, status.ToString(), token))
                 .ReturnsAsync(entities);
@@ -50,6 +51,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             {
                 entity.Status = status.ToString();
                 entity.ReviewedDate = DateTime.Now;
+                entity.WithdrawnDate = null;
             }
             repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, status.ToString(), token))
                 .ReturnsAsync(entities);
