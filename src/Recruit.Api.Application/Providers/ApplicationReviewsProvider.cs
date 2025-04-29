@@ -123,6 +123,7 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
                 SharedApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.Shared.ToString()),
                 SuccessfulApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.Successful.ToString()),
                 UnsuccessfulApplications = fil.Count(entity => entity.Status == ApplicationReviewStatus.Unsuccessful.ToString()),
+                EmployerReviewedApplications = fil.Count(entity => entity.DateSharedWithEmployer != null || entity.Status == ApplicationReviewStatus.InReview.ToString()),
                 Applications = fil.Count()
             })
             .ToList();

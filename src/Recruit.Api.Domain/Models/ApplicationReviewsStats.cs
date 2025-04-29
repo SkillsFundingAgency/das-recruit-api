@@ -8,5 +8,6 @@
         public int SharedApplications { get; init; }
         public int SuccessfulApplications { get; init; }
         public int UnsuccessfulApplications { get; init; }
+        public int EmployerReviewedApplications { get; init; }
     }
 }
