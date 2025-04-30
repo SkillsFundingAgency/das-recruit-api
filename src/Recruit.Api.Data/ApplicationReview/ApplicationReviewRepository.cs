@@ -12,13 +12,13 @@ public interface IApplicationReviewRepository
     Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
-        string sortColumn = "",
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default);
     Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
-        string sortColumn = "",
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default);
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
@@ -40,7 +40,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
     public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
-        string sortColumn = "CreatedDate",
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default)
     {
@@ -53,7 +53,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
     public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
-        string sortColumn = "",
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default)
     {

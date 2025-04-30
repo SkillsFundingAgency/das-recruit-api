@@ -17,15 +17,16 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             [Greedy] ApplicationReviewsProvider provider)
         {
             // Arrange
-            var vacancyReferences = new List<long> { 1, 2, 3 };
+            var vacancyReferences = new List<long> { 1, 2, 3, 4 };
 
             var applicationReviews = new List<ApplicationReviewEntity>
             {
-                new() { VacancyReference = 1, Status = ApplicationReviewStatus.New.ToString(), ReviewedDate = null },
-                new() { VacancyReference = 1, Status = ApplicationReviewStatus.Successful.ToString() },
-                new() { VacancyReference = 2, Status = ApplicationReviewStatus.Unsuccessful.ToString() },
-                new() { VacancyReference = 3, Status = ApplicationReviewStatus.InReview.ToString(), ReviewedDate = DateTime.Now },
-                new() { VacancyReference = 4, Status = ApplicationReviewStatus.Interviewing.ToString() }
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.New.ToString(), ReviewedDate = null, WithdrawnDate = null},
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.Successful.ToString(),WithdrawnDate = null },
+                new() { VacancyReference = 2, Status = ApplicationReviewStatus.Unsuccessful.ToString(), WithdrawnDate = null },
+                new() { VacancyReference = 3, Status = ApplicationReviewStatus.InReview.ToString(), ReviewedDate = DateTime.Now, WithdrawnDate = null },
+                new() { VacancyReference = 4, Status = ApplicationReviewStatus.Interviewing.ToString(), WithdrawnDate = null },
+                new() { VacancyReference = 4, Status = ApplicationReviewStatus.Shared.ToString(), WithdrawnDate = null }
             };
 
             repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, vacancyReferences, token))
@@ -39,27 +40,31 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
 
             result[0].VacancyReference.Should().Be(1);
             result[0].NewApplications.Should().Be(1);
+            result[0].SharedApplications.Should().Be(0);
             result[0].SuccessfulApplications.Should().Be(1);
             result[0].UnsuccessfulApplications.Should().Be(0);
             result[0].Applications.Should().Be(2);
 
             result[1].VacancyReference.Should().Be(2);
             result[1].NewApplications.Should().Be(0);
+            result[1].SharedApplications.Should().Be(0);
             result[1].SuccessfulApplications.Should().Be(0);
             result[1].UnsuccessfulApplications.Should().Be(1);
             result[1].Applications.Should().Be(1);
 
             result[2].VacancyReference.Should().Be(3);
             result[2].NewApplications.Should().Be(0);
+            result[1].SharedApplications.Should().Be(0);
             result[2].SuccessfulApplications.Should().Be(0);
             result[2].UnsuccessfulApplications.Should().Be(0);
             result[2].Applications.Should().Be(1);
 
             result[3].VacancyReference.Should().Be(4);
             result[3].NewApplications.Should().Be(0);
+            result[3].SharedApplications.Should().Be(1);
             result[3].SuccessfulApplications.Should().Be(0);
             result[3].UnsuccessfulApplications.Should().Be(0);
-            result[3].Applications.Should().Be(1);
+            result[3].Applications.Should().Be(2);
 
             repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, vacancyReferences, token), Times.Once);
         }
