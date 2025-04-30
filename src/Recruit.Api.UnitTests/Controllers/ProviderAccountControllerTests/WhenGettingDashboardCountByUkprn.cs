@@ -20,11 +20,11 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
             CancellationToken token)
         {
             // Arrange
-            providerMock.Setup(p => p.GetCountByUkprn(ukprn, status , token))
+            providerMock.Setup(p => p.GetCountByUkprn(ukprn, token))
                 .ReturnsAsync(mockResponse);
 
             // Act
-            var result = await controller.GetDashboardCountByUkprn(ukprn, status, token);
+            var result = await controller.GetDashboardCountByUkprn(ukprn, token);
 
             // Assert
             result.Should().BeOfType<Ok<DashboardModel>>();
@@ -45,11 +45,11 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
         {
             // Arrange
             // Arrange
-            providerMock.Setup(p => p.GetCountByUkprn(ukprn, status, token))
+            providerMock.Setup(p => p.GetCountByUkprn(ukprn, token))
                 .ThrowsAsync(new Exception());
 
             // Act
-            var result = await controller.GetDashboardCountByUkprn(ukprn, status, token);
+            var result = await controller.GetDashboardCountByUkprn(ukprn, token);
 
             // Assert
             result.Should().BeOfType<ProblemHttpResult>();

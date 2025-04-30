@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
@@ -52,14 +51,13 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [ProducesResponseType(typeof(DashboardModel), StatusCodes.Status200OK)]
         public async Task<IResult> GetDashboardCountByAccountId(
             [FromRoute][Required] long accountId,
-            [FromQuery][Required] ApplicationReviewStatus status,
             CancellationToken token = default)
         {
             try
             {
                 logger.LogInformation("Recruit API: Received query to get dashboard stats by account id : {AccountId}", accountId);
 
-                var response = await provider.GetCountByAccountId(accountId, status, token);
+                var response = await provider.GetCountByAccountId(accountId, token);
 
                 return TypedResults.Ok(response);
             }
