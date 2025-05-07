@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
+using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 
@@ -18,6 +18,7 @@ public interface IRecruitDataContext
     DbSet<ProhibitedContentEntity> ProhibitedContentEntities { get; set; }
     DbSet<EmployerProfileEntity> EmployerProfileEntities { get; set; }
     DbSet<EmployerProfileAddressEntity> EmployerProfileAddressEntities { get; set; }
+    DbSet<VacancyReviewEntity> VacancyReviewEntities { get; set; }
     DatabaseFacade Database { get; }
     Task Ping(CancellationToken cancellationToken);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
@@ -31,6 +32,7 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
     public DbSet<ProhibitedContentEntity> ProhibitedContentEntities { get; set; }
     public DbSet<EmployerProfileEntity> EmployerProfileEntities { get; set; }
     public DbSet<EmployerProfileAddressEntity> EmployerProfileAddressEntities { get; set; }
+    public DbSet<VacancyReviewEntity> VacancyReviewEntities { get; set; }
 
     private readonly ConnectionStrings? _configuration;
     public RecruitDataContext() {}
@@ -73,6 +75,7 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
         modelBuilder.ApplyConfiguration(new ProhibitedContentEntityConfiguration());
         modelBuilder.ApplyConfiguration(new EmployerProfileEntityConfiguration());
         modelBuilder.ApplyConfiguration(new EmployerProfileAddressEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new VacancyReviewEntityConfiguration());
 
         base.OnModelCreating(modelBuilder);
     }
