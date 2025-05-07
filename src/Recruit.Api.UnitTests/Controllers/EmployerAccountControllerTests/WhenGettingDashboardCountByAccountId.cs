@@ -20,11 +20,11 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
             [Greedy] EmployerAccountController controller)
         {
             // Arrange
-            providerMock.Setup(p => p.GetCountByAccountId(accountId, status , token))
+            providerMock.Setup(p => p.GetCountByAccountId(accountId, token))
                 .ReturnsAsync(mockResponse);
 
             // Act
-            var result = await controller.GetDashboardCountByAccountId(accountId, status, token);
+            var result = await controller.GetDashboardCountByAccountId(accountId, token);
 
             // Assert
             result.Should().BeOfType<Ok<DashboardModel>>();
@@ -45,11 +45,11 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
         {
             // Arrange
             // Arrange
-            providerMock.Setup(p => p.GetCountByAccountId(accountId, status, token))
+            providerMock.Setup(p => p.GetCountByAccountId(accountId, token))
                 .ThrowsAsync(new Exception());
 
             // Act
-            var result = await controller.GetDashboardCountByAccountId(accountId, status, token);
+            var result = await controller.GetDashboardCountByAccountId(accountId, token);
 
             // Assert
             result.Should().BeOfType<ProblemHttpResult>();

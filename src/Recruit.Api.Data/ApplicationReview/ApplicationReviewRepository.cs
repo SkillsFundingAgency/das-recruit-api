@@ -23,8 +23,8 @@ public interface IApplicationReviewRepository
         CancellationToken token = default);
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, string status, CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, string status, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
 }
@@ -92,19 +92,19 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return entity;
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, string status, CancellationToken token = default)
+    public async Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, CancellationToken token = default)
     {
         return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
-            .Where(fil => fil.AccountId == accountId && fil.Status == status)
+            .Where(fil => fil.AccountId == accountId)
             .ToListAsync(token);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, string status, CancellationToken token = default)
+    public async Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, CancellationToken token = default)
     {
         return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
-            .Where(fil => fil.Ukprn == ukprn && fil.Status == status)
+            .Where(fil => fil.Ukprn == ukprn)
             .ToListAsync(token);
     }
 
