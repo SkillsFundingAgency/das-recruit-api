@@ -20,6 +20,21 @@ internal static class JsonPatchDocumentExtensions
         result.Operations.AddRange(operations);
         return result;
     }
+    
+    public static JsonPatchDocument<TEntity> ToDomain<TSource, TEntity>(this JsonPatchDocument<TSource> source) where TEntity : class where TSource : class
+    {
+        var result = new JsonPatchDocument<TEntity>();
+        var operations = source.Operations.Select(x => new Operation<TEntity>
+        {
+            from = x.from,
+            op = x.op,
+            value = x.value,
+            path = x?.path
+        });
+            
+        result.Operations.AddRange(operations);
+        return result;
+    }
 
     public static void ThrowIfOperationsOn<TEntity>(this JsonPatchDocument<TEntity> document, IEnumerable<string> paths) where TEntity : class
     {

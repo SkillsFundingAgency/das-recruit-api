@@ -1,4 +1,5 @@
-﻿using FluentAssertions.Execution;
+﻿using FluentAssertions.Equivalency;
+using FluentAssertions.Execution;
 
 namespace SFA.DAS.Recruit.Api.UnitTests;
 
@@ -13,6 +14,11 @@ public static class ItIs
 
     public static T EquivalentTo<T>(T obj)
     {
-        return It.Is<T>(seq => MatchingAssertion(() => seq.Should().BeEquivalentTo(obj, "")));
+        return EquivalentTo(obj, config => config);
+    }
+
+    public static T EquivalentTo<T>(T obj, Func<EquivalencyAssertionOptions<T>, EquivalencyAssertionOptions<T>> config)
+    {
+        return It.Is<T>(seq => MatchingAssertion(() => seq.Should().BeEquivalentTo(obj, config, "")));
     }
 }
