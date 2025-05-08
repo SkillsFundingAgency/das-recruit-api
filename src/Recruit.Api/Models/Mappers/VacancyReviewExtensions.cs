@@ -59,13 +59,13 @@ public static class VacancyReviewExtensions
 
         return new VacancyReviewEntity {
             Id = id,
-            VacancyReference = request.VacancyReference,
+            VacancyReference = request.VacancyReference!.Value,
             VacancyTitle = request.VacancyTitle,
-            CreatedDate = request.CreatedDate,
-            SlaDeadLine = request.SlaDeadLine,
+            CreatedDate = request.CreatedDate!.Value,
+            SlaDeadLine = request.SlaDeadLine!.Value,
             ReviewedDate = request.ReviewedDate,
             Status = request.Status,
-            SubmissionCount = request.SubmissionCount,
+            SubmissionCount = request.SubmissionCount!.Value,
             ReviewedByUserEmail = request.ReviewedByUserEmail,
             SubmittedByUserEmail = request.SubmittedByUserEmail,
             ClosedDate = request.ClosedDate,

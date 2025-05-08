@@ -18,5 +18,6 @@ CREATE TABLE dbo.[VacancyReview] (
     [DismissedAutomatedQAOutcomeIndicators]     nvarchar(max)       NOT NULL Default('[]'),
     [UpdatedFieldIdentifiers]                   nvarchar(max)       NOT NULL Default('[]'),
     [VacancySnapshot]                           nvarchar(max)       NOT NULL,
-    CONSTRAINT [PK_VacancyReview] PRIMARY KEY (Id)
+    CONSTRAINT [PK_VacancyReview] PRIMARY KEY (Id),
+    INDEX [IX_VacancyReview_VacancyReference] NONCLUSTERED(VacancyReference)
 )

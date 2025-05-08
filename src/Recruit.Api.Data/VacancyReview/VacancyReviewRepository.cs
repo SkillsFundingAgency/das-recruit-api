@@ -15,12 +15,13 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
     public Task<VacancyReviewEntity?> GetOneAsync(Guid key, CancellationToken cancellationToken)
     {
         return dataContext.VacancyReviewEntities
+            .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == key, cancellationToken);
     }
 
     public async Task<UpsertResult<VacancyReviewEntity>> UpsertOneAsync(VacancyReviewEntity entity, CancellationToken cancellationToken)
     {
-        var existingEntity = await GetOneAsync(entity.Id, cancellationToken);
+        var existingEntity = await dataContext.VacancyReviewEntities.FirstOrDefaultAsync(x => x.Id == entity.Id, cancellationToken);
         if (existingEntity is null)
         {
             await dataContext.VacancyReviewEntities.AddAsync(entity, cancellationToken);

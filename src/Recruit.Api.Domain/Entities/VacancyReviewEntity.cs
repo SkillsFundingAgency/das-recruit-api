@@ -21,7 +21,7 @@ public class VacancyReviewEntity
     public required string SubmittedByUserEmail { get; init; }
     public DateTime? ClosedDate { get; init; }
     [MaxLength(50)]
-    public string? ManualOutcome { get; init; }
+    public string? ManualOutcome { get; set; }
     public string? ManualQaComment { get; init; }
     public required string ManualQaFieldIndicators { get; init; }
     public string? AutomatedQaOutcome { get; init; }

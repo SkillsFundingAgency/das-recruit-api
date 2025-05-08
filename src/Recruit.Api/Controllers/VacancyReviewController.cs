@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
@@ -55,31 +54,32 @@ public class VacancyReviewController: ControllerBase
     public async Task<IResult> PatchOne(
         [FromServices] IVacancyReviewRepository repository,
         [FromRoute] Guid id,
-        [FromBody] JsonPatchDocument patchRequest,
+        [FromBody] JsonPatchDocument<VacancyReview> patchRequest,
         CancellationToken cancellationToken)
     {
-        var employerProfile = await repository.GetOneAsync(id, cancellationToken);
-        if (employerProfile is null)
+        var vacancyReview = await repository.GetOneAsync(id, cancellationToken);
+        if (vacancyReview is null)
         {
             return Results.NotFound();
         }
-
-        var patchDocument = patchRequest.ToDomain<VacancyReviewEntity>();
+        
         try
         {
-            patchDocument.ThrowIfOperationsOn([
-                nameof(VacancyReviewEntity.VacancyReference),
-                nameof(VacancyReviewEntity.CreatedDate)
+            patchRequest.ThrowIfOperationsOn([
+                nameof(VacancyReview.VacancyReference),
+                nameof(VacancyReview.CreatedDate)
             ]);
-            patchDocument.ApplyTo(employerProfile);
+            
+            var patchDocument = patchRequest.ToDomain<VacancyReview, VacancyReviewEntity>();
+            patchDocument.ApplyTo(vacancyReview);
         }
         catch (JsonPatchException ex)
         {
             return TypedResults.ValidationProblem(ex.ToProblemsDictionary());
         }
 
-        await repository.UpsertOneAsync(employerProfile, cancellationToken);
-        return TypedResults.Ok(employerProfile.ToPatchResponse());
+        await repository.UpsertOneAsync(vacancyReview, cancellationToken);
+        return TypedResults.Ok(vacancyReview.ToPatchResponse());
     }
     
     [HttpDelete]

@@ -24,7 +24,6 @@ public class WhenGettingVacancyReview: BaseFixture
         // assert
         response.EnsureSuccessStatusCode();
         vacancyReview.Should().BeEquivalentTo(expected, options => options
-            .ExcludingMissingMembers()
             .Excluding(x => x.ManualQaFieldIndicators)
             .Excluding(x => x.UpdatedFieldIdentifiers)
             .Excluding(x => x.DismissedAutomatedQaOutcomeIndicators)
@@ -71,7 +70,6 @@ public class WhenGettingVacancyReview: BaseFixture
         response.EnsureSuccessStatusCode();
         vacancyReviews.Should().HaveCount(3);
         vacancyReviews.Should().BeEquivalentTo(expected, options => options
-            .ExcludingMissingMembers()
             .Excluding(x => x.ManualQaFieldIndicators)
             .Excluding(x => x.UpdatedFieldIdentifiers)
             .Excluding(x => x.DismissedAutomatedQaOutcomeIndicators)

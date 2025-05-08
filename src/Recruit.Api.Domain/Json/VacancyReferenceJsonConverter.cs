@@ -18,9 +18,10 @@ public class VacancyReferenceJsonConverter : JsonConverter<VacancyReference>
 
     public override void Write(Utf8JsonWriter writer, VacancyReference value, JsonSerializerOptions options)
     {
-        if (value == VacancyReference.None)
+        if (VacancyReference.None.Equals(value))
         {
             writer.WriteNullValue();
+            return;
         }
         
         writer.WriteStringValue(value.ToString());
