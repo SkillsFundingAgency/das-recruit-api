@@ -40,7 +40,6 @@ resources:
     source: das-employer-config
     branch: master
 
-
 stages:
 - stage: Build
   jobs:
