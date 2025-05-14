@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Moq.Language;
 using Moq.Language.Flow;
 using SFA.DAS.Recruit.Api.Data;
 
@@ -37,6 +38,13 @@ public static class MoqExtensions
 
     public static IReturnsResult<IRecruitDataContext> ReturnsDbSet<TEntity>(
         this ISetup<IRecruitDataContext, DbSet<TEntity>> setupResult,
+        IEnumerable<TEntity> entities) where TEntity : class
+    {
+        return setupResult.Returns(entities.BuildDbSet());
+    }
+    
+    public static ISetupSequentialResult<DbSet<TEntity>> ReturnsDbSet<TEntity>(
+        this ISetupSequentialResult<DbSet<TEntity>> setupResult,
         IEnumerable<TEntity> entities) where TEntity : class
     {
         return setupResult.Returns(entities.BuildDbSet());

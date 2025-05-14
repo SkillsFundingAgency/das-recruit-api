@@ -12,6 +12,7 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Recruit.Api.AppStart;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Filters;
 
 namespace SFA.DAS.Recruit.Api;
@@ -108,6 +109,7 @@ internal class Startup
             c.OperationFilter<SwaggerVersionHeaderFilter>();
             c.DocumentFilter<JsonPatchDocumentFilter>();
             c.DocumentFilter<HealthChecksFilter>();
+            c.MapType<VacancyReference>(() => new OpenApiSchema { Type = "string" });
         });
         services.AddApiVersioning(opt =>
         {
