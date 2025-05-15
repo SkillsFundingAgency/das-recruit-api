@@ -61,7 +61,7 @@ internal class WhenGettingAllByUkprn
         context.Setup(x => x.ApplicationReviewEntities)
             .ReturnsDbSet(allApplications);
 
-        var actual = await repository.GetAllByUkprn(ukprn, status.ToString(), token);
+        var actual = await repository.GetAllByUkprn(ukprn, token);
 
         actual.Should().BeEquivalentTo(applicationsReviews);
     }

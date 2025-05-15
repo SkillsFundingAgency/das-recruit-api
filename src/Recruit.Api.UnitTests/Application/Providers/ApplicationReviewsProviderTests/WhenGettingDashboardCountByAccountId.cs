@@ -11,57 +11,52 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
         [Test, MoqAutoData]
         public async Task GettingDashboardByAccountId_Given_Status_Submitted_And_ReviewDate_Null_ShouldReturnDashboard(
             long accountId,
-            ApplicationReviewStatus status,
             CancellationToken token,
             List<ApplicationReviewEntity> entities,
             [Frozen] Mock<IApplicationReviewRepository> repositoryMock,
             [Greedy] ApplicationReviewsProvider provider)
         {
             // Arrange
-            status = ApplicationReviewStatus.New;
             foreach (var entity in entities)
             {
-                entity.Status = status.ToString();
-                entity.ReviewedDate = null;
+                entity.Status = ApplicationReviewStatus.New.ToString();
                 entity.WithdrawnDate = null;
             }
-            repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, status.ToString(), token))
+            repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, token))
                 .ReturnsAsync(entities);
             // Act
-            var result = await provider.GetCountByAccountId(accountId, status, token);
+            var result = await provider.GetCountByAccountId(accountId, token);
             
             // Assert
             result.NewApplicationsCount.Should().Be(entities.Count);
             result.EmployerReviewedApplicationsCount.Should().Be(0);
-            repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, status.ToString(), token), Times.Once);
+            repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, token), Times.Once);
         }
 
-        [Test, MoqAutoData]
+        [Test]
+        [MoqInlineAutoData(ApplicationReviewStatus.EmployerUnsuccessful)]
+        [MoqInlineAutoData(ApplicationReviewStatus.EmployerInterviewing)]
         public async Task GettingDashboardByAccountId_Given_Status_Submitted_And_ReviewDate__Not_Null_ShouldReturnDashboard(
-            long accountId,
             ApplicationReviewStatus status,
+            long accountId,
             CancellationToken token,
             List<ApplicationReviewEntity> entities,
             [Frozen] Mock<IApplicationReviewRepository> repositoryMock,
             [Greedy] ApplicationReviewsProvider provider)
         {
             // Arrange
-            status = ApplicationReviewStatus.Interviewing;
             foreach (var entity in entities)
             {
                 entity.Status = status.ToString();
-                entity.ReviewedDate = DateTime.Now;
-                entity.WithdrawnDate = null;
             }
-            repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, status.ToString(), token))
+            repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, token))
                 .ReturnsAsync(entities);
             // Act
-            var result = await provider.GetCountByAccountId(accountId, status, token);
+            var result = await provider.GetCountByAccountId(accountId, token);
 
             // Assert
-            result.NewApplicationsCount.Should().Be(0);
             result.EmployerReviewedApplicationsCount.Should().Be(entities.Count);
-            repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, status.ToString(), token), Times.Once);
+            repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, token), Times.Once);
         }
     }
 }

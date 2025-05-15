@@ -61,7 +61,7 @@ internal class WhenGettingAllByAccountId
         context.Setup(x => x.ApplicationReviewEntities)
             .ReturnsDbSet(allApplications);
 
-        var actual = await repository.GetAllByAccountId(accountId, status.ToString(), token);
+        var actual = await repository.GetAllByAccountId(accountId, token);
 
         actual.Should().BeEquivalentTo(applicationsReviews);
     }

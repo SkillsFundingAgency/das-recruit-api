@@ -24,9 +24,9 @@ public interface IApplicationReviewsProvider
         bool isAscending = false,
         CancellationToken token = default);
 
-    Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationReviewStatus status, CancellationToken token = default);
+    Task<DashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default);
 
-    Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationReviewStatus status, CancellationToken token = default);
+    Task<DashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default);
 
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
 
@@ -46,8 +46,8 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
     public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
         int pageNumber,
         int pageSize,
-        string sortColumn,
-        bool isAscending,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
         CancellationToken token = default)
     {
         return await repository.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
@@ -56,22 +56,23 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
     public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
-        string sortColumn = "CreatedDate",
-        bool isAscending = false, CancellationToken token = default)
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default)
     {
         return await repository.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
-    public async Task<DashboardModel> GetCountByAccountId(long accountId, ApplicationReviewStatus status, CancellationToken token = default)
+    public async Task<DashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByAccountId(accountId, status.ToString(), token);
+        var applicationReviews = await repository.GetAllByAccountId(accountId, token);
 
         return GetDashboardModel(applicationReviews);
     }
 
-    public async Task<DashboardModel> GetCountByUkprn(int ukprn, ApplicationReviewStatus status, CancellationToken token = default)
+    public async Task<DashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByUkprn(ukprn, status.ToString(), token);
+        var applicationReviews = await repository.GetAllByUkprn(ukprn, token);
 
         return GetDashboardModel(applicationReviews);
     }
@@ -106,8 +107,11 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
     {
         return new DashboardModel
         {
-            NewApplicationsCount = applicationReviews.Count(fil => fil.Status == ApplicationReviewStatus.New.ToString() && fil.WithdrawnDate is null),
-            EmployerReviewedApplicationsCount = applicationReviews.Count(fil => fil is { ReviewedDate: not null, WithdrawnDate: null}),
+            NewApplicationsCount = applicationReviews.Count(fil =>
+                fil.Status == ApplicationReviewStatus.New.ToString() && fil.WithdrawnDate is null),
+            EmployerReviewedApplicationsCount = applicationReviews.Count(entity =>
+                entity.Status == ApplicationReviewStatus.EmployerUnsuccessful.ToString() ||
+                entity.Status == ApplicationReviewStatus.EmployerInterviewing.ToString()),
         };
     }
 
