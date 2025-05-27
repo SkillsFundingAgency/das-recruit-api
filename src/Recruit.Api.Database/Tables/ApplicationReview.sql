@@ -21,8 +21,8 @@ CREATE TABLE dbo.[ApplicationReview] (
     [AdditionalQuestion2]           NVARCHAR(max) NULL,
     [VacancyTitle]                  NVARCHAR(500) NOT NULL,
     CONSTRAINT [PK_ApplicationReview] PRIMARY KEY (Id),
-    INDEX [IX_ApplicationReview_Ukprn] NONCLUSTERED(Ukprn),
-    INDEX [IX_ApplicationReview_AccountId] NONCLUSTERED(AccountId),
+    INDEX [IX_ApplicationReview_Ukprn] NONCLUSTERED(Ukprn) INCLUDE ([AccountId], [AccountLegalEntityId], [AdditionalQuestion1], [AdditionalQuestion2], [ApplicationId], [CandidateFeedback], [CandidateId], [CreatedDate], [DateSharedWithEmployer], [EmployerFeedback], [HasEverBeenEmployerInterviewing], [LegacyApplicationId], [ReviewedDate], [Status], [StatusUpdatedDate], [SubmittedDate], [VacancyReference], [VacancyTitle], [WithdrawnDate]),
+    INDEX [IX_ApplicationReview_AccountId] NONCLUSTERED(AccountId)  INCLUDE ([Ukprn], [AccountLegalEntityId], [AdditionalQuestion1], [AdditionalQuestion2], [ApplicationId], [CandidateFeedback], [CandidateId], [CreatedDate], [DateSharedWithEmployer], [EmployerFeedback], [HasEverBeenEmployerInterviewing], [LegacyApplicationId], [ReviewedDate], [Status], [StatusUpdatedDate], [SubmittedDate], [VacancyReference], [VacancyTitle], [WithdrawnDate]),
     INDEX [IX_ApplicationReview_CandidateId] NONCLUSTERED(CandidateId),
     INDEX [IX_ApplicationReview_VacancyRef] NONCLUSTERED(VacancyReference),
     INDEX [IX_ApplicationReview_Status] NONCLUSTERED(Status)
