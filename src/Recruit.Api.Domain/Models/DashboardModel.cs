@@ -4,6 +4,5 @@
     {
         public int NewApplicationsCount { get; init; } = 0;
         public int EmployerReviewedApplicationsCount { get; init; } = 0;
-        public bool HasNoApplications { get; init; } = false;
     }
 }

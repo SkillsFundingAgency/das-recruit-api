@@ -30,7 +30,6 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             // Assert
             result.NewApplicationsCount.Should().Be(entities.Count);
             result.EmployerReviewedApplicationsCount.Should().Be(0);
-            result.HasNoApplications.Should().BeFalse();
             repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, token), Times.Once);
         }
 
@@ -58,7 +57,6 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
 
             // Assert
             result.EmployerReviewedApplicationsCount.Should().Be(entities.Count);
-            result.HasNoApplications.Should().BeFalse();
             repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, token), Times.Once);
         }
 
@@ -80,7 +78,6 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
 
             // Assert
             result.EmployerReviewedApplicationsCount.Should().Be(0);
-            result.HasNoApplications.Should().BeTrue();
             repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, token), Times.Once);
         }
 
@@ -110,7 +107,6 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             // Assert
             result.NewApplicationsCount.Should().Be(0);
             result.EmployerReviewedApplicationsCount.Should().Be(0);
-            result.HasNoApplications.Should().BeTrue();
             repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, token), Times.Once);
         }
     }

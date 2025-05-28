@@ -111,24 +111,23 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
                 fil is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
             EmployerReviewedApplicationsCount = applicationReviews.Count(entity =>
                 entity.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing)),
-            HasNoApplications = !applicationReviews.Any(fil => fil.WithdrawnDate is null),
         };
     }
 
     private static List<ApplicationReviewsStats> GetApplicationReviewsStats(List<ApplicationReviewEntity> applicationReviews)
     {
         return applicationReviews
-            .Where(fil => fil.WithdrawnDate is null)
             .GroupBy(fil => fil.VacancyReference)
             .Select(group => new ApplicationReviewsStats
             {
                 VacancyReference = group.Key,
-                NewApplications = group.Count(entity => entity.Status == nameof(ApplicationReviewStatus.New)),
-                SharedApplications = group.Count(entity => entity.Status == nameof(ApplicationReviewStatus.Shared)),
-                SuccessfulApplications = group.Count(entity => entity.Status == nameof(ApplicationReviewStatus.Successful)),
-                UnsuccessfulApplications = group.Count(entity => entity.Status == nameof(ApplicationReviewStatus.Unsuccessful)),
-                EmployerReviewedApplications = group.Count(entity => entity.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing)),
-                Applications = group.Count()
+                NewApplications = group.Count(entity => entity is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
+                SharedApplications = group.Count(entity => entity is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null }),
+                SuccessfulApplications = group.Count(entity => entity is { Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null }),
+                UnsuccessfulApplications = group.Count(entity => entity is { Status: nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate: null }),
+                EmployerReviewedApplications = group.Count(entity => entity.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing) && entity.WithdrawnDate == null),
+                Applications = group.Count(entity => entity.WithdrawnDate == null),
+                HasNoApplications = group.All(entity => entity.WithdrawnDate != null)
             })
             .ToList();
     }
