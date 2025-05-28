@@ -108,10 +108,10 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
         return new DashboardModel
         {
             NewApplicationsCount = applicationReviews.Count(fil =>
-                fil.Status == ApplicationReviewStatus.New.ToString() && fil.WithdrawnDate is null),
+                fil is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
             EmployerReviewedApplicationsCount = applicationReviews.Count(entity =>
-                entity.Status == ApplicationReviewStatus.EmployerUnsuccessful.ToString() ||
-                entity.Status == ApplicationReviewStatus.EmployerInterviewing.ToString()),
+                entity.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing)),
+            HasNoApplications = !applicationReviews.Any(fil => fil.WithdrawnDate is null),
         };
     }
 
@@ -123,11 +123,11 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
             .Select(group => new ApplicationReviewsStats
             {
                 VacancyReference = group.Key,
-                NewApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.New.ToString()),
-                SharedApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.Shared.ToString()),
-                SuccessfulApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.Successful.ToString()),
-                UnsuccessfulApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.Unsuccessful.ToString()),
-                EmployerReviewedApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.EmployerUnsuccessful.ToString() || entity.Status == ApplicationReviewStatus.EmployerInterviewing.ToString()),
+                NewApplications = group.Count(entity => entity.Status == nameof(ApplicationReviewStatus.New)),
+                SharedApplications = group.Count(entity => entity.Status == nameof(ApplicationReviewStatus.Shared)),
+                SuccessfulApplications = group.Count(entity => entity.Status == nameof(ApplicationReviewStatus.Successful)),
+                UnsuccessfulApplications = group.Count(entity => entity.Status == nameof(ApplicationReviewStatus.Unsuccessful)),
+                EmployerReviewedApplications = group.Count(entity => entity.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing)),
                 Applications = group.Count()
             })
             .ToList();

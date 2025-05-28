@@ -2,7 +2,8 @@
 {
     public record DashboardModel
     {
-        public int NewApplicationsCount { get; set; } = 0;
-        public int EmployerReviewedApplicationsCount { get; set; } = 0;
+        public int NewApplicationsCount { get; init; } = 0;
+        public int EmployerReviewedApplicationsCount { get; init; } = 0;
+        public bool HasNoApplications { get; init; } = false;
     }
 }
