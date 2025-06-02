@@ -18,6 +18,13 @@ CREATE TABLE dbo.[VacancyReview] (
     [DismissedAutomatedQAOutcomeIndicators]     nvarchar(max)       NOT NULL Default('[]'),
     [UpdatedFieldIdentifiers]                   nvarchar(max)       NOT NULL Default('[]'),
     [VacancySnapshot]                           nvarchar(max)       NOT NULL,
+    [AccountId]                                 BIGINT              NOT NULL DEFAULT(0),
+    [AccountLegalEntityId]                      BIGINT              NOT NULL DEFAULT(0),
+    [Ukprn]                                     BIGINT              NOT NULL DEFAULT(0),
+    [OwnerType]                                 tinyint             NOT NULL DEFAULT(3)
     CONSTRAINT [PK_VacancyReview] PRIMARY KEY (Id),
-    INDEX [IX_VacancyReview_VacancyReference] NONCLUSTERED(VacancyReference)
+    INDEX [IX_VacancyReview_VacancyReference] NONCLUSTERED(VacancyReference),
+    INDEX [IX_VacancyReview_AccountId] NONCLUSTERED(AccountId),
+    INDEX [IX_VacancyReview_AccountLegalEntityId] NONCLUSTERED(AccountLegalEntityId),
+    INDEX [IX_VacancyReview_Ukprn] NONCLUSTERED(Ukprn)
 )

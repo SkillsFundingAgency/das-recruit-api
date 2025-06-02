@@ -24,4 +24,8 @@ public class PutVacancyReviewRequest
     public required List<string> DismissedAutomatedQaOutcomeIndicators { get; init; }
     public required List<string> UpdatedFieldIdentifiers { get; init; }
     public required string VacancySnapshot { get; init; }
+    public long Ukprn { get; set; }
+    public long AccountId { get; set; }
+    public long AccountLegalEntityId { get; set; }
+    public OwnerType OwnerType { get; set; }
 }
