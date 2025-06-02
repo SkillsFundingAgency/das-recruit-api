@@ -30,4 +30,8 @@ public class VacancyReviewEntity
     public required string DismissedAutomatedQaOutcomeIndicators { get; init; }
     public required string UpdatedFieldIdentifiers { get; init; }
     public required string VacancySnapshot { get; init; }
+    public required long AccountId { get; init; }
+    public required long AccountLegalEntityId { get; init; }
+    public required long Ukprn { get; init; }
+    public required OwnerType OwnerType { get; init; }
 }

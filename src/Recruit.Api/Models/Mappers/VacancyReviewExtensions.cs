@@ -30,6 +30,10 @@ public static class VacancyReviewExtensions
             VacancyReference = entity.VacancyReference,
             VacancySnapshot = entity.VacancySnapshot,
             VacancyTitle = entity.VacancyTitle,
+            OwnerType = entity.OwnerType,
+            AccountId = entity.AccountId,
+            AccountLegalEntityId = entity.AccountLegalEntityId,
+            Ukprn = entity.Ukprn
         };
     }
     
@@ -77,6 +81,10 @@ public static class VacancyReviewExtensions
             DismissedAutomatedQaOutcomeIndicators = JsonSerializer.Serialize(request.DismissedAutomatedQaOutcomeIndicators, JsonConfig.Options),
             UpdatedFieldIdentifiers = JsonSerializer.Serialize(request.UpdatedFieldIdentifiers, JsonConfig.Options),
             VacancySnapshot = request.VacancySnapshot,
+            Ukprn = request.Ukprn,
+            AccountId = request.AccountId,
+            OwnerType = request.OwnerType,
+            AccountLegalEntityId = request.AccountLegalEntityId
         };
     }
 }
