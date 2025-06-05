@@ -36,7 +36,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             var result = await provider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token);
 
             // Assert
-            result.Should().HaveCount(4);
+            result.Should().HaveCount(5);
 
             result[0].VacancyReference.Should().Be(1);
             result[0].NewApplications.Should().Be(1);
@@ -70,6 +70,14 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             result[3].Applications.Should().Be(2);
             result[3].HasNoApplications.Should().BeFalse();
 
+            result[4].VacancyReference.Should().Be(5);
+            result[4].NewApplications.Should().Be(0);
+            result[4].SharedApplications.Should().Be(0);
+            result[4].SuccessfulApplications.Should().Be(0);
+            result[4].UnsuccessfulApplications.Should().Be(0);
+            result[4].Applications.Should().Be(0);
+            result[4].HasNoApplications.Should().BeTrue();
+
             repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token), Times.Once);
         }
 
@@ -101,7 +109,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             var result = await provider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token);
 
             // Assert
-            result.Should().HaveCount(4);
+            result.Should().HaveCount(5);
 
             result[0].VacancyReference.Should().Be(1);
             result[0].NewApplications.Should().Be(0);
@@ -134,6 +142,14 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             result[3].UnsuccessfulApplications.Should().Be(0);
             result[3].Applications.Should().Be(0);
             result[3].HasNoApplications.Should().BeTrue();
+
+            result[4].VacancyReference.Should().Be(5);
+            result[4].NewApplications.Should().Be(0);
+            result[4].SharedApplications.Should().Be(0);
+            result[4].SuccessfulApplications.Should().Be(0);
+            result[4].UnsuccessfulApplications.Should().Be(0);
+            result[4].Applications.Should().Be(0);
+            result[4].HasNoApplications.Should().BeTrue();
 
             repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token), Times.Once);
         }
