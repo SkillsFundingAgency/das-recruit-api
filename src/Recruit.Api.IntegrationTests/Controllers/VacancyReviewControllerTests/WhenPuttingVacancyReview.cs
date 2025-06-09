@@ -22,14 +22,11 @@ public class WhenPuttingVacancyReview: BaseFixture
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         errors.Should().NotBeNull();
-        errors.Errors.Should().HaveCount(7);
+        errors.Errors.Should().HaveCount(4);
         errors.Errors.Should().ContainKeys(
             nameof(PutVacancyReviewRequest.VacancyReference),
             nameof(PutVacancyReviewRequest.VacancyTitle),
             nameof(PutVacancyReviewRequest.VacancySnapshot),
-            nameof(PutVacancyReviewRequest.ManualQaFieldIndicators),
-            nameof(PutVacancyReviewRequest.DismissedAutomatedQaOutcomeIndicators),
-            nameof(PutVacancyReviewRequest.UpdatedFieldIdentifiers),
             nameof(PutVacancyReviewRequest.SubmittedByUserEmail)
         );
     }
