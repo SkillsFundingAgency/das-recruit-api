@@ -13,6 +13,7 @@ CREATE TABLE dbo.[ApplicationReview] (
     [ReviewedDate]                  DATETIME NULL,   
     [SubmittedDate]                 DATETIME NULL,   
     [Status]                        NVARCHAR(50) NOT NULL,
+    [TemporaryReviewStatus]         NVARCHAR(50) NULL,
     [StatusUpdatedDate]             DATETIME NULL,
     [VacancyReference]              BIGINT NOT NULL,
     [LegacyApplicationId]           uniqueidentifier NULL,

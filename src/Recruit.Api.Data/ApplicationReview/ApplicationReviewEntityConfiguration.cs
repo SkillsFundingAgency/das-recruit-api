@@ -27,6 +27,7 @@ internal class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<A
         builder.Property(x => x.ReviewedDate).HasColumnName("ReviewedDate").HasColumnType("DateTime");
         builder.Property(x => x.SubmittedDate).HasColumnName("SubmittedDate").HasColumnType("DateTime");
         builder.Property(x => x.Status).HasColumnName("Status").HasColumnType("nvarchar(50)").IsRequired();
+        builder.Property(x => x.TemporaryReviewStatus).HasColumnName("TemporaryReviewStatus").HasColumnType("nvarchar(50)");
         builder.Property(x => x.StatusUpdatedDate).HasColumnName("StatusUpdatedDate").HasColumnType("DateTime");
         builder.Property(x => x.VacancyReference).HasColumnName("VacancyReference").HasColumnType("bigint").IsRequired();
         builder.Property(x => x.LegacyApplicationId).HasColumnName("LegacyApplicationId").HasColumnType("uniqueidentifier");
