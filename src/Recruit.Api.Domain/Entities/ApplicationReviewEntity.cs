@@ -23,4 +23,5 @@ public class ApplicationReviewEntity
     public string? CandidateFeedback { get; set; }
     public string? EmployerFeedback { get; set; }
     public string Status { get; set; }
+    public string? TemporaryReviewStatus { get; set; }
 }
