@@ -98,7 +98,7 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
     {
         var applicationReviews = await repository.GetAllByAccountId(accountId, vacancyReferences, token);
 
-        return GetApplicationReviewsStats(applicationReviews);
+        return GetApplicationReviewsStats(vacancyReferences, applicationReviews);
     }
 
     public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences,
@@ -106,7 +106,7 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
     {
         var applicationReviews = await repository.GetAllByUkprn(ukprn, vacancyReferences, token);
 
-        return GetApplicationReviewsStats(applicationReviews);
+        return GetApplicationReviewsStats(vacancyReferences, applicationReviews);
     }
 
     private static DashboardModel GetDashboardModel(List<ApplicationReviewEntity> applicationReviews)
@@ -114,28 +114,41 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
         return new DashboardModel
         {
             NewApplicationsCount = applicationReviews.Count(fil =>
-                fil.Status == ApplicationReviewStatus.New.ToString() && fil.WithdrawnDate is null),
+                fil is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
             EmployerReviewedApplicationsCount = applicationReviews.Count(entity =>
-                entity.Status == ApplicationReviewStatus.EmployerUnsuccessful.ToString() ||
-                entity.Status == ApplicationReviewStatus.EmployerInterviewing.ToString()),
+                entity.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing)),
         };
     }
 
-    private static List<ApplicationReviewsStats> GetApplicationReviewsStats(List<ApplicationReviewEntity> applicationReviews)
+    private static List<ApplicationReviewsStats> GetApplicationReviewsStats(List<long> vacancyReferences, List<ApplicationReviewEntity> applicationReviews)
     {
-        return applicationReviews
-            .Where(fil => fil.WithdrawnDate is null)
-            .GroupBy(fil => fil.VacancyReference)
-            .Select(group => new ApplicationReviewsStats
-            {
-                VacancyReference = group.Key,
-                NewApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.New.ToString()),
-                SharedApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.Shared.ToString()),
-                SuccessfulApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.Successful.ToString()),
-                UnsuccessfulApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.Unsuccessful.ToString()),
-                EmployerReviewedApplications = group.Count(entity => entity.Status == ApplicationReviewStatus.EmployerUnsuccessful.ToString() || entity.Status == ApplicationReviewStatus.EmployerInterviewing.ToString()),
-                Applications = group.Count()
-            })
+        return vacancyReferences
+            .GroupJoin(
+                applicationReviews,
+                vacancyRef => vacancyRef,
+                review => review.VacancyReference,
+                (vacancyRef, reviews) =>
+                {
+                    var applicationReviewEntities = reviews.ToList();
+
+                    return new ApplicationReviewsStats {
+                        VacancyReference = vacancyRef,
+                        NewApplications = applicationReviewEntities.Count(e =>
+                            e is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
+                        SharedApplications = applicationReviewEntities.Count(e =>
+                            e is {Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null}),
+                        SuccessfulApplications = applicationReviewEntities.Count(e =>
+                            e is {Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null}),
+                        UnsuccessfulApplications = applicationReviewEntities.Count(e =>
+                            e is {Status: nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate: null}),
+                        EmployerReviewedApplications = applicationReviewEntities.Count(e =>
+                            (e.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or
+                                nameof(ApplicationReviewStatus.EmployerInterviewing)) &&
+                            e.WithdrawnDate == null),
+                        Applications = applicationReviewEntities.Count(e => e.WithdrawnDate == null),
+                        HasNoApplications = applicationReviewEntities.All(e => e.WithdrawnDate != null)
+                    };
+                })
             .ToList();
     }
 }
