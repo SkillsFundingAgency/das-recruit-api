@@ -39,7 +39,7 @@ internal class WhenMappingApplicationReviewEntity
     public void To_ApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         // act
-        var result = entity.ToApplicationReview();
+        var result = entity.ToGetResponse();
         
         // assert
         result.Should().BeEquivalentTo(entity);

@@ -8,34 +8,6 @@ namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
 internal static class ApplicationReviewExtensions
 {
-    public static ApplicationReview ToApplicationReview(this ApplicationReviewEntity entity)
-    {
-        return new ApplicationReview {
-            AccountId = entity.AccountId,
-            AccountLegalEntityId = entity.AccountLegalEntityId,
-            AdditionalQuestion1 = entity.AdditionalQuestion1,
-            AdditionalQuestion2 = entity.AdditionalQuestion2,
-            ApplicationId = entity.ApplicationId,
-            CandidateFeedback = entity.CandidateFeedback,
-            CandidateId = entity.CandidateId,
-            CreatedDate = entity.CreatedDate,
-            DateSharedWithEmployer = entity.DateSharedWithEmployer,
-            EmployerFeedback = entity.EmployerFeedback,
-            HasEverBeenEmployerInterviewing = entity.HasEverBeenEmployerInterviewing,
-            Id = entity.Id,
-            LegacyApplicationId = entity.LegacyApplicationId,
-            ReviewedDate = entity.ReviewedDate,
-            Status = entity.Status,
-            TemporaryReviewStatus = entity.TemporaryReviewStatus,
-            StatusUpdatedDate = entity.StatusUpdatedDate,
-            SubmittedDate = entity.SubmittedDate,
-            Ukprn = entity.Ukprn,
-            VacancyReference = entity.VacancyReference,
-            VacancyTitle = entity.VacancyTitle,
-            WithdrawnDate = entity.WithdrawnDate,
-        };
-    }
-    
     public static GetApplicationReviewResponse ToGetResponse(this ApplicationReviewEntity entity)
     {
         return new GetApplicationReviewResponse {
@@ -161,5 +133,10 @@ internal static class ApplicationReviewExtensions
             
         result.Operations.AddRange(operations);
         return result;
+    }
+
+    public static List<GetApplicationReviewResponse> ToGetResponse(this List<ApplicationReviewEntity> entities)
+    {
+        return entities.Select(ToGetResponse).ToList();
     }
 }

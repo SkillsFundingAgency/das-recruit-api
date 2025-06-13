@@ -34,6 +34,7 @@ public interface IApplicationReviewsProvider
 
     Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(VacancyReference vacancyReference, CancellationToken token = default);
 }
 
 internal class ApplicationReviewsProvider(IApplicationReviewRepository repository) : IApplicationReviewsProvider
@@ -101,6 +102,11 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
         var applicationReviews = await repository.GetAllByUkprn(ukprn, vacancyReferences, token);
 
         return GetApplicationReviewsStats(applicationReviews);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(VacancyReference vacancyReference, CancellationToken token = default)
+    {
+        return await repository.GetAllByVacancyReference(vacancyReference.Value, token);
     }
 
     private static DashboardModel GetDashboardModel(List<ApplicationReviewEntity> applicationReviews)

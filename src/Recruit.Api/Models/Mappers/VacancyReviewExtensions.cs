@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using SFA.DAS.Recruit.Api.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Json;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
