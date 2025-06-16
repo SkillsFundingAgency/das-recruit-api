@@ -27,6 +27,7 @@ public interface IApplicationReviewRepository
     Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
+    Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(long vacancyReference, CancellationToken token = default);
 
 }
@@ -37,6 +38,12 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
             .FirstOrDefaultAsync(fil => fil.Id == id, token);
+    }
+    public async Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default)
+    {
+        return await recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .FirstOrDefaultAsync(fil => fil.ApplicationId == applicationId, token);
     }
 
     public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,

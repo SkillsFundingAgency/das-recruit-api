@@ -35,6 +35,7 @@ public interface IApplicationReviewsProvider
     Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(VacancyReference vacancyReference, CancellationToken token = default);
+    Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
 }
 
 internal class ApplicationReviewsProvider(IApplicationReviewRepository repository) : IApplicationReviewsProvider
@@ -42,6 +43,11 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
     public async Task<ApplicationReviewEntity?> GetById(Guid id, CancellationToken token = default)
     {
         return await repository.GetById(id, token);
+    }
+    
+    public async Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default)
+    {
+        return await repository.GetByApplicationId(applicationId, token);
     }
 
     public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
