@@ -18,11 +18,11 @@ public class PutVacancyReviewRequest
     public DateTime? ClosedDate { get; init; }
     public string? ManualOutcome { get; init; }
     public string? ManualQaComment { get; init; }
-    public required List<string> ManualQaFieldIndicators { get; init; }
+    public List<string>? ManualQaFieldIndicators { get; init; } = [];
     public string? AutomatedQaOutcome { get; init; }
     public string? AutomatedQaOutcomeIndicators { get; init; }
-    public required List<string> DismissedAutomatedQaOutcomeIndicators { get; init; }
-    public required List<string> UpdatedFieldIdentifiers { get; init; }
+    public List<string>? DismissedAutomatedQaOutcomeIndicators { get; init; } = [];
+    public List<string>? UpdatedFieldIdentifiers { get; init; } = [];
     public required string VacancySnapshot { get; init; }
     public long Ukprn { get; set; }
     public long AccountId { get; set; }
