@@ -117,6 +117,15 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
                 fil is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
             EmployerReviewedApplicationsCount = applicationReviews.Count(entity =>
                 entity.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing)),
+            SharedApplicationsCount = applicationReviews.Count(e =>
+                e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null }),
+            AllSharedApplicationsCount = applicationReviews.Count(e =>
+                e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null }),
+            SuccessfulApplicationsCount = applicationReviews.Count(e =>
+                e is { Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null }),
+            UnsuccessfulApplicationsCount = applicationReviews.Count(e =>
+                e is { Status: nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate: null }),
+            HasNoApplications = applicationReviews.All(e => e.WithdrawnDate != null)
         };
     }
 
