@@ -17,7 +17,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             [Greedy] ApplicationReviewsProvider provider)
         {
             // Arrange
-            var vacancyReferences = new List<long> { 1, 2, 3, 4, 5 };
+            var vacancyReferences = new List<long> { 1, 2, 3, 4, 5, 6 };
 
             var applicationReviews = new List<ApplicationReviewEntity>
             {
@@ -27,6 +27,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
                 new() { VacancyReference = 3, Status = nameof(ApplicationReviewStatus.InReview), ReviewedDate = DateTime.Now, WithdrawnDate = null },
                 new() { VacancyReference = 4, Status = nameof(ApplicationReviewStatus.Interviewing), WithdrawnDate = null },
                 new() { VacancyReference = 4, Status = nameof(ApplicationReviewStatus.Shared), WithdrawnDate = null },
+                new() { VacancyReference = 5, Status = nameof(ApplicationReviewStatus.Shared), DateSharedWithEmployer = DateTime.Now, WithdrawnDate = null },
             };
 
             repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token))
@@ -36,11 +37,12 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             var result = await provider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token);
 
             // Assert
-            result.Should().HaveCount(5);
+            result.Should().HaveCount(6);
 
             result[0].VacancyReference.Should().Be(1);
             result[0].NewApplications.Should().Be(1);
             result[0].SharedApplications.Should().Be(0);
+            result[0].AllSharedApplications.Should().Be(0);
             result[0].SuccessfulApplications.Should().Be(1);
             result[0].UnsuccessfulApplications.Should().Be(0);
             result[0].Applications.Should().Be(2);
@@ -49,6 +51,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             result[1].VacancyReference.Should().Be(2);
             result[1].NewApplications.Should().Be(0);
             result[1].SharedApplications.Should().Be(0);
+            result[1].AllSharedApplications.Should().Be(0);
             result[1].SuccessfulApplications.Should().Be(0);
             result[1].UnsuccessfulApplications.Should().Be(1);
             result[1].Applications.Should().Be(1);
@@ -57,6 +60,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             result[2].VacancyReference.Should().Be(3);
             result[2].NewApplications.Should().Be(0);
             result[2].SharedApplications.Should().Be(0);
+            result[2].AllSharedApplications.Should().Be(0);
             result[2].SuccessfulApplications.Should().Be(0);
             result[2].UnsuccessfulApplications.Should().Be(0);
             result[2].Applications.Should().Be(1);
@@ -65,6 +69,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             result[3].VacancyReference.Should().Be(4);
             result[3].NewApplications.Should().Be(0);
             result[3].SharedApplications.Should().Be(1);
+            result[3].AllSharedApplications.Should().Be(0);
             result[3].SuccessfulApplications.Should().Be(0);
             result[3].UnsuccessfulApplications.Should().Be(0);
             result[3].Applications.Should().Be(2);
@@ -72,11 +77,21 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
 
             result[4].VacancyReference.Should().Be(5);
             result[4].NewApplications.Should().Be(0);
-            result[4].SharedApplications.Should().Be(0);
+            result[4].SharedApplications.Should().Be(1);
             result[4].SuccessfulApplications.Should().Be(0);
             result[4].UnsuccessfulApplications.Should().Be(0);
-            result[4].Applications.Should().Be(0);
-            result[4].HasNoApplications.Should().BeTrue();
+            result[4].Applications.Should().Be(1);
+            result[4].AllSharedApplications.Should().Be(1);
+            result[4].HasNoApplications.Should().BeFalse();
+
+            result[5].VacancyReference.Should().Be(6);
+            result[5].NewApplications.Should().Be(0);
+            result[5].SharedApplications.Should().Be(0);
+            result[5].SuccessfulApplications.Should().Be(0);
+            result[5].UnsuccessfulApplications.Should().Be(0);
+            result[5].Applications.Should().Be(0);
+            result[5].AllSharedApplications.Should().Be(0);
+            result[5].HasNoApplications.Should().BeTrue();
 
             repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token), Times.Once);
         }
