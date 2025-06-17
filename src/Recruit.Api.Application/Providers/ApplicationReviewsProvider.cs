@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+﻿using System.Globalization;
+using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -120,7 +121,8 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
             SharedApplicationsCount = applicationReviews.Count(e =>
                 e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null }),
             AllSharedApplicationsCount = applicationReviews.Count(e =>
-                e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null }),
+                e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null } &&
+                e.DateSharedWithEmployer > DateTime.MinValue),
             SuccessfulApplicationsCount = applicationReviews.Count(e =>
                 e is { Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null }),
             UnsuccessfulApplicationsCount = applicationReviews.Count(e =>
@@ -140,18 +142,20 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
                 {
                     var applicationReviewEntities = reviews.ToList();
 
-                    return new ApplicationReviewsStats {
+                    return new ApplicationReviewsStats
+                    {
                         VacancyReference = vacancyRef,
                         NewApplications = applicationReviewEntities.Count(e =>
-                            e is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
+                            e is { Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null }),
                         SharedApplications = applicationReviewEntities.Count(e =>
-                            e is {Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null}),
-                        AllSharedApplications = applicationReviewEntities.Count(e => 
-                            e is {Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null}),
+                            e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null }),
+                        AllSharedApplications = applicationReviewEntities.Count(e =>
+                            e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null } &&
+                            e.DateSharedWithEmployer > DateTime.MinValue),
                         SuccessfulApplications = applicationReviewEntities.Count(e =>
-                            e is {Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null}),
+                            e is { Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null }),
                         UnsuccessfulApplications = applicationReviewEntities.Count(e =>
-                            e is {Status: nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate: null}),
+                            e is { Status: nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate: null }),
                         EmployerReviewedApplications = applicationReviewEntities.Count(e =>
                             e.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or
                                 nameof(ApplicationReviewStatus.EmployerInterviewing) &&
