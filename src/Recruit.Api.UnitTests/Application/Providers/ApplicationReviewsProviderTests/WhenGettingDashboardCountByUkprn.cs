@@ -51,6 +51,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             foreach (var entity in entities)
             {
                 entity.Status = status.ToString();
+                entity.WithdrawnDate = null;
             }
             repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, token))
                 .ReturnsAsync(entities);
@@ -59,6 +60,55 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
 
             // Assert
             result.EmployerReviewedApplicationsCount.Should().Be(entities.Count);
+            repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, token), Times.Once);
+        }
+
+        [Test]
+        [MoqInlineAutoData(ApplicationReviewStatus.EmployerUnsuccessful)]
+        [MoqInlineAutoData(ApplicationReviewStatus.EmployerInterviewing)]
+        public async Task GettingDashboardByUkprn_NoEntities_ShouldReturnDashboard(
+            ApplicationReviewStatus status,
+            int ukprn,
+            CancellationToken token,
+            [Frozen] Mock<IApplicationReviewRepository> repositoryMock,
+            [Greedy] ApplicationReviewsProvider provider)
+        {
+            // Arrange
+            repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, token))
+                .ReturnsAsync([]);
+            // Act
+            var result = await provider.GetCountByUkprn(ukprn, token);
+
+            // Assert
+            result.EmployerReviewedApplicationsCount.Should().Be(0);
+            repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, token), Times.Once);
+        }
+
+        [Test, MoqAutoData]
+        public async Task GettingDashboardByUkprn_Given_Status_WithdrawnDate_ShouldReturnDashboard(
+            int ukprn,
+            ApplicationReviewStatus status,
+            CancellationToken token,
+            List<ApplicationReviewEntity> entities,
+            [Frozen] Mock<IApplicationReviewRepository> repositoryMock,
+            [Greedy] ApplicationReviewsProvider provider)
+        {
+            // Arrange
+            status = ApplicationReviewStatus.New;
+            foreach (var entity in entities)
+            {
+                entity.Status = status.ToString();
+                entity.ReviewedDate = null;
+                entity.WithdrawnDate = DateTime.Now;
+            }
+            repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, token))
+                .ReturnsAsync(entities);
+            // Act
+            var result = await provider.GetCountByUkprn(ukprn, token);
+
+            // Assert
+            result.NewApplicationsCount.Should().Be(0);
+            result.EmployerReviewedApplicationsCount.Should().Be(0);
             repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, token), Times.Once);
         }
     }

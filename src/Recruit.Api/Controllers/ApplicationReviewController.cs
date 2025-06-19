@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
@@ -63,6 +64,32 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
         catch (Exception e)
         {
             logger.LogError(e, "Unable to Get application review by application id : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
+    [Route($"~/{RouteNames.ApplicationReview}/{{vacancyReference}}")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(List<GetApplicationReviewResponse>), StatusCodes.Status200OK)]
+    public async Task<IResult> GetManyByVacancyReference(
+        [FromRoute][Required] VacancyReference vacancyReference,
+        CancellationToken token)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get all application reviews by vacancyReference : {vacancyReference}", vacancyReference);
+
+            var response = await provider.GetAllByVacancyReference(vacancyReference, token);
+
+            return response is null or { Count: 0} 
+                ? Results.NotFound() 
+                : TypedResults.Ok(response.ToGetResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get application reviews by vacancyReference : An error occurred");
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
