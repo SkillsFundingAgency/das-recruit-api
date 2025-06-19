@@ -34,7 +34,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
 
                 var response = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
-                var mappedResults = response.Items.Select(app => app.ToApplicationReview());
+                var mappedResults = response.Items.Select(app => app.ToGetResponse());
 
                 return TypedResults.Ok(new ApplicationReviewsResponse(response.ToPageInfo(), mappedResults));
             }
