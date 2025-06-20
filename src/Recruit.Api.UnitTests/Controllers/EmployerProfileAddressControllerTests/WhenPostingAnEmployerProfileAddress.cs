@@ -11,18 +11,9 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileAddressContro
 
 internal class WhenPostingAnEmployerProfileAddress
 {
-    private Fixture _fixture;
-
-    [SetUp]
-    public void Setup()
-    {
-        _fixture = new Fixture();
-        _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-    }
-    
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_The_Profile_Is_Created(
+        EmployerProfileAddressEntity entity,
         long accountLegalEntityId,
         Mock<IEmployerProfileAddressRepository> repository,
         PostEmployerProfileAddressRequest request,
@@ -30,7 +21,6 @@ internal class WhenPostingAnEmployerProfileAddress
         CancellationToken token)
     {
         // arrange
-        var entity = _fixture.Create<EmployerProfileAddressEntity>();
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<EmployerProfileAddressEntity>(), token))
             .ReturnsAsync(UpsertResult.Create(entity, true));

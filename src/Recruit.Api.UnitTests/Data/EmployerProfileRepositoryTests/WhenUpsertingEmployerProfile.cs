@@ -7,24 +7,14 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.EmployerProfileRepositoryTests;
 
 internal class WhenUpsertingEmployerProfile
 {
-    private Fixture _fixture;
-
-    [SetUp]
-    public void Setup()
-    {
-        _fixture = new Fixture();
-        _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-    }
-    
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task UpsertOneAsync_Inserts_New_Entity(
+        EmployerProfileEntity entity,
         [Frozen] Mock<IRecruitDataContext> context,
         [Greedy] EmployerProfileRepository sut,
         CancellationToken token)
     {
         // arrange
-        var entity = _fixture.Create<EmployerProfileEntity>();
         var dbSet = new List<EmployerProfileEntity>().BuildDbSetMock();
         context.Setup(x => x.EmployerProfileEntities).Returns(dbSet.Object);
 
