@@ -21,10 +21,14 @@ CREATE TABLE dbo.[VacancyReview] (
     [AccountId]                                 BIGINT              NOT NULL DEFAULT(0),
     [AccountLegalEntityId]                      BIGINT              NOT NULL DEFAULT(0),
     [Ukprn]                                     BIGINT              NOT NULL DEFAULT(0),
-    [OwnerType]                                 tinyint             NOT NULL DEFAULT(3)
+    [OwnerType]                                 tinyint             NOT NULL DEFAULT(3),
+    [VacancyClosingDate]                        datetime            NULL,
     CONSTRAINT [PK_VacancyReview] PRIMARY KEY (Id),
     INDEX [IX_VacancyReview_VacancyReference] NONCLUSTERED(VacancyReference),
+    INDEX [IX_VacancyReview_VacancyReferenceStatus] NONCLUSTERED(VacancyReference,Status),
     INDEX [IX_VacancyReview_AccountId] NONCLUSTERED(AccountId),
     INDEX [IX_VacancyReview_AccountLegalEntityId] NONCLUSTERED(AccountLegalEntityId),
-    INDEX [IX_VacancyReview_Ukprn] NONCLUSTERED(Ukprn)
+    INDEX [IX_VacancyReview_Ukprn] NONCLUSTERED(Ukprn),
+    INDEX [IX_VacancyReview_UkprnOwnerTypeClosingDate] NONCLUSTERED(Ukprn,OwnerType,Status,VacancyClosingDate),
+    INDEX [IX_VacancyReview_AccountIdOwnerTypeClosingDate] NONCLUSTERED(AccountId,OwnerType,Status,VacancyClosingDate),
 )
