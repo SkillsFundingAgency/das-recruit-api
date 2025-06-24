@@ -28,5 +28,4 @@ public class PutVacancyReviewRequest
     public long AccountId { get; set; }
     public long AccountLegalEntityId { get; set; }
     public OwnerType OwnerType { get; set; }
-    public DateTime? VacancyClosingDate { get; set; }
 }

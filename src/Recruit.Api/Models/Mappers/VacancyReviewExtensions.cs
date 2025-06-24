@@ -32,8 +32,7 @@ public static class VacancyReviewExtensions
             OwnerType = entity.OwnerType,
             AccountId = entity.AccountId,
             AccountLegalEntityId = entity.AccountLegalEntityId,
-            Ukprn = entity.Ukprn,
-            VacancyClosingDate = entity.VacancyClosingDate
+            Ukprn = entity.Ukprn
         };
     }
     
@@ -84,8 +83,7 @@ public static class VacancyReviewExtensions
             Ukprn = request.Ukprn,
             AccountId = request.AccountId,
             OwnerType = request.OwnerType,
-            AccountLegalEntityId = request.AccountLegalEntityId,
-            VacancyClosingDate = request.VacancyClosingDate
+            AccountLegalEntityId = request.AccountLegalEntityId
         };
     }
 }
