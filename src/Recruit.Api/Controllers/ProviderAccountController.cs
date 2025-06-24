@@ -3,16 +3,19 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
+using SFA.DAS.Recruit.Api.Models.Responses.VacancyReview;
 
 namespace SFA.DAS.Recruit.Api.Controllers
 {
     [Route($"{RouteNames.Provider}/{{ukprn:int}}/")]
-    public class ProviderAccountController([FromServices]
-    IApplicationReviewsProvider provider,
+    public class ProviderAccountController(
+        [FromServices] IApplicationReviewsProvider provider,
+        [FromServices] IVacancyReviewRepository vacancyReviewRepository,
         ILogger<ApplicationReviewController> logger) : ControllerBase
     {
         [HttpGet]
@@ -41,6 +44,37 @@ namespace SFA.DAS.Recruit.Api.Controllers
             catch (Exception e)
             {
                 logger.LogError(e, "Unable to Get all application reviews by ukprn : An error occurred");
+                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("vacancyReviews")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(VacancyReviewsResponse), StatusCodes.Status200OK)]
+        public async Task<IResult> GetAllVacancyReviewsByUkprn(
+            [FromRoute][Required] int ukprn,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string sortColumn = nameof(VacancyReviewEntity.CreatedDate),
+            [FromQuery] bool isAscending = false,
+            [FromQuery] ReviewStatus reviewStatus = ReviewStatus.New,
+            CancellationToken token = default)
+        {
+            try
+            {
+                logger.LogInformation("Recruit API: Received query to get all vacancy reviews by ukprn : {Ukprn}", ukprn);
+
+                var response = await vacancyReviewRepository.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, reviewStatus, token);
+
+                var mappedResults = response.Items.Select(app => app.ToGetResponse());
+
+                return TypedResults.Ok(new VacancyReviewsResponse(response.ToPageInfo(), mappedResults));
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Unable to Get all vacancy reviews by ukprn : An error occurred");
                 return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }

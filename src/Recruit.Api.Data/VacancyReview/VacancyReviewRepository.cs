@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Data.VacancyReview;
@@ -8,6 +9,21 @@ namespace SFA.DAS.Recruit.Api.Data.VacancyReview;
 public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, Guid>, IWriteRepository<VacancyReviewEntity, Guid>
 {
     Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
+    Task<PaginatedList<VacancyReviewEntity>> GetAllByAccountId(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(VacancyReviewEntity.CreatedDate),
+        bool isAscending = false,
+        ReviewStatus reviewStatus = ReviewStatus.New,
+        CancellationToken cancellationToken = default);
+
+    Task<PaginatedList<VacancyReviewEntity>> GetAllByUkprn(int ukprn,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(VacancyReviewEntity.CreatedDate),
+        bool isAscending = false,
+        ReviewStatus reviewStatus = ReviewStatus.New,
+        CancellationToken cancellationToken = default);
 }
 
 public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyReviewRepository
@@ -54,5 +70,31 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             .Where(x => x.VacancyReference == vacancyReference)
             .OrderBy(x => x.CreatedDate)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<PaginatedList<VacancyReviewEntity>> GetAllByAccountId(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = "CreatedDate",
+        bool isAscending = false, ReviewStatus reviewStatus = ReviewStatus.New,
+        CancellationToken cancellationToken = default)
+    {
+        var query = dataContext.VacancyReviewEntities
+            .AsNoTracking()
+            .Where(fil => fil.AccountId == accountId && fil.Status == reviewStatus);
+        return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, cancellationToken);
+    }
+
+    public async Task<PaginatedList<VacancyReviewEntity>> GetAllByUkprn(int ukprn,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = "CreatedDate",
+        bool isAscending = false, ReviewStatus reviewStatus = ReviewStatus.New,
+        CancellationToken cancellationToken = default)
+    {
+        var query = dataContext.VacancyReviewEntities
+            .AsNoTracking()
+            .Where(fil => fil.Ukprn == ukprn && fil.Status == reviewStatus);
+        return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, cancellationToken);
     }
 }
