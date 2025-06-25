@@ -13,7 +13,7 @@ public class VacancyReviewEntity
     public required DateTime CreatedDate { get; init; }
     public required DateTime SlaDeadLine { get; init; }
     public DateTime? ReviewedDate { get; init; }
-    public required ReviewStatus Status { get; init; }
+    public required ReviewStatus Status { get; set; }
     public byte SubmissionCount { get; init; }
     [MaxLength(255)]
     public string? ReviewedByUserEmail { get; init; }

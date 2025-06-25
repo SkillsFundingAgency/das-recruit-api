@@ -2,7 +2,7 @@
 using AutoFixture.Kernel;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 
-namespace SFA.DAS.Recruit.Api.IntegrationTests;
+namespace SFA.DAS.Recruit.Api.UnitTests;
 
 public class VacancyReviewEntitySpecimenBuilder : ISpecimenBuilder
 {

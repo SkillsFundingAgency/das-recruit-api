@@ -103,61 +103,19 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
 
     public async Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, CancellationToken token = default)
     {
-        //return await recruitDataContext.ApplicationReviewEntities
-        //    .AsNoTracking()
-        //    .Where(appReview => appReview.AccountId == accountId)
-        //    .Join(
-        //        recruitDataContext.VacancyReviewEntities.AsNoTracking()
-        //            .Where(vacancyReview =>
-        //                vacancyReview.Status == ReviewStatus.Closed &&
-        //                vacancyReview.ManualOutcome == "Approved" &&
-        //                vacancyReview.OwnerType == OwnerType.Employer),
-        //        appReview => appReview.VacancyReference,
-        //        vacancyReview => vacancyReview.VacancyReference.Value,
-        //        (appReview, _) => appReview
-        //    )
-        //    .ToListAsync(token);
-
-        /*-----------------------------------------------------------------------*/
-
-        //var query =
-        //    from a in recruitDataContext.ApplicationReviewEntities
-        //        .Where(appReview => appReview.AccountId == accountId)
-        //    join v in recruitDataContext.VacancyReviewEntities
-        //        on a.VacancyReference equals v.VacancyReference.Value
-        //    where v.ManualOutcome == "Approved" && v.Status == ReviewStatus.Closed &&
-        //          v.OwnerType == OwnerType.Employer
-        //    select a;
-
-        //return await query.ToListAsync(token);
-
-
-        /*-----------------------------------------------------------------------*/
-
-        var appQuery = recruitDataContext.ApplicationReviewEntities
-            .Where(a => a.AccountId == accountId)
-            .Select(a => new {
-                App = a,
-                VacancyId = a.VacancyReference
-            });
-
-        var vacQuery = recruitDataContext.VacancyReviewEntities
-            .Where(v => v.Status == ReviewStatus.Closed
-                        && v.ManualOutcome == "Approved"
-                        && v.OwnerType == OwnerType.Employer)
-            .Select(v => new {
-                Vac = v,
-                VacancyId = v.VacancyReference
-            });
-
-        var result = from appReview in appQuery
-                     join vacancyReview in vacQuery
-                         on appReview.VacancyId equals vacancyReview.VacancyId
-                     select appReview;
-
-        return await result
-            .Select(x => x.App)
+        return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
+            .Where(appReview => appReview.AccountId == accountId)
+            .Join(
+                recruitDataContext.VacancyReviewEntities.AsNoTracking()
+                    .Where(vacancyReview =>
+                        vacancyReview.Status == ReviewStatus.Closed &&
+                        vacancyReview.ManualOutcome == "Approved" &&
+                        vacancyReview.OwnerType == OwnerType.Employer),
+                appReview => appReview.VacancyReference,
+                vacancyReview => vacancyReview.VacancyReference,
+                (appReview, _) => appReview
+            )
             .ToListAsync(token);
     }
 
