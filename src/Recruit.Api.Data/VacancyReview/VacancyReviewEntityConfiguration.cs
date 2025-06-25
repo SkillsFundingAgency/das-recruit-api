@@ -13,7 +13,7 @@ public class VacancyReviewEntityConfiguration: IEntityTypeConfiguration<VacancyR
     {
         builder.ToTable("VacancyReview");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.VacancyReference).HasConversion(x => x.Value, x => new VacancyReference(x));
+        builder.Property(x => x.VacancyReference).HasColumnName("VacancyReference").HasColumnType("bigint").IsRequired();
         builder.Property(x => x.Status).HasConversion(v => v.ToString(), v => (ReviewStatus)Enum.Parse(typeof(ReviewStatus), v));
         builder.Property(x => x.OwnerType).HasColumnName("OwnerType").HasColumnType("tinyint").IsRequired();
     }

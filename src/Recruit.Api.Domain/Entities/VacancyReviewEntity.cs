@@ -7,7 +7,7 @@ public class VacancyReviewEntity
 {
     [Key]
     public Guid Id { get; init; }
-    public required VacancyReference VacancyReference { get; set; }
+    public required long VacancyReference { get; set; }
     [MaxLength(500)]
     public required string VacancyTitle { get; init; }
     public required DateTime CreatedDate { get; init; }

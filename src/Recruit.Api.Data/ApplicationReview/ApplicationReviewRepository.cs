@@ -147,7 +147,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                         && v.OwnerType == OwnerType.Employer)
             .Select(v => new {
                 Vac = v,
-                VacancyId = v.VacancyReference.Value
+                VacancyId = v.VacancyReference
             });
 
         var result = from appReview in appQuery
@@ -196,7 +196,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                         vacancyReview.ManualOutcome == "Approved" &&
                         vacancyReview.OwnerType == OwnerType.Employer),
                 appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference.Value,
+                vacancyReview => vacancyReview.VacancyReference,
                 (appReview, _) => appReview
             )
             .ToListAsync(token);
@@ -219,7 +219,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                         vacancyReview.ManualOutcome == "Approved" &&
                         vacancyReview.OwnerType == OwnerType.Provider),
                 appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference.Value,
+                vacancyReview => vacancyReview.VacancyReference,
                 (appReview, _) => appReview
             )
             .ToListAsync(token);
