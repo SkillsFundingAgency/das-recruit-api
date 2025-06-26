@@ -33,5 +33,5 @@ public class VacancyReviewEntity
     public required long AccountId { get; init; }
     public required long AccountLegalEntityId { get; init; }
     public required long Ukprn { get; init; }
-    public required OwnerType OwnerType { get; init; }
+    public required OwnerType OwnerType { get; set; }
 }

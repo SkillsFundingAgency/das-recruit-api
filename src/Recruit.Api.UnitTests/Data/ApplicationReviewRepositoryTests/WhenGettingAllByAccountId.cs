@@ -48,7 +48,6 @@ internal class WhenGettingAllByAccountId
         actual.Items.Should().BeEquivalentTo(applicationsReviews);
     }
 
-    
     [Test, RecursiveMoqAutoData]
     public async Task Then_The_ApplicationReviews_Not_Matched_Then_No_Results_Returned(
         long accountId,

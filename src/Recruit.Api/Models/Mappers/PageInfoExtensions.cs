@@ -8,4 +8,7 @@ internal static class PageInfoExtensions
 {
     public static PageInfo ToPageInfo(this PaginatedList<ApplicationReviewEntity> paginatedList) 
         => new(paginatedList.TotalCount, paginatedList.PageIndex, paginatedList.PageSize, paginatedList.TotalPages, paginatedList.HasPreviousPage, paginatedList.HasNextPage);
+
+    public static PageInfo ToPageInfo(this PaginatedList<VacancyDetail> paginatedList)
+        => new(paginatedList.TotalCount, paginatedList.PageIndex, paginatedList.PageSize, paginatedList.TotalPages, paginatedList.HasPreviousPage, paginatedList.HasNextPage);
 }

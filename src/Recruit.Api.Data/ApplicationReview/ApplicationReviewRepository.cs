@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
@@ -20,6 +21,20 @@ public interface IApplicationReviewRepository
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
+        CancellationToken token = default);
+    Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        CancellationToken token = default);
+    Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        ApplicationReviewStatus status = ApplicationReviewStatus.New,
         CancellationToken token = default);
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
@@ -72,6 +87,60 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        CancellationToken token = default)
+    {
+        string statusString = status.ToString();
+
+        var query = recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(appReview => appReview.AccountId == accountId && appReview.Status == statusString)
+            .Join(
+                recruitDataContext.VacancyReviewEntities.AsNoTracking()
+                    .Where(vacancyReview =>
+                        vacancyReview.Status == ReviewStatus.Closed &&
+                        vacancyReview.ManualOutcome == "Approved" &&
+                        vacancyReview.OwnerType == OwnerType.Employer),
+                appReview => appReview.VacancyReference,
+                vacancyReview => vacancyReview.VacancyReference,
+                (appReview, _) => appReview
+            );
+
+        return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
+    }
+
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        CancellationToken token = default)
+    {
+        string statusString = status.ToString();
+
+        var query = recruitDataContext.ApplicationReviewEntities
+        .AsNoTracking()
+            .Where(appReview => appReview.Ukprn == ukprn && appReview.Status == statusString)
+            .Join(
+                recruitDataContext.VacancyReviewEntities.AsNoTracking()
+                    .Where(vacancyReview =>
+                        vacancyReview.Status == ReviewStatus.Closed &&
+                        vacancyReview.ManualOutcome == "Approved" &&
+                        vacancyReview.OwnerType == OwnerType.Provider),
+                appReview => appReview.VacancyReference,
+                vacancyReview => vacancyReview.VacancyReference,
+                (appReview, _) => appReview
+            );
+
+        return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
+    }
+
     public async Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default)
     {
         var applicationReview = await recruitDataContext.ApplicationReviewEntities.FirstOrDefaultAsync(fil => fil.Id == entity.Id, token);
@@ -101,7 +170,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return entity;
     }
 
-    public async Task<ApplicationReviewEntity?> UpdateByApplicationId(ApplicationReviewEntity entity, CancellationToken token = default)
+    private async Task<ApplicationReviewEntity?> UpdateByApplicationId(ApplicationReviewEntity entity, CancellationToken token = default)
     {
         var applicationReview = await recruitDataContext.ApplicationReviewEntities.FirstOrDefaultAsync(fil => fil.ApplicationId == entity.ApplicationId, token);
         if (applicationReview is null)

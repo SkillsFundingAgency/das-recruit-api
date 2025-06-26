@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
@@ -11,8 +12,7 @@ using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 namespace SFA.DAS.Recruit.Api.Controllers
 {
     [Route($"{RouteNames.Employer}/{{accountId:long}}/")]
-    public class EmployerAccountController([FromServices]
-    IApplicationReviewsProvider provider,
+    public class EmployerAccountController([FromServices] IApplicationReviewsProvider provider,
         ILogger<ApplicationReviewController> logger) : ControllerBase
     {
         [HttpGet]
@@ -64,6 +64,34 @@ namespace SFA.DAS.Recruit.Api.Controllers
             catch (Exception e)
             {
                 logger.LogError(e, "Unable to get dashboard stats by account id : An error occurred");
+                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("applicationReviews/dashboard/vacancies")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(VacancyDashboardResponse), StatusCodes.Status200OK)]
+        public async Task<IResult> GetDashboardVacanciesCountByAccountId(
+            [FromRoute][Required] long accountId,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 25,
+            [FromQuery] string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+            [FromQuery] bool isAscending = false,
+            [FromQuery] ApplicationReviewStatus status = ApplicationReviewStatus.New,
+            CancellationToken token = default)
+        {
+            try
+            {
+                logger.LogInformation("Recruit API: Received query to get dashboard vacancy count by account id : {AccountId}", accountId);
+
+                var response = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, status, token);
+
+                return TypedResults.Ok(new VacancyDashboardResponse(response.ToPageInfo(), response.Items));
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Unable to get dashboard vacancy count by account id : An error occurred");
                 return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }
