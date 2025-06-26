@@ -41,7 +41,7 @@ public interface IApplicationReviewsProvider
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
-        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
 
     Task<PaginatedList<VacancyDetail>> GetAllByUkprn(int ukprn,
@@ -49,7 +49,7 @@ public interface IApplicationReviewsProvider
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
-        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
 }
 
@@ -71,7 +71,7 @@ internal class ApplicationReviewsProvider(
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
-        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default)
     {
         var appReviews = await applicationReviewRepository.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, status, token);
@@ -84,7 +84,7 @@ internal class ApplicationReviewsProvider(
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
-        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default)
     {
         var appReviews =

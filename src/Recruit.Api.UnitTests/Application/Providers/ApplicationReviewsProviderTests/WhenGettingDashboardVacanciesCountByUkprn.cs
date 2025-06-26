@@ -25,11 +25,12 @@ internal class WhenGettingDashboardVacanciesCountByUkprn
                 new() { VacancyReference = 2, Status = nameof(ApplicationReviewStatus.Shared), WithdrawnDate = null }
             };
         var paginated = new PaginatedList<ApplicationReviewEntity>(appReviews, 3, pageNumber, pageSize);
-        repository.Setup(r => r.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, status, It.IsAny<CancellationToken>()))
+        repository.Setup(r => r.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, new List<ApplicationReviewStatus>{status}, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginated);
 
         // Act
-        var result = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, status);
+        var result = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false,
+            [status]);
 
         // Assert
         result.Should().NotBeNull();
@@ -55,11 +56,12 @@ internal class WhenGettingDashboardVacanciesCountByUkprn
         const int pageSize = 10;
         const ApplicationReviewStatus status = ApplicationReviewStatus.New;
         var paginated = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
-        repository.Setup(r => r.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, status, It.IsAny<CancellationToken>()))
+        repository.Setup(r => r.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, new List<ApplicationReviewStatus>{status}, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginated);
 
         // Act
-        var result = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, status);
+        var result = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false,
+            [status]);
 
         // Assert
         result.Should().NotBeNull();
@@ -79,12 +81,12 @@ internal class WhenGettingDashboardVacanciesCountByUkprn
         const bool isAscending = true;
         const ApplicationReviewStatus status = ApplicationReviewStatus.EmployerInterviewing;
         var paginated = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
-        repository.Setup(r => r.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, It.IsAny<CancellationToken>()))
+        repository.Setup(r => r.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, new List<ApplicationReviewStatus>{status}, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginated)
             .Verifiable();
 
         // Act
-        var result = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, status);
+        var result = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, [status]);
 
         // Assert
         repository.Verify();

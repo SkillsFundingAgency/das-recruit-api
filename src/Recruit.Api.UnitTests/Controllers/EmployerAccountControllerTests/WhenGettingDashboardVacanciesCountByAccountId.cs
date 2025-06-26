@@ -25,11 +25,11 @@ public class WhenGettingDashboardVacanciesCountByAccountId
         CancellationToken token)
     {
         // Arrange
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, status, token))
+        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, new List<ApplicationReviewStatus>{status} , token))
             .ReturnsAsync(mockVacancies);
 
         // Act
-        var result = await controller.GetDashboardVacanciesCountByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, status, token);
+        var result = await controller.GetDashboardVacanciesCountByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, [status], token);
 
         // Assert
         result.Should().BeOfType<Ok<VacancyDashboardResponse>>();
@@ -55,11 +55,11 @@ public class WhenGettingDashboardVacanciesCountByAccountId
     {
         // Arrange
         // Arrange
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, status, token))
+        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, new List<ApplicationReviewStatus>{status}, token))
             .ThrowsAsync(new Exception());
 
         // Act
-        var result = await controller.GetDashboardVacanciesCountByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, status, token);
+        var result = await controller.GetDashboardVacanciesCountByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, [status], token);
 
         // Assert
         result.Should().BeOfType<ProblemHttpResult>();

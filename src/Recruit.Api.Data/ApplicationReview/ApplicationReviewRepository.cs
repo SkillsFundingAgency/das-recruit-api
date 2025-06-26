@@ -27,14 +27,14 @@ public interface IApplicationReviewRepository
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
-        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
     Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
-        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
@@ -92,14 +92,22 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
-        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default)
     {
-        string statusString = status.ToString();
+        var statusString = new List<string>();
+        if (status == null)
+        {
+            statusString.Add(ApplicationReviewStatus.New.ToString());
+        }
+        else
+        {
+            statusString = status.Select(s => s.ToString()).ToList();
+        }
 
         var query = recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
-            .Where(appReview => appReview.AccountId == accountId && appReview.Status == statusString)
+            .Where(appReview => appReview.AccountId == accountId && statusString.Contains(appReview.Status))
             .Join(
                 recruitDataContext.VacancyReviewEntities.AsNoTracking()
                     .Where(vacancyReview =>
@@ -119,14 +127,22 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
-        ApplicationReviewStatus status = ApplicationReviewStatus.New,
+        List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default)
     {
-        string statusString = status.ToString();
+        var statusString = new List<string>();
+        if (status == null)
+        {
+            statusString.Add(ApplicationReviewStatus.New.ToString());
+        }
+        else
+        {
+            statusString = status.Select(s => s.ToString()).ToList();
+        }
 
         var query = recruitDataContext.ApplicationReviewEntities
         .AsNoTracking()
-            .Where(appReview => appReview.Ukprn == ukprn && appReview.Status == statusString)
+            .Where(appReview => appReview.Ukprn == ukprn && statusString.Contains(appReview.Status))
             .Join(
                 recruitDataContext.VacancyReviewEntities.AsNoTracking()
                     .Where(vacancyReview =>

@@ -78,7 +78,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             [FromQuery] int pageSize = 25,
             [FromQuery] string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
             [FromQuery] bool isAscending = false,
-            [FromQuery] ApplicationReviewStatus status = ApplicationReviewStatus.New,
+            [FromQuery] List<ApplicationReviewStatus>? status = null,
             CancellationToken token = default)
         {
             try
