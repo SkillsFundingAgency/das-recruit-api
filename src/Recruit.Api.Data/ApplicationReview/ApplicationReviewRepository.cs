@@ -93,8 +93,22 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         var applicationReview = await recruitDataContext.ApplicationReviewEntities.FirstOrDefaultAsync(fil => fil.Id == entity.Id, token);
         if (applicationReview is null)
         {
+            return await UpdateByApplicationId(entity, token);
+        }
+        
+        recruitDataContext.SetValues(applicationReview, entity);
+        await recruitDataContext.SaveChangesAsync(token);
+        return entity;
+    }
+
+    public async Task<ApplicationReviewEntity?> UpdateByApplicationId(ApplicationReviewEntity entity, CancellationToken token = default)
+    {
+        var applicationReview = await recruitDataContext.ApplicationReviewEntities.FirstOrDefaultAsync(fil => fil.ApplicationId == entity.ApplicationId, token);
+        if (applicationReview is null)
+        {
             return null;
         }
+        entity.Id = applicationReview.Id;
         
         recruitDataContext.SetValues(applicationReview, entity);
         await recruitDataContext.SaveChangesAsync(token);
