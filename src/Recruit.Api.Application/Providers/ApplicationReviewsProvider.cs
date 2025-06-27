@@ -1,4 +1,6 @@
-﻿using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+﻿using System.Globalization;
+using System.Linq;
+using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -219,13 +221,18 @@ internal class ApplicationReviewsProvider(
 
     private static List<VacancyDetail> GetVacancyDetails(List<ApplicationReviewEntity> applicationReviews)
     {
+        if (applicationReviews.Count == 0) return [];
+
+        // Use a default date to filter out uninitialized DateSharedWithEmployer values
+        var defaultDate = new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc);
+
         return applicationReviews
             .GroupBy(ar => ar.VacancyReference)
-            .Select(g => new VacancyDetail
-            {
+            .Select(g => new VacancyDetail {
                 VacancyReference = g.Key,
                 NewApplications = g.Count(ar => ar is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
-                Applications = g.Count(ar => ar.WithdrawnDate == null)
+                Applications = g.Count(ar => ar.WithdrawnDate == null),
+                AllSharedApplications = g.Count(ar => ar.Status == nameof(ApplicationReviewStatus.Shared) && ar.DateSharedWithEmployer > defaultDate)
             })
             .ToList();
     }

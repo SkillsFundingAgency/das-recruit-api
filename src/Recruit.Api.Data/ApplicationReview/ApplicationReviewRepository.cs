@@ -95,25 +95,23 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default)
     {
-        var statusString = new List<string>();
-        if (status == null)
-        {
-            statusString.Add(ApplicationReviewStatus.New.ToString());
-        }
-        else
-        {
-            statusString = status.Select(s => s.ToString()).ToList();
-        }
+        var ownerTypes = status is not null && status.Contains(ApplicationReviewStatus.Shared)
+            ? new List<OwnerType> { OwnerType.Employer, OwnerType.Provider }
+            : new List<OwnerType> { OwnerType.Employer };
+
+        var statusStrings = status is null
+            ? [ApplicationReviewStatus.New.ToString()]
+            : status.Select(s => s.ToString()).ToList();
 
         var query = recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
-            .Where(appReview => appReview.AccountId == accountId && statusString.Contains(appReview.Status))
+            .Where(appReview => appReview.AccountId == accountId && statusStrings.Contains(appReview.Status))
             .Join(
                 recruitDataContext.VacancyReviewEntities.AsNoTracking()
                     .Where(vacancyReview =>
                         vacancyReview.Status == ReviewStatus.Closed &&
                         vacancyReview.ManualOutcome == "Approved" &&
-                        vacancyReview.OwnerType == OwnerType.Employer),
+                        ownerTypes.Contains(vacancyReview.OwnerType)),
                 appReview => appReview.VacancyReference,
                 vacancyReview => vacancyReview.VacancyReference,
                 (appReview, _) => appReview
