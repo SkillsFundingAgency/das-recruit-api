@@ -85,7 +85,11 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get dashboard vacancy count by account id : {AccountId}", accountId);
 
-                var response = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, status, token);
+                var response = status != null && status.Contains(ApplicationReviewStatus.AllShared)
+                    ? await provider.GetAllSharedByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending,
+                        token)
+                    : await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, status,
+                        token);
 
                 return TypedResults.Ok(new VacancyDashboardResponse(response.ToPageInfo(), response.Items));
             }

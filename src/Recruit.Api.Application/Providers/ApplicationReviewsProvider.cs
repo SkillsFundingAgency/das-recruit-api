@@ -46,6 +46,13 @@ public interface IApplicationReviewsProvider
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
 
+    Task<PaginatedList<VacancyDetail>> GetAllSharedByAccountId(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default);
+
     Task<PaginatedList<VacancyDetail>> GetAllByUkprn(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
@@ -77,6 +84,18 @@ internal class ApplicationReviewsProvider(
         CancellationToken token = default)
     {
         var appReviews = await applicationReviewRepository.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, status, token);
+        var vacancyDetails = GetVacancyDetails(appReviews.Items);
+        return new PaginatedList<VacancyDetail>(vacancyDetails, appReviews.TotalCount, appReviews.PageIndex, appReviews.PageSize);
+    }
+
+    public async Task<PaginatedList<VacancyDetail>> GetAllSharedByAccountId(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default)
+    {
+        var appReviews = await applicationReviewRepository.GetAllSharedByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
         var vacancyDetails = GetVacancyDetails(appReviews.Items);
         return new PaginatedList<VacancyDetail>(vacancyDetails, appReviews.TotalCount, appReviews.PageIndex, appReviews.PageSize);
     }
@@ -232,7 +251,8 @@ internal class ApplicationReviewsProvider(
                 VacancyReference = g.Key,
                 NewApplications = g.Count(ar => ar is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
                 Applications = g.Count(ar => ar.WithdrawnDate == null),
-                AllSharedApplications = g.Count(ar => ar.Status == nameof(ApplicationReviewStatus.Shared) && ar.DateSharedWithEmployer > defaultDate)
+                Shared = g.Count(ar => ar is {Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null}),
+                AllSharedApplications = g.Count(ar => ar.DateSharedWithEmployer > defaultDate && ar.WithdrawnDate == null)
             })
             .ToList();
     }

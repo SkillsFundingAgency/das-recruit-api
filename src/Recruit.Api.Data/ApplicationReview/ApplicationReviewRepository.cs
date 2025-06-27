@@ -29,6 +29,13 @@ public interface IApplicationReviewRepository
         bool isAscending = false,
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
+
+    Task<PaginatedList<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default);
     Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
@@ -115,6 +122,29 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 appReview => appReview.VacancyReference,
                 vacancyReview => vacancyReview.VacancyReference,
                 (appReview, _) => appReview
+            );
+
+        return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
+    }
+
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default)
+    {
+        var query = recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(appReview => appReview.AccountId == accountId && appReview.DateSharedWithEmployer != null)
+            .Join(
+                recruitDataContext.VacancyReviewEntities.AsNoTracking()
+                    .Where(vacancyReview =>
+                        vacancyReview.Status == ReviewStatus.Closed &&
+                        vacancyReview.ManualOutcome == "Approved"),
+                appReview => appReview.VacancyReference,
+                vacancyReview => vacancyReview.VacancyReference,
+                (appReview, vacancyReview) => appReview
             );
 
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
