@@ -144,7 +144,7 @@ internal class ApplicationReviewsProvider(
         var allSharedApplicationReviews = await applicationReviewRepository.GetAllSharedByAccountId(accountId, token); 
 
         var dashboardModel = GetDashboardModel(applicationReviews, true);
-        dashboardModel.AllSharedApplicationsCount = allSharedApplicationReviews.Count(e =>
+        dashboardModel.SharedApplicationsCount = allSharedApplicationReviews.Count(e =>
             e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null } &&
             e.DateSharedWithEmployer > new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc));
 
