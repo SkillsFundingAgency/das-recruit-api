@@ -17,19 +17,18 @@ internal class WhenGettingDashboardVacanciesCountByAccountId
         const long accountId = 123L;
         const int pageNumber = 1;
         const int pageSize = 2;
-        const ApplicationReviewStatus status = ApplicationReviewStatus.New;
         var appReviews = new List<ApplicationReviewEntity>
         {
                 new() { VacancyReference = 1, Status = nameof(ApplicationReviewStatus.New), WithdrawnDate = null },
                 new() { VacancyReference = 1, Status = nameof(ApplicationReviewStatus.New), WithdrawnDate = null },
-                new() { VacancyReference = 2, Status = nameof(ApplicationReviewStatus.Shared), WithdrawnDate = null }
+                new() { VacancyReference = 2, Status = nameof(ApplicationReviewStatus.Shared), WithdrawnDate = null, DateSharedWithEmployer = DateTime.Now}
             };
         var paginated = new PaginatedList<ApplicationReviewEntity>(appReviews, 3, pageNumber, pageSize);
-        repository.Setup(r => r.GetAllByAccountId(accountId, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, new List<ApplicationReviewStatus>{status}, It.IsAny<CancellationToken>()))
+        repository.Setup(r => r.GetAllByAccountId(accountId, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, new List<ApplicationReviewStatus>{ ApplicationReviewStatus.New, ApplicationReviewStatus.Shared }, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginated);
 
         // Act
-        var result = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, [status]);
+        var result = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, [ApplicationReviewStatus.New, ApplicationReviewStatus.Shared]);
 
         // Assert
         result.Should().NotBeNull();
@@ -39,9 +38,11 @@ internal class WhenGettingDashboardVacanciesCountByAccountId
         var vacancy1 = result.Items.First(v => v.VacancyReference == 1);
         vacancy1.NewApplications.Should().Be(2);
         vacancy1.Applications.Should().Be(2);
+        vacancy1.AllSharedApplications.Should().Be(0);
         var vacancy2 = result.Items.First(v => v.VacancyReference == 2);
         vacancy2.NewApplications.Should().Be(0);
         vacancy2.Applications.Should().Be(1);
+        vacancy2.AllSharedApplications.Should().Be(1);
     }
 
     [Test, MoqAutoData]
