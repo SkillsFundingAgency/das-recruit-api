@@ -139,8 +139,16 @@ internal class ApplicationReviewsProvider(
     public async Task<DashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
     {
         var applicationReviews = await applicationReviewRepository.GetAllByAccountId(accountId, token);
+        
+        // TODO: This will be moved to as separate endpoint in future and combine the results in the Recruit Outer Api
+        var allSharedApplicationReviews = await applicationReviewRepository.GetAllSharedByAccountId(accountId, token); 
 
-        return GetDashboardModel(applicationReviews);
+        var dashboardModel = GetDashboardModel(applicationReviews, true);
+        dashboardModel.AllSharedApplicationsCount = allSharedApplicationReviews.Count(e =>
+            e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null } &&
+            e.DateSharedWithEmployer > new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc));
+
+        return dashboardModel;
     }
 
     public async Task<DashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
@@ -181,8 +189,11 @@ internal class ApplicationReviewsProvider(
         return await applicationReviewRepository.GetAllByVacancyReference(vacancyReference, token);
     }
 
-    private static DashboardModel GetDashboardModel(List<ApplicationReviewEntity> applicationReviews)
+    private static DashboardModel GetDashboardModel(List<ApplicationReviewEntity> applicationReviews, bool skipAllShared = false)
     {
+        // Use a default date to filter out uninitialized DateSharedWithEmployer values
+        var defaultDate = new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc);
+
         return new DashboardModel
         {
             NewApplicationsCount = applicationReviews.Count(fil =>
@@ -191,9 +202,9 @@ internal class ApplicationReviewsProvider(
                 entity.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing)),
             SharedApplicationsCount = applicationReviews.Count(e =>
                 e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null }),
-            AllSharedApplicationsCount = applicationReviews.Count(e =>
+            AllSharedApplicationsCount = skipAllShared ? 0 : applicationReviews.Count(e =>
                 e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null } &&
-                e.DateSharedWithEmployer > DateTime.MinValue),
+                e.DateSharedWithEmployer > defaultDate),
             SuccessfulApplicationsCount = applicationReviews.Count(e =>
                 e is { Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null }),
             UnsuccessfulApplicationsCount = applicationReviews.Count(e =>

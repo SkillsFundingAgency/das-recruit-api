@@ -7,7 +7,7 @@
         public int SuccessfulApplicationsCount { get; init; } = 0;
         public int UnsuccessfulApplicationsCount { get; init; } = 0;
         public int SharedApplicationsCount { get; init; } = 0;
-        public int AllSharedApplicationsCount { get; init; } = 0;
+        public int AllSharedApplicationsCount { get; set; } = 0;
         public bool HasNoApplications { get; init; } = false;
     }
 }
