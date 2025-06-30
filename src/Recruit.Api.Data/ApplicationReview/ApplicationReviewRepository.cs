@@ -53,6 +53,8 @@ public interface IApplicationReviewRepository
     Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(long vacancyReference, CancellationToken token = default);
 
+    Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId, List<long> vacancyReferences,CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,List<long> vacancyReferences, CancellationToken token = default);
 }
 internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
 {
@@ -150,7 +152,6 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
 
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
     }
-
     public async Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,
         CancellationToken token = default)
     {
@@ -162,6 +163,56 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 appReview.AccountId == accountId &&
                 appReview.DateSharedWithEmployer != null &&
                 appReview.DateSharedWithEmployer > defaultDate &&
+                appReview.WithdrawnDate == null)
+            .Join(
+                recruitDataContext.VacancyReviewEntities
+                    .AsNoTracking()
+                    .Where(vacancyReview =>
+                        vacancyReview.Status == ReviewStatus.Closed &&
+                        vacancyReview.ManualOutcome == "Approved"),
+                appReview => appReview.VacancyReference,
+                vacancyReview => vacancyReview.VacancyReference,
+                (appReview, vacancyReview) => appReview
+            );
+
+        return await query.ToListAsync(token);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,List<long> vacancyReferences,
+        CancellationToken token = default)
+    {
+        var defaultDate = new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc);
+
+        var query = recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(appReview =>
+                vacancyReferences.Contains(appReview.VacancyReference) &&
+                appReview.AccountId == accountId &&
+                appReview.DateSharedWithEmployer != null &&
+                appReview.DateSharedWithEmployer > defaultDate &&
+                appReview.WithdrawnDate == null)
+            .Join(
+                recruitDataContext.VacancyReviewEntities
+                    .AsNoTracking()
+                    .Where(vacancyReview =>
+                        vacancyReview.Status == ReviewStatus.Closed &&
+                        vacancyReview.ManualOutcome == "Approved"),
+                appReview => appReview.VacancyReference,
+                vacancyReview => vacancyReview.VacancyReference,
+                (appReview, vacancyReview) => appReview
+            );
+
+        return await query.ToListAsync(token);
+    }
+    public async Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId,List<long> vacancyReferences,
+        CancellationToken token = default)
+    {
+        var query = recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(appReview =>
+                vacancyReferences.Contains(appReview.VacancyReference) &&
+                appReview.AccountId == accountId &&
+                appReview.Status == ApplicationReviewStatus.Shared.ToString() &&
                 appReview.WithdrawnDate == null)
             .Join(
                 recruitDataContext.VacancyReviewEntities

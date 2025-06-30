@@ -34,7 +34,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
                 .ReturnsAsync(applicationReviews);
 
             // Act
-            var result = await provider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token);
+            var result = await provider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences,null, token);
 
             // Assert
             result.Should().HaveCount(6);
@@ -121,7 +121,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
                 .ReturnsAsync(applicationReviews);
 
             // Act
-            var result = await provider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token);
+            var result = await provider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences,null, token);
 
             // Assert
             result.Should().HaveCount(5);
