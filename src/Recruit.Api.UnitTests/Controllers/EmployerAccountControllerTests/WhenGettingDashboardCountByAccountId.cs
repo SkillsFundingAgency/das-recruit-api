@@ -14,7 +14,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
         public async Task Then_The_Count_ReturnsOk(
             long accountId,
             ApplicationReviewStatus status,
-            DashboardModel mockResponse,
+            EmployerApplicationReviewStatsModel mockResponse,
             CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
             [Greedy] EmployerAccountController controller)
@@ -27,8 +27,8 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
             var result = await controller.GetDashboardCountByAccountId(accountId, token);
 
             // Assert
-            result.Should().BeOfType<Ok<DashboardModel>>();
-            var okResult = result as Ok<DashboardModel>;
+            result.Should().BeOfType<Ok<EmployerApplicationReviewStatsModel>>();
+            var okResult = result as Ok<EmployerApplicationReviewStatsModel>;
 
             okResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
             okResult.Value!.Should().BeEquivalentTo(mockResponse);
@@ -38,7 +38,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
         public async Task Then_Returns_Exception(
             long accountId,
             ApplicationReviewStatus status,
-            DashboardModel mockResponse,
+            EmployerApplicationReviewStatsModel mockResponse,
             CancellationToken token,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
             [Greedy] EmployerAccountController controller)

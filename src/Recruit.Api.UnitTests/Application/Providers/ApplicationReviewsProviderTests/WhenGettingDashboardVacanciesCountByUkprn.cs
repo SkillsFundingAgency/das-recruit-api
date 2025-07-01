@@ -24,7 +24,7 @@ internal class WhenGettingDashboardVacanciesCountByUkprn
                 new() { VacancyReference = 2, Status = nameof(ApplicationReviewStatus.Shared), WithdrawnDate = null, DateSharedWithEmployer = DateTime.Now}
             };
         var paginated = new PaginatedList<ApplicationReviewEntity>(appReviews, 3, pageNumber, pageSize);
-        repository.Setup(r => r.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, new List<ApplicationReviewStatus>{ ApplicationReviewStatus.New, ApplicationReviewStatus.Shared }, It.IsAny<CancellationToken>()))
+        repository.Setup(r => r.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, new List<ApplicationReviewStatus>{ ApplicationReviewStatus.New, ApplicationReviewStatus.Shared }, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginated);
 
         // Act
@@ -57,7 +57,7 @@ internal class WhenGettingDashboardVacanciesCountByUkprn
         const int pageSize = 10;
         const ApplicationReviewStatus status = ApplicationReviewStatus.New;
         var paginated = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
-        repository.Setup(r => r.GetAllByUkprn(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, new List<ApplicationReviewStatus>{status}, It.IsAny<CancellationToken>()))
+        repository.Setup(r => r.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, new List<ApplicationReviewStatus>{status}, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginated);
 
         // Act
@@ -82,7 +82,7 @@ internal class WhenGettingDashboardVacanciesCountByUkprn
         const bool isAscending = true;
         const ApplicationReviewStatus status = ApplicationReviewStatus.EmployerInterviewing;
         var paginated = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
-        repository.Setup(r => r.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, new List<ApplicationReviewStatus>{status}, It.IsAny<CancellationToken>()))
+        repository.Setup(r => r.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, new List<ApplicationReviewStatus>{status}, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginated)
             .Verifiable();
 

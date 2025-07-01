@@ -69,7 +69,7 @@ internal class WhenGettingAllByAccountId
         context.Setup(x => x.VacancyReviewEntities)
             .ReturnsDbSet(vacancyReviewEntities);
 
-        var actual = await repository.GetAllByAccountId(accountId, [vacancyReference], token);
+        var actual = await repository.GetByAccountIdAndVacancyReferencesAsync(accountId, [vacancyReference], token);
 
         actual.Count.Should().Be(0);
     }

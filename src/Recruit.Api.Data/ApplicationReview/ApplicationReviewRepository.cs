@@ -22,7 +22,7 @@ public interface IApplicationReviewRepository
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default);
-    Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+    Task<PaginatedList<ApplicationReviewEntity>> GetPagedByAccountAndStatusAsync(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
@@ -37,7 +37,7 @@ public interface IApplicationReviewRepository
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default);
-    Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+    Task<PaginatedList<ApplicationReviewEntity>> GetPagedByUkprnAndStatusAsync(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
@@ -48,13 +48,12 @@ public interface IApplicationReviewRepository
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetByUkprnAndVacancyReferencesAsync(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetByAccountIdAndVacancyReferencesAsync(long accountId, List<long> vacancyReferences, CancellationToken token = default);
     Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(long vacancyReference, CancellationToken token = default);
-
     Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId, List<long> vacancyReferences,CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
 }
 internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
 {
@@ -64,6 +63,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .AsNoTracking()
             .FirstOrDefaultAsync(fil => fil.Id == id, token);
     }
+
     public async Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default)
     {
         return await recruitDataContext.ApplicationReviewEntities
@@ -97,7 +97,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
-    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedByAccountAndStatusAsync(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
@@ -152,6 +152,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
 
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, token);
     }
+
     public async Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,
         CancellationToken token = default)
     {
@@ -178,7 +179,8 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await query.ToListAsync(token);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,List<long> vacancyReferences,
+    public async Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,
+        List<long> vacancyReferences,
         CancellationToken token = default)
     {
         var defaultDate = new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc);
@@ -204,7 +206,9 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
 
         return await query.ToListAsync(token);
     }
-    public async Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId,List<long> vacancyReferences,
+
+    public async Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId,
+        List<long> vacancyReferences,
         CancellationToken token = default)
     {
         var query = recruitDataContext.ApplicationReviewEntities
@@ -228,7 +232,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await query.ToListAsync(token);
     }
 
-    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedByUkprnAndStatusAsync(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
@@ -292,20 +296,6 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return entity;
     }
 
-    private async Task<ApplicationReviewEntity?> UpdateByApplicationId(ApplicationReviewEntity entity, CancellationToken token = default)
-    {
-        var applicationReview = await recruitDataContext.ApplicationReviewEntities.FirstOrDefaultAsync(fil => fil.ApplicationId == entity.ApplicationId, token);
-        if (applicationReview is null)
-        {
-            return null;
-        }
-        entity.Id = applicationReview.Id;
-        
-        recruitDataContext.SetValues(applicationReview, entity);
-        await recruitDataContext.SaveChangesAsync(token);
-        return entity;
-    }
-
     public async Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, CancellationToken token = default)
     {
         return await recruitDataContext.ApplicationReviewEntities
@@ -342,7 +332,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .ToListAsync(token);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+    public async Task<List<ApplicationReviewEntity>> GetByAccountIdAndVacancyReferencesAsync(long accountId,
         List<long> vacancyReferences,
         CancellationToken token = default)
     {
@@ -365,7 +355,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .ToListAsync(token);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+    public async Task<List<ApplicationReviewEntity>> GetByUkprnAndVacancyReferencesAsync(int ukprn,
         List<long> vacancyReferences,
         CancellationToken token = default)
     {
@@ -394,5 +384,19 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .AsNoTracking()
             .Where(fil => fil.VacancyReference == vacancyReference)
             .ToListAsync(token);
+    }
+
+    private async Task<ApplicationReviewEntity?> UpdateByApplicationId(ApplicationReviewEntity entity, CancellationToken token = default)
+    {
+        var applicationReview = await recruitDataContext.ApplicationReviewEntities.FirstOrDefaultAsync(fil => fil.ApplicationId == entity.ApplicationId, token);
+        if (applicationReview is null)
+        {
+            return null;
+        }
+        entity.Id = applicationReview.Id;
+
+        recruitDataContext.SetValues(applicationReview, entity);
+        await recruitDataContext.SaveChangesAsync(token);
+        return entity;
     }
 }

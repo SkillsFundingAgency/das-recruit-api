@@ -14,7 +14,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
         public async Task Then_The_Count_ReturnsOk(
             int ukprn,
             ApplicationReviewStatus status,
-            DashboardModel mockResponse,
+            ProviderApplicationReviewStatsModel mockResponse,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
             [Greedy] ProviderAccountController controller,
             CancellationToken token)
@@ -27,8 +27,8 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
             var result = await controller.GetDashboardCountByUkprn(ukprn, token);
 
             // Assert
-            result.Should().BeOfType<Ok<DashboardModel>>();
-            var okResult = result as Ok<DashboardModel>;
+            result.Should().BeOfType<Ok<ProviderApplicationReviewStatsModel>>();
+            var okResult = result as Ok<ProviderApplicationReviewStatsModel>;
 
             okResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
             okResult.Value!.Should().BeEquivalentTo(mockResponse);
@@ -38,7 +38,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
         public async Task Then_Returns_Exception(
             int ukprn,
             ApplicationReviewStatus status,
-            DashboardModel mockResponse,
+            ProviderApplicationReviewStatsModel mockResponse,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
             [Greedy] ProviderAccountController controller,
             CancellationToken token)

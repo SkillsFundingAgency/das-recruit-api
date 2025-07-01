@@ -48,7 +48,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [HttpGet]
         [Route("applicationReviews/dashboard")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(DashboardModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EmployerApplicationReviewStatsModel), StatusCodes.Status200OK)]
         public async Task<IResult> GetDashboardCountByAccountId(
             [FromRoute][Required] long accountId,
             CancellationToken token = default)
@@ -58,6 +58,29 @@ namespace SFA.DAS.Recruit.Api.Controllers
                 logger.LogInformation("Recruit API: Received query to get dashboard stats by account id : {AccountId}", accountId);
 
                 var response = await provider.GetCountByAccountId(accountId, token);
+
+                return TypedResults.Ok(response);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Unable to get dashboard stats by account id : An error occurred");
+                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("applicationReviews/dashboard/shared")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(SharedApplicationReviewsStatsModel), StatusCodes.Status200OK)]
+        public async Task<IResult> GetDashboardSharedCountByAccountId(
+            [FromRoute][Required] long accountId,
+            CancellationToken token = default)
+        {
+            try
+            {
+                logger.LogInformation("Recruit API: Received query to get dashboard shared stats by account id : {AccountId}", accountId);
+
+                var response = await provider.GetSharedApplicationsCountByAccountId(accountId, token);
 
                 return TypedResults.Ok(response);
             }

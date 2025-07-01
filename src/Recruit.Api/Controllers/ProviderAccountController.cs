@@ -48,7 +48,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [HttpGet]
         [Route("applicationReviews/dashboard")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(DashboardModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProviderApplicationReviewStatsModel), StatusCodes.Status200OK)]
         public async Task<IResult> GetDashboardCountByUkprn(
             [FromRoute][Required] int ukprn,
             CancellationToken token = default)
