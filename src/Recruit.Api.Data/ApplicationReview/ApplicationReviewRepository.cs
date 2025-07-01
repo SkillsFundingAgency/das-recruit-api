@@ -323,7 +323,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 vacancyReview => vacancyReview.VacancyReference,
                 (appReview, _) => appReview
             ).GroupBy(c=>c.Status).Select(g=>new DashboardCountModel {
-                 Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString()),
+                 Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
                  Count = g.Count()
             })
             .ToListAsync(token);
@@ -333,7 +333,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
     {
         return await recruitDataContext.ApplicationReviewEntities
         .AsNoTracking()
-            .Where(appReview => appReview.Ukprn == ukprn)
+            .Where(appReview => appReview.Ukprn == ukprn && appReview.WithdrawnDate == null)
             .Join(
                 recruitDataContext.VacancyReviewEntities.AsNoTracking()
                     .Where(vacancyReview =>
@@ -344,7 +344,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 vacancyReview => vacancyReview.VacancyReference,
                 (appReview, _) => appReview
             ).GroupBy(c=>c.Status).Select(g=>new DashboardCountModel {
-                Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString()),
+                Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
                 Count = g.Count()
             })
             .ToListAsync(token);
