@@ -12,9 +12,10 @@ public static class QueryableExtensions
         int pageSize,
         string sortColumn,
         bool isAscending = true, 
+        int totalRecords =  0,
         CancellationToken token = default)
     {
-        int totalRecords = await query.CountAsync(token);
+        //int totalRecords = await query.CountAsync(token);
 
         if (!string.IsNullOrWhiteSpace(sortColumn))
         {
