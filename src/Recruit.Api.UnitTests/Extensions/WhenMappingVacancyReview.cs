@@ -12,7 +12,7 @@ public class WhenMappingVacancyReview
         // arrange
         var id = Guid.NewGuid();
         var request = new PutVacancyReviewRequest {
-            VacancyReference = 1234,
+            VacancyReference = "VAC1234",
             VacancyTitle = "vacancyTitle",
             CreatedDate = DateTime.Now.AddDays(-1),
             SlaDeadLine = DateTime.Now,
@@ -41,8 +41,10 @@ public class WhenMappingVacancyReview
             .Excluding(x => x.ManualQaFieldIndicators)
             .Excluding(x => x.UpdatedFieldIdentifiers)
             .Excluding(x => x.DismissedAutomatedQaOutcomeIndicators)
+            .Excluding(x => x.VacancyReference)
         );
 
+        result.VacancyReference.Should().Be(1234L);
         result.ManualQaFieldIndicators.Should().Be("[\"one\",\"two\"]");
         result.DismissedAutomatedQaOutcomeIndicators.Should().Be("[\"three\",\"four\"]");
         result.UpdatedFieldIdentifiers.Should().Be("[]");

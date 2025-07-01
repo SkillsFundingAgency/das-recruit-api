@@ -62,7 +62,7 @@ public static class VacancyReviewExtensions
 
         return new VacancyReviewEntity {
             Id = id,
-            VacancyReference = request.VacancyReference!.Value,
+            VacancyReference = request.VacancyReference!.Value.Value,
             VacancyTitle = request.VacancyTitle,
             CreatedDate = request.CreatedDate!.Value,
             SlaDeadLine = request.SlaDeadLine!.Value,

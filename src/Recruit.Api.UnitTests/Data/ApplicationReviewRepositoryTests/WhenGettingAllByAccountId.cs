@@ -1,7 +1,7 @@
 ﻿using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Data.ApplicationReviewRepositoryTests;
@@ -11,6 +11,7 @@ internal class WhenGettingAllByAccountId
 {
     [Test, RecursiveMoqAutoData]
     public async Task Then_The_ApplicationReviews_Are_Returned_By_AccountId(
+        long vacancyReference,
         long accountId,
         int pageNumber,
         int pageSize,
@@ -18,6 +19,7 @@ internal class WhenGettingAllByAccountId
         bool isAscending,
         CancellationToken token,
         List<ApplicationReviewEntity> applicationsReviews,
+        List<VacancyReviewEntity> vacancyReviewEntities,
         [Frozen] Mock<IRecruitDataContext> context,
         [Greedy] ApplicationReviewRepository repository)
     {
@@ -27,13 +29,19 @@ internal class WhenGettingAllByAccountId
         foreach (var application in applicationsReviews)
         {
             application.AccountId = accountId;
+            application.VacancyReference = vacancyReference;
+        }
+        foreach (var vacancyReview in vacancyReviewEntities)
+        {
+            vacancyReview.VacancyReference = vacancyReference;
+            vacancyReview.Status = ReviewStatus.Closed;
+            vacancyReview.ManualOutcome = "Approved";
         }
 
-        var allApplications = new List<ApplicationReviewEntity>();
-        allApplications.AddRange(applicationsReviews);
-
         context.Setup(x => x.ApplicationReviewEntities)
-            .ReturnsDbSet(allApplications);
+            .ReturnsDbSet(applicationsReviews);
+        context.Setup(x => x.VacancyReviewEntities)
+            .ReturnsDbSet(vacancyReviewEntities);
 
         var actual = await repository.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
@@ -41,37 +49,12 @@ internal class WhenGettingAllByAccountId
     }
 
     [Test, RecursiveMoqAutoData]
-    public async Task Then_The_ApplicationReviews_Are_Returned_By_AccountId(
-        long accountId,
-        ApplicationReviewStatus status,
-        CancellationToken token,
-        List<ApplicationReviewEntity> applicationsReviews,
-        [Frozen] Mock<IRecruitDataContext> context,
-        [Greedy] ApplicationReviewRepository repository)
-    {
-        foreach (var application in applicationsReviews)
-        {
-            application.AccountId = accountId;
-            application.Status = status.ToString();
-        }
-
-        var allApplications = new List<ApplicationReviewEntity>();
-        allApplications.AddRange(applicationsReviews);
-
-        context.Setup(x => x.ApplicationReviewEntities)
-            .ReturnsDbSet(allApplications);
-
-        var actual = await repository.GetAllByAccountId(accountId, token);
-
-        actual.Should().BeEquivalentTo(applicationsReviews);
-    }
-
-    [Test, RecursiveMoqAutoData]
-    public async Task Then_The_ApplicationReviews_Are_Returned_By_AccountId(
+    public async Task Then_The_ApplicationReviews_Not_Matched_Then_No_Results_Returned(
         long accountId,
         long vacancyReference,
         CancellationToken token,
         List<ApplicationReviewEntity> applicationsReviews,
+        List<VacancyReviewEntity> vacancyReviewEntities,
         [Frozen] Mock<IRecruitDataContext> context,
         [Greedy] ApplicationReviewRepository repository)
     {
@@ -81,14 +64,13 @@ internal class WhenGettingAllByAccountId
             application.VacancyReference = vacancyReference;
         }
 
-        var allApplications = new List<ApplicationReviewEntity>();
-        allApplications.AddRange(applicationsReviews);
-
         context.Setup(x => x.ApplicationReviewEntities)
-            .ReturnsDbSet(allApplications);
+            .ReturnsDbSet(applicationsReviews);
+        context.Setup(x => x.VacancyReviewEntities)
+            .ReturnsDbSet(vacancyReviewEntities);
 
         var actual = await repository.GetAllByAccountId(accountId, [vacancyReference], token);
 
-        actual.Should().BeEquivalentTo(applicationsReviews);
+        actual.Count.Should().Be(0);
     }
 }

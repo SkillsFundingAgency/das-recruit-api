@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Recruit.Api.IntegrationTests;
+﻿using SFA.DAS.Recruit.Api.UnitTests;
+
+namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
 public abstract class BaseFixture
 {
