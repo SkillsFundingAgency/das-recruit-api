@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Linq;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.Models;
@@ -279,9 +279,6 @@ internal class ApplicationReviewsProvider(
     private static List<VacancyDetail> GetVacancyDetails(List<ApplicationReviewEntity> applicationReviews)
     {
         if (applicationReviews.Count == 0) return [];
-
-        // Use a default date to filter out uninitialized DateSharedWithEmployer values
-        var defaultDate = new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc);
 
         return applicationReviews
             .GroupBy(ar => ar.VacancyReference)

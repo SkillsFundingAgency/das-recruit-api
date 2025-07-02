@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -165,26 +165,13 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
     public async Task<int> GetAllSharedByAccountId(long accountId,
         CancellationToken token = default)
     {
-        var defaultDate = new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc);
-
         var query = recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
             .Where(appReview =>
                 appReview.AccountId == accountId &&
                 appReview.DateSharedWithEmployer != null &&
-                appReview.DateSharedWithEmployer > defaultDate &&
                 appReview.Status == ApplicationReviewStatus.Shared.ToString() &&
-                appReview.WithdrawnDate == null)
-            .Join(
-                recruitDataContext.VacancyReviewEntities
-                    .AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved"),
-                appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
-                (appReview, vacancyReview) => appReview
-            );
+                appReview.WithdrawnDate == null);
 
         return await query.CountAsync(token);
     }
@@ -192,26 +179,13 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
     public async Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,List<long> vacancyReferences,
         CancellationToken token = default)
     {
-        var defaultDate = new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc);
-
         var query = recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
             .Where(appReview =>
                 vacancyReferences.Contains(appReview.VacancyReference) &&
                 appReview.AccountId == accountId &&
                 appReview.DateSharedWithEmployer != null &&
-                appReview.DateSharedWithEmployer > defaultDate &&
-                appReview.WithdrawnDate == null)
-            .Join(
-                recruitDataContext.VacancyReviewEntities
-                    .AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved"),
-                appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
-                (appReview, vacancyReview) => appReview
-            );
+                appReview.WithdrawnDate == null);
 
         return await query.ToListAsync(token);
     }
@@ -224,22 +198,12 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 vacancyReferences.Contains(appReview.VacancyReference) &&
                 appReview.AccountId == accountId &&
                 appReview.Status == ApplicationReviewStatus.Shared.ToString() &&
-                appReview.WithdrawnDate == null)
-            .Join(
-                recruitDataContext.VacancyReviewEntities
-                    .AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved"),
-                appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
-                (appReview, vacancyReview) => appReview
-            );
+                appReview.WithdrawnDate == null);
 
         return await query.ToListAsync(token);
     }
 
-    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+    public async Task<PaginatedList<VacancyReviewEntity>> GetAllByUkprn(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
