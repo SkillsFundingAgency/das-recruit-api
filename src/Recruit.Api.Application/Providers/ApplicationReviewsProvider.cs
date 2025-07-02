@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Linq;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.Models;
@@ -143,10 +143,14 @@ internal class ApplicationReviewsProvider(
         // TODO: This will be moved to as separate endpoint in future and combine the results in the Recruit Outer Api
         var allSharedApplicationReviews = await applicationReviewRepository.GetAllSharedByAccountId(accountId, token); 
 
-        var dashboardModel = GetDashboardModel(applicationReviews, true);
-        dashboardModel.SharedApplicationsCount = allSharedApplicationReviews.Count(e =>
-            e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null } &&
-            e.DateSharedWithEmployer > new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc));
+        var dashboardModel = new DashboardModel {
+            NewApplicationsCount = applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.New)?.Count ?? 0,
+            SharedApplicationsCount = allSharedApplicationReviews,
+            SuccessfulApplicationsCount = applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.Successful)?.Count ?? 0,
+            UnsuccessfulApplicationsCount = applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.Unsuccessful)?.Count ?? 0,
+            EmployerReviewedApplicationsCount = (applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.EmployerInterviewing)?.Count ?? 0) 
+                + (applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.EmployerUnsuccessful)?.Count ?? 0)
+        };
 
         return dashboardModel;
     }
@@ -155,7 +159,14 @@ internal class ApplicationReviewsProvider(
     {
         var applicationReviews = await applicationReviewRepository.GetAllByUkprn(ukprn, token);
 
-        return GetDashboardModel(applicationReviews);
+        return new DashboardModel {
+            NewApplicationsCount = applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.New)?.Count ?? 0,
+            SharedApplicationsCount = 0,
+            SuccessfulApplicationsCount = applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.Successful)?.Count ?? 0,
+            UnsuccessfulApplicationsCount = applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.Unsuccessful)?.Count ?? 0,
+            EmployerReviewedApplicationsCount = (applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.EmployerInterviewing)?.Count ?? 0) 
+                                                + (applicationReviews.FirstOrDefault(c=>c.Status == ApplicationReviewStatus.EmployerUnsuccessful)?.Count ?? 0)
+        };
     }
 
     public async Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default)
@@ -269,9 +280,6 @@ internal class ApplicationReviewsProvider(
     {
         if (applicationReviews.Count == 0) return [];
 
-        // Use a default date to filter out uninitialized DateSharedWithEmployer values
-        var defaultDate = new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc);
-
         return applicationReviews
             .GroupBy(ar => ar.VacancyReference)
             .Select(g => new VacancyDetail {
@@ -279,7 +287,7 @@ internal class ApplicationReviewsProvider(
                 NewApplications = g.Count(ar => ar is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
                 Applications = g.Count(ar => ar.WithdrawnDate == null),
                 Shared = g.Count(ar => ar is {Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null}),
-                AllSharedApplications = g.Count(ar => ar.DateSharedWithEmployer > defaultDate && ar.WithdrawnDate == null)
+                AllSharedApplications = g.Count(ar => ar is { DateSharedWithEmployer: not null, WithdrawnDate: null })
             })
             .ToList();
     }
