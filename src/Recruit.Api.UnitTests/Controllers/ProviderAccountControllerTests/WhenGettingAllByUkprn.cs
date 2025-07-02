@@ -25,7 +25,7 @@ public class WhenGettingAllByUkprn
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>(mockResponse.ToList(), 1, pageNumber, pageSize);
-        providerMock.Setup(p => p.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
+        providerMock.Setup(p => p.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
                     .ReturnsAsync(pagedResult);
 
         // Act
@@ -53,7 +53,7 @@ public class WhenGettingAllByUkprn
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
-        providerMock.Setup(p => p.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
+        providerMock.Setup(p => p.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
                     .ReturnsAsync(pagedResult);
 
         // Act
@@ -79,7 +79,7 @@ public class WhenGettingAllByUkprn
         CancellationToken token)
     {
         // Arrange
-        providerMock.Setup(p => p.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
+        providerMock.Setup(p => p.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token))
             .ThrowsAsync(new Exception());
 
         // Act
