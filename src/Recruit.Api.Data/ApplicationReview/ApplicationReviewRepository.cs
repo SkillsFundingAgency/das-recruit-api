@@ -246,7 +246,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         if (applicationReview == null)
         {
             entity.CreatedDate = DateTime.UtcNow;
-            await recruitDataContext.ApplicationReviewEntities.AddAsync(entity, token);
+            recruitDataContext.ApplicationReviewEntities.Add(entity);
             await recruitDataContext.SaveChangesAsync(token);
             return UpsertResult.Create(entity, true);
         }
