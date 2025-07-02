@@ -287,7 +287,7 @@ internal class ApplicationReviewsProvider(
                 NewApplications = g.Count(ar => ar is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
                 Applications = g.Count(ar => ar.WithdrawnDate == null),
                 Shared = g.Count(ar => ar is {Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null}),
-                AllSharedApplications = g.Count(ar => ar.DateSharedWithEmployer > defaultDate && ar.WithdrawnDate == null)
+                AllSharedApplications = g.Count(ar => ar is { DateSharedWithEmployer: not null, WithdrawnDate: null })
             })
             .ToList();
     }

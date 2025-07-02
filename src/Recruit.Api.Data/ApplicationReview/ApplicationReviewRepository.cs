@@ -203,7 +203,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await query.ToListAsync(token);
     }
 
-    public async Task<PaginatedList<VacancyReviewEntity>> GetAllByUkprn(int ukprn,
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
