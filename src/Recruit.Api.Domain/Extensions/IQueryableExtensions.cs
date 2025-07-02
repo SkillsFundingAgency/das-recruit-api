@@ -15,8 +15,6 @@ public static class QueryableExtensions
         int totalRecords =  0,
         CancellationToken token = default)
     {
-        //int totalRecords = await query.CountAsync(token);
-
         if (!string.IsNullOrWhiteSpace(sortColumn))
         {
             var param = Expression.Parameter(typeof(T), "x");
