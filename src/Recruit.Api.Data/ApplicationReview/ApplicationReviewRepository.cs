@@ -22,14 +22,14 @@ public interface IApplicationReviewRepository
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default);
-    Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+    Task<PaginatedList<ApplicationReviewEntity>> GetPagedByAccountAndStatusAsync(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
-    Task<int> GetAllSharedByAccountId(long accountId,
+    Task<int> GetSharedCountByAccountId(long accountId,
         CancellationToken token = default);
     Task<PaginatedList<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,
         int pageNumber = 1,
@@ -37,7 +37,7 @@ public interface IApplicationReviewRepository
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default);
-    Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+    Task<PaginatedList<ApplicationReviewEntity>> GetPagedByUkprnAndStatusAsync(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
@@ -48,8 +48,8 @@ public interface IApplicationReviewRepository
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
     Task<List<DashboardCountModel>> GetAllByAccountId(long accountId, CancellationToken token = default);
     Task<List<DashboardCountModel>> GetAllByUkprn(int ukprn, CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetByUkprnAndVacancyReferencesAsync(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetByAccountIdAndVacancyReferencesAsync(long accountId, List<long> vacancyReferences, CancellationToken token = default);
     Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(long vacancyReference, CancellationToken token = default);
 
@@ -103,7 +103,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, groupedCountQuery, token);
     }
 
-    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedByAccountAndStatusAsync(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
@@ -162,7 +162,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
 
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, groupedCountQuery, token);
     }
-    public async Task<int> GetAllSharedByAccountId(long accountId,
+    public async Task<int> GetSharedCountByAccountId(long accountId,
         CancellationToken token = default)
     {
         var query = recruitDataContext.ApplicationReviewEntities
@@ -203,7 +203,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await query.ToListAsync(token);
     }
 
-    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedByUkprnAndStatusAsync(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
@@ -211,19 +211,13 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default)
     {
-        var statusString = new List<string>();
-        if (status == null)
-        {
-            statusString.Add(ApplicationReviewStatus.New.ToString());
-        }
-        else
-        {
-            statusString = status.Select(s => s.ToString()).ToList();
-        }
+        var statusStrings = status is null
+            ? [ApplicationReviewStatus.New.ToString()]
+            : status.Select(s => s.ToString()).ToList();
 
         var query = recruitDataContext.ApplicationReviewEntities
         .AsNoTracking()
-            .Where(appReview => appReview.Ukprn == ukprn && statusString.Contains(appReview.Status) && appReview.WithdrawnDate == null)
+            .Where(appReview => appReview.Ukprn == ukprn && statusStrings.Contains(appReview.Status) && appReview.WithdrawnDate == null)
             .Join(
                 recruitDataContext.VacancyReviewEntities.AsNoTracking()
                     .Where(vacancyReview =>
@@ -297,9 +291,9 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 appReview => appReview.VacancyReference,
                 vacancyReview => vacancyReview.VacancyReference,
                 (appReview, _) => appReview
-            ).GroupBy(c=>c.Status).Select(g=>new DashboardCountModel {
-                 Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
-                 Count = g.Count()
+            ).GroupBy(c => c.Status).Select(g => new DashboardCountModel {
+                Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
+                Count = g.Count()
             })
             .ToListAsync(token);
     }
@@ -318,14 +312,14 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 appReview => appReview.VacancyReference,
                 vacancyReview => vacancyReview.VacancyReference,
                 (appReview, _) => appReview
-            ).GroupBy(c=>c.Status).Select(g=>new DashboardCountModel {
+            ).GroupBy(c => c.Status).Select(g => new DashboardCountModel {
                 Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
                 Count = g.Count()
             })
             .ToListAsync(token);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+    public async Task<List<ApplicationReviewEntity>> GetByAccountIdAndVacancyReferencesAsync(long accountId,
         List<long> vacancyReferences,
         CancellationToken token = default)
     {
@@ -348,7 +342,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .ToListAsync(token);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+    public async Task<List<ApplicationReviewEntity>> GetByUkprnAndVacancyReferencesAsync(int ukprn,
         List<long> vacancyReferences,
         CancellationToken token = default)
     {
