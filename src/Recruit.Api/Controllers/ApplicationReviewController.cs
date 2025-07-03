@@ -143,7 +143,11 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
             var applicationReview = await provider.GetById(applicationId, cancellationToken);
             if (applicationReview is null)
             {
-                return TypedResults.NotFound();
+                applicationReview = await provider.GetByApplicationId(applicationId, cancellationToken);
+                if (applicationReview is null)
+                {
+                    return TypedResults.NotFound();    
+                }
             }
             
             var entityPatchDocument = patchRequest.ToEntity();

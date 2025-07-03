@@ -45,6 +45,7 @@ public class WhenPatchingApplicationReview
     {
         // Arrange
         providerMock.Setup(p => p.GetById(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((ApplicationReviewEntity?)null);
+        providerMock.Setup(p => p.GetByApplicationId(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((ApplicationReviewEntity?)null);
 
         // Act
         var result = await controller.Patch(id, patchDocument, CancellationToken.None);
@@ -55,6 +56,31 @@ public class WhenPatchingApplicationReview
         result.Should().BeOfType<NotFound>();
     }
 
+    
+    [Test, MoqAutoData]
+    public async Task When_Application_Not_Found_By_Id_Found_By_ApplicationId_And_Updated(
+        Guid id,
+        JsonPatchDocument<ApplicationReview> patchDocument,
+        ApplicationReviewEntity applicationReview,
+        [Frozen] Mock<IApplicationReviewsProvider> providerMock,
+        [Greedy] ApplicationReviewController controller,
+        CancellationToken token)
+    {
+        // Arrange
+        providerMock.Setup(p => p.GetById(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((ApplicationReviewEntity?)null);
+        providerMock.Setup(p => p.GetByApplicationId(id, It.IsAny<CancellationToken>())).ReturnsAsync(applicationReview);
+        providerMock.Setup(p => p.Update(It.Is<ApplicationReviewEntity>(c=>c.Id == applicationReview.Id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(applicationReview);
+
+        // Act
+        var result = await controller.Patch(id, patchDocument, CancellationToken.None);
+
+        // Assert
+        var okResult = result.Should().BeOfType<Ok<PatchApplicationReviewResponse>>().Subject;
+        var response = okResult.Value.Should().BeOfType<PatchApplicationReviewResponse>().Subject;
+        response.Id.Should().Be(applicationReview.Id);
+    }
+    
     [Test, MoqAutoData]
     public async Task Patch_ReturnsInternalServerException_WhenApplicationReview_Throws_Exception(
         Guid id,
