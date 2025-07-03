@@ -8,18 +8,9 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileAddressContro
 
 public class WhenGettingAnEmployerProfileAddress
 {
-    private Fixture _fixture;
-
-    [SetUp]
-    public void Setup()
-    {
-        _fixture = new Fixture();
-        _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-    }
-    
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_The_Address_Is_Returned(
+        EmployerProfileAddressEntity entity,
         long accountLegalEntityId,
         int id,
         Mock<IEmployerProfileAddressRepository> repository,
@@ -27,7 +18,6 @@ public class WhenGettingAnEmployerProfileAddress
         CancellationToken token)
     {
         // arrange
-        var entity = _fixture.Create<EmployerProfileAddressEntity>();
         repository
             .Setup(x => x.GetOneAsync(It.IsAny<EmployerProfileAddressKey>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(entity);
@@ -63,8 +53,9 @@ public class WhenGettingAnEmployerProfileAddress
         result.Should().BeOfType<NotFound>();
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_The_Addresses_Are_Returned(
+        List<EmployerProfileAddressEntity> entities,
         long accountLegalEntityId,
         int id,
         Mock<IEmployerProfileAddressRepository> repository,
@@ -72,7 +63,6 @@ public class WhenGettingAnEmployerProfileAddress
         CancellationToken token)
     {
         // arrange
-        var entities = _fixture.Create<List<EmployerProfileAddressEntity>>();
         repository
             .Setup(x => x.GetManyAsync(accountLegalEntityId, token))
             .ReturnsAsync(entities);
