@@ -25,7 +25,7 @@ public class WhenGettingAllByAccountId
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>(mockResponse.ToList(), 1, pageNumber, pageSize);
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
+        providerMock.Setup(p => p.GetPagedAccountIdAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
                     .ReturnsAsync(pagedResult);
 
         // Act
@@ -53,7 +53,7 @@ public class WhenGettingAllByAccountId
     {
         // Arrange
         var pagedResult = new PaginatedList<ApplicationReviewEntity>([], 0, pageNumber, pageSize);
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
+        providerMock.Setup(p => p.GetPagedAccountIdAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
                     .ReturnsAsync(pagedResult);
 
         // Act
@@ -80,7 +80,7 @@ public class WhenGettingAllByAccountId
     {
         // Arrange
         // Arrange
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
+        providerMock.Setup(p => p.GetPagedAccountIdAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, token))
             .ThrowsAsync(new Exception());
 
         // Act

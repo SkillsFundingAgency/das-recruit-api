@@ -30,7 +30,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
                 new() { VacancyReference = 5, Status = nameof(ApplicationReviewStatus.Shared), DateSharedWithEmployer = DateTime.Now, WithdrawnDate = null },
             };
 
-            repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token))
+            repositoryMock.Setup(repo => repo.GetByAccountIdAndVacancyReferencesAsync(accountId, vacancyReferences, token))
                 .ReturnsAsync(applicationReviews);
 
             // Act
@@ -93,7 +93,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             result[5].AllSharedApplications.Should().Be(0);
             result[5].HasNoApplications.Should().BeTrue();
 
-            repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token), Times.Once);
+            repositoryMock.Verify(repo => repo.GetByAccountIdAndVacancyReferencesAsync(accountId, vacancyReferences, token), Times.Once);
         }
 
         [Test, MoqAutoData]
@@ -117,7 +117,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
                 new() { VacancyReference = 4, Status = nameof(ApplicationReviewStatus.Shared), WithdrawnDate = DateTime.Now },
             };
 
-            repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token))
+            repositoryMock.Setup(repo => repo.GetByAccountIdAndVacancyReferencesAsync(accountId, vacancyReferences, token))
                 .ReturnsAsync(applicationReviews);
 
             // Act
@@ -166,7 +166,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
             result[4].Applications.Should().Be(0);
             result[4].HasNoApplications.Should().BeTrue();
 
-            repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, vacancyReferences, token), Times.Once);
+            repositoryMock.Verify(repo => repo.GetByAccountIdAndVacancyReferencesAsync(accountId, vacancyReferences, token), Times.Once);
         }
     }
 }

@@ -29,7 +29,7 @@ internal class WhenGettingAllByAccountId
             .ReturnsAsync(expectedList);
 
         // Act
-        var result = await provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
+        var result = await provider.GetPagedAccountIdAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
         // Assert
         result.Should().BeEquivalentTo(expectedList);
@@ -55,7 +55,7 @@ internal class WhenGettingAllByAccountId
             .ThrowsAsync(new Exception("Repository exception"));
 
         // Act & Assert
-        Assert.ThrowsAsync<Exception>(() => provider.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token));
+        Assert.ThrowsAsync<Exception>(() => provider.GetPagedAccountIdAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, token));
 
         repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token), Times.Once);
     }

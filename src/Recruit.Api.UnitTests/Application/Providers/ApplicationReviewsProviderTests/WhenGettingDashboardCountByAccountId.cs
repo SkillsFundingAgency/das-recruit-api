@@ -22,7 +22,7 @@ internal class WhenGettingDashboardCountByAccountId
         [Greedy] ApplicationReviewsProvider provider)
     {
         // Arrange
-        repositoryMock.Setup(x => x.GetAllSharedByAccountId(accountId, token)).ReturnsAsync(sharedCount);
+        repositoryMock.Setup(x => x.GetSharedCountByAccountId(accountId, token)).ReturnsAsync(sharedCount);
         repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, token))
             .ReturnsAsync([
                 new DashboardCountModel {

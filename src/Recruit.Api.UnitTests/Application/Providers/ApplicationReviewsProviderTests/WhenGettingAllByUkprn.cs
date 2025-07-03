@@ -29,7 +29,7 @@ internal class WhenGettingAllByUkprn
             .ReturnsAsync(expectedList);
 
         // Act
-        var result = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
+        var result = await provider.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
 
         // Assert
         result.Should().BeEquivalentTo(expectedList);
@@ -55,7 +55,7 @@ internal class WhenGettingAllByUkprn
             .ThrowsAsync(new Exception("Repository exception"));
 
         // Act & Assert
-        Assert.ThrowsAsync<Exception>(() => provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token));
+        Assert.ThrowsAsync<Exception>(() => provider.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token));
 
         repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token), Times.Once);
     }

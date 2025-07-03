@@ -69,7 +69,7 @@ internal class WhenGettingAllByUkprn
         context.Setup(x => x.VacancyReviewEntities)
             .ReturnsDbSet(vacancyReviewEntities);
 
-        var actual = await repository.GetAllByUkprn(ukprn, [vacancyReference], token);
+        var actual = await repository.GetByUkprnAndVacancyReferencesAsync(ukprn, [vacancyReference], token);
 
         actual.Count.Should().Be(0);
     }

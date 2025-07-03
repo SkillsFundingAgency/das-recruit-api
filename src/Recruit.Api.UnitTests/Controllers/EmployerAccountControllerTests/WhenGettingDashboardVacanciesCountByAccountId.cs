@@ -25,7 +25,7 @@ public class WhenGettingDashboardVacanciesCountByAccountId
         CancellationToken token)
     {
         // Arrange
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, new List<ApplicationReviewStatus>{status} , token))
+        providerMock.Setup(p => p.GetPagedByAccountAndStatusAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, new List<ApplicationReviewStatus>{status} , token))
             .ReturnsAsync(mockVacancies);
 
         // Act
@@ -55,7 +55,7 @@ public class WhenGettingDashboardVacanciesCountByAccountId
     {
         // Arrange
         // Arrange
-        providerMock.Setup(p => p.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, new List<ApplicationReviewStatus>{status}, token))
+        providerMock.Setup(p => p.GetPagedByAccountAndStatusAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, new List<ApplicationReviewStatus>{status}, token))
             .ThrowsAsync(new Exception());
 
         // Act
