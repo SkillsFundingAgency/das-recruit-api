@@ -25,7 +25,7 @@ public class WhenGettingDashboardVacancyByUkprn
         CancellationToken token)
     {
         // Arrange
-        providerMock.Setup(p => p.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token))
+        providerMock.Setup(p => p.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token))
             .ReturnsAsync(mockVacancies);
 
         // Act
@@ -55,7 +55,7 @@ public class WhenGettingDashboardVacancyByUkprn
     {
         // Arrange
         // Arrange
-        providerMock.Setup(p => p.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token))
+        providerMock.Setup(p => p.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token))
             .ThrowsAsync(new Exception());
 
         // Act
