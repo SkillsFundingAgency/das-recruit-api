@@ -32,7 +32,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get all application reviews by ukprn : {ukprn}", ukprn);
 
-                var response = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
+                var response = await provider.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
 
                 var mappedResults = response.Items.Select(app => app.ToGetResponse());
 
@@ -85,7 +85,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get dashboard vacancy count by ukprn : {Ukprn}", ukprn);
 
-                var response = await provider.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token);
+                var response = await provider.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token);
 
                 return TypedResults.Ok(new VacancyDashboardResponse(response.ToPageInfo(), response.Items));
             }
