@@ -12,6 +12,6 @@ public static class ApiUtils
     
     public static T? DeserializeOrNull<T>(string? value) where T : class
     {
-        return value is null ? null : JsonSerializer.Deserialize<T>(value, JsonConfig.Options);
+        return string.IsNullOrWhiteSpace(value) ? null : JsonSerializer.Deserialize<T>(value, JsonConfig.Options);
     }
 }

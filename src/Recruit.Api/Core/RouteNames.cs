@@ -2,6 +2,7 @@
 
 internal struct RouteElements
 {
+    public const string Account = "accounts";
     public const string Api = "api";
     public const string ApplicationReview = "applicationreviews";
     public const string Employer = "employer";
@@ -16,6 +17,7 @@ internal struct RouteElements
 
 internal struct RouteNames
 {
+    public const string Account = $"{RouteElements.Api}/{RouteElements.Account}";
     public const string ApplicationReview = $"{RouteElements.Api}/{RouteElements.ApplicationReview}";
     public const string Employer = $"{RouteElements.Api}/{RouteElements.Employer}";
     public const string EmployerProfile = $"{RouteElements.Api}/{RouteElements.Employer}/{RouteElements.EmployerProfiles}";

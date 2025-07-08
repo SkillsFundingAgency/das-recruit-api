@@ -6,8 +6,10 @@ using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Vacancy;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
+using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
@@ -28,6 +30,32 @@ public class VacancyController : Controller
         return result is null
             ? Results.NotFound()
             : TypedResults.Ok(result.ToGetResponse());
+    }
+
+    /*
+     This is an example paged endpoint, it can be modified or extended as appropriate
+     */
+    [HttpGet, Route($"~/{RouteNames.Account}/{{accountId:long}}/{RouteElements.Vacancies}")]
+    [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetManyByAccountId(
+        [FromServices] IVacancyRepository repository,
+        [FromRoute] long accountId,
+        PagingParams pagingParams,
+        SortingParams<VacancySortColumn> sortingParams,
+        // [FromQuery] FilterParams<VacancyFilterOptions> filterParams
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetManyByAccountIdAsync(
+            accountId,
+            pagingParams.Page ?? 1,
+            pagingParams.PageSize ?? 25,
+            sortingParams.SortColumn.Resolve(),
+            sortingParams.SortOrder ?? SortOrder.Asc,
+            cancellationToken);
+
+        var response = result.ToPagedResponse(x => x.ToGetResponse());
+        return TypedResults.Ok(response);
     }
     
     [HttpPost]

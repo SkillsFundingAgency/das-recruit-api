@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -9,10 +10,37 @@ namespace SFA.DAS.Recruit.Api.Data.Vacancy;
 public interface IVacancyRepository: IReadRepository<VacancyEntity, Guid>, IWriteRepository<VacancyEntity, Guid>
 {
     Task<VacancyReference> GetNextVacancyReferenceAsync(CancellationToken cancellationToken);
+    
+    Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy, SortOrder sortOrder, CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
 {
+    public async Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId, ushort page = 1, ushort pageSize = 25,
+        Expression<Func<VacancyEntity, TKey>>? orderBy = null, SortOrder sortOrder = SortOrder.Desc, 
+        CancellationToken cancellationToken = default)
+    {
+        var query = dataContext.VacancyEntities.Where(x => x.AccountId == accountId);
+        int count = await query.CountAsync(cancellationToken);
+        if (orderBy is not null)
+        {
+            query  = sortOrder is SortOrder.Desc
+                ? query.OrderByDescending(orderBy)
+                : query.OrderBy(orderBy);
+        }
+
+        int skip = (Math.Max(page, (ushort)1) - 1) * pageSize;
+        ushort take = Math.Max(pageSize, (ushort)1);
+
+        var items = await query
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync(cancellationToken);
+        
+        return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
+    }
+    
+    
     public async Task<VacancyEntity?> GetOneAsync(Guid key, CancellationToken cancellationToken)
     {
         return await dataContext
