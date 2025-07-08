@@ -8,25 +8,15 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileControllerTes
 
 public class WhenGettingAnEmployerProfile
 {
-    private Fixture _fixture;
-
-    [SetUp]
-    public void Setup()
-    {
-        _fixture = new Fixture();
-        _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-    }
-    
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_The_Profile_Is_Returned(
+        EmployerProfileEntity entity,
         long accountLegalEntityId,
         Mock<IEmployerProfileRepository> repository,
         [Greedy] EmployerProfileController sut,
         CancellationToken token)
     {
         // arrange
-        var entity = _fixture.Create<EmployerProfileEntity>();
         repository
             .Setup(x => x.GetOneAsync(accountLegalEntityId, token))
             .ReturnsAsync(entity);
@@ -59,15 +49,15 @@ public class WhenGettingAnEmployerProfile
         result.Should().BeOfType<NotFound>();
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_The_Profiles_Are_Returned(
+        List<EmployerProfileEntity> entities,
         long accountId,
         Mock<IEmployerProfileRepository> repository,
         [Greedy] EmployerProfileController sut,
         CancellationToken token)
     {
         // arrange
-        var entities = _fixture.Create<List<EmployerProfileEntity>>();
         repository
             .Setup(x => x.GetManyForAccountAsync(accountId, token))
             .ReturnsAsync(entities);
