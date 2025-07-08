@@ -22,7 +22,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
     public async Task<UpsertResult<VacancyEntity>> UpsertOneAsync(VacancyEntity entity, CancellationToken cancellationToken)
     {
-        var existingEntity = await GetOneAsync(entity.Id, cancellationToken);
+        var existingEntity = entity.Id == Guid.Empty ? null : await GetOneAsync(entity.Id, cancellationToken);
         if (existingEntity is null)
         {
             await dataContext.VacancyEntities.AddAsync(entity, cancellationToken);

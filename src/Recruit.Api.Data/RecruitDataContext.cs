@@ -61,10 +61,10 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
         Entry(to).CurrentValues.SetValues(from);
     }
 
-    public async Task<VacancyReference> GetNextVacancyReferenceAsync(CancellationToken cancellationToken)
+    public async Task<VacancyReference> GetNextVacancyReferenceAsync(CancellationToken cancellationToken = default)
     {
         var sqlParameter = new SqlParameter("@result", SqlDbType.BigInt) { Direction = ParameterDirection.Output };
-        await Database.ExecuteSqlRawAsync("set @result = next value for VacancyReference", sqlParameter, cancellationToken);
+        await Database.ExecuteSqlRawAsync("set @result = next value for VacancyReference", [sqlParameter], cancellationToken);
         return (long)sqlParameter.Value;
     }
 

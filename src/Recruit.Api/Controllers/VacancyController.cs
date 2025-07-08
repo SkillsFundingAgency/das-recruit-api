@@ -38,8 +38,13 @@ public class VacancyController : Controller
         [FromBody] PostVacancyRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await repository.UpsertOneAsync(request.ToDomain(), cancellationToken);
-        return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.VacancyReference}", result.Entity.ToPostResponse());
+        var entity = request.ToDomain();
+        var vacancyReference = await repository.GetNextVacancyReferenceAsync(cancellationToken);
+        entity.VacancyReference = vacancyReference.Value;
+        entity.CreatedDate = DateTime.UtcNow;
+        
+        var result = await repository.UpsertOneAsync(entity, cancellationToken);
+        return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
     
     [HttpPut, Route("{vacancyId:guid}")]

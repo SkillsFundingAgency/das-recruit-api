@@ -3,20 +3,19 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
-using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
-using SFA.DAS.Recruit.Api.UnitTests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
-public class WhenPuttingVacancy: BaseFixture
+public class WhenPostingVacancy: BaseFixture
 {
     [Test]
     public async Task Then_Without_Required_Fields_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}", new {});
+        var response = await Client.PostAsJsonAsync(RouteNames.Vacancies, new {});
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert
@@ -34,49 +33,34 @@ public class WhenPuttingVacancy: BaseFixture
     {
         // arrange
         var id = Guid.NewGuid();
+        var vacancyReference = Fixture.Create<VacancyReference>();
+        var request = Fixture.Create<PostVacancyRequest>();
+
         Server.DataContext
             .Setup(x => x.VacancyEntities)
             .ReturnsDbSet(Fixture.CreateMany<VacancyEntity>(10).ToList());
-
-        var request = Fixture.Create<PutVacancyRequest>();
-        var expectedEntity = request.ToDomain(id);
+        
+        Server.DataContext
+            .Setup(x => x.VacancyEntities.AddAsync(It.IsAny<VacancyEntity>(), It.IsAny<CancellationToken>()))
+            .Callback((VacancyEntity entity, CancellationToken _) => { entity.Id = id; });
+        
+        Server.DataContext
+            .Setup(x => x.GetNextVacancyReferenceAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vacancyReference.Value);
         
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{id}", request);
+        var response = await Client.PostAsJsonAsync(RouteNames.Vacancies, request);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
         vacancy.Should().BeEquivalentTo(request);
+        vacancy.Id.Should().Be(id);
+        vacancy.VacancyReference.Should().Be(vacancyReference.Value);
         
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
         response.Headers.Location.ToString().Should().Be($"/{RouteNames.Vacancies}/{vacancy.Id}");
-
-        Server.DataContext.Verify(x => x.VacancyEntities.AddAsync(ItIs.EquivalentTo(expectedEntity), It.IsAny<CancellationToken>()), Times.Once());
-        Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-    }
-    
-    [Test]
-    public async Task Then_The_Vacancy_Is_Replaced()
-    {
-        // arrange
-        var items = Fixture.CreateMany<VacancyEntity>(10).ToList();
-        var targetItem = items[5];
-        Server.DataContext
-            .Setup(x => x.VacancyEntities)
-            .ReturnsDbSet(items);
-
-        var request = Fixture.Create<PutVacancyRequest>();
         
-        // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{targetItem.Id}", request);
-        var vacancy = await response.Content.ReadAsAsync<Vacancy>();
-
-        // assert
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        vacancy.Should().BeEquivalentTo(request);
-
-        Server.DataContext.Verify(x => x.SetValues(targetItem, ItIs.EquivalentTo(request.ToDomain(targetItem.Id))), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }
