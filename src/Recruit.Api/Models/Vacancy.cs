@@ -73,7 +73,6 @@ public class Address
     public string? AddressLine3 { get; set; }
     public string? AddressLine4 { get; set; }
     public required string Postcode { get; set; }
-    //public string? Country { get; set; } // TODO: do we need this now we're England only?
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
 }
