@@ -31,6 +31,8 @@ public interface IApplicationReviewRepository
         CancellationToken token = default);
     Task<int> GetSharedCountByAccountId(long accountId,
         CancellationToken token = default);
+    Task<int> GetAllSharedCountByAccountId(long accountId,
+        CancellationToken token = default);
     Task<PaginatedList<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
@@ -171,6 +173,18 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 appReview.AccountId == accountId &&
                 appReview.DateSharedWithEmployer != null &&
                 appReview.Status == ApplicationReviewStatus.Shared.ToString() &&
+                appReview.WithdrawnDate == null);
+
+        return await query.CountAsync(token);
+    }
+
+    public async Task<int> GetAllSharedCountByAccountId(long accountId, CancellationToken token = default)
+    {
+        var query = recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(appReview =>
+                appReview.AccountId == accountId &&
+                appReview.DateSharedWithEmployer != null &&
                 appReview.WithdrawnDate == null);
 
         return await query.CountAsync(token);

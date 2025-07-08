@@ -137,11 +137,15 @@ internal class ApplicationReviewsProvider(
 
     public async Task<DashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
     {
-        var dashboardCount = await applicationReviewRepository.GetAllByAccountId(accountId, token);
-        int sharedApplicationReviewsCount = await applicationReviewRepository.GetSharedCountByAccountId(accountId, token);
+        var dashboardCountTask = applicationReviewRepository.GetAllByAccountId(accountId, token);
+        var sharedApplicationReviewsCountTask = applicationReviewRepository.GetSharedCountByAccountId(accountId, token);
+        var allSharedApplicationReviewsCountTask = applicationReviewRepository.GetAllSharedCountByAccountId(accountId, token);
 
-        var dashboardModel = (DashboardModel)dashboardCount;
-        dashboardModel.SharedApplicationsCount = sharedApplicationReviewsCount;
+        await Task.WhenAll(dashboardCountTask, sharedApplicationReviewsCountTask, allSharedApplicationReviewsCountTask);
+        
+        var dashboardModel = (DashboardModel)dashboardCountTask.Result;
+        dashboardModel.SharedApplicationsCount = sharedApplicationReviewsCountTask.Result;
+        dashboardModel.AllSharedApplicationsCount = allSharedApplicationReviewsCountTask.Result;
 
         return dashboardModel;
     }
