@@ -139,9 +139,11 @@ internal class ApplicationReviewsProvider(
     {
         var dashboardCount = await applicationReviewRepository.GetAllByAccountId(accountId, token);
         int sharedApplicationReviewsCount = await applicationReviewRepository.GetSharedCountByAccountId(accountId, token);
-
+        int allSharedApplicationReviewsCount = await applicationReviewRepository.GetAllSharedCountByAccountId(accountId, token);
+        
         var dashboardModel = (DashboardModel)dashboardCount;
         dashboardModel.SharedApplicationsCount = sharedApplicationReviewsCount;
+        dashboardModel.AllSharedApplicationsCount = allSharedApplicationReviewsCount;
 
         return dashboardModel;
     }

@@ -17,12 +17,14 @@ internal class WhenGettingDashboardCountByAccountId
         int employerUnsuccessfulCount,
         int employerInterviewingCount,
         int sharedCount,
+        int allSharedCount,
         CancellationToken token,
         [Frozen] Mock<IApplicationReviewRepository> repositoryMock,
         [Greedy] ApplicationReviewsProvider provider)
     {
         // Arrange
         repositoryMock.Setup(x => x.GetSharedCountByAccountId(accountId, token)).ReturnsAsync(sharedCount);
+        repositoryMock.Setup(x => x.GetAllSharedCountByAccountId(accountId, token)).ReturnsAsync(allSharedCount);
         repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, token))
             .ReturnsAsync([
                 new DashboardCountModel {
@@ -55,6 +57,7 @@ internal class WhenGettingDashboardCountByAccountId
         result.UnsuccessfulApplicationsCount.Should().Be(unsuccessfulCount);
         result.SuccessfulApplicationsCount.Should().Be(successfulCount);
         result.SharedApplicationsCount.Should().Be(sharedCount);
+        result.AllSharedApplicationsCount.Should().Be(allSharedCount);
         repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, token), Times.Once);
     }
         
