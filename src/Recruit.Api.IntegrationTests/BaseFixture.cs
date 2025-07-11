@@ -16,6 +16,7 @@ public abstract class BaseFixture
         Fixture = new Fixture();
         Fixture.Customizations.Add(new VacancyReferenceSpecimenBuilder());
         Fixture.Customizations.Add(new VacancyReviewEntitySpecimenBuilder());
+        Fixture.Customizations.Add(new VacancyEntitySpecimenBuilder());
     }
 
     [TearDown]

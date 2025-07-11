@@ -1,6 +1,6 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace SFA.DAS.Recruit.Api.Domain.Models;
+namespace SFA.DAS.Recruit.Api.Domain.Enums;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum OwnerType
