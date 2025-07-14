@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Core;
-using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
@@ -74,7 +73,7 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(List<GetApplicationReviewResponse>), StatusCodes.Status200OK)]
     public async Task<IResult> GetManyByVacancyReference(
-        [FromRoute][Required] VacancyReference vacancyReference,
+        [FromRoute][Required] long vacancyReference,
         CancellationToken token)
     {
         try
@@ -144,7 +143,11 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
             var applicationReview = await provider.GetById(applicationId, cancellationToken);
             if (applicationReview is null)
             {
-                return TypedResults.NotFound();
+                applicationReview = await provider.GetByApplicationId(applicationId, cancellationToken);
+                if (applicationReview is null)
+                {
+                    return TypedResults.NotFound();    
+                }
             }
             
             var entityPatchDocument = patchRequest.ToEntity();

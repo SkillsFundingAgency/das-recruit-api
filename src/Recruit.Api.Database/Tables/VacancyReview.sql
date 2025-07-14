@@ -24,7 +24,12 @@ CREATE TABLE dbo.[VacancyReview] (
     [OwnerType]                                 tinyint             NOT NULL DEFAULT(3)
     CONSTRAINT [PK_VacancyReview] PRIMARY KEY (Id),
     INDEX [IX_VacancyReview_VacancyReference] NONCLUSTERED(VacancyReference),
+    INDEX [IX_VacancyReview_VacancyReferenceStatus] NONCLUSTERED(VacancyReference,Status),
+    INDEX [IX_VacancyReview_VacancyReferenceStatusOwnerOutcome] NONCLUSTERED(VacancyReference,Status, OwnerType, ManualOutcome),
+    INDEX [IX_VacancyReview_StatusOwnerOutcome] NONCLUSTERED(Status, OwnerType, ManualOutcome),
     INDEX [IX_VacancyReview_AccountId] NONCLUSTERED(AccountId),
     INDEX [IX_VacancyReview_AccountLegalEntityId] NONCLUSTERED(AccountLegalEntityId),
-    INDEX [IX_VacancyReview_Ukprn] NONCLUSTERED(Ukprn)
+    INDEX [IX_VacancyReview_Ukprn] NONCLUSTERED(Ukprn),
+    INDEX [IX_VacancyReview_UkprnOwnerType] NONCLUSTERED(Ukprn,OwnerType,Status),
+    INDEX [IX_VacancyReview_AccountIdOwnerType] NONCLUSTERED(AccountId,OwnerType,Status),
 )

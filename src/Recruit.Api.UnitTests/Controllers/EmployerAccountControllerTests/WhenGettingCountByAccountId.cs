@@ -19,11 +19,11 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
             CancellationToken token)
         {
             // Arrange
-            providerMock.Setup(p => p.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token))
+            providerMock.Setup(p => p.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, null, token))
                 .ReturnsAsync(mockResponse);
 
             // Act
-            var result = await controller.GetCountByVacancyReferences(accountId, vacancyReferences, token);
+            var result = await controller.GetCountByVacancyReferences(accountId,"", vacancyReferences, token);
 
             // Assert
             result.Should().BeOfType<Ok<List<ApplicationReviewsStats>>>();
@@ -44,11 +44,11 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
         {
             // Arrange
             // Arrange
-            providerMock.Setup(p => p.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, token))
+            providerMock.Setup(p => p.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences,null, token))
                 .ThrowsAsync(new Exception());
 
             // Act
-            var result = await controller.GetCountByVacancyReferences(accountId, vacancyReferences, token);
+            var result = await controller.GetCountByVacancyReferences(accountId,null, vacancyReferences, token);
 
             // Assert
             result.Should().BeOfType<ProblemHttpResult>();

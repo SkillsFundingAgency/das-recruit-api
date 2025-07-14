@@ -49,9 +49,8 @@ public class WhenGettingVacancyReview: BaseFixture
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
-    [TestCase("12341234")]
-    [TestCase("VAC12341234")]
-    public async Task Then_The_VacancyReviews_Are_Returned(string vacancyReference)
+    [Test, AutoData]
+    public async Task Then_The_VacancyReviews_Are_Returned(long vacancyReference)
     {
         // arrange
         var items = Fixture.CreateMany<VacancyReviewEntity>(10).ToList();

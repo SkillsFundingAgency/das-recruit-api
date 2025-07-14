@@ -1,7 +1,8 @@
-﻿using SFA.DAS.Recruit.Api.Data.ApplicationReview;
+using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Application.Providers;
@@ -10,14 +11,14 @@ public interface IApplicationReviewsProvider
 {
     Task<ApplicationReviewEntity?> GetById(Guid id, CancellationToken token = default);
 
-    Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
+    Task<PaginatedList<ApplicationReviewEntity>> GetPagedAccountIdAsync(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default);
 
-    Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+    Task<PaginatedList<ApplicationReviewEntity>> GetPagedUkprnAsync(int ukprn,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
@@ -32,72 +33,156 @@ public interface IApplicationReviewsProvider
 
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
 
-    Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences, ApplicationReviewStatus? applicationSharedFilteringStatus = null, CancellationToken token = default);
     Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(VacancyReference vacancyReference, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(long vacancyReference, CancellationToken token = default);
     Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
+    Task<PaginatedList<VacancyDetail>> GetPagedByAccountAndStatusAsync(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        List<ApplicationReviewStatus>? status = null,
+        CancellationToken token = default);
+
+    Task<PaginatedList<VacancyDetail>> GetPagedAllSharedByAccountId(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default);
+
+    Task<PaginatedList<VacancyDetail>> GetPagedByUkprnAndStatusAsync(int ukprn,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        List<ApplicationReviewStatus>? status = null,
+        CancellationToken token = default);
 }
 
-internal class ApplicationReviewsProvider(IApplicationReviewRepository repository) : IApplicationReviewsProvider
+internal class ApplicationReviewsProvider(
+    IApplicationReviewRepository applicationReviewRepository) : IApplicationReviewsProvider
 {
     public async Task<ApplicationReviewEntity?> GetById(Guid id, CancellationToken token = default)
     {
-        return await repository.GetById(id, token);
+        return await applicationReviewRepository.GetById(id, token);
     }
     
     public async Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default)
     {
-        return await repository.GetByApplicationId(applicationId, token);
+        return await applicationReviewRepository.GetByApplicationId(applicationId, token);
     }
 
-    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByAccountId(long accountId,
-        int pageNumber,
-        int pageSize,
+    public async Task<PaginatedList<VacancyDetail>> GetPagedByAccountAndStatusAsync(long accountId,
+        int pageNumber = 1,
+        int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
+        List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default)
     {
-        return await repository.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
+        var appReviews = await applicationReviewRepository.GetPagedByAccountAndStatusAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, status, token);
+        var vacancyDetails = GetVacancyDetails(appReviews.Items);
+        return new PaginatedList<VacancyDetail>(vacancyDetails, appReviews.TotalCount, appReviews.PageIndex, appReviews.PageSize);
     }
 
-    public async Task<PaginatedList<ApplicationReviewEntity>> GetAllByUkprn(int ukprn,
+    public async Task<PaginatedList<VacancyDetail>> GetPagedAllSharedByAccountId(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
         string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
         bool isAscending = false,
         CancellationToken token = default)
     {
-        return await repository.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
+        var appReviews = await applicationReviewRepository.GetAllSharedByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
+        var vacancyDetails = GetVacancyDetails(appReviews.Items);
+        return new PaginatedList<VacancyDetail>(vacancyDetails, appReviews.TotalCount, appReviews.PageIndex, appReviews.PageSize);
+    }
+
+    public async Task<PaginatedList<VacancyDetail>> GetPagedByUkprnAndStatusAsync(int ukprn,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        List<ApplicationReviewStatus>? status = null,
+        CancellationToken token = default)
+    {
+        var appReviews =
+            await applicationReviewRepository.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending,
+                status, token);
+        var vacancyDetails = GetVacancyDetails(appReviews.Items);
+        return new PaginatedList<VacancyDetail>(vacancyDetails, appReviews.TotalCount, appReviews.PageIndex,
+            appReviews.PageSize);
+    }
+
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedAccountIdAsync(long accountId,
+        int pageNumber,
+        int pageSize,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
+    }
+
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedUkprnAsync(int ukprn,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
     public async Task<DashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByAccountId(accountId, token);
+        var dashboardCount = await applicationReviewRepository.GetAllByAccountId(accountId, token);
+        int sharedApplicationReviewsCount = await applicationReviewRepository.GetSharedCountByAccountId(accountId, token);
+        int allSharedApplicationReviewsCount = await applicationReviewRepository.GetAllSharedCountByAccountId(accountId, token);
+        
+        var dashboardModel = (DashboardModel)dashboardCount;
+        dashboardModel.SharedApplicationsCount = sharedApplicationReviewsCount;
+        dashboardModel.AllSharedApplicationsCount = allSharedApplicationReviewsCount;
 
-        return GetDashboardModel(applicationReviews);
+        return dashboardModel;
     }
 
     public async Task<DashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByUkprn(ukprn, token);
-
-        return GetDashboardModel(applicationReviews);
+        return await applicationReviewRepository.GetAllByUkprn(ukprn, token);
     }
 
     public async Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default)
     {
-        return await repository.Update(entity, token);
+        return await applicationReviewRepository.Update(entity, token);
     }
 
     public async Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default)
     {
-        return await repository.Upsert(entity, token);
+        return await applicationReviewRepository.Upsert(entity, token);
     }
 
-    public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences,
+    public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByAccountId(long accountId, List<long> vacancyReferences,ApplicationReviewStatus? applicationSharedFilteringStatus,
         CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByAccountId(accountId, vacancyReferences, token);
+        List<ApplicationReviewEntity> applicationReviews;
+        if (applicationSharedFilteringStatus is ApplicationReviewStatus.Shared or ApplicationReviewStatus.AllShared)
+        {
+            if (applicationSharedFilteringStatus == ApplicationReviewStatus.AllShared)
+            {
+                applicationReviews  = await applicationReviewRepository.GetAllSharedByAccountId(accountId,vacancyReferences, token);    
+            }
+            else
+            {
+                applicationReviews  = await applicationReviewRepository.GetNewSharedByAccountId(accountId, vacancyReferences,token);    
+            }
+        }
+        else
+        {
+            applicationReviews  = await applicationReviewRepository.GetByAccountIdAndVacancyReferencesAsync(accountId, vacancyReferences, token);
+        }
+        
 
         return GetApplicationReviewsStats(vacancyReferences, applicationReviews);
     }
@@ -105,35 +190,14 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
     public async Task<List<ApplicationReviewsStats>> GetVacancyReferencesCountByUkprn(int ukprn, List<long> vacancyReferences,
         CancellationToken token = default)
     {
-        var applicationReviews = await repository.GetAllByUkprn(ukprn, vacancyReferences, token);
+        var applicationReviews = await applicationReviewRepository.GetByUkprnAndVacancyReferencesAsync(ukprn, vacancyReferences, token);
 
         return GetApplicationReviewsStats(vacancyReferences, applicationReviews);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(VacancyReference vacancyReference, CancellationToken token = default)
+    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(long vacancyReference, CancellationToken token = default)
     {
-        return await repository.GetAllByVacancyReference(vacancyReference.Value, token);
-    }
-
-    private static DashboardModel GetDashboardModel(List<ApplicationReviewEntity> applicationReviews)
-    {
-        return new DashboardModel
-        {
-            NewApplicationsCount = applicationReviews.Count(fil =>
-                fil is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null}),
-            EmployerReviewedApplicationsCount = applicationReviews.Count(entity =>
-                entity.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing)),
-            SharedApplicationsCount = applicationReviews.Count(e =>
-                e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null }),
-            AllSharedApplicationsCount = applicationReviews.Count(e =>
-                e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null } &&
-                e.DateSharedWithEmployer > DateTime.MinValue),
-            SuccessfulApplicationsCount = applicationReviews.Count(e =>
-                e is { Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null }),
-            UnsuccessfulApplicationsCount = applicationReviews.Count(e =>
-                e is { Status: nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate: null }),
-            HasNoApplications = applicationReviews.All(e => e.WithdrawnDate != null)
-        };
+        return await applicationReviewRepository.GetAllByVacancyReference(vacancyReference, token);
     }
 
     private static List<ApplicationReviewsStats> GetApplicationReviewsStats(List<long> vacancyReferences, List<ApplicationReviewEntity> applicationReviews)
@@ -146,29 +210,54 @@ internal class ApplicationReviewsProvider(IApplicationReviewRepository repositor
                 (vacancyRef, reviews) =>
                 {
                     var applicationReviewEntities = reviews.ToList();
-
                     return new ApplicationReviewsStats
                     {
                         VacancyReference = vacancyRef,
-                        NewApplications = applicationReviewEntities.Count(e =>
-                            e is { Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null }),
-                        SharedApplications = applicationReviewEntities.Count(e =>
-                            e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null }),
-                        AllSharedApplications = applicationReviewEntities.Count(e =>
-                            e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null } &&
-                            e.DateSharedWithEmployer > DateTime.MinValue),
-                        SuccessfulApplications = applicationReviewEntities.Count(e =>
-                            e is { Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null }),
-                        UnsuccessfulApplications = applicationReviewEntities.Count(e =>
-                            e is { Status: nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate: null }),
-                        EmployerReviewedApplications = applicationReviewEntities.Count(e =>
-                            e.Status is nameof(ApplicationReviewStatus.EmployerUnsuccessful) or
-                                nameof(ApplicationReviewStatus.EmployerInterviewing) &&
-                            e.WithdrawnDate == null),
-                        Applications = applicationReviewEntities.Count(e => e.WithdrawnDate == null),
-                        HasNoApplications = applicationReviewEntities.All(e => e.WithdrawnDate != null)
+                        NewApplications = applicationReviewEntities.New(),
+                        SharedApplications = applicationReviewEntities.Shared(),
+                        AllSharedApplications = applicationReviewEntities.AllShared(),
+                        SuccessfulApplications = applicationReviewEntities.Successful(),
+                        UnsuccessfulApplications = applicationReviewEntities.Unsuccessful(),
+                        EmployerReviewedApplications = applicationReviewEntities.EmployerReviewed(),
+                        Applications = applicationReviewEntities.AllCount(),
+                        HasNoApplications = applicationReviewEntities.HasNoApplications()
                     };
                 })
+            .ToList();
+    }
+
+    private static List<VacancyDetail> GetVacancyDetails(List<ApplicationReviewEntity> applicationReviews)
+    {
+        if (applicationReviews.Count == 0) return [];
+
+        return applicationReviews
+            .GroupBy(ar => ar.VacancyReference)
+            .Select(g =>
+            {
+                int newApplications = g.Count(ar =>
+                    Enum.TryParse<ApplicationReviewStatus>(ar.Status, out var status) &&
+                    status == ApplicationReviewStatus.New &&
+                    ar.WithdrawnDate == null);
+
+                int shared = g.Count(ar =>
+                    Enum.TryParse<ApplicationReviewStatus>(ar.Status, out var status) &&
+                    status == ApplicationReviewStatus.Shared &&
+                    ar.WithdrawnDate == null);
+
+                int allSharedApplications = g.Count(ar =>
+                    ar is {DateSharedWithEmployer: not null, WithdrawnDate: null});
+
+                int applications = g.Count(ar => ar.WithdrawnDate == null);
+
+                return new VacancyDetail
+                {
+                    VacancyReference = g.Key,
+                    NewApplications = newApplications,
+                    Applications = applications,
+                    Shared = shared,
+                    AllSharedApplications = allSharedApplications
+                };
+            })
             .ToList();
     }
 }

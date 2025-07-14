@@ -7,13 +7,13 @@ public class VacancyReviewEntity
 {
     [Key]
     public Guid Id { get; init; }
-    public required VacancyReference VacancyReference { get; set; }
+    public required long VacancyReference { get; set; }
     [MaxLength(500)]
     public required string VacancyTitle { get; init; }
     public required DateTime CreatedDate { get; init; }
     public required DateTime SlaDeadLine { get; init; }
     public DateTime? ReviewedDate { get; init; }
-    public required ReviewStatus Status { get; init; }
+    public required ReviewStatus Status { get; set; }
     public byte SubmissionCount { get; init; }
     [MaxLength(255)]
     public string? ReviewedByUserEmail { get; init; }
@@ -33,5 +33,5 @@ public class VacancyReviewEntity
     public required long AccountId { get; init; }
     public required long AccountLegalEntityId { get; init; }
     public required long Ukprn { get; init; }
-    public required OwnerType OwnerType { get; init; }
+    public required OwnerType OwnerType { get; set; }
 }
