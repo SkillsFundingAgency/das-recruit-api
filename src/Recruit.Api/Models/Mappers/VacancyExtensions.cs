@@ -151,7 +151,7 @@ public static class VacancyExtensions
             {
                 Ukprn = entity.Ukprn,
                 Name = entity.TrainingProvider_Name!,
-                Address = ApiUtils.DeserializeOrNull<Address>(entity.TrainingProvider_Address)!,
+                Address = ApiUtils.DeserializeOrNull<TrainingProviderAddress>(entity.TrainingProvider_Address)!,
             },
             TransferInfo = ApiUtils.DeserializeOrNull<TransferInfo>(entity.TransferInfo),
             VacancyReference = entity.VacancyReference,

@@ -79,9 +79,9 @@ public class Address
 
 public class ContactDetail
 {
-    public required string Name { get; set; }
-    public required string Email { get; set; }
-    public required string Phone { get; set; }
+    public string? Name { get; set; }
+    public string? Email { get; set; }
+    public string? Phone { get; set; }
 }
 
 public class ReviewFieldIndicator
@@ -90,11 +90,22 @@ public class ReviewFieldIndicator
     public bool IsChangeRequested { get; set; }
 }
 
+public class TrainingProviderAddress
+{
+    public string? AddressLine1 { get; set; }
+    public string? AddressLine2 { get; set; }
+    public string? AddressLine3 { get; set; }
+    public string? AddressLine4 { get; set; }
+    public string? Postcode { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
+}
+
 public class TrainingProvider
 {
     public long? Ukprn { get; set; }
     public required string Name { get; set; }
-    public required Address Address { get; set; }
+    public required TrainingProviderAddress Address { get; set; }
 }
 
 public class TransferInfo
@@ -113,7 +124,7 @@ public class Qualification
     public string Grade { get; set; }
     public int? Level { get; set; }
     public QualificationWeighting? Weighting { get; set; }
-    public string OtherQualificationName { get; set; }
+    public string? OtherQualificationName { get; set; }
 }
 
 public class Wage
