@@ -104,8 +104,8 @@ public class TrainingProviderAddress
 public class TrainingProvider
 {
     public long? Ukprn { get; set; }
-    public required string Name { get; set; }
-    public required TrainingProviderAddress Address { get; set; }
+    public string? Name { get; set; }
+    public TrainingProviderAddress? Address { get; set; }
 }
 
 public class TransferInfo
