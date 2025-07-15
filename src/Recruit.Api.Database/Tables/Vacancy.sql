@@ -29,7 +29,7 @@ CREATE TABLE dbo.[Vacancy] (
     [ApplicationInstructions]                   nvarchar(500)       NULL,
     [ShortDescription]                          nvarchar(400)       NULL,
     [Description]                               nvarchar(max)       NULL,
-    [AnonymousReason]                           nvarchar(200)       NULL,
+    [AnonymousReason]                           nvarchar(1000)      NULL,
     [DisabilityConfident]                       bit                 NULL,
     [ContactName]                               nvarchar(100)       NULL,
     [ContactEmail]                              nvarchar(100)       NULL,
