@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Recruit.Api.Domain.Models;
+﻿using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Models;
 
