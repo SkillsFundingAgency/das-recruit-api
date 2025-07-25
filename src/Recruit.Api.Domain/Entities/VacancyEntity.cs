@@ -74,5 +74,5 @@ public class VacancyEntity
     public bool? HasOptedToAddQualifications {get; set;}
     public string? EmployerReviewFieldIndicators {get; set;}
     public string? ProviderReviewFieldIndicators {get; set;}
-    public string? SubmittedByUserId { get; set; }
+    public Guid? SubmittedByUserId { get; set; }
 }
