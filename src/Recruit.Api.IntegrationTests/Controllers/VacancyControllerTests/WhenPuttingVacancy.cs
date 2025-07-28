@@ -35,6 +35,10 @@ public class WhenPuttingVacancy: BaseFixture
         // arrange
         var id = Guid.NewGuid();
         Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(Fixture.CreateMany<UserEntity>(10));
+        
+        Server.DataContext
             .Setup(x => x.VacancyEntities)
             .ReturnsDbSet(Fixture.CreateMany<VacancyEntity>(10).ToList());
 
@@ -46,7 +50,7 @@ public class WhenPuttingVacancy: BaseFixture
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
-        vacancy.Should().BeEquivalentTo(request);
+        vacancy.Should().BeEquivalentTo(request, opt => opt.Excluding(x => x.SubmittedByUserId));
         
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
@@ -65,6 +69,10 @@ public class WhenPuttingVacancy: BaseFixture
         Server.DataContext
             .Setup(x => x.VacancyEntities)
             .ReturnsDbSet(items);
+        
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(Fixture.CreateMany<UserEntity>(10));
 
         var request = Fixture.Create<PutVacancyRequest>();
         
@@ -74,7 +82,7 @@ public class WhenPuttingVacancy: BaseFixture
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        vacancy.Should().BeEquivalentTo(request);
+        vacancy.Should().BeEquivalentTo(request, opt => opt.Excluding(x => x.SubmittedByUserId));
 
         Server.DataContext.Verify(x => x.SetValues(targetItem, ItIs.EquivalentTo(request.ToDomain(targetItem.Id))), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);

@@ -63,5 +63,5 @@ public class PutVacancyRequest
     public bool? HasOptedToAddQualifications { get; init; }
     public List<ReviewFieldIndicator>? EmployerReviewFieldIndicators { get; init; }
     public List<ReviewFieldIndicator>? ProviderReviewFieldIndicators { get; init; }
-    public Guid? SubmittedByUserId { get; init; }
+    public string? SubmittedByUserId { get; init; }
 }
