@@ -10,17 +10,7 @@ using SFA.DAS.Recruit.Api.Models.Responses.EmployerProfile;
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileControllerTests;
 
 public class WhenPatchingAnEmployerProfile
-{
-    private Fixture _fixture;
-
-    [SetUp]
-    public void Setup()
-    {
-        _fixture = new Fixture();
-        _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-    }
-    
+{   
     [Test, MoqAutoData]
     public async Task Then_The_Profile_Is_NotFound(
         long accountLegalEntityId,
@@ -42,8 +32,9 @@ public class WhenPatchingAnEmployerProfile
         result.Should().BeOfType<NotFound>();
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_The_Profile_Is_Patched(
+        EmployerProfileEntity entity,
         long accountLegalEntityId,
         string aboutOrganisation,
         string tradingName,
@@ -57,8 +48,6 @@ public class WhenPatchingAnEmployerProfile
             new Operation("replace", "/AboutOrganisation", null, aboutOrganisation),
             new Operation("replace", "/TradingName", null, tradingName),
         ]);
-
-        var entity = _fixture.Create<EmployerProfileEntity>();
         repository.Setup(x => x.GetOneAsync(accountLegalEntityId, token)).ReturnsAsync(() => entity);
         repository.Setup(x => x.UpsertOneAsync(It.IsAny<EmployerProfileEntity>(), It.IsAny<CancellationToken>())).ReturnsAsync(UpsertResult.Create(entity, false));
 
@@ -74,8 +63,9 @@ public class WhenPatchingAnEmployerProfile
         patchResult.Value.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers());
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_Invalid_Updates_Returns_BadRequest(
+        EmployerProfileEntity entity,
         long accountLegalEntityId,
         Mock<IEmployerProfileRepository> repository,
         [Greedy] EmployerProfileController sut,
@@ -84,8 +74,6 @@ public class WhenPatchingAnEmployerProfile
         // arrange
         var patchRequest = new JsonPatchDocument();
         patchRequest.Operations.AddRange([new Operation("replace", "/Foo", null, "A new value")]);
-
-        var entity = _fixture.Create<EmployerProfileEntity>();
         repository.Setup(x => x.GetOneAsync(accountLegalEntityId, token)).ReturnsAsync(() => entity);
 
         // act
