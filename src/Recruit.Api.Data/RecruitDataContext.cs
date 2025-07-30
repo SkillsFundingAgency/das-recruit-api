@@ -9,6 +9,7 @@ using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
 using SFA.DAS.Recruit.Api.Data.Vacancy;
+using SFA.DAS.Recruit.Api.Data.User;
 using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -24,6 +25,7 @@ public interface IRecruitDataContext
     DbSet<EmployerProfileAddressEntity> EmployerProfileAddressEntities { get; }
     DbSet<VacancyReviewEntity> VacancyReviewEntities { get; }
     DbSet<VacancyEntity> VacancyEntities { get; }
+    DbSet<UserEntity> UserEntities { get; }
     DatabaseFacade Database { get; }
     Task Ping(CancellationToken cancellationToken);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
@@ -40,7 +42,8 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
     public DbSet<EmployerProfileAddressEntity> EmployerProfileAddressEntities { get; set; }
     public DbSet<VacancyReviewEntity> VacancyReviewEntities { get; set; }
     public DbSet<VacancyEntity> VacancyEntities { get; set; }
-
+    public DbSet<UserEntity> UserEntities { get; set; }
+    
     private readonly ConnectionStrings? _configuration;
     public RecruitDataContext() {}
     public RecruitDataContext(DbContextOptions options) : base(options) {}
@@ -89,6 +92,7 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
         modelBuilder.ApplyConfiguration(new ProhibitedContentEntityConfiguration());
         modelBuilder.ApplyConfiguration(new EmployerProfileEntityConfiguration());
         modelBuilder.ApplyConfiguration(new EmployerProfileAddressEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new VacancyReviewEntityConfiguration());
         modelBuilder.ApplyConfiguration(new VacancyEntityConfiguration());
 

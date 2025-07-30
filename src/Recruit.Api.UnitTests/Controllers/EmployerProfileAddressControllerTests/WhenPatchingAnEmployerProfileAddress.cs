@@ -11,16 +11,6 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileAddressContro
 
 public class WhenPatchingAnEmployerProfileAddress
 {
-    private Fixture _fixture;
-
-    [SetUp]
-    public void Setup()
-    {
-        _fixture = new Fixture();
-        _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
-        _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-    }
-    
     [Test, MoqAutoData]
     public async Task Then_The_Profile_Is_NotFound(
         long accountLegalEntityId,
@@ -44,8 +34,9 @@ public class WhenPatchingAnEmployerProfileAddress
         result.Should().BeOfType<NotFound>();
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_The_Profile_Is_Patched(
+        EmployerProfileAddressEntity entity,
         long accountLegalEntityId,
         int id,
         string addressLine1,
@@ -61,7 +52,6 @@ public class WhenPatchingAnEmployerProfileAddress
             new Operation("replace", "/Postcode", null, postcode),
         ]);
 
-        var entity = _fixture.Create<EmployerProfileAddressEntity>();
         repository.Setup(x => x.GetOneAsync(It.IsAny<EmployerProfileAddressKey>(), It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         repository.Setup(x => x.UpsertOneAsync(It.IsAny<EmployerProfileAddressEntity>(), It.IsAny<CancellationToken>())).ReturnsAsync(UpsertResult.Create(entity, false));
 
@@ -78,8 +68,9 @@ public class WhenPatchingAnEmployerProfileAddress
         patchResult.Value.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers());
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_Invalid_Updates_Returns_BadRequest(
+        EmployerProfileAddressEntity entity,
         long accountLegalEntityId,
         int id,
         Mock<IEmployerProfileAddressRepository> repository,
@@ -89,8 +80,6 @@ public class WhenPatchingAnEmployerProfileAddress
         // arrange
         var patchRequest = new JsonPatchDocument();
         patchRequest.Operations.AddRange([new Operation("replace", "/Foo", null, "A new value")]);
-
-        var entity = _fixture.Create<EmployerProfileAddressEntity>();
         repository.Setup(x => x.GetOneAsync(It.IsAny<EmployerProfileAddressKey>(), It.IsAny<CancellationToken>())).ReturnsAsync(entity);
 
         // act
@@ -101,8 +90,9 @@ public class WhenPatchingAnEmployerProfileAddress
         result.Should().BeOfType<ValidationProblem>();
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Then_Excluded_Field_Updates_Returns_BadRequest(
+        EmployerProfileAddressEntity entity,
         long accountLegalEntityId,
         int id,
         Mock<IEmployerProfileAddressRepository> repository,
@@ -112,8 +102,6 @@ public class WhenPatchingAnEmployerProfileAddress
         // arrange
         var patchRequest = new JsonPatchDocument();
         patchRequest.Operations.AddRange([new Operation("replace", $"/{nameof(EmployerProfileAddressEntity.AccountLegalEntityId)}", null, "A new value")]);
-
-        var entity = _fixture.Create<EmployerProfileAddressEntity>();
         repository.Setup(x => x.GetOneAsync(It.IsAny<EmployerProfileAddressKey>(), It.IsAny<CancellationToken>())).ReturnsAsync(entity);
 
         // act
