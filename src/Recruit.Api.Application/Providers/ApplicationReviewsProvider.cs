@@ -59,10 +59,16 @@ public interface IApplicationReviewsProvider
         bool isAscending = false,
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
+
+    Task<PaginatedList<ApplicationReviewEntity>> GetPagedByVacancyReferenceAsync(long vacancyReference,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default);
 }
 
-internal class ApplicationReviewsProvider(
-    IApplicationReviewRepository applicationReviewRepository) : IApplicationReviewsProvider
+internal class ApplicationReviewsProvider(IApplicationReviewRepository applicationReviewRepository) : IApplicationReviewsProvider
 {
     public async Task<ApplicationReviewEntity?> GetById(Guid id, CancellationToken token = default)
     {
@@ -113,6 +119,17 @@ internal class ApplicationReviewsProvider(
         var vacancyDetails = GetVacancyDetails(appReviews.Items);
         return new PaginatedList<VacancyDetail>(vacancyDetails, appReviews.TotalCount, appReviews.PageIndex,
             appReviews.PageSize);
+    }
+
+    public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedByVacancyReferenceAsync(long vacancyReference,
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        bool isAscending = false,
+        CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetPagedByVacancyReference(vacancyReference, pageNumber, pageSize,
+            sortColumn, isAscending, token);
     }
 
     public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedAccountIdAsync(long accountId,
