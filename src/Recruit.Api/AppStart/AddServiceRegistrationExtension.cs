@@ -6,6 +6,7 @@ using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
+using SFA.DAS.Recruit.Api.Data.Vacancy;
 using SFA.DAS.Recruit.Api.Data.User;
 using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
@@ -32,6 +33,7 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IEmployerProfileAddressRepository, EmployerProfileAddressRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVacancyReviewRepository, VacancyReviewRepository>();
+        services.AddScoped<IVacancyRepository, VacancyRepository>();
     }
 
     public static void AddDatabaseRegistration(

@@ -2,6 +2,7 @@
 
 internal struct RouteElements
 {
+    public const string Account = "accounts";
     public const string Api = "api";
     public const string ApplicationReview = "applicationreviews";
     public const string Employer = "employer";
@@ -10,12 +11,14 @@ internal struct RouteElements
     public const string ProhibitedContent = "prohibitedcontent";
     public const string Provider = "provider";
     public const string User = "user";
-    public const string VacancyReview = "vacancyreviews";
     public const string Vacancies = "vacancies";
+    public const string VacancyReference = "vacancyreference";
+    public const string VacancyReview = "vacancyreviews";
 }
 
 internal struct RouteNames
 {
+    public const string Account = $"{RouteElements.Api}/{RouteElements.Account}";
     public const string ApplicationReview = $"{RouteElements.Api}/{RouteElements.ApplicationReview}";
     public const string Employer = $"{RouteElements.Api}/{RouteElements.Employer}";
     public const string EmployerProfile = $"{RouteElements.Api}/{RouteElements.Employer}/{RouteElements.EmployerProfiles}";
@@ -23,5 +26,6 @@ internal struct RouteNames
     public const string Provider = $"{RouteElements.Api}/{RouteElements.Provider}";
     public const string User = $"{RouteElements.Api}/{RouteElements.User}";
     public const string VacancyReviews = $"{RouteElements.Api}/{RouteElements.VacancyReview}";
+    public const string VacancyReference = $"{RouteElements.Api}/{RouteElements.VacancyReference}";
     public const string Vacancies = $"{RouteElements.Api}/{RouteElements.Vacancies}";
 }
