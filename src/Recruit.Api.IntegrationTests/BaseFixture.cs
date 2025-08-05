@@ -17,6 +17,8 @@ public abstract class BaseFixture
         Fixture.Customizations.Add(new VacancyReferenceSpecimenBuilder());
         Fixture.Customizations.Add(new VacancyReviewEntitySpecimenBuilder());
         Fixture.Customizations.Add(new VacancyEntitySpecimenBuilder());
+        Fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => Fixture.Behaviors.Remove(b));
+        Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
     }
 
     [TearDown]

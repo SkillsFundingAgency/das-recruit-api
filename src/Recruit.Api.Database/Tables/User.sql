@@ -8,12 +8,12 @@ CREATE TABLE dbo.[User] (
     [LastSignedInDate]                                              datetime            NULL,
     [Name]                                                          nvarchar(500)       NOT NULL,
     [Email]                                                         nvarchar(255)       NOT NULL,
-    [EmployerAccountIds]                                            nvarchar(max)       NOT NULL Default('[]'),
     [Ukprn]                                                         BIGINT              NULL,
     [TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn] datetime            NULL,
     [ClosedVacanciesBlockedProviderAlertDismissedOn]                datetime            NULL,
     [TransferredVacanciesBlockedProviderAlertDismissedOn]           datetime            NULL,
     [ClosedVacanciesWithdrawnByQaAlertDismissedOn]                  datetime            NULL,
+    [NotificationPreferences]                                       nvarchar(max)       NULL,
     CONSTRAINT [PK_User] PRIMARY KEY (Id),
     INDEX [IX_User_DfEUserId] NONCLUSTERED(DfEUserId),
     INDEX [IX_User_IdamsUserId] NONCLUSTERED(IdamsUserId)

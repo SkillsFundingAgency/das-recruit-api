@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
-using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.User;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
-using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfile;
 using SFA.DAS.Recruit.Api.Models.Requests.User;
-using SFA.DAS.Recruit.Api.Models.Responses.EmployerProfile;
 using SFA.DAS.Recruit.Api.Models.Responses.User;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.UserControllerTests;
@@ -24,7 +22,7 @@ internal class WhenPuttingAUser
         CancellationToken token)
     {
         // arrange
-        request.UserType = "Provider";
+        request.UserType = UserType.Provider;
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<UserEntity>(), token))
             .ReturnsAsync(UpsertResult.Create(entity, false));
@@ -49,7 +47,7 @@ internal class WhenPuttingAUser
         CancellationToken token)
     {
         // arrange
-        request.UserType = "Employer";
+        request.UserType = UserType.Employer;
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<UserEntity>(), token))
             .ReturnsAsync(UpsertResult.Create(entity, true));
