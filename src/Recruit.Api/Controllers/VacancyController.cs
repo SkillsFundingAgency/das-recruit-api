@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data;
+using SFA.DAS.Recruit.Api.Data.User;
 using SFA.DAS.Recruit.Api.Data.Vacancy;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -63,10 +64,24 @@ public class VacancyController : Controller
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IResult> PostOne(
         [FromServices] IVacancyRepository repository,
+        [FromServices] IUserRepository userRepository,
         [FromBody] PostVacancyRequest request,
         CancellationToken cancellationToken)
     {
         var entity = request.ToDomain();
+
+        // This lookup should eventually be removed once we've migrated away from Mongo
+        // We do this because currently the submitted user id is not the SQL user id, but could match
+        // the IdamsUserId, DfEUserId or the actual UserId.
+        if (request.SubmittedByUserId is not null)
+        {
+            var user = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+            if (user is not null)
+            {
+                entity.SubmittedByUserId = user.Id;
+            }
+        }
+        
         var vacancyReference = await repository.GetNextVacancyReferenceAsync(cancellationToken);
         entity.VacancyReference = vacancyReference.Value;
         entity.CreatedDate = DateTime.UtcNow;
@@ -81,12 +96,27 @@ public class VacancyController : Controller
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]   
     public async Task<IResult> PutOne(
         [FromServices] IVacancyRepository repository,
+        [FromServices] IUserRepository userRepository,
         [FromRoute] Guid vacancyId,
         [FromBody] PutVacancyRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await repository.UpsertOneAsync(request.ToDomain(vacancyId), cancellationToken);
-    
+        var entity = request.ToDomain(vacancyId);
+        
+        // This lookup should eventually be removed once we've migrated away from Mongo
+        // We do this because currently the submitted user id is not the SQL user id, but could match
+        // the IdamsUserId, DfEUserId or the actual UserId.
+        if (request.SubmittedByUserId is not null)
+        {
+            var user = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+            if (user is not null)
+            {
+                entity.SubmittedByUserId = user.Id;
+            }
+        }
+
+        var result = await repository.UpsertOneAsync(entity, cancellationToken);
+        
         return result.Created
             ? TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPutResponse())
             : TypedResults.Ok(result.Entity.ToPutResponse());

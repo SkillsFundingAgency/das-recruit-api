@@ -4,7 +4,10 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 
 namespace SFA.DAS.Recruit.Api.Data.User;
 
-public interface IUserRepository : IReadRepository<UserEntity, Guid>, IWriteRepository<UserEntity, Guid>;
+public interface IUserRepository : IReadRepository<UserEntity, Guid>, IWriteRepository<UserEntity, Guid>
+{
+    Task<UserEntity?> FindByUserIdAsync(string userId, CancellationToken cancellationToken);
+}
 
 public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
 {
@@ -32,5 +35,12 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
     public Task<bool> DeleteOneAsync(Guid key, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<UserEntity?> FindByUserIdAsync(string userId, CancellationToken cancellationToken)
+    {
+        return await dataContext.UserEntities
+            .Where(x => x.IdamsUserId == userId || x.DfEUserId == userId || x.Id.ToString() == userId)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }
