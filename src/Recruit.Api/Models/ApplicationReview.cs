@@ -1,3 +1,5 @@
+using SFA.DAS.Recruit.Api.Domain.Enums;
+
 namespace SFA.DAS.Recruit.Api.Models;
 
 public record ApplicationReview
@@ -18,7 +20,7 @@ public record ApplicationReview
     public long AccountId {get; init; }
     public long AccountLegalEntityId {get; init; }
     public long VacancyReference {get; init; }
-    public string Status {get; init; } 
+    public ApplicationReviewStatus Status {get; init; } 
     public string? TemporaryReviewStatus { get; init; }
     public string? AdditionalQuestion1 {get; init; }
     public string? AdditionalQuestion2 {get; init; }

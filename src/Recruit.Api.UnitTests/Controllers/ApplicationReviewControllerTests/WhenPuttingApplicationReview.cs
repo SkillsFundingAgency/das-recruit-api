@@ -5,6 +5,7 @@ using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
@@ -23,6 +24,7 @@ public class WhenPuttingApplicationReview
     {
         // Arrange
         ApplicationReviewEntity passedApplicationReview = null;
+        request.Status = nameof(ApplicationReviewStatus.New);
         applicationReview.Id = id;
         providerMock
             .Setup(p => p.Upsert(It.IsAny<ApplicationReviewEntity>(), It.IsAny<CancellationToken>()))
@@ -39,7 +41,8 @@ public class WhenPuttingApplicationReview
         // Assert
         passedApplicationReview.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
         createdResult.Should().NotBeNull();
-        createdResult.Value.Should().BeEquivalentTo(applicationReview);
+        createdResult.Value.Should().BeEquivalentTo(applicationReview, options => options.Excluding(c=>c.Status));
+        createdResult.Value.Status.Should().Be(ApplicationReviewStatus.New);
     }
 
     [Test, MoqAutoData]
