@@ -57,8 +57,7 @@ public class WhenGettingUser: BaseFixture
         var items = Fixture.CreateMany<UserEntity>(10).ToList();
         var expected1 = items[1];
         var expected2 = items[2];
-        expected1.NotificationPreferences = JsonSerializer.Serialize(Fixture.Create<NotificationPreferences>());
-        expected2.NotificationPreferences = JsonSerializer.Serialize(Fixture.Create<NotificationPreferences>());
+        
         Server.DataContext
             .Setup(x => x.UserEntities)
             .ReturnsDbSet(items);
@@ -71,7 +70,36 @@ public class WhenGettingUser: BaseFixture
             ]);
 
         // act
-        var response = await Client.GetAsync($"{RouteElements.Api}/employeraccounts/ABCD");
+        var response = await Client.GetAsync($"{RouteNames.User}/by/employerAccountId/ABCD");
+        var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
+    
+        // assert
+        response.EnsureSuccessStatusCode();
+        users.Should().NotBeNull();
+        users.Should().HaveCount(2);
+        users.Should().ContainEquivalentOf(expected1, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
+        users.Should().ContainEquivalentOf(expected2, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
+    }
+    
+    [Test]
+    public async Task Then_Users_Are_Found_When_Searching_By_Ukprn()
+    {
+        // arrange
+        var items = Fixture.CreateMany<UserEntity>(10).ToList();
+        var expected1 = items[1];
+        var expected2 = items[2];
+        expected1.Ukprn = 999999;
+        expected2.Ukprn = 999999;
+        
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(items);
+        Server.DataContext
+            .Setup(x => x.UserEmployerAccountEntities)
+            .ReturnsDbSet([]);
+
+        // act
+        var response = await Client.GetAsync($"{RouteNames.User}/by/ukprn/999999");
         var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
     
         // assert

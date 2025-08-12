@@ -69,4 +69,9 @@ public static class RecruitUserExtensions
     {
         return ToResponseDto(entity);
     }
+    
+    public static RecruitUser ToPatchResponse(this UserEntity entity)
+    {
+        return ToResponseDto(entity);
+    }
 }

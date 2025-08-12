@@ -16,5 +16,6 @@ CREATE TABLE dbo.[User] (
     [NotificationPreferences]                                       nvarchar(max)       NULL,
     CONSTRAINT [PK_User] PRIMARY KEY (Id),
     INDEX [IX_User_DfEUserId] NONCLUSTERED(DfEUserId),
-    INDEX [IX_User_IdamsUserId] NONCLUSTERED(IdamsUserId)
+    INDEX [IX_User_IdamsUserId] NONCLUSTERED(IdamsUserId),
+    INDEX [IX_User_Ukprn] NONCLUSTERED(Ukprn)
 )
