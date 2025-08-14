@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
@@ -30,6 +31,21 @@ public class UserController
                             { UserId = (Guid)key, EmployerAccountId = x.Value<string>()! })
                     },
                     _ => throw new JsonPatchException(new JsonPatchError(null, operation, $"Operation type '{operation.op}' not supported for property '{nameof(UserEntity.EmployerAccounts)}'"))
+                };
+            }
+        },
+        {
+            nameof(PutUserRequest.NotificationPreferences), (_, operation) =>
+            {
+                var value = operation.value as JObject;
+                return operation.OperationType switch {
+                    OperationType.Replace => new Operation<UserEntity>
+                    {
+                        path = nameof(UserEntity.NotificationPreferences),
+                        op = operation.op,
+                        value = value?.ToString(Formatting.None) ?? operation.value.ToString()
+                    },
+                    _ => throw new JsonPatchException(new JsonPatchError(null, operation, $"Operation type '{operation.op}' not supported for property '{nameof(UserEntity.NotificationPreferences)}'"))
                 };
             }
         }
@@ -69,6 +85,20 @@ public class UserController
     {
         var result = await repository.FindUsersByUkprnAsync(ukprn, cancellationToken);
         return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
+    }
+    
+    [HttpGet, Route("by/idams/{idams}")]
+    [ProducesResponseType(typeof(RecruitUser), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetOneByIdams(
+        [FromServices] IUserRepository repository,
+        [FromRoute] string idams,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.FindUserByIdamsAsync(idams, cancellationToken);
+        return result is null
+            ? Results.NotFound()
+            : TypedResults.Ok(result.ToGetResponse());
     }
     
     [HttpPut, Route("{id:guid}")]
