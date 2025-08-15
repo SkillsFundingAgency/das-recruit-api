@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.Recruit.Api.Data;
-using SFA.DAS.Recruit.Api.Data.EmployerProfile;
 using SFA.DAS.Recruit.Api.Data.User;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
@@ -24,7 +23,7 @@ internal class WhenUpsertingUser
 
         // assert
         context.Verify(x => x.SaveChangesAsync(token), Times.Once);
-        dbSet.Verify(x => x.AddAsync(entity, token), Times.Once);
+        dbSet.Verify(x => x.Add(entity), Times.Once);
         result.Created.Should().BeTrue();
     }
     
