@@ -7,7 +7,7 @@ namespace SFA.DAS.Recruit.Api.Data.User;
 public interface IUserRepository : IReadRepository<UserEntity, Guid>, IWriteRepository<UserEntity, Guid>
 {
     Task<UserEntity?> FindByUserIdAsync(string userId, CancellationToken cancellationToken);
-    Task<List<UserEntity>> FindUsersByEmployerAccountIdAsync(string employerAccountId, CancellationToken cancellationToken);
+    Task<List<UserEntity>> FindUsersByEmployerAccountIdAsync(long employerAccountId, CancellationToken cancellationToken);
     Task<List<UserEntity>> FindUsersByUkprnAsync(long ukprn, CancellationToken cancellationToken);
     Task<UserEntity?> FindUserByIdamsAsync(string idams, CancellationToken cancellationToken);
 }
@@ -59,7 +59,7 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<List<UserEntity>> FindUsersByEmployerAccountIdAsync(string employerAccountId, CancellationToken cancellationToken)
+    public async Task<List<UserEntity>> FindUsersByEmployerAccountIdAsync(long employerAccountId, CancellationToken cancellationToken)
     {
         var results = await dataContext
             .UserEmployerAccountEntities

@@ -74,7 +74,7 @@ public class WhenPatchingUser: BaseFixture
             .ReturnsDbSet([]);
 
         var patchDocument = new JsonPatchDocument<RecruitUser>();
-        patchDocument.Replace(x => x.EmployerAccountIds, ["ABCD", "BCDE"]);
+        patchDocument.Replace(x => x.EmployerAccountIds, [123, 456]);
         
         // act
         var response = await Client.PatchAsync($"{RouteNames.User}/{targetItem.Id}", patchDocument);

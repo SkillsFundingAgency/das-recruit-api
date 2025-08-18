@@ -11,7 +11,7 @@ public class UserEmployerAccountEntity
     
     [Key]
     [Column(Order = 2)]
-    public string EmployerAccountId { get; set; }
+    public long EmployerAccountId { get; set; }
     
     public virtual UserEntity User { get; set; }
 }

@@ -68,7 +68,7 @@ public class WhenPuttingUser: BaseFixture
         Server.DataContext
             .Setup(x => x.UserEmployerAccountEntities)
             .ReturnsDbSet([
-                new UserEmployerAccountEntity { UserId = targetItem.Id, EmployerAccountId = "ABCD", User = targetItem }
+                new UserEmployerAccountEntity { UserId = targetItem.Id, EmployerAccountId = 123, User = targetItem }
             ]);
 
         var request = Fixture.Create<PutUserRequest>();

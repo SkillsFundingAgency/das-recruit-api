@@ -64,9 +64,9 @@ public class WhenGettingUser: BaseFixture
         Server.DataContext
             .Setup(x => x.UserEmployerAccountEntities)
             .ReturnsDbSet([
-                new UserEmployerAccountEntity { UserId = expected1.Id, EmployerAccountId = "ABCD", User = expected1 },
-                new UserEmployerAccountEntity { UserId = expected1.Id, EmployerAccountId = "BCDE", User = expected1 },
-                new UserEmployerAccountEntity { UserId = expected2.Id, EmployerAccountId = "ABCD", User = expected2 },
+                new UserEmployerAccountEntity { UserId = expected1.Id, EmployerAccountId = 123, User = expected1 },
+                new UserEmployerAccountEntity { UserId = expected1.Id, EmployerAccountId = 456, User = expected1 },
+                new UserEmployerAccountEntity { UserId = expected2.Id, EmployerAccountId = 123, User = expected2 },
             ]);
 
         // act

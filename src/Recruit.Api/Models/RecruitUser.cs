@@ -13,7 +13,7 @@ public record RecruitUser
     public DateTime? LastSignedInDate { get; set; }
     [MaxLength(500)] public required string Name { get; set; }
     [MaxLength(250)] public required string Email { get; set; }
-    public List<string> EmployerAccountIds { get; set; } = [];
+    public List<long> EmployerAccountIds { get; set; } = [];
     public long? Ukprn { get; set; }
     public DateTime? TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn { get; set; }
     public DateTime? ClosedVacanciesBlockedProviderAlertDismissedOn { get; set; }

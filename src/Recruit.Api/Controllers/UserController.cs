@@ -28,7 +28,7 @@ public class UserController
                         path = nameof(UserEntity.EmployerAccounts),
                         op = operation.op,
                         value = (operation.value as JArray)!.Select(x => new UserEmployerAccountEntity
-                            { UserId = (Guid)key, EmployerAccountId = x.Value<string>()! })
+                            { UserId = (Guid)key, EmployerAccountId = x.Value<long>()! })
                     },
                     _ => throw new JsonPatchException(new JsonPatchError(null, operation, $"Operation type '{operation.op}' not supported for property '{nameof(UserEntity.EmployerAccounts)}'"))
                 };
@@ -69,11 +69,11 @@ public class UserController
     [ProducesResponseType(typeof(List<RecruitUser>), StatusCodes.Status200OK)]
     public async Task<IResult> GetAllByEmployerAccountId(
         [FromServices] IUserRepository repository,
-        [FromRoute] string employerAccountId,
+        [FromRoute] long employerAccountId,
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByEmployerAccountIdAsync(employerAccountId, cancellationToken);
-        return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
+        return TypedResults.Ok(new{Users = result.Select(x => x.ToGetResponse())});
     }
     
     [HttpGet, Route("by/ukprn/{ukprn:long}")]
