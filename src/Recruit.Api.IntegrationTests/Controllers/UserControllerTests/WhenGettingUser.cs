@@ -70,7 +70,7 @@ public class WhenGettingUser: BaseFixture
             ]);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.User}/by/employerAccountId/ABCD");
+        var response = await Client.GetAsync($"{RouteNames.User}/by/employerAccountId/123");
         var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
     
         // assert
@@ -108,5 +108,55 @@ public class WhenGettingUser: BaseFixture
         users.Should().HaveCount(2);
         users.Should().ContainEquivalentOf(expected1, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
         users.Should().ContainEquivalentOf(expected2, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
+    }
+    
+    [Test]
+    public async Task Then_Users_Are_Found_When_Searching_By_IdamsId()
+    {
+        // arrange
+        var items = Fixture.CreateMany<UserEntity>(10).ToList();
+        var expected1 = items[1];
+        expected1.IdamsUserId = Fixture.Create<string>();
+        
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(items);
+        Server.DataContext
+            .Setup(x => x.UserEmployerAccountEntities)
+            .ReturnsDbSet([]);
+
+        // act
+        var response = await Client.GetAsync($"{RouteNames.User}/by/idams/{expected1.IdamsUserId}");
+        var user = await response.Content.ReadAsAsync<RecruitUser>();
+    
+        // assert
+        response.EnsureSuccessStatusCode();
+        user.Should().NotBeNull();
+        user.Should().BeEquivalentTo(expected1, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
+    }
+    
+    [Test]
+    public async Task Then_Users_Are_Found_When_Searching_By_DfeUserId()
+    {
+        // arrange
+        var items = Fixture.CreateMany<UserEntity>(10).ToList();
+        var expected1 = items[1];
+        expected1.DfEUserId = Fixture.Create<string>();
+        
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(items);
+        Server.DataContext
+            .Setup(x => x.UserEmployerAccountEntities)
+            .ReturnsDbSet([]);
+
+        // act
+        var response = await Client.GetAsync($"{RouteNames.User}/by/dfeuserid/{expected1.DfEUserId}");
+        var user = await response.Content.ReadAsAsync<RecruitUser>();
+    
+        // assert
+        response.EnsureSuccessStatusCode();
+        user.Should().NotBeNull();
+        user.Should().BeEquivalentTo(expected1, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
     }
 }

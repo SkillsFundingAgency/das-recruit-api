@@ -73,7 +73,7 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByEmployerAccountIdAsync(employerAccountId, cancellationToken);
-        return TypedResults.Ok(new{Users = result.Select(x => x.ToGetResponse())});
+        return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
     }
     
     [HttpGet, Route("by/ukprn/{ukprn:long}")]
