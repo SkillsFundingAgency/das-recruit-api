@@ -87,6 +87,20 @@ public class UserController
         return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
     }
     
+    [HttpGet, Route("by/dfeuserid/{dfeUserId}")]
+    [ProducesResponseType(typeof(RecruitUser), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetOneByDfeUserId(
+        [FromServices] IUserRepository repository,
+        [FromRoute] string dfeUserId,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.FindUsersByDfeUserIdAsync(dfeUserId, cancellationToken);
+        return result is null
+            ? Results.NotFound()
+            : TypedResults.Ok(result.ToGetResponse());
+    }
+    
     [HttpGet, Route("by/idams/{idams}")]
     [ProducesResponseType(typeof(RecruitUser), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
