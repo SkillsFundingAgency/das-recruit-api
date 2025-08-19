@@ -1,4 +1,5 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Domain.Entities;
 
@@ -18,6 +19,6 @@ public class UserEntity
     public DateTime? ClosedVacanciesBlockedProviderAlertDismissedOn { get; set; }
     public DateTime? TransferredVacanciesBlockedProviderAlertDismissedOn { get; set; }
     public DateTime? ClosedVacanciesWithdrawnByQaAlertDismissedOn { get; set; }
-    public string? NotificationPreferences { get; set; }
+    public NotificationPreferences? NotificationPreferences { get; set; }
     public string? DfEUserId { get; set; }
 }

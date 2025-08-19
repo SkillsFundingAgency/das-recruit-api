@@ -30,22 +30,18 @@ public static class RecruitUserExtensions
             ClosedVacanciesBlockedProviderAlertDismissedOn = request.ClosedVacanciesBlockedProviderAlertDismissedOn,
             TransferredVacanciesBlockedProviderAlertDismissedOn = request.TransferredVacanciesBlockedProviderAlertDismissedOn,
             TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn = request.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn,
-            NotificationPreferences = JsonSerializer.Serialize(request.NotificationPreferences)
+            NotificationPreferences = request.NotificationPreferences
         };
     }
 
     private static RecruitUser ToResponseDto(UserEntity user)
     {
-        var prefs = user.NotificationPreferences is null
-            ? new NotificationPreferences()
-            : JsonSerializer.Deserialize<NotificationPreferences>(user.NotificationPreferences)!;
-
         return new RecruitUser {
             Id = user.Id,
             UserType = user.UserType.ToDto(),
             Email = user.Email,
             Name = user.Name,
-            NotificationPreferences = prefs,
+            NotificationPreferences = user.NotificationPreferences,
             ClosedVacanciesBlockedProviderAlertDismissedOn = user.ClosedVacanciesBlockedProviderAlertDismissedOn,
             ClosedVacanciesWithdrawnByQaAlertDismissedOn = user.ClosedVacanciesWithdrawnByQaAlertDismissedOn,
             CreatedDate = user.CreatedDate,

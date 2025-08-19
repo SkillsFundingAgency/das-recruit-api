@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.User;
+using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
@@ -60,9 +61,13 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.GetOneAsync(id, cancellationToken);
-        return result is null
-            ? TypedResults.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+        if (result is null)
+        {
+            return TypedResults.NotFound();
+        }
+        
+        NotificationPreferenceDefaults.Update(result);
+        return TypedResults.Ok(result.ToGetResponse());
     }
     
     [HttpGet, Route("by/employerAccountId/{employerAccountId}")]
@@ -73,6 +78,7 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByEmployerAccountIdAsync(employerAccountId, cancellationToken);
+        NotificationPreferenceDefaults.Update(result);
         return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
     }
     
@@ -84,6 +90,7 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByUkprnAsync(ukprn, cancellationToken);
+        NotificationPreferenceDefaults.Update(result);
         return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
     }
     
@@ -96,9 +103,13 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByDfeUserIdAsync(dfeUserId, cancellationToken);
-        return result is null
-            ? Results.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+        if (result is null)
+        {
+            return TypedResults.NotFound();
+        }
+        
+        NotificationPreferenceDefaults.Update(result); 
+        return TypedResults.Ok(result.ToGetResponse());
     }
     
     [HttpGet, Route("by/idams/{idams}")]
@@ -110,9 +121,13 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUserByIdamsAsync(idams, cancellationToken);
-        return result is null
-            ? Results.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+        if (result is null)
+        {
+            return TypedResults.NotFound();
+        }
+        
+        NotificationPreferenceDefaults.Update(result);
+        return TypedResults.Ok(result.ToGetResponse());
     }
     
     [HttpPut, Route("{id:guid}")]
@@ -126,7 +141,6 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
-
         return result.Created
             ? TypedResults.Created($"/{RouteNames.User}/{result.Entity.Id}", result.Entity.ToPutResponse())
             : TypedResults.Ok(result.Entity.ToPutResponse());
