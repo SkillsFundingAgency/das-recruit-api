@@ -10,6 +10,7 @@ public interface IUserRepository : IReadRepository<UserEntity, Guid>, IWriteRepo
     Task<List<UserEntity>> FindUsersByEmployerAccountIdAsync(long employerAccountId, CancellationToken cancellationToken);
     Task<List<UserEntity>> FindUsersByUkprnAsync(long ukprn, CancellationToken cancellationToken);
     Task<UserEntity?> FindUserByIdamsAsync(string idams, CancellationToken cancellationToken);
+    Task<UserEntity?> FindUsersByDfeUserIdAsync(string dfeUserId, CancellationToken cancellationToken);
 }
 
 public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
@@ -81,5 +82,10 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
     public async Task<UserEntity?> FindUserByIdamsAsync(string idams, CancellationToken cancellationToken)
     {
         return await dataContext.UserEntities.SingleOrDefaultAsync(x => x.IdamsUserId == idams, cancellationToken);
+    }
+
+    public async Task<UserEntity?> FindUsersByDfeUserIdAsync(string dfeUserId, CancellationToken cancellationToken)
+    {
+        return await dataContext.UserEntities.SingleOrDefaultAsync(x => x.DfEUserId == dfeUserId, cancellationToken);
     }
 }

@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.User;
+using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
@@ -60,12 +61,16 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.GetOneAsync(id, cancellationToken);
-        return result is null
-            ? TypedResults.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+        if (result is null)
+        {
+            return TypedResults.NotFound();
+        }
+        
+        NotificationPreferenceDefaults.Update(result);
+        return TypedResults.Ok(result.ToGetResponse());
     }
     
-    [HttpGet, Route("by/employerAccountId/{employerAccountId}")]
+    [HttpGet, Route("by/employerAccountId/{employerAccountId:long}")]
     [ProducesResponseType(typeof(List<RecruitUser>), StatusCodes.Status200OK)]
     public async Task<IResult> GetAllByEmployerAccountId(
         [FromServices] IUserRepository repository,
@@ -73,7 +78,8 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByEmployerAccountIdAsync(employerAccountId, cancellationToken);
-        return TypedResults.Ok(new{Users = result.Select(x => x.ToGetResponse())});
+        NotificationPreferenceDefaults.Update(result);
+        return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
     }
     
     [HttpGet, Route("by/ukprn/{ukprn:long}")]
@@ -84,7 +90,26 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByUkprnAsync(ukprn, cancellationToken);
+        NotificationPreferenceDefaults.Update(result);
         return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
+    }
+    
+    [HttpGet, Route("by/dfeuserid/{dfeUserId}")]
+    [ProducesResponseType(typeof(RecruitUser), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetOneByDfeUserId(
+        [FromServices] IUserRepository repository,
+        [FromRoute] string dfeUserId,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.FindUsersByDfeUserIdAsync(dfeUserId, cancellationToken);
+        if (result is null)
+        {
+            return TypedResults.NotFound();
+        }
+        
+        NotificationPreferenceDefaults.Update(result); 
+        return TypedResults.Ok(result.ToGetResponse());
     }
     
     [HttpGet, Route("by/idams/{idams}")]
@@ -96,9 +121,13 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUserByIdamsAsync(idams, cancellationToken);
-        return result is null
-            ? Results.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+        if (result is null)
+        {
+            return TypedResults.NotFound();
+        }
+        
+        NotificationPreferenceDefaults.Update(result);
+        return TypedResults.Ok(result.ToGetResponse());
     }
     
     [HttpPut, Route("{id:guid}")]
@@ -112,7 +141,6 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
-
         return result.Created
             ? TypedResults.Created($"/{RouteNames.User}/{result.Entity.Id}", result.Entity.ToPutResponse())
             : TypedResults.Ok(result.Entity.ToPutResponse());

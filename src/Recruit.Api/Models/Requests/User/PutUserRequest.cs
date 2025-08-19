@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Models.Requests.User;
 

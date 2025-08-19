@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using System.Text.Json;
 using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 
@@ -14,7 +14,7 @@ public class WhenGettingUser: BaseFixture
         // arrange
         var items = Fixture.CreateMany<UserEntity>(10).ToList();
         var expected = items[1];
-        expected.NotificationPreferences = JsonSerializer.Serialize(Fixture.Create<NotificationPreferences>());
+        NotificationPreferenceDefaults.Update(expected);
         Server.DataContext
             .Setup(x => x.UserEntities)
             .ReturnsDbSet(items);
@@ -29,7 +29,7 @@ public class WhenGettingUser: BaseFixture
         // assert
         response.EnsureSuccessStatusCode();
         user.Should().NotBeNull();
-        user.Should().BeEquivalentTo(expected, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
+        user.Should().BeEquivalentTo(expected, opt => opt.ExcludingMissingMembers());
     }
     
     [Test]
@@ -57,6 +57,8 @@ public class WhenGettingUser: BaseFixture
         var items = Fixture.CreateMany<UserEntity>(10).ToList();
         var expected1 = items[1];
         var expected2 = items[2];
+        NotificationPreferenceDefaults.Update(expected1);
+        NotificationPreferenceDefaults.Update(expected2);
         
         Server.DataContext
             .Setup(x => x.UserEntities)
@@ -70,15 +72,15 @@ public class WhenGettingUser: BaseFixture
             ]);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.User}/by/employerAccountId/ABCD");
+        var response = await Client.GetAsync($"{RouteNames.User}/by/employerAccountId/123");
         var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
     
         // assert
         response.EnsureSuccessStatusCode();
         users.Should().NotBeNull();
         users.Should().HaveCount(2);
-        users.Should().ContainEquivalentOf(expected1, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
-        users.Should().ContainEquivalentOf(expected2, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
+        users.Should().ContainEquivalentOf(expected1, opt => opt.ExcludingMissingMembers());
+        users.Should().ContainEquivalentOf(expected2, opt => opt.ExcludingMissingMembers());
     }
     
     [Test]
@@ -88,6 +90,8 @@ public class WhenGettingUser: BaseFixture
         var items = Fixture.CreateMany<UserEntity>(10).ToList();
         var expected1 = items[1];
         var expected2 = items[2];
+        NotificationPreferenceDefaults.Update(expected1);
+        NotificationPreferenceDefaults.Update(expected2);
         expected1.Ukprn = 999999;
         expected2.Ukprn = 999999;
         
@@ -106,7 +110,59 @@ public class WhenGettingUser: BaseFixture
         response.EnsureSuccessStatusCode();
         users.Should().NotBeNull();
         users.Should().HaveCount(2);
-        users.Should().ContainEquivalentOf(expected1, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
-        users.Should().ContainEquivalentOf(expected2, opt => opt.ExcludingMissingMembers().Excluding(x => x.NotificationPreferences));
+        users.Should().ContainEquivalentOf(expected1, opt => opt.ExcludingMissingMembers());
+        users.Should().ContainEquivalentOf(expected2, opt => opt.ExcludingMissingMembers());
+    }
+    
+    [Test]
+    public async Task Then_Users_Are_Found_When_Searching_By_IdamsId()
+    {
+        // arrange
+        var items = Fixture.CreateMany<UserEntity>(10).ToList();
+        var expected1 = items[1];
+        NotificationPreferenceDefaults.Update(expected1);
+        expected1.IdamsUserId = Fixture.Create<string>();
+        
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(items);
+        Server.DataContext
+            .Setup(x => x.UserEmployerAccountEntities)
+            .ReturnsDbSet([]);
+
+        // act
+        var response = await Client.GetAsync($"{RouteNames.User}/by/idams/{expected1.IdamsUserId}");
+        var user = await response.Content.ReadAsAsync<RecruitUser>();
+    
+        // assert
+        response.EnsureSuccessStatusCode();
+        user.Should().NotBeNull();
+        user.Should().BeEquivalentTo(expected1, opt => opt.ExcludingMissingMembers());
+    }
+    
+    [Test]
+    public async Task Then_Users_Are_Found_When_Searching_By_DfeUserId()
+    {
+        // arrange
+        var items = Fixture.CreateMany<UserEntity>(10).ToList();
+        var expected1 = items[1];
+        NotificationPreferenceDefaults.Update(expected1);
+        expected1.DfEUserId = Fixture.Create<string>();
+        
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(items);
+        Server.DataContext
+            .Setup(x => x.UserEmployerAccountEntities)
+            .ReturnsDbSet([]);
+
+        // act
+        var response = await Client.GetAsync($"{RouteNames.User}/by/dfeuserid/{expected1.DfEUserId}");
+        var user = await response.Content.ReadAsAsync<RecruitUser>();
+    
+        // assert
+        response.EnsureSuccessStatusCode();
+        user.Should().NotBeNull();
+        user.Should().BeEquivalentTo(expected1, opt => opt.ExcludingMissingMembers());
     }
 }
