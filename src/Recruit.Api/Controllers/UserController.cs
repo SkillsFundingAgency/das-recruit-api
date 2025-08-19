@@ -70,7 +70,7 @@ public class UserController
         return TypedResults.Ok(result.ToGetResponse());
     }
     
-    [HttpGet, Route("by/employerAccountId/{employerAccountId}")]
+    [HttpGet, Route("by/employerAccountId/{employerAccountId:long}")]
     [ProducesResponseType(typeof(List<RecruitUser>), StatusCodes.Status200OK)]
     public async Task<IResult> GetAllByEmployerAccountId(
         [FromServices] IUserRepository repository,
