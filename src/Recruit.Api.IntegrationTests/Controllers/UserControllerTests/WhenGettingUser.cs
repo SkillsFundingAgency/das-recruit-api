@@ -2,6 +2,8 @@
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.UserControllerTests;
@@ -83,6 +85,47 @@ public class WhenGettingUser: BaseFixture
         users.Should().ContainEquivalentOf(expected2, opt => opt.ExcludingMissingMembers());
     }
     
+    [TestCase(NotificationFrequency.NotSet)]
+    [TestCase(NotificationFrequency.Immediately)]
+    [TestCase(NotificationFrequency.Daily)]
+    [TestCase(NotificationFrequency.Weekly)]
+    public async Task Then_Users_Are_Filtered_When_Searching_By_EmployerAccountId_For_An_Event(NotificationFrequency frequency)
+    {
+        // arrange
+        var items = Fixture.CreateMany<UserEntity>(3).ToList();
+        items[0].NotificationPreferences = new NotificationPreferences {
+            EventPreferences = [new NotificationPreference(NotificationTypes.ApplicationSubmitted, "", NotificationScope.NotSet, NotificationFrequency.Never)]
+        };
+        items[1].NotificationPreferences = new NotificationPreferences {
+            EventPreferences = [new NotificationPreference(NotificationTypes.ApplicationSubmitted, "", NotificationScope.NotSet, frequency)]
+        };
+        items[2].NotificationPreferences = new NotificationPreferences {
+            EventPreferences = [new NotificationPreference(NotificationTypes.ApplicationSubmitted, "", NotificationScope.NotSet, frequency)]
+        };
+        
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(items);
+        Server.DataContext
+            .Setup(x => x.UserEmployerAccountEntities)
+            .ReturnsDbSet([
+                new UserEmployerAccountEntity { UserId = items[0].Id, EmployerAccountId = 123, User = items[0] },
+                new UserEmployerAccountEntity { UserId = items[1].Id, EmployerAccountId = 123, User = items[1] },
+                new UserEmployerAccountEntity { UserId = items[2].Id, EmployerAccountId = 123, User = items[2] },
+            ]);
+
+        // act
+        var response = await Client.GetAsync($"{RouteNames.User}/by/employerAccountId/123?notificationType={nameof(NotificationTypes.ApplicationSubmitted)}");
+        var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
+    
+        // assert
+        response.EnsureSuccessStatusCode();
+        users.Should().NotBeNull();
+        users.Should().HaveCount(2);
+        users.Should().ContainEquivalentOf(items[1], opt => opt.ExcludingMissingMembers());
+        users.Should().ContainEquivalentOf(items[2], opt => opt.ExcludingMissingMembers());
+    }
+    
     [Test]
     public async Task Then_Users_Are_Found_When_Searching_By_Ukprn()
     {
@@ -98,9 +141,6 @@ public class WhenGettingUser: BaseFixture
         Server.DataContext
             .Setup(x => x.UserEntities)
             .ReturnsDbSet(items);
-        Server.DataContext
-            .Setup(x => x.UserEmployerAccountEntities)
-            .ReturnsDbSet([]);
 
         // act
         var response = await Client.GetAsync($"{RouteNames.User}/by/ukprn/999999");
@@ -112,6 +152,43 @@ public class WhenGettingUser: BaseFixture
         users.Should().HaveCount(2);
         users.Should().ContainEquivalentOf(expected1, opt => opt.ExcludingMissingMembers());
         users.Should().ContainEquivalentOf(expected2, opt => opt.ExcludingMissingMembers());
+    }
+    
+    [TestCase(NotificationFrequency.NotSet)]
+    [TestCase(NotificationFrequency.Immediately)]
+    [TestCase(NotificationFrequency.Daily)]
+    [TestCase(NotificationFrequency.Weekly)]
+    public async Task Then_Users_Are_Filtered_When_Searching_By_Ukprn_For_An_Event(NotificationFrequency frequency)
+    {
+        // arrange
+        var items = Fixture.CreateMany<UserEntity>(3).ToList();
+        items[0].Ukprn = 999999;
+        items[1].Ukprn = 999999;
+        items[2].Ukprn = 999999;
+        items[0].NotificationPreferences = new NotificationPreferences {
+            EventPreferences = [new NotificationPreference(NotificationTypes.ApplicationSubmitted, "", NotificationScope.NotSet, NotificationFrequency.Never)]
+        };
+        items[1].NotificationPreferences = new NotificationPreferences {
+            EventPreferences = [new NotificationPreference(NotificationTypes.ApplicationSubmitted, "", NotificationScope.NotSet, frequency)]
+        };
+        items[2].NotificationPreferences = new NotificationPreferences {
+            EventPreferences = [new NotificationPreference(NotificationTypes.ApplicationSubmitted, "", NotificationScope.NotSet, frequency)]
+        };
+        
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(items);
+
+        // act
+        var response = await Client.GetAsync($"{RouteNames.User}/by/ukprn/999999?notificationType={nameof(NotificationTypes.ApplicationSubmitted)}");
+        var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
+    
+        // assert
+        response.EnsureSuccessStatusCode();
+        users.Should().NotBeNull();
+        users.Should().HaveCount(2);
+        users.Should().ContainEquivalentOf(items[1], opt => opt.ExcludingMissingMembers());
+        users.Should().ContainEquivalentOf(items[2], opt => opt.ExcludingMissingMembers());
     }
     
     [Test]

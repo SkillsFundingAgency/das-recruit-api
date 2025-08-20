@@ -9,4 +9,10 @@ public static class NotificationPreferencesExtensions
     {
         return notificationPreferences.EventPreferences.Single(x => x.Event == eventType);
     }
+    
+    public static bool TryGetForEvent(this NotificationPreferences notificationPreferences, NotificationTypes eventType, out NotificationPreference? notificationPreference)
+    {
+        notificationPreference = notificationPreferences.EventPreferences.FirstOrDefault(x => x.Event == eventType);
+        return notificationPreference is not null;
+    }
 }

@@ -8,6 +8,8 @@ using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.User;
 using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.User;
@@ -59,11 +61,27 @@ public class UserController
     public async Task<IResult> GetAllByEmployerAccountId(
         [FromServices] IUserRepository repository,
         [FromRoute] long employerAccountId,
+        [FromQuery] NotificationTypes? notificationType,
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByEmployerAccountIdAsync(employerAccountId, cancellationToken);
         NotificationPreferenceDefaults.Update(result);
-        return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
+        if (notificationType is null)
+        {
+            return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
+        }
+        
+        var filteredResults = result
+            .Where(x =>
+            {
+                if (x.NotificationPreferences!.TryGetForEvent(notificationType.Value, out var notificationPreference))
+                {
+                    return notificationPreference!.Frequency is not NotificationFrequency.Never;
+                }
+                return false;
+            })
+            .Select(x => x.ToGetResponse());
+        return TypedResults.Ok(filteredResults);
     }
     
     [HttpGet, Route("by/ukprn/{ukprn:long}")]
@@ -71,11 +89,27 @@ public class UserController
     public async Task<IResult> GetAllByUkprn(
         [FromServices] IUserRepository repository,
         [FromRoute] long ukprn,
+        [FromQuery] NotificationTypes? notificationType,
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByUkprnAsync(ukprn, cancellationToken);
         NotificationPreferenceDefaults.Update(result);
-        return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
+        if (notificationType is null)
+        {
+            return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
+        }
+        
+        var filteredResults = result
+            .Where(x =>
+            {
+                if (x.NotificationPreferences!.TryGetForEvent(notificationType.Value, out var notificationPreference))
+                {
+                    return notificationPreference!.Frequency is not NotificationFrequency.Never;
+                }
+                return false;
+            })
+            .Select(x => x.ToGetResponse());
+        return TypedResults.Ok(filteredResults);
     }
     
     [HttpGet, Route("by/dfeuserid/{dfeUserId}")]
