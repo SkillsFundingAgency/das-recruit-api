@@ -42,6 +42,7 @@ internal static class EmployerNotificationPreferences
         new (NotificationTypes.ApplicationSubmitted, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily),
         new (NotificationTypes.VacancyApprovedOrRejected, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet),
         new (NotificationTypes.VacancySentForReview, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet),
+        new (NotificationTypes.ApplicationSharedWithEmployer, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately),
     ];
 
     public static void UpdateWithDefaults(NotificationPreferences preferences)
