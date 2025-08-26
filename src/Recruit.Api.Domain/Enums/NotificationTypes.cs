@@ -10,5 +10,6 @@ public enum NotificationTypes
     ApplicationSubmitted,
     VacancySentForReview,
     SharedApplicationReviewedByEmployer,
-    ProviderAttachedToVacancy
+    ProviderAttachedToVacancy,
+    ApplicationSharedWithEmployer,
 }

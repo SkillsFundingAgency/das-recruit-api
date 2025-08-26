@@ -17,7 +17,8 @@ public class WhenGettingEmployerNotificationPreferenceDefaults
         EmployerNotificationPreferences.UpdateWithDefaults(prefs);
 
         // assert
-        prefs.EventPreferences.Should().HaveCount(3);
+        prefs.EventPreferences.Should().HaveCount(4);
+
         var applicationSubmittedPref = prefs.GetForEvent(NotificationTypes.ApplicationSubmitted);
         applicationSubmittedPref.Method.Should().Be("Email");
         applicationSubmittedPref.Scope.Should().Be(NotificationScope.OrganisationVacancies);
@@ -32,6 +33,11 @@ public class WhenGettingEmployerNotificationPreferenceDefaults
         vacancySendForReviewPref.Method.Should().Be("Email");
         vacancySendForReviewPref.Scope.Should().Be(NotificationScope.OrganisationVacancies);
         vacancySendForReviewPref.Frequency.Should().Be(NotificationFrequency.NotSet);
+
+        var applicationSharedWithEmployerPref = prefs.GetForEvent(NotificationTypes.ApplicationSharedWithEmployer);
+        applicationSharedWithEmployerPref.Method.Should().Be("Email");
+        applicationSharedWithEmployerPref.Scope.Should().Be(NotificationScope.OrganisationVacancies);
+        applicationSharedWithEmployerPref.Frequency.Should().Be(NotificationFrequency.Immediately);
     }
     
     [Test, MoqAutoData]
@@ -48,7 +54,7 @@ public class WhenGettingEmployerNotificationPreferenceDefaults
         EmployerNotificationPreferences.UpdateWithDefaults(prefs);
 
         // assert
-        prefs.EventPreferences.Should().HaveCount(3);
+        prefs.EventPreferences.Should().HaveCount(4);
         var applicationSubmittedPref = prefs.GetForEvent(NotificationTypes.ApplicationSubmitted);
         applicationSubmittedPref.Should().BeEquivalentTo(existingPref);
     }
@@ -67,7 +73,7 @@ public class WhenGettingEmployerNotificationPreferenceDefaults
         EmployerNotificationPreferences.UpdateWithDefaults(prefs);
 
         // assert
-        prefs.EventPreferences.Should().HaveCount(4);
+        prefs.EventPreferences.Should().HaveCount(5);
         var pref = prefs.GetForEvent(NotificationTypes.VacancyClosingSoon);
         pref.Should().Be(existingPref);
     }
