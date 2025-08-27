@@ -19,6 +19,6 @@ public class UserEntity
     public DateTime? ClosedVacanciesBlockedProviderAlertDismissedOn { get; set; }
     public DateTime? TransferredVacanciesBlockedProviderAlertDismissedOn { get; set; }
     public DateTime? ClosedVacanciesWithdrawnByQaAlertDismissedOn { get; set; }
-    public NotificationPreferences? NotificationPreferences { get; set; }
+    public virtual NotificationPreferences? NotificationPreferences { get; set; }
     public string? DfEUserId { get; set; }
 }

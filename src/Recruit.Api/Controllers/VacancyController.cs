@@ -82,6 +82,18 @@ public class VacancyController : Controller
             }
         }
         
+        // This lookup should eventually be removed once we've migrated away from Mongo
+        // We do this because currently the submitted user id is not the SQL user id, but could match
+        // the IdamsUserId, DfEUserId or the actual UserId.
+        if (request.ReviewRequestedByUserId is not null)
+        {
+            var user = await userRepository.FindByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
+            if (user is not null)
+            {
+                entity.ReviewRequestedByUserId = user.Id;
+            }
+        }
+        
         var vacancyReference = await repository.GetNextVacancyReferenceAsync(cancellationToken);
         entity.VacancyReference = vacancyReference.Value;
         entity.CreatedDate = DateTime.UtcNow;
@@ -112,6 +124,18 @@ public class VacancyController : Controller
             if (user is not null)
             {
                 entity.SubmittedByUserId = user.Id;
+            }
+        }
+        
+        // This lookup should eventually be removed once we've migrated away from Mongo
+        // We do this because currently the submitted user id is not the SQL user id, but could match
+        // the IdamsUserId, DfEUserId or the actual UserId.
+        if (request.ReviewRequestedByUserId is not null)
+        {
+            var user = await userRepository.FindByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
+            if (user is not null)
+            {
+                entity.ReviewRequestedByUserId = user.Id;
             }
         }
 
