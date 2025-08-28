@@ -16,13 +16,14 @@ CREATE TABLE dbo.[Vacancy] (
     [CreatedDate]                               datetime            NOT NULL default CURRENT_TIMESTAMP,
     [LastUpdatedDate]                           datetime            NULL,
     [SubmittedDate]                             datetime            NULL,
-    [ReviewDate]                                datetime            NULL,
+    [ReviewRequestedDate]                       datetime            NULL,
     [ClosedDate]                                datetime            NULL,
     [DeletedDate]                               datetime            NULL,
     [LiveDate]                                  datetime            NULL,
     [StartDate]                                 datetime            NULL,
     [ClosingDate]                               datetime            NULL,
     [SubmittedByUserId]                         uniqueidentifier    NULL,
+    [ReviewRequestedByUserId]                   uniqueidentifier    NULL,
     [ReviewCount]                               int                 NOT NULL default 0,
     [ApplicationUrl]                            nvarchar(500)       NULL, -- validation currently allows 2000
     [ApplicationMethod]                         nvarchar(50)        NULL, -- max is currently 30 chars
