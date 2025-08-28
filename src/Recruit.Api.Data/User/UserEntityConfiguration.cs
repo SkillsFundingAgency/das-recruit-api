@@ -22,7 +22,7 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.HasKey(x => x.Id);
         builder.Property(x => x.UserType).HasConversion(v => v.ToString(), v => (UserType)Enum.Parse(typeof(UserType), v));
-        builder.Property(x => x.NotificationPreferences).HasConversion<NotificationPreferencesConverter>();
+        builder.Property<NotificationPreferences>(x => x.NotificationPreferences!).HasConversion<NotificationPreferencesConverter>();
     }
 }
 
@@ -30,8 +30,8 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 /// Using a ValueConverter allows us to process null values
 /// </summary>
 public class NotificationPreferencesConverter() : ValueConverter<NotificationPreferences, string?>(
-    x => JsonSerializer.Serialize(x, Options),
-    x => x == null ? new NotificationPreferences() : JsonSerializer.Deserialize<NotificationPreferences>(x, Options)!)
+    static x => JsonSerializer.Serialize(x, Options),
+    static x => JsonSerializer.Deserialize<NotificationPreferences>(x ?? "{}", Options)!)
 {
     private static readonly JsonSerializerOptions Options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
     public override bool ConvertsNulls => true;
