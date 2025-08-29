@@ -12,11 +12,11 @@ internal class WhenGettingQaDashboard
     [Test]
     [MoqInlineAutoData(ReviewStatus.UnderReview)]
     [MoqInlineAutoData(ReviewStatus.PendingReview)]
-    public async Task Then_GetQaDashboard_Return_As_Expected(ReviewStatus status,
-            CancellationToken token,
+    public async Task Then_GetQaDashboard_Return_As_Expected(ReviewStatus status,            
             List<VacancyReviewEntity> entities,
             [Frozen] Mock<IRecruitDataContext> context,
-            [Greedy] VacancyReviewRepository repository)
+            [Greedy] VacancyReviewRepository repository,
+            CancellationToken token)
     {
         // Arrange
         foreach (var vacancyReviewEntity in entities)
@@ -37,11 +37,11 @@ internal class WhenGettingQaDashboard
     [Test]
     [MoqInlineAutoData(ReviewStatus.New)]
     [MoqInlineAutoData(ReviewStatus.Closed)]
-    public async Task Then_GetQaDashboard_Return_As_Empty(ReviewStatus status,
-            CancellationToken token,
+    public async Task Then_GetQaDashboard_Return_As_Empty(ReviewStatus status,            
             List<VacancyReviewEntity> entities,
             [Frozen] Mock<IRecruitDataContext> context,
-            [Greedy] VacancyReviewRepository repository)
+            [Greedy] VacancyReviewRepository repository,
+            CancellationToken token)
     {
         // Arrange
         foreach (var vacancyReviewEntity in entities)
