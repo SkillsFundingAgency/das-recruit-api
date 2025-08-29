@@ -59,25 +59,31 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
 
     public async Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken)
     {
-        var reviews = await dataContext.VacancyReviewEntities
+        var now = DateTime.UtcNow;
+        var twelveHoursAgo = now.AddHours(-12);
+        var twentyFourHoursAgo = now.AddHours(-24);
+
+        var query = dataContext.VacancyReviewEntities
             .Where(rv => rv.Status == ReviewStatus.PendingReview || rv.Status == ReviewStatus.UnderReview)
-            .OrderByDescending(rv => rv.CreatedDate)
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
+            .AsNoTracking();
 
-        if (reviews.Count == 0)
-            return new QaDashboard();
+        var dashboard = await query
+            .GroupBy(_ => 1)
+            .Select(g => new QaDashboard {
+                TotalVacanciesForReview = g.Count(),
+                TotalVacanciesResubmitted = g
+                    .Where(r => r.SubmissionCount > 1)
+                    .Select(r => r.VacancyReference)
+                    .Distinct()
+                    .Count(),
+                TotalVacanciesBrokenSla = g.Count(r => r.SlaDeadLine < now),
+                TotalVacanciesSubmittedTwelveTwentyFourHours = g.Count(r =>
+                    r.SubmissionCount == 1 &&
+                    r.CreatedDate <= twentyFourHoursAgo &&
+                    r.CreatedDate > twelveHoursAgo)
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
-        return new QaDashboard 
-        {
-            TotalVacanciesForReview = reviews.Count,
-            TotalVacanciesResubmitted = reviews.Where(r => r.SubmissionCount > 1)
-                .Select(r => r.VacancyReference)
-                .Distinct()
-                .Count(),
-            TotalVacanciesBrokenSla = reviews.Count(r => r.SlaDeadLine < DateTime.UtcNow),
-            TotalVacanciesSubmittedTwelveTwentyFourHours = reviews.Count(c =>
-                c.SubmissionCount == 1 && (DateTime.UtcNow - c.CreatedDate).TotalHours >= 12 && (DateTime.UtcNow - c.CreatedDate).TotalHours < 24)
-        };
+        return dashboard ?? new QaDashboard();
     }
 }
