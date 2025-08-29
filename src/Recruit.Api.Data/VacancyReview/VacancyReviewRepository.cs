@@ -8,6 +8,7 @@ namespace SFA.DAS.Recruit.Api.Data.VacancyReview;
 public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, Guid>, IWriteRepository<VacancyReviewEntity, Guid>
 {
     Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
+    Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken);
 }
 
 public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyReviewRepository
@@ -54,5 +55,29 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             .Where(x => x.VacancyReference == vacancyReference)
             .OrderBy(x => x.CreatedDate)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken)
+    {
+        var reviews = await dataContext.VacancyReviewEntities
+            .Where(rv => rv.Status == ReviewStatus.PendingReview || rv.Status == ReviewStatus.UnderReview)
+            .OrderByDescending(rv => rv.CreatedDate)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        if (reviews.Count == 0)
+            return new QaDashboard();
+
+        return new QaDashboard 
+        {
+            TotalVacanciesForReview = reviews.Count,
+            TotalVacanciesResubmitted = reviews.Where(r => r.SubmissionCount > 1)
+                .Select(r => r.VacancyReference)
+                .Distinct()
+                .Count(),
+            TotalVacanciesBrokenSla = reviews.Count(r => r.SlaDeadLine < DateTime.UtcNow),
+            TotalVacanciesSubmittedTwelveTwentyFourHours = reviews.Count(c =>
+                c.SubmissionCount == 1 && (DateTime.UtcNow - c.CreatedDate).TotalHours >= 12 && (DateTime.UtcNow - c.CreatedDate).TotalHours < 24)
+        };
     }
 }
