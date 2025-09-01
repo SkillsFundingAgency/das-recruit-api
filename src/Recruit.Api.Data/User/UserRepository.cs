@@ -31,8 +31,17 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
             await dataContext.SaveChangesAsync(cancellationToken);
             return UpsertResult.Create(entity, true);
         }
+        var prefs = existingEntity.NotificationPreferences;
+        
         entity.UpdatedDate = DateTime.UtcNow;
         dataContext.SetValues(existingEntity, entity);
+
+        // TODO: temporary fix whilst users are being updated with data from mongo, this
+        // should be removed once the switch to SQL is complete
+        if (existingEntity.NotificationPreferences?.EventPreferences?.Count == 0)
+        {
+            existingEntity.NotificationPreferences = prefs;
+        }
 
         // remove the deleted employerAccountIds
         var newEntityIds = entity.EmployerAccounts.Select(x => x.EmployerAccountId).ToList();
