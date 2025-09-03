@@ -57,7 +57,9 @@ public class WhenPostingVacancy: BaseFixture
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
-        vacancy.Should().BeEquivalentTo(request, opt => opt.Excluding(x => x.SubmittedByUserId));
+        vacancy.Should().BeEquivalentTo(request, opt => opt
+            .Excluding(x => x.SubmittedByUserId)
+            .Excluding(x => x.ReviewRequestedByUserId));
         vacancy.Id.Should().Be(id);
         vacancy.VacancyReference.Should().Be(vacancyReference.Value);
         

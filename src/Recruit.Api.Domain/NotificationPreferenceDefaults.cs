@@ -57,17 +57,17 @@ internal static class ProviderNotificationPreferences
 {
     private const string Channel = "Email"; 
     
-    private static readonly List<NotificationPreference> EmployerDefaults = [
+    private static readonly List<NotificationPreference> ProviderDefaults = [
         new (NotificationTypes.ApplicationSubmitted, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily),
         new (NotificationTypes.VacancyApprovedOrRejected, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet),
-        new (NotificationTypes.SharedApplicationReviewedByEmployer, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet),
+        new (NotificationTypes.SharedApplicationReviewedByEmployer, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily),
         new (NotificationTypes.ProviderAttachedToVacancy, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately),
     ];
 
     public static void UpdateWithDefaults(NotificationPreferences preferences)
     {
         var items = preferences.EventPreferences;
-        var defaultsToAdd = EmployerDefaults.Where(x => preferences.EventPreferences.All(y => y.Event != x.Event)).Select(x => x with {});
+        var defaultsToAdd = ProviderDefaults.Where(x => preferences.EventPreferences.All(y => y.Event != x.Event)).Select(x => x with {});
         items.AddRange(defaultsToAdd);
     }
 }

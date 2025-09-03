@@ -50,7 +50,10 @@ public class WhenPuttingVacancy: BaseFixture
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
-        vacancy.Should().BeEquivalentTo(request, opt => opt.Excluding(x => x.SubmittedByUserId));
+        vacancy.Should().BeEquivalentTo(request, opt => opt
+            .Excluding(x => x.SubmittedByUserId)
+            .Excluding(x => x.ReviewRequestedByUserId)
+        );
         
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
@@ -82,7 +85,9 @@ public class WhenPuttingVacancy: BaseFixture
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        vacancy.Should().BeEquivalentTo(request, opt => opt.Excluding(x => x.SubmittedByUserId));
+        vacancy.Should().BeEquivalentTo(request, opt => opt
+            .Excluding(x => x.SubmittedByUserId)
+            .Excluding(x => x.ReviewRequestedByUserId));
 
         Server.DataContext.Verify(x => x.SetValues(targetItem, ItIs.EquivalentTo(request.ToDomain(targetItem.Id))), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
