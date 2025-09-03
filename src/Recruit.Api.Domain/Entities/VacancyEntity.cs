@@ -18,7 +18,7 @@ public class VacancyEntity
     public DateTime? CreatedDate {get; set;}
     public DateTime? LastUpdatedDate {get; set;}
     public DateTime? SubmittedDate {get; set;}
-    public DateTime? ReviewDate {get; set;}
+    public DateTime? ReviewRequestedDate {get; set;}
     public DateTime? ClosedDate {get; set;}
     public DateTime? DeletedDate {get; set;}
     public DateTime? LiveDate {get; set;}
@@ -75,4 +75,5 @@ public class VacancyEntity
     public string? EmployerReviewFieldIndicators {get; set;}
     public string? ProviderReviewFieldIndicators {get; set;}
     public Guid? SubmittedByUserId { get; set; }
+    public Guid? ReviewRequestedByUserId { get; set; }
 }

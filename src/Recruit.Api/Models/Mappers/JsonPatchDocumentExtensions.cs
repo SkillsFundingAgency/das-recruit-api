@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 
@@ -30,6 +31,35 @@ internal static class JsonPatchDocumentExtensions
             op = x.op,
             value = x.value,
             path = x?.path
+        });
+            
+        result.Operations.AddRange(operations);
+        return result;
+    }
+    
+    public static JsonPatchDocument<TEntity> ToDomain<TSource, TEntity>(this JsonPatchDocument<TSource> source, object id, Dictionary<string, Func<object, Operation<TSource>, Operation<TEntity>>> fieldMappings) where TEntity : class where TSource : class
+    {
+        var pathRegex = new Regex(@"^\/(?<property>[a-zA-Z]*)[\/-]?", RegexOptions.IgnoreCase | RegexOptions.Compiled, TimeSpan.FromSeconds(2));
+        var pathReplaceRegex = new Regex(@"([\w]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled, TimeSpan.FromSeconds(2));
+        var result = new JsonPatchDocument<TEntity>();
+        var operations = source.Operations.Select(x =>
+        {
+            var match = pathRegex.Match(x.path);
+            string queryField = match.Success ? match.Groups["property"].Value : x.path; 
+
+            if (fieldMappings.TryGetValue(queryField, out Func<object, Operation<TSource>, Operation<TEntity>>? mapping))
+            {
+                var mappedOperation = mapping(id, x);
+                mappedOperation.path = pathReplaceRegex.Replace(x.path, mappedOperation.path);
+                return mappedOperation;    
+            }
+
+            return new Operation<TEntity> {
+                from = x.from,
+                op = x.op,
+                value = x.value,
+                path = x.path,
+            };
         });
             
         result.Operations.AddRange(operations);

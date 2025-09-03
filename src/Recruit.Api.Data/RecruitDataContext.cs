@@ -26,6 +26,7 @@ public interface IRecruitDataContext
     DbSet<VacancyReviewEntity> VacancyReviewEntities { get; }
     DbSet<VacancyEntity> VacancyEntities { get; }
     DbSet<UserEntity> UserEntities { get; }
+    DbSet<UserEmployerAccountEntity> UserEmployerAccountEntities { get; }
     DatabaseFacade Database { get; }
     Task Ping(CancellationToken cancellationToken);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
@@ -43,6 +44,7 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
     public DbSet<VacancyReviewEntity> VacancyReviewEntities { get; set; }
     public DbSet<VacancyEntity> VacancyEntities { get; set; }
     public DbSet<UserEntity> UserEntities { get; set; }
+    public DbSet<UserEmployerAccountEntity> UserEmployerAccountEntities { get; set; }
     
     private readonly ConnectionStrings? _configuration;
     public RecruitDataContext() {}
@@ -92,6 +94,7 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
         modelBuilder.ApplyConfiguration(new ProhibitedContentEntityConfiguration());
         modelBuilder.ApplyConfiguration(new EmployerProfileEntityConfiguration());
         modelBuilder.ApplyConfiguration(new EmployerProfileAddressEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new UserEmployerAccountConfiguration());
         modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new VacancyReviewEntityConfiguration());
         modelBuilder.ApplyConfiguration(new VacancyEntityConfiguration());
