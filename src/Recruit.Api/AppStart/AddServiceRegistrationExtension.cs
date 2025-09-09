@@ -10,8 +10,6 @@ using SFA.DAS.Recruit.Api.Data.Vacancy;
 using SFA.DAS.Recruit.Api.Data.User;
 using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
-using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
-using SFA.DAS.Recruit.Api.Validators;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
@@ -21,7 +19,7 @@ public static class AddServiceRegistrationExtension
     public static void AddApplicationDependencies(this IServiceCollection services)
     {
         // validators
-        services.AddScoped<IValidator<PutApplicationReviewRequest>, PutApplicationReviewRequestValidator>();
+        services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();
