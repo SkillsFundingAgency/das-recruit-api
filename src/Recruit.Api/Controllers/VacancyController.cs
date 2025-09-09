@@ -33,6 +33,17 @@ public class VacancyController : Controller
             : TypedResults.Ok(result.ToGetResponse());
     }
 
+    [HttpGet, Route("by-reference/{vacancyReference:long}")]
+    [ProducesResponseType(typeof(List<Vacancy>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetOneByVacancyReference([FromServices] IVacancyRepository repository, [FromRoute] long vacancyReference, CancellationToken cancellationToken)
+    {
+        var result = await repository.GetOneByVacancyReferenceAsync(vacancyReference, cancellationToken);
+        return result is null
+            ? Results.NotFound()
+            : TypedResults.Ok(result.ToGetResponse());
+    }
+
     /*
      This is an example paged endpoint, it can be modified or extended as appropriate
      */
