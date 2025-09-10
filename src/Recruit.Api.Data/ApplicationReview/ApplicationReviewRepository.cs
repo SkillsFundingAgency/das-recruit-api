@@ -224,7 +224,10 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
 
         var query = recruitDataContext.ApplicationReviewEntities
         .AsNoTracking()
-            .Where(appReview => appReview.Ukprn == ukprn && statusStrings.Contains(appReview.Status) && appReview.WithdrawnDate == null)
+            .Where(appReview =>
+                appReview.Ukprn == ukprn &&
+                statusStrings.Contains(appReview.Status) &&
+                appReview.WithdrawnDate == null)
             .Join(
                 recruitDataContext.VacancyEntities.AsNoTracking()
                     .Where(vacancy => vacancy.OwnerType == OwnerType.Provider),
@@ -232,7 +235,10 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview);
 
-        int groupedCountQuery = await query.GroupBy(c => c.VacancyReference).CountAsync(cancellationToken: token);
+        int groupedCountQuery = await query
+            .Select(c => c.VacancyReference)
+            .Distinct()
+            .CountAsync(cancellationToken: token);
 
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, groupedCountQuery, token);
     }
