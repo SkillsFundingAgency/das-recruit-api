@@ -54,7 +54,7 @@ internal class WhenGettingAllByAccountId
         long vacancyReference,
         CancellationToken token,
         List<ApplicationReviewEntity> applicationsReviews,
-        List<VacancyReviewEntity> vacancyReviewEntities,
+        List<VacancyEntity> vacancyEntities,
         [Frozen] Mock<IRecruitDataContext> context,
         [Greedy] ApplicationReviewRepository repository)
     {
@@ -66,8 +66,8 @@ internal class WhenGettingAllByAccountId
 
         context.Setup(x => x.ApplicationReviewEntities)
             .ReturnsDbSet(applicationsReviews);
-        context.Setup(x => x.VacancyReviewEntities)
-            .ReturnsDbSet(vacancyReviewEntities);
+        context.Setup(x => x.VacancyEntities)
+            .ReturnsDbSet(vacancyEntities);
 
         var actual = await repository.GetByAccountIdAndVacancyReferencesAsync(accountId, [vacancyReference], token);
 
