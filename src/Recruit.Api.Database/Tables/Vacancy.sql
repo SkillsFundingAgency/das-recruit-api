@@ -28,7 +28,7 @@ CREATE TABLE dbo.[Vacancy] (
     [ApplicationUrl]                            nvarchar(500)       NULL, -- validation currently allows 2000
     [ApplicationMethod]                         nvarchar(50)        NULL, -- max is currently 30 chars
     [ApplicationInstructions]                   nvarchar(500)       NULL,
-    [ShortDescription]                          nvarchar(400)       NULL,
+    [ShortDescription]                          nvarchar(1000)      NULL,
     [Description]                               nvarchar(max)       NULL,
     [AnonymousReason]                           nvarchar(1000)      NULL,
     [DisabilityConfident]                       bit                 NULL,
