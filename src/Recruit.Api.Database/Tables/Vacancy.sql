@@ -59,16 +59,16 @@ CREATE TABLE dbo.[Vacancy] (
     [TrainingProvider_Address]                  nvarchar(500)       NULL,
     [Wage_Duration]                             int                 NULL,
     [Wage_DurationUnit]                         nvarchar(10)        NULL,
-    [Wage_WorkingWeekDescription]               nvarchar(250)       NULL,
+    [Wage_WorkingWeekDescription]               nvarchar(500)       NULL,
     [Wage_WeeklyHours]                          decimal             NULL,
     [Wage_WageType]                             nvarchar(40)        NULL, -- max is currently 33 chars
     [Wage_FixedWageYearlyAmount]                decimal             NULL,
-    [Wage_WageAdditionalInformation]            nvarchar(250)       NULL,
-    [Wage_CompanyBenefitsInformation]           nvarchar(250)       NULL,
+    [Wage_WageAdditionalInformation]            nvarchar(500)       NULL,
+    [Wage_CompanyBenefitsInformation]           nvarchar(500)       NULL,
     [ClosureReason]                             nvarchar(30)        NULL, -- max is currently 21 chars
     [TransferInfo]                              nvarchar(500)       NULL, -- json serialise
-    [AdditionalQuestion1]                       nvarchar(250)       NULL,
-    [AdditionalQuestion2]                       nvarchar(250)       NULL,
+    [AdditionalQuestion1]                       nvarchar(500)       NULL,
+    [AdditionalQuestion2]                       nvarchar(500)       NULL,
     [HasSubmittedAdditionalQuestions]           bit                 NULL,
     [HasChosenProviderContactDetails]           bit                 NULL,
     [HasOptedToAddQualifications]               bit                 NULL,
