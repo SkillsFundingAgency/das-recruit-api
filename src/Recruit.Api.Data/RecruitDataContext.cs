@@ -1,6 +1,5 @@
 ﻿using System.Data;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -27,6 +26,7 @@ public interface IRecruitDataContext
     DbSet<VacancyEntity> VacancyEntities { get; }
     DbSet<UserEntity> UserEntities { get; }
     DbSet<UserEmployerAccountEntity> UserEmployerAccountEntities { get; }
+    DbSet<RecruitNotificationEntity> RecruitNotifications { get; }
     DatabaseFacade Database { get; }
     Task Ping(CancellationToken cancellationToken);
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
@@ -45,6 +45,7 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
     public DbSet<VacancyEntity> VacancyEntities { get; set; }
     public DbSet<UserEntity> UserEntities { get; set; }
     public DbSet<UserEmployerAccountEntity> UserEmployerAccountEntities { get; set; }
+    public DbSet<RecruitNotificationEntity> RecruitNotifications { get; set; }
     
     private readonly ConnectionStrings? _configuration;
     public RecruitDataContext() {}
@@ -75,18 +76,12 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        var connection = new SqlConnection { ConnectionString = _configuration!.SqlConnectionString, };
+        optionsBuilder.UseSqlServer(connection, options => options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), null));
         optionsBuilder.UseLazyLoadingProxies();
-
-        var connection = new SqlConnection {
-            ConnectionString = _configuration!.SqlConnectionString,
-        };
-
-        optionsBuilder.UseSqlServer(connection, options =>
-            options.EnableRetryOnFailure(
-                5,
-                TimeSpan.FromSeconds(20),
-                null
-            ));
+        
+        // Note: useful to keep here
+        //optionsBuilder.LogTo(message => Debug.WriteLine(message));
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
