@@ -10,7 +10,7 @@ internal class WhenMappingApplicationReviewEntity
     public void To_GetApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         //Arrange
-        entity.Status = nameof(ApplicationReviewStatus.InReview);
+        entity.Status = ApplicationReviewStatus.InReview;
         
         // act
         var result = entity.ToGetResponse();
@@ -24,7 +24,7 @@ internal class WhenMappingApplicationReviewEntity
     public void To_PatchApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         //Arrange
-        entity.Status = nameof(ApplicationReviewStatus.InReview);
+        entity.Status = ApplicationReviewStatus.InReview;
         
         // act
         var result = entity.ToPatchResponse();
@@ -35,24 +35,10 @@ internal class WhenMappingApplicationReviewEntity
     }
     
     [Test, MoqAutoData]
-    public void To_PutApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
-    {
-        //Arrange
-        entity.Status = "test";
-        
-        // act
-        var result = entity.ToPutResponse();
-        
-        // assert
-        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status));
-        result.Status.Should().Be(ApplicationReviewStatus.New);
-    }
-    
-    [Test, MoqAutoData]
     public void To_ApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         //Arrange
-        entity.Status = nameof(ApplicationReviewStatus.InReview);
+        entity.Status = ApplicationReviewStatus.InReview;
         
         // act
         var result = entity.ToGetResponse();

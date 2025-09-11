@@ -117,13 +117,10 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             ? new List<OwnerType> { OwnerType.Employer, OwnerType.Provider }
             : new List<OwnerType> { OwnerType.Employer };
 
-        var statusStrings = status is null
-            ? [ApplicationReviewStatus.New.ToString()]
-            : status.Select(s => s.ToString()).ToList();
-
+        var statuses = status ?? [ApplicationReviewStatus.New];
         var query = recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
-            .Where(appReview => appReview.AccountId == accountId && statusStrings.Contains(appReview.Status) && appReview.WithdrawnDate == null) 
+            .Where(appReview => appReview.AccountId == accountId && statuses.Contains(appReview.Status) && appReview.WithdrawnDate == null) 
             .Join(
                 recruitDataContext.VacancyReviewEntities.AsNoTracking()
                     .Where(vacancyReview =>
@@ -135,8 +132,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 (appReview, _) => appReview
             );
         
-        var groupedCountQuery = await query.GroupBy(c => c.VacancyReference).CountAsync(cancellationToken: token);
-
+        int groupedCountQuery = await query.GroupBy(c => c.VacancyReference).CountAsync(cancellationToken: token);
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, groupedCountQuery, token);
     }
 
@@ -172,7 +168,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .Where(appReview =>
                 appReview.AccountId == accountId &&
                 appReview.DateSharedWithEmployer != null &&
-                appReview.Status == ApplicationReviewStatus.Shared.ToString() &&
+                appReview.Status == ApplicationReviewStatus.Shared &&
                 appReview.WithdrawnDate == null);
 
         return await query.CountAsync(token);
@@ -211,7 +207,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .Where(appReview =>
                 vacancyReferences.Contains(appReview.VacancyReference) &&
                 appReview.AccountId == accountId &&
-                appReview.Status == ApplicationReviewStatus.Shared.ToString() &&
+                appReview.Status == ApplicationReviewStatus.Shared &&
                 appReview.WithdrawnDate == null);
 
         return await query.ToListAsync(token);
@@ -225,13 +221,11 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default)
     {
-        var statusStrings = status is null
-            ? [ApplicationReviewStatus.New.ToString()]
-            : status.Select(s => s.ToString()).ToList();
+        var statuses = status ?? [ApplicationReviewStatus.New];
 
         var query = recruitDataContext.ApplicationReviewEntities
         .AsNoTracking()
-            .Where(appReview => appReview.Ukprn == ukprn && statusStrings.Contains(appReview.Status) && appReview.WithdrawnDate == null)
+            .Where(appReview => appReview.Ukprn == ukprn && statuses.Contains(appReview.Status) && appReview.WithdrawnDate == null)
             .Join(
                 recruitDataContext.VacancyReviewEntities.AsNoTracking()
                     .Where(vacancyReview =>

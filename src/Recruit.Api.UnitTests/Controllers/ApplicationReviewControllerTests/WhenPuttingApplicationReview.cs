@@ -23,8 +23,8 @@ public class WhenPuttingApplicationReview
         [Greedy] ApplicationReviewController controller)
     {
         // Arrange
-        ApplicationReviewEntity passedApplicationReview = null;
-        request.Status = nameof(ApplicationReviewStatus.New);
+        ApplicationReviewEntity? passedApplicationReview = null;
+        request.Status = ApplicationReviewStatus.New;
         applicationReview.Id = id;
         providerMock
             .Setup(p => p.Upsert(It.IsAny<ApplicationReviewEntity>(), It.IsAny<CancellationToken>()))
@@ -41,8 +41,7 @@ public class WhenPuttingApplicationReview
         // Assert
         passedApplicationReview.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
         createdResult.Should().NotBeNull();
-        createdResult.Value.Should().BeEquivalentTo(applicationReview, options => options.Excluding(c=>c.Status));
-        createdResult.Value.Status.Should().Be(ApplicationReviewStatus.New);
+        createdResult.Value.Should().BeEquivalentTo(applicationReview);
     }
 
     [Test, MoqAutoData]

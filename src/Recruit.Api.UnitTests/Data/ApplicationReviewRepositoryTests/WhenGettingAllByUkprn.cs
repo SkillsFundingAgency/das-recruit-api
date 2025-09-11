@@ -61,7 +61,7 @@ internal class WhenGettingAllByUkprn
         {
             application.Ukprn = ukprn;
             application.VacancyReference = vacancyReference;
-            application.Status = status.ToString();
+            application.Status = status;
         }
 
         context.Setup(x => x.ApplicationReviewEntities)

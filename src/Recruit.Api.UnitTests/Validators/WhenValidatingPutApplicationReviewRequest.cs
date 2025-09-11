@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
+﻿using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 using SFA.DAS.Recruit.Api.Validators;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators;
@@ -28,7 +29,7 @@ internal class WhenValidatingPutApplicationReviewRequest
             Ukprn = 0,
             AccountId = 0,
             CandidateId = Guid.Empty,
-            Status = null!,
+            Status = ApplicationReviewStatus.New,
             VacancyReference = 0,
             LegacyApplicationId = null,
             VacancyTitle = null!,

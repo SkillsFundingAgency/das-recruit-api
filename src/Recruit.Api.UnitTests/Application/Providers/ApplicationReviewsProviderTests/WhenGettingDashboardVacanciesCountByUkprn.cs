@@ -19,9 +19,9 @@ internal class WhenGettingDashboardVacanciesCountByUkprn
         const int pageSize = 2;
         var appReviews = new List<ApplicationReviewEntity>
         {
-                new() { VacancyReference = 1, Status = nameof(ApplicationReviewStatus.New), WithdrawnDate = null },
-                new() { VacancyReference = 1, Status = nameof(ApplicationReviewStatus.New), WithdrawnDate = null },
-                new() { VacancyReference = 2, Status = nameof(ApplicationReviewStatus.Shared), WithdrawnDate = null, DateSharedWithEmployer = DateTime.Now}
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.New, WithdrawnDate = null },
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.New, WithdrawnDate = null },
+                new() { VacancyReference = 2, Status = ApplicationReviewStatus.Shared, WithdrawnDate = null, DateSharedWithEmployer = DateTime.Now}
             };
         var paginated = new PaginatedList<ApplicationReviewEntity>(appReviews, 3, pageNumber, pageSize);
         repository.Setup(r => r.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, nameof(ApplicationReviewEntity.CreatedDate), false, new List<ApplicationReviewStatus>{ ApplicationReviewStatus.New, ApplicationReviewStatus.Shared }, It.IsAny<CancellationToken>()))

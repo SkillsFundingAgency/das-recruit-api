@@ -21,13 +21,13 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
 
             var applicationReviews = new List<ApplicationReviewEntity>
             {
-                new() { VacancyReference = 1, Status = nameof(ApplicationReviewStatus.New), ReviewedDate = null, WithdrawnDate = null},
-                new() { VacancyReference = 1, Status = nameof(ApplicationReviewStatus.Successful),WithdrawnDate = null },
-                new() { VacancyReference = 2, Status = nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate = null },
-                new() { VacancyReference = 3, Status = nameof(ApplicationReviewStatus.InReview), ReviewedDate = DateTime.Now, WithdrawnDate = null },
-                new() { VacancyReference = 4, Status = nameof(ApplicationReviewStatus.Interviewing), WithdrawnDate = null },
-                new() { VacancyReference = 4, Status = nameof(ApplicationReviewStatus.Shared), WithdrawnDate = null },
-                new() { VacancyReference = 5, Status = nameof(ApplicationReviewStatus.Shared), DateSharedWithEmployer = DateTime.Now, WithdrawnDate = null },
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.New, ReviewedDate = null, WithdrawnDate = null},
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.Successful,WithdrawnDate = null },
+                new() { VacancyReference = 2, Status = ApplicationReviewStatus.Unsuccessful, WithdrawnDate = null },
+                new() { VacancyReference = 3, Status = ApplicationReviewStatus.InReview, ReviewedDate = DateTime.Now, WithdrawnDate = null },
+                new() { VacancyReference = 4, Status = ApplicationReviewStatus.Interviewing, WithdrawnDate = null },
+                new() { VacancyReference = 4, Status = ApplicationReviewStatus.Shared, WithdrawnDate = null },
+                new() { VacancyReference = 5, Status = ApplicationReviewStatus.Shared, DateSharedWithEmployer = DateTime.Now, WithdrawnDate = null },
             };
 
             repositoryMock.Setup(repo => repo.GetByAccountIdAndVacancyReferencesAsync(accountId, vacancyReferences, token))
@@ -109,12 +109,12 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviews
 
             var applicationReviews = new List<ApplicationReviewEntity>
             {
-                new() { VacancyReference = 1, Status = nameof(ApplicationReviewStatus.New), WithdrawnDate = DateTime.Now},
-                new() { VacancyReference = 1, Status = nameof(ApplicationReviewStatus.Successful),WithdrawnDate = DateTime.Now },
-                new() { VacancyReference = 2, Status = nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate = DateTime.Now },
-                new() { VacancyReference = 3, Status = nameof(ApplicationReviewStatus.InReview), ReviewedDate = DateTime.Now, WithdrawnDate = DateTime.Now },
-                new() { VacancyReference = 4, Status = nameof(ApplicationReviewStatus.Interviewing), WithdrawnDate = DateTime.Now },
-                new() { VacancyReference = 4, Status = nameof(ApplicationReviewStatus.Shared), WithdrawnDate = DateTime.Now },
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.New, WithdrawnDate = DateTime.Now},
+                new() { VacancyReference = 1, Status = ApplicationReviewStatus.Successful,WithdrawnDate = DateTime.Now },
+                new() { VacancyReference = 2, Status = ApplicationReviewStatus.Unsuccessful, WithdrawnDate = DateTime.Now },
+                new() { VacancyReference = 3, Status = ApplicationReviewStatus.InReview, ReviewedDate = DateTime.Now, WithdrawnDate = DateTime.Now },
+                new() { VacancyReference = 4, Status = ApplicationReviewStatus.Interviewing, WithdrawnDate = DateTime.Now },
+                new() { VacancyReference = 4, Status = ApplicationReviewStatus.Shared, WithdrawnDate = DateTime.Now },
             };
 
             repositoryMock.Setup(repo => repo.GetByAccountIdAndVacancyReferencesAsync(accountId, vacancyReferences, token))

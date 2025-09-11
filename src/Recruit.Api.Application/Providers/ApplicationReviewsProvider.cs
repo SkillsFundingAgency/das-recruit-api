@@ -234,19 +234,9 @@ internal class ApplicationReviewsProvider(
             .GroupBy(ar => ar.VacancyReference)
             .Select(g =>
             {
-                int newApplications = g.Count(ar =>
-                    Enum.TryParse<ApplicationReviewStatus>(ar.Status, out var status) &&
-                    status == ApplicationReviewStatus.New &&
-                    ar.WithdrawnDate == null);
-
-                int shared = g.Count(ar =>
-                    Enum.TryParse<ApplicationReviewStatus>(ar.Status, out var status) &&
-                    status == ApplicationReviewStatus.Shared &&
-                    ar.WithdrawnDate == null);
-
-                int allSharedApplications = g.Count(ar =>
-                    ar is {DateSharedWithEmployer: not null, WithdrawnDate: null});
-
+                int newApplications = g.Count(ar => ar is { Status: ApplicationReviewStatus.New, WithdrawnDate: null });
+                int shared = g.Count(ar => ar is { Status: ApplicationReviewStatus.Shared, WithdrawnDate: null });
+                int allSharedApplications = g.Count(ar => ar is {DateSharedWithEmployer: not null, WithdrawnDate: null});
                 int applications = g.Count(ar => ar.WithdrawnDate == null);
 
                 return new VacancyDetail
