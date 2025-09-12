@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Application.Providers;
+using SFA.DAS.Recruit.Api.Core.Email;
+using SFA.DAS.Recruit.Api.Core.Email.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.EmployerProfile;
@@ -17,7 +20,7 @@ namespace SFA.DAS.Recruit.Api.AppStart;
 [ExcludeFromCodeCoverage]
 public static class AddServiceRegistrationExtension
 {
-    public static void AddApplicationDependencies(this IServiceCollection services)
+    public static void AddApplicationDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         // validators
         services.AddValidatorsFromAssembly(typeof(Program).Assembly);
@@ -34,6 +37,11 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVacancyReviewRepository, VacancyReviewRepository>();
         services.AddScoped<IVacancyRepository, VacancyRepository>();
+        
+        // email
+        services.AddSingleton(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
+        services.AddScoped<SharedApplicationEmailStrategy>();
+        services.AddScoped<IApplicationReviewEmailStrategyFactory, ApplicationReviewEmailStrategyFactory>();
     }
 
     public static void AddDatabaseRegistration(
@@ -66,5 +74,13 @@ public static class AddServiceRegistrationExtension
         services
             .AddHealthChecks()
             .AddCheck<DefaultHealthCheck>("default");
+    }
+    
+    public static void RegisterDasEncodingService(this IServiceCollection services, IConfiguration configuration)
+    {
+        var dasEncodingConfig = new EncodingConfig { Encodings = [] };
+        configuration.GetSection(nameof(dasEncodingConfig.Encodings)).Bind(dasEncodingConfig.Encodings);
+        services.AddSingleton(dasEncodingConfig);
+        services.AddSingleton<IEncodingService, EncodingService>();
     }
 }

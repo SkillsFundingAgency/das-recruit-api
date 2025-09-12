@@ -29,7 +29,6 @@ internal class WhenValidatingPutApplicationReviewRequest
             Ukprn = 0,
             AccountId = 0,
             CandidateId = Guid.Empty,
-            Status = ApplicationReviewStatus.New,
             VacancyReference = 0,
             LegacyApplicationId = null,
             VacancyTitle = null!,
@@ -41,6 +40,6 @@ internal class WhenValidatingPutApplicationReviewRequest
         
         // assert
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().HaveCount(7);
+        result.Errors.Should().HaveCount(6);
     }
 }

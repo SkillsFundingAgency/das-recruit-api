@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 
@@ -14,7 +13,7 @@ public static class HttpClientExtensions
 
         // IMPORTANT: System.Json.Text.JsonSerializer does not serialise JsonPatchDocument correctly 
         string stringContent = JsonConvert.SerializeObject(patchDocument);
-        var requestContent = new StringContent(stringContent, Encoding.UTF8, "application/json-patch+json");
+        var requestContent = new StringContent(stringContent, System.Text.Encoding.UTF8, "application/json-patch+json");
         return client.PatchAsync(requestUri, requestContent);
     }
 }

@@ -10,8 +10,8 @@ namespace SFA.DAS.Recruit.Api.Data.Vacancy;
 public interface IVacancyRepository: IReadRepository<VacancyEntity, Guid>, IWriteRepository<VacancyEntity, Guid>
 {
     Task<VacancyReference> GetNextVacancyReferenceAsync(CancellationToken cancellationToken);
-    
     Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy, SortOrder sortOrder, CancellationToken cancellationToken);
+    Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
@@ -39,8 +39,14 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         
         return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
     }
-    
-    
+
+    public async Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken)
+    {
+        return await dataContext
+            .VacancyEntities
+            .FirstOrDefaultAsync(x => x.VacancyReference == vacancyReference, cancellationToken);
+    }
+
     public async Task<VacancyEntity?> GetOneAsync(Guid key, CancellationToken cancellationToken)
     {
         return await dataContext
