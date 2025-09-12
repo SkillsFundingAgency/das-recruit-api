@@ -25,9 +25,9 @@ CREATE TABLE dbo.[Vacancy] (
     [SubmittedByUserId]                         uniqueidentifier    NULL,
     [ReviewRequestedByUserId]                   uniqueidentifier    NULL,
     [ReviewCount]                               int                 NOT NULL default 0,
-    [ApplicationUrl]                            nvarchar(500)       NULL, -- validation currently allows 2000
+    [ApplicationUrl]                            nvarchar(2000)      NULL, -- validation currently allows 2000
     [ApplicationMethod]                         nvarchar(50)        NULL, -- max is currently 30 chars
-    [ApplicationInstructions]                   nvarchar(500)       NULL,
+    [ApplicationInstructions]                   nvarchar(1000)       NULL,
     [ShortDescription]                          nvarchar(max)      NULL,
     [Description]                               nvarchar(max)       NULL,
     [AnonymousReason]                           nvarchar(1000)      NULL,
