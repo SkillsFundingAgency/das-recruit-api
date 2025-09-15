@@ -25,10 +25,10 @@ CREATE TABLE dbo.[Vacancy] (
     [SubmittedByUserId]                         uniqueidentifier    NULL,
     [ReviewRequestedByUserId]                   uniqueidentifier    NULL,
     [ReviewCount]                               int                 NOT NULL default 0,
-    [ApplicationUrl]                            nvarchar(500)       NULL, -- validation currently allows 2000
+    [ApplicationUrl]                            nvarchar(2000)      NULL, -- validation currently allows 2000
     [ApplicationMethod]                         nvarchar(50)        NULL, -- max is currently 30 chars
-    [ApplicationInstructions]                   nvarchar(500)       NULL,
-    [ShortDescription]                          nvarchar(1000)      NULL,
+    [ApplicationInstructions]                   nvarchar(1000)       NULL,
+    [ShortDescription]                          nvarchar(max)      NULL,
     [Description]                               nvarchar(max)       NULL,
     [AnonymousReason]                           nvarchar(1000)      NULL,
     [DisabilityConfident]                       bit                 NULL,
@@ -59,11 +59,11 @@ CREATE TABLE dbo.[Vacancy] (
     [TrainingProvider_Address]                  nvarchar(500)       NULL,
     [Wage_Duration]                             int                 NULL,
     [Wage_DurationUnit]                         nvarchar(10)        NULL,
-    [Wage_WorkingWeekDescription]               nvarchar(500)       NULL,
+    [Wage_WorkingWeekDescription]               nvarchar(1000)       NULL,
     [Wage_WeeklyHours]                          decimal             NULL,
     [Wage_WageType]                             nvarchar(40)        NULL, -- max is currently 33 chars
     [Wage_FixedWageYearlyAmount]                decimal             NULL,
-    [Wage_WageAdditionalInformation]            nvarchar(500)       NULL,
+    [Wage_WageAdditionalInformation]            nvarchar(1000)       NULL,
     [Wage_CompanyBenefitsInformation]           nvarchar(500)       NULL,
     [ClosureReason]                             nvarchar(30)        NULL, -- max is currently 21 chars
     [TransferInfo]                              nvarchar(500)       NULL, -- json serialise

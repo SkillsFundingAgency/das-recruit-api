@@ -8,6 +8,7 @@ internal struct RouteElements
     public const string Employer = "employer";
     public const string EmployerProfileAddresses = "addresses";
     public const string EmployerProfiles = "profiles";
+    public const string Notifications = "notifications";
     public const string ProhibitedContent = "prohibitedcontent";
     public const string Provider = "provider";
     public const string User = "user";
@@ -22,6 +23,7 @@ internal struct RouteNames
     public const string ApplicationReview = $"{RouteElements.Api}/{RouteElements.ApplicationReview}";
     public const string Employer = $"{RouteElements.Api}/{RouteElements.Employer}";
     public const string EmployerProfile = $"{RouteElements.Api}/{RouteElements.Employer}/{RouteElements.EmployerProfiles}";
+    public const string Notifications = $"{RouteElements.Api}/{RouteElements.Notifications}";
     public const string ProhibitedContent = $"{RouteElements.Api}/{RouteElements.ProhibitedContent}";
     public const string Provider = $"{RouteElements.Api}/{RouteElements.Provider}";
     public const string User = $"{RouteElements.Api}/{RouteElements.User}";
