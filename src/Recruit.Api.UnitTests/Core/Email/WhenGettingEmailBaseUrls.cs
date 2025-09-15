@@ -21,4 +21,22 @@ public class WhenGettingEmailBaseUrls
         // assert
         result.Should().Be(expectedValue);
     }
+    
+    [Test]
+    [MoqInlineAutoData("prd", "https://recruit.providers.apprenticeships.education.gov.uk")]
+    [MoqInlineAutoData("PRD", "https://recruit.providers.apprenticeships.education.gov.uk")]
+    [MoqInlineAutoData("local", "https://recruit.local-pas.apprenticeships.education.gov.uk")]
+    [MoqInlineAutoData("DEV", "https://recruit.dev-pas.apprenticeships.education.gov.uk")]
+    [MoqInlineAutoData("tEsT", "https://recruit.test-pas.apprenticeships.education.gov.uk")]
+    public void Then_The_Correct_RecruitProviderBaseUrl_Is_Returned(string environment, string expectedValue)
+    {
+        // arrange
+        var sut = new EmailTemplateHelper(environment);
+
+        // act
+        string result = sut.RecruitProviderBaseUrl;
+
+        // assert
+        result.Should().Be(expectedValue);
+    }
 }

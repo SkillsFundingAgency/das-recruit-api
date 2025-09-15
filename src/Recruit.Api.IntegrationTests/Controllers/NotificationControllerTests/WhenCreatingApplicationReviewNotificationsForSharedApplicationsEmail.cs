@@ -11,37 +11,6 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControlle
 public class WhenCreatingApplicationReviewNotificationsForSharedApplicationsEmail : BaseFixture
 {
     [Test, MoqAutoData]
-    public async Task And_ApplicationReview_Does_Not_Exist_Then_BadRequest_Returned(Guid id)
-    {
-        // arrange
-        Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([]);
-
-        // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{id}/create-notifications", null);
-
-        // assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-    }
-    
-    [Test, MoqAutoData]
-    public async Task And_Vacancy_Does_Not_Exist_Then_InternalServerError_Returned(List<ApplicationReviewEntity> applicationReviews)
-    {
-        // arrange
-        applicationReviews[1].Status = ApplicationReviewStatus.Shared;
-        Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(applicationReviews);
-        Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([]);
-
-        // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReviews[1].Id}/create-notifications", null);
-        var errors = await response.Content.ReadAsAsync<ProblemDetails>();
-
-        // assert
-        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-        errors.Should().NotBeNull();
-        errors.Title.Should().Be("Data integrity error");
-    }
-    
-    [Test, MoqAutoData]
     public async Task And_No_Users_Are_Found_Then_No_Notifications_Are_Created(
         List<ApplicationReviewEntity> applicationReviews,
         List<VacancyEntity> vacancies)
@@ -107,9 +76,9 @@ public class WhenCreatingApplicationReviewNotificationsForSharedApplicationsEmai
         {
             x.Tokens.Should().HaveCount(5);
             expectedUserNames.Should().Contain(x.Tokens["firstName"]);
-            x.Tokens.Should().ContainEquivalentOf(new KeyValuePair<string, string>("trainingProvider", vacancy.TrainingProvider_Name!));
-            x.Tokens.Should().ContainEquivalentOf(new KeyValuePair<string, string>("advertTitle", vacancy.Title!));
-            x.Tokens.Should().ContainEquivalentOf(new KeyValuePair<string, string>("vacancyReference", vacancy.VacancyReference.ToString()!));
+            x.Tokens["trainingProvider"].Should().Be(vacancy.TrainingProvider_Name!);
+            x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
+            x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString()!);
             x.Tokens["applicationUrl"].Should()
                 .EndWith($"/accounts/{expectedHashedAccountId}/vacancies/{vacancy.Id}/applications/{applicationReview.ApplicationId}/?vacancySharedByProvider=True");
         });

@@ -23,7 +23,7 @@ public static class AddServiceRegistrationExtension
     public static void AddApplicationDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         // validators
-        services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+        services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();
@@ -41,6 +41,7 @@ public static class AddServiceRegistrationExtension
         // email
         services.AddSingleton(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
         services.AddScoped<SharedApplicationEmailStrategy>();
+        services.AddScoped<EmployerHasReviewedApplicationEmailStrategy>();
         services.AddScoped<IApplicationReviewEmailStrategyFactory, ApplicationReviewEmailStrategyFactory>();
     }
 
