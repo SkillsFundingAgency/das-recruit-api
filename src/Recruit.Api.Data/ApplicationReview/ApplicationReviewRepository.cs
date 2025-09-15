@@ -54,7 +54,6 @@ public interface IApplicationReviewRepository
     Task<List<ApplicationReviewEntity>> GetByAccountIdAndVacancyReferencesAsync(long accountId, List<long> vacancyReferences, CancellationToken token = default);
     Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(long vacancyReference, CancellationToken token = default);
-
     Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId, List<long> vacancyReferences,CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,List<long> vacancyReferences, CancellationToken token = default);
 }
@@ -125,13 +124,10 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .AsNoTracking()
             .Where(appReview => appReview.AccountId == accountId && statusStrings.Contains(appReview.Status) && appReview.WithdrawnDate == null) 
             .Join(
-                recruitDataContext.VacancyReviewEntities.AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved" &&
-                        ownerTypes.Contains(vacancyReview.OwnerType)),
+                recruitDataContext.VacancyEntities.AsNoTracking()
+                    .Where(vacancy => ownerTypes.Contains((OwnerType)vacancy.OwnerType!)),
                 appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
+                vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
             );
         
@@ -151,13 +147,10 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .AsNoTracking()
             .Where(appReview => appReview.AccountId == accountId && appReview.DateSharedWithEmployer != null && appReview.WithdrawnDate == null)
             .Join(
-                recruitDataContext.VacancyReviewEntities.AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved"),
+                recruitDataContext.VacancyEntities.AsNoTracking(),
                 appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
-                (appReview, vacancyReview) => appReview
+                vacancy => vacancy.VacancyReference,
+                (appReview, vacancy) => appReview
             );
         
         var groupedCountQuery = await query.GroupBy(c => c.VacancyReference).CountAsync(cancellationToken: token);
@@ -231,19 +224,21 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
 
         var query = recruitDataContext.ApplicationReviewEntities
         .AsNoTracking()
-            .Where(appReview => appReview.Ukprn == ukprn && statusStrings.Contains(appReview.Status) && appReview.WithdrawnDate == null)
+            .Where(appReview =>
+                appReview.Ukprn == ukprn &&
+                statusStrings.Contains(appReview.Status) &&
+                appReview.WithdrawnDate == null)
             .Join(
-                recruitDataContext.VacancyReviewEntities.AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved" &&
-                        vacancyReview.OwnerType == OwnerType.Provider),
+                recruitDataContext.VacancyEntities.AsNoTracking()
+                    .Where(vacancy => vacancy.OwnerType == OwnerType.Provider),
                 appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
-                (appReview, _) => appReview
-            );
+                vacancy => vacancy.VacancyReference,
+                (appReview, _) => appReview);
 
-        var groupedCountQuery = await query.GroupBy(c => c.VacancyReference).CountAsync(cancellationToken: token);
+        int groupedCountQuery = await query
+            .Select(c => c.VacancyReference)
+            .Distinct()
+            .CountAsync(cancellationToken: token);
 
         return await query.GetPagedAsync(pageNumber, pageSize, sortColumn, isAscending, groupedCountQuery, token);
     }
@@ -297,18 +292,17 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .AsNoTracking()
             .Where(appReview => appReview.AccountId == accountId && appReview.WithdrawnDate == null)
             .Join(
-                recruitDataContext.VacancyReviewEntities.AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved" &&
-                        vacancyReview.OwnerType == OwnerType.Employer),
+                recruitDataContext.VacancyEntities.AsNoTracking()
+                    .Where(vacancy => vacancy.OwnerType == OwnerType.Employer),
                 appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
+                vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
-            ).GroupBy(c => c.Status).Select(g => new DashboardCountModel {
-                Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
-                Count = g.Count()
-            })
+            ).GroupBy(c => c.Status).Select(g => 
+                new DashboardCountModel
+                {
+                    Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
+                    Count = g.Count()
+                })
             .ToListAsync(token);
     }
 
@@ -318,15 +312,14 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         .AsNoTracking()
             .Where(appReview => appReview.Ukprn == ukprn && appReview.WithdrawnDate == null)
             .Join(
-                recruitDataContext.VacancyReviewEntities.AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved" &&
-                        vacancyReview.OwnerType == OwnerType.Provider),
+                recruitDataContext.VacancyEntities.AsNoTracking()
+                    .Where(vacancy => vacancy.OwnerType == OwnerType.Provider),
                 appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
+                vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
-            ).GroupBy(c => c.Status).Select(g => new DashboardCountModel {
+            ).GroupBy(c => c.Status).Select(g => 
+            new DashboardCountModel
+            {
                 Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
                 Count = g.Count()
             })
@@ -344,13 +337,10 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .AsNoTracking()
             .Where(appReview => appReview.AccountId == accountId && vacancyReferences.Contains(appReview.VacancyReference))
             .Join(
-                recruitDataContext.VacancyReviewEntities.AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved" &&
-                        vacancyReview.OwnerType == OwnerType.Employer),
+                recruitDataContext.VacancyEntities.AsNoTracking()
+                    .Where(vacancy => vacancy.OwnerType == OwnerType.Employer),
                 appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
+                vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
             )
             .ToListAsync(token);
@@ -367,13 +357,10 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .AsNoTracking()
             .Where(appReview => appReview.Ukprn == ukprn && vacancyReferences.Contains(appReview.VacancyReference))
             .Join(
-                recruitDataContext.VacancyReviewEntities.AsNoTracking()
-                    .Where(vacancyReview =>
-                        vacancyReview.Status == ReviewStatus.Closed &&
-                        vacancyReview.ManualOutcome == "Approved" &&
-                        vacancyReview.OwnerType == OwnerType.Provider),
+                recruitDataContext.VacancyEntities.AsNoTracking()
+                    .Where(vacancy => vacancy.OwnerType == OwnerType.Provider),
                 appReview => appReview.VacancyReference,
-                vacancyReview => vacancyReview.VacancyReference,
+                vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
             )
             .ToListAsync(token);
