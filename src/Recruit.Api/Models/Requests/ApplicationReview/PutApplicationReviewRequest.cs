@@ -9,14 +9,14 @@ public class PutApplicationReviewRequest
     public DateTime? DateSharedWithEmployer { get; init; }
     public DateTime? ReviewedDate { get; init; }
     public DateTime? StatusUpdatedDate { get; init; }
-    public Guid CandidateId { get; init; }
+    public Guid CandidateId { get; set; }
     public Guid? ApplicationId { get; init; }
     public Guid? LegacyApplicationId { get; init; }
     public bool HasEverBeenEmployerInterviewing { get; init; }
     public int Ukprn { get; set; }
     public long AccountId { get; set; }
     public long AccountLegalEntityId { get; set; }
-    public long VacancyReference { get; init; }
+    public long VacancyReference { get; set; }
     public ApplicationReviewStatus Status { get; set; }
     public string? TemporaryReviewStatus { get; init; }
     public string VacancyTitle { get; init; }
