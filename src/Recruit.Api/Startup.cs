@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using FluentValidation;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -97,7 +98,8 @@ internal class Startup
                 options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
-
+        services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+        
         services.AddApplicationDependencies();
         services.AddDatabaseRegistration(candidateAccountConfiguration!, Configuration["EnvironmentName"]);
         services.AddOpenTelemetryRegistration(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!);
