@@ -3,6 +3,7 @@ using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Application.Providers.ApplicationReviewsProviderTests;
 [TestFixture]
@@ -22,15 +23,15 @@ internal class WhenGettingDashboardCountByUkprn
         // Arrange
         repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, token))
             .ReturnsAsync([
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.New,
                     Count = newCount
                 },
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.Successful,
                     Count = successfulCount
                 },
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.Unsuccessful,
                     Count = unsuccessfulCount
                 }

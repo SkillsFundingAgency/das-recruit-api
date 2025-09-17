@@ -1,5 +1,4 @@
-﻿using SFA.DAS.Recruit.Api.Data.Models;
-using SFA.DAS.Recruit.Api.Domain.Enums;
+﻿using SFA.DAS.Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.Domain.Models
 {
@@ -13,7 +12,15 @@ namespace SFA.DAS.Recruit.Api.Domain.Models
         public int AllSharedApplicationsCount { get; set; } = 0;
         public bool HasNoApplications { get; init; } = false;
 
-        public static implicit operator DashboardModel(List<DashboardCountModel> source)
+        public int ClosedVacanciesCount { get; init; } = 0;
+        public int DraftVacanciesCount { get; init; } = 0;
+        public int ReviewVacanciesCount { get; init; } = 0;
+        public int ReferredVacanciesCount { get; init; } = 0;
+        public int LiveVacanciesCount { get; init; } = 0;
+        public int SubmittedVacanciesCount { get; init; } = 0;
+
+
+        public static implicit operator DashboardModel(List<ApplicationReviewsDashboardCountModel> source)
         {
             return new DashboardModel 
             {

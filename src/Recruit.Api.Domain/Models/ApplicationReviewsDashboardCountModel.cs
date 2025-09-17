@@ -1,8 +1,8 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 
-namespace SFA.DAS.Recruit.Api.Data.Models;
+namespace SFA.DAS.Recruit.Api.Domain.Models;
 
-public class DashboardCountModel
+public class ApplicationReviewsDashboardCountModel
 {
     public ApplicationReviewStatus Status { get; set; }
     public int Count { get; set; }
