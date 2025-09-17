@@ -7,6 +7,7 @@ public class EmailTemplateHelper(string environmentName)
     // ====================================================
     private static readonly Dictionary<EmailTemplates, Guid> ProductionTemplates = new() {
         [EmailTemplates.ApplicationReviewShared] = new Guid("53058846-e369-4396-87b2-015c9d16360a"),
+        [EmailTemplates.ApplicationSubmitted] = new Guid("e07a6992-4d17-4167-b526-2ead6fe9ad4d"),
         [EmailTemplates.EmployerHasReviewedSharedApplication] = new Guid("2f1b70d4-c722-4815-85a0-80a080eac642"),
     };
     
@@ -15,6 +16,7 @@ public class EmailTemplateHelper(string environmentName)
     // ====================================================
     private static readonly Dictionary<EmailTemplates, Guid> DevelopmentTemplates = new() {
         [EmailTemplates.ApplicationReviewShared] = new Guid("f6fc57e6-7318-473d-8cb5-ca653035391a"),
+        [EmailTemplates.ApplicationSubmitted] = new Guid("8aedd294-fd12-4b77-b4b8-2066744e1fdc"),
         [EmailTemplates.EmployerHasReviewedSharedApplication] = new Guid("feb4191d-a373-4040-9bc6-93c09d8039b5"),
     };
 

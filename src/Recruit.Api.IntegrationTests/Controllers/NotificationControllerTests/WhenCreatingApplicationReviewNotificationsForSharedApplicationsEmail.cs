@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -45,6 +44,7 @@ public class WhenCreatingApplicationReviewNotificationsForSharedApplicationsEmai
         applicationReview.Status = ApplicationReviewStatus.Shared;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         var expectedUserNames = users.Select(x => x.Name).ToList();
+        var expectedEmailAddresses = users.Select(x => x.Email).ToList();
         
         userEmployerAccountEntities.ForEach(x => x.EmployerAccountId = applicationReview.AccountId);
         for (int count = 0; count < users.Count; count++)
@@ -75,6 +75,7 @@ public class WhenCreatingApplicationReviewNotificationsForSharedApplicationsEmai
         notificationEmails.Should().AllSatisfy(x =>
         {
             x.Tokens.Should().HaveCount(5);
+            expectedEmailAddresses.Should().Contain(x.RecipientAddress);
             expectedUserNames.Should().Contain(x.Tokens["firstName"]);
             x.Tokens["trainingProvider"].Should().Be(vacancy.TrainingProvider_Name!);
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);

@@ -2,16 +2,11 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Encoding;
-using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data;
-using SFA.DAS.Recruit.Api.Data.ApplicationReview;
-using SFA.DAS.Recruit.Api.Data.EmployerProfile;
-using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
+using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Data.Vacancy;
-using SFA.DAS.Recruit.Api.Data.User;
 using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 
@@ -42,6 +37,7 @@ public static class AddServiceRegistrationExtension
         services.AddSingleton(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
         services.AddScoped<SharedApplicationEmailStrategy>();
         services.AddScoped<EmployerHasReviewedApplicationEmailStrategy>();
+        services.AddScoped<NewApplicationEmailStrategy>();
         services.AddScoped<IApplicationReviewEmailStrategyFactory, ApplicationReviewEmailStrategyFactory>();
     }
 

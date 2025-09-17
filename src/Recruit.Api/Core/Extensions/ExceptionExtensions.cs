@@ -1,18 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
+using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Core.Extensions;
 
 public static class ExceptionExtensions
 {
-    public static IResult ToResponse(this MissingEmailStrategyException ex)
+    public static IResult ToResponse(this NotSupportedException ex)
     {
         return TypedResults.Problem(new ProblemDetails {
             Status = StatusCodes.Status501NotImplemented,
-            Title = "Missing email handler",
+            Title = "The request could not be completed",
             Detail = ex.Message
         });
     }
+    
     public static IResult ToResponse(this DataIntegrityException ex)
     {
         return TypedResults.Problem(new ProblemDetails {

@@ -37,7 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Recruit.Api.Application\Recruit.Api.Application.csproj" />
     <ProjectReference Include="..\Recruit.Api.Data\Recruit.Api.Data.csproj" />
     <ProjectReference Include="..\Recruit.Api.Domain\Recruit.Api.Domain.csproj" />
   </ItemGroup>
