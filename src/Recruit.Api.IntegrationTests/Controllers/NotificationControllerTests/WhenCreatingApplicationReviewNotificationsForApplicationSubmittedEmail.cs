@@ -141,7 +141,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             x.Tokens["employerName"].Should().Be(vacancy.EmployerName);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
             x.Tokens["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
-            x.Tokens["manageAdvertURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/accounts/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+            x.Tokens["manageAdvertURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
             x.Tokens["location"].Should().Be("Recruiting nationally");
         });
     }
@@ -226,7 +226,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         staticData["employerName"].Should().Be(vacancy.EmployerName);
         staticData["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
         staticData["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
-        staticData["manageAdvertURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/accounts/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+        staticData["manageAdvertURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
         staticData["location"].Should().Be("Recruiting nationally");
     }
     
@@ -278,7 +278,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         staticData["employerName"].Should().Be(vacancy.EmployerName);
         staticData["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
         staticData["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
-        staticData["manageAdvertURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/accounts/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+        staticData["manageAdvertURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
         staticData["location"].Should().Be("Recruiting nationally");
     }
 }

@@ -23,6 +23,7 @@ public class NotificationsRepository(IRecruitDataContext dataContext): INotifica
             .ToListAsync(cancellationToken);
         
         return await dataContext.RecruitNotifications
+            .Include(x => x.User)
             .Where(x => x.SendWhen < when && userIds.Contains(x.UserId))
             .ToListAsync(cancellationToken);
     }

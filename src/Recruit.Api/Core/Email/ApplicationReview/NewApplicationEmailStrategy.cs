@@ -23,7 +23,7 @@ public class NewApplicationEmailStrategy(
 {
     // TODO: check these urls
     private const string ApplicationReviewEmployerUrl = "{0}/accounts/{1}/vacancies/{2}/manage";
-    private const string ApplicationReviewProviderUrl = "{0}/accounts/{1}/vacancies/{2}/manage";
+    private const string ApplicationReviewProviderUrl = "{0}/{1}/vacancies/{2}/manage";
     
     public async Task<List<NotificationEmail>> ExecuteAsync(ApplicationReviewEntity applicationReview, CancellationToken cancellationToken)
     {
@@ -95,8 +95,12 @@ public class NewApplicationEmailStrategy(
         return immediateEmails;
     }
 
-    private RecruitNotificationEntity GenerateDelayedNotification(DateTime sendWhen, UserEntity user,
-        ApplicationReviewEntity applicationReview, VacancyEntity vacancy, string hashedEmployerAccountId,
+    private RecruitNotificationEntity GenerateDelayedNotification(
+        DateTime sendWhen,
+        UserEntity user,
+        ApplicationReviewEntity applicationReview,
+        VacancyEntity vacancy,
+        string hashedEmployerAccountId,
         Guid templateId)
     {
         var notification = GenerateNotificationEmail(user, applicationReview, vacancy, hashedEmployerAccountId, templateId);
@@ -109,7 +113,8 @@ public class NewApplicationEmailStrategy(
         };
     }
 
-    private NotificationEmail GenerateNotificationEmail(UserEntity user,
+    private NotificationEmail GenerateNotificationEmail(
+        UserEntity user,
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
         string hashedEmployerAccountId,

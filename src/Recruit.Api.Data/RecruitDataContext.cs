@@ -89,6 +89,7 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
         modelBuilder.ApplyConfiguration(new ProhibitedContentEntityConfiguration());
         modelBuilder.ApplyConfiguration(new EmployerProfileEntityConfiguration());
         modelBuilder.ApplyConfiguration(new EmployerProfileAddressEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new RecruitNotificationConfiguration());
         modelBuilder.ApplyConfiguration(new UserEmployerAccountConfiguration());
         modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
         modelBuilder.ApplyConfiguration(new VacancyReviewEntityConfiguration());
