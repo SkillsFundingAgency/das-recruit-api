@@ -3,7 +3,6 @@ using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email.ApplicationReview;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Core.Extensions;
-using SFA.DAS.Recruit.Api.Data.ApplicationReview;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;

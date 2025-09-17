@@ -3,8 +3,6 @@ using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Configuration;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Data.User;
-using SFA.DAS.Recruit.Api.Data.Vacancy;
 using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
