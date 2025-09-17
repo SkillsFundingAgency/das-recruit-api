@@ -1,6 +1,6 @@
-﻿using SFA.DAS.Recruit.Api.Core.Exceptions;
-using SFA.DAS.Recruit.Api.Domain.Entities;
+﻿using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.ApplicationReview;
 
@@ -24,7 +24,7 @@ internal class ApplicationReviewEmailStrategyFactory(
             ApplicationReviewStatus.EmployerUnsuccessful => employerHasReviewedApplicationEmailStrategy,
             ApplicationReviewStatus.New => newApplicationEmailStrategy,
             ApplicationReviewStatus.Shared => sharedApplicationEmailStrategy,
-            _ => throw new MissingEmailStrategyException($"No registered handler for Application Review Status {applicationReview.Status}")
+            _ => throw new NotSupportedException($"Missing email handler: no registered handler for Application Review Status {applicationReview.Status}")
         };
     }
 }

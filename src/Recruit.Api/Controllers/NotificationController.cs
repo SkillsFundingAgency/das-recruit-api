@@ -7,6 +7,7 @@ using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
+using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -42,7 +43,6 @@ public class NotificationController : ControllerBase
         return TypedResults.NoContent();
     }
 
-
     [HttpPost, Route($"~/{RouteNames.ApplicationReview}/{{id:guid}}/create-notifications")]
     [ProducesResponseType(typeof(IEnumerable<NotificationEmail>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -71,7 +71,7 @@ public class NotificationController : ControllerBase
         {
             return ex.ToResponse();
         }
-        catch (MissingEmailStrategyException ex)
+        catch (NotSupportedException ex)
         {
             return ex.ToResponse();
         }

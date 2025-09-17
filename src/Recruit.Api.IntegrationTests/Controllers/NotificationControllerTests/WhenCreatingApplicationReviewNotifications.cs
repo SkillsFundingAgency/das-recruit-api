@@ -30,7 +30,7 @@ public class WhenCreatingApplicationReviewNotifications : BaseFixture
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotImplemented);
         errors.Should().NotBeNull();
-        errors.Title.Should().Be("Missing email handler");
+        errors.Title.Should().Be("The request could not be completed");
     }
     
     [Test, MoqAutoData]

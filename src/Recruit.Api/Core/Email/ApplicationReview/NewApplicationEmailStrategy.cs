@@ -8,6 +8,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
+using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.ApplicationReview;
 
@@ -19,7 +20,6 @@ public class NewApplicationEmailStrategy(
     IEncodingService encodingService,
     EmailTemplateHelper emailTemplateHelper) : IApplicationReviewEmailStrategy
 {
-    // TODO: check these urls
     private const string ApplicationReviewEmployerUrl = "{0}/accounts/{1}/vacancies/{2}/manage";
     private const string ApplicationReviewProviderUrl = "{0}/{1}/vacancies/{2}/manage";
     
@@ -35,10 +35,7 @@ public class NewApplicationEmailStrategy(
         var users = vacancy.OwnerType switch {
             OwnerType.Employer => await userRepository.FindUsersByEmployerAccountIdAsync(applicationReview.AccountId, cancellationToken),
             OwnerType.Provider => await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken),
-            // TODO: do we need to cover these?
-            // OwnerType.External => expr,
-            // OwnerType.Unknown => expr,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new NotSupportedException($"The vacancy owner type '{vacancy.OwnerType}' is not supported")
         };
         
         string? hashedEmployerAccountId = encodingService.Encode(applicationReview.AccountId, EncodingType.AccountId);
@@ -85,8 +82,6 @@ public class NewApplicationEmailStrategy(
 
         if (delayedEmails.Count > 0)
         {
-            // TODO: how do we combine these at a later point?
-            // The current endpoint in the controller doesn't understand how to combine dynamic data tokens based on the template id
             await notificationsRepository.InsertManyAsync(delayedEmails, cancellationToken);
         }
         

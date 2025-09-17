@@ -220,7 +220,6 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         
         var staticData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(notification.StaticData);
         staticData.Should().NotBeNull();
-        // TODO: where does the email get stored?
         staticData["firstName"].Should().Be(providerUser.Name);
         staticData["advertTitle"].Should().Be(vacancy.Title!);
         staticData["employerName"].Should().Be(vacancy.EmployerName);
@@ -272,7 +271,6 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
 
         var staticData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(notification.StaticData);
         staticData.Should().NotBeNull();
-        // TODO: where does the email get stored?
         staticData["firstName"].Should().Be(providerUser.Name);
         staticData["advertTitle"].Should().Be(vacancy.Title!);
         staticData["employerName"].Should().Be(vacancy.EmployerName);
