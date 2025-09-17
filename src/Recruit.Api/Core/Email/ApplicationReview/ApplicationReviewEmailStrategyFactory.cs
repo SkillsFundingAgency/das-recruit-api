@@ -11,7 +11,8 @@ public interface IApplicationReviewEmailStrategyFactory
 
 internal class ApplicationReviewEmailStrategyFactory(
     SharedApplicationEmailStrategy sharedApplicationEmailStrategy,
-    EmployerHasReviewedApplicationEmailStrategy employerHasReviewedApplicationEmailStrategy
+    EmployerHasReviewedApplicationEmailStrategy employerHasReviewedApplicationEmailStrategy,
+    NewApplicationEmailStrategy newApplicationEmailStrategy
     ) : IApplicationReviewEmailStrategyFactory
 {
     public IApplicationReviewEmailStrategy Create(ApplicationReviewEntity applicationReview)
@@ -19,9 +20,10 @@ internal class ApplicationReviewEmailStrategyFactory(
         ArgumentNullException.ThrowIfNull(applicationReview, nameof(applicationReview));
         
         return applicationReview.Status switch {
-            ApplicationReviewStatus.Shared => sharedApplicationEmailStrategy,
             ApplicationReviewStatus.EmployerInterviewing => employerHasReviewedApplicationEmailStrategy,
             ApplicationReviewStatus.EmployerUnsuccessful => employerHasReviewedApplicationEmailStrategy,
+            ApplicationReviewStatus.New => newApplicationEmailStrategy,
+            ApplicationReviewStatus.Shared => sharedApplicationEmailStrategy,
             _ => throw new MissingEmailStrategyException($"No registered handler for Application Review Status {applicationReview.Status}")
         };
     }

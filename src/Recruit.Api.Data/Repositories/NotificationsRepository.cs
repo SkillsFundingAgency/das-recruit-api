@@ -7,6 +7,7 @@ public interface INotificationsRepository
 {
     Task<List<RecruitNotificationEntity>> GetBatchByDateAsync(DateTime when, CancellationToken cancellationToken);
     Task DeleteManyAsync(IEnumerable<long> keys, CancellationToken cancellationToken);
+    Task<List<RecruitNotificationEntity>> InsertManyAsync(List<RecruitNotificationEntity> notifications, CancellationToken cancellationToken);
 }
 
 public class NotificationsRepository(IRecruitDataContext dataContext): INotificationsRepository
@@ -31,5 +32,12 @@ public class NotificationsRepository(IRecruitDataContext dataContext): INotifica
         await dataContext.RecruitNotifications
             .Where(x => keys.Contains(x.Id))
             .ExecuteDeleteAsync(cancellationToken);
+    }
+
+    public async Task<List<RecruitNotificationEntity>> InsertManyAsync(List<RecruitNotificationEntity> notifications, CancellationToken cancellationToken)
+    {
+        dataContext.RecruitNotifications.AddRange(notifications);
+        await dataContext.SaveChangesAsync(cancellationToken);
+        return notifications;
     }
 }

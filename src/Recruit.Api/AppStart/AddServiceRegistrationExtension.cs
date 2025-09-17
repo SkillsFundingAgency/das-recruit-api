@@ -42,6 +42,7 @@ public static class AddServiceRegistrationExtension
         services.AddSingleton(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
         services.AddScoped<SharedApplicationEmailStrategy>();
         services.AddScoped<EmployerHasReviewedApplicationEmailStrategy>();
+        services.AddScoped<NewApplicationEmailStrategy>();
         services.AddScoped<IApplicationReviewEmailStrategyFactory, ApplicationReviewEmailStrategyFactory>();
     }
 
