@@ -12,7 +12,8 @@ using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 namespace SFA.DAS.Recruit.Api.Controllers
 {
     [Route($"{RouteNames.Provider}/{{ukprn:int}}/")]
-    public class ProviderAccountController([FromServices] IApplicationReviewsProvider provider,
+    public class ProviderAccountController([FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+        [FromServices] IVacancyProvider vacancyProvider,
         ILogger<ApplicationReviewController> logger) : ControllerBase
     {
         [HttpGet]
@@ -32,7 +33,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get all application reviews by ukprn : {ukprn}", ukprn);
 
-                var response = await provider.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
+                var response = await applicationReviewsProvider.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
 
                 var mappedResults = response.Items.Select(app => app.ToGetResponse());
 
@@ -57,9 +58,11 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get dashboard stats by ukprn : {ukprn}", ukprn);
 
-                var response = await provider.GetCountByUkprn(ukprn, token);
+                var applicationReviewsResponse = await applicationReviewsProvider.GetCountByUkprn(ukprn, token);
+                var vacancyResponse = await vacancyProvider.GetCountByUkprn(ukprn, token);
+                var dashboardModel = DashboardModel.MapToDashboardModel(applicationReviewsResponse, vacancyResponse);
 
-                return TypedResults.Ok(response);
+                return TypedResults.Ok(dashboardModel);
             }
             catch (Exception e)
             {
@@ -85,7 +88,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get dashboard vacancy count by ukprn : {Ukprn}", ukprn);
 
-                var response = await provider.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token);
+                var response = await applicationReviewsProvider.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token);
 
                 return TypedResults.Ok(new VacancyDashboardResponse(response.ToPageInfo(), response.Items));
             }
@@ -109,7 +112,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get vacancy references count by ukprn : {ukprn}", ukprn);
 
-                var response = await provider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, token);
+                var response = await applicationReviewsProvider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, token);
 
                 return TypedResults.Ok(response);
             }

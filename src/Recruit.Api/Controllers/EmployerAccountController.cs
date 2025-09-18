@@ -12,7 +12,8 @@ using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 namespace SFA.DAS.Recruit.Api.Controllers
 {
     [Route($"{RouteNames.Employer}/{{accountId:long}}/")]
-    public class EmployerAccountController([FromServices] IApplicationReviewsProvider provider,
+    public class EmployerAccountController([FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+        [FromServices] IVacancyProvider vacancyProvider,
         ILogger<ApplicationReviewController> logger) : ControllerBase
     {
         [HttpGet]
@@ -32,7 +33,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get all application reviews by account id : {AccountId}", accountId);
 
-                var response = await provider.GetPagedAccountIdAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
+                var response = await applicationReviewsProvider.GetPagedAccountIdAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, token);
 
                 var mappedResults = response.Items.Select(app => app.ToGetResponse());
 
@@ -57,9 +58,11 @@ namespace SFA.DAS.Recruit.Api.Controllers
             {
                 logger.LogInformation("Recruit API: Received query to get dashboard stats by account id : {AccountId}", accountId);
 
-                var response = await provider.GetCountByAccountId(accountId, token);
+                var applicationReviewsResponse = await applicationReviewsProvider.GetCountByAccountId(accountId, token);
+                var vacancyResponse = await vacancyProvider.GetCountByAccountId(accountId, token);
+                var dashboardModel = DashboardModel.MapToDashboardModel(applicationReviewsResponse, vacancyResponse);
 
-                return TypedResults.Ok(response);
+                return TypedResults.Ok(dashboardModel);
             }
             catch (Exception e)
             {
@@ -86,9 +89,9 @@ namespace SFA.DAS.Recruit.Api.Controllers
                 logger.LogInformation("Recruit API: Received query to get dashboard vacancy count by account id : {AccountId}", accountId);
 
                 var response = status != null && status.Contains(ApplicationReviewStatus.AllShared)
-                    ? await provider.GetPagedAllSharedByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending,
+                    ? await applicationReviewsProvider.GetPagedAllSharedByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending,
                         token)
-                    : await provider.GetPagedByAccountAndStatusAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, status,
+                    : await applicationReviewsProvider.GetPagedByAccountAndStatusAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, status,
                         token);
 
                 return TypedResults.Ok(new VacancyDashboardResponse(response.ToPageInfo(), response.Items));
@@ -120,7 +123,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
                     status = parsedStatus;
                 }
                 
-                var response = await provider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, status, token);
+                var response = await applicationReviewsProvider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, status, token);
 
                 return TypedResults.Ok(response);
             }
