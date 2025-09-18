@@ -1,36 +1,39 @@
-﻿using SFA.DAS.Recruit.Api.Domain.Enums;
-
-namespace SFA.DAS.Recruit.Api.Domain.Models
+﻿namespace SFA.DAS.Recruit.Api.Domain.Models
 {
     public record DashboardModel
     {
-        public int NewApplicationsCount { get; init; } = 0;
-        public int EmployerReviewedApplicationsCount { get; init; } = 0;
-        public int SuccessfulApplicationsCount { get; init; } = 0;
-        public int UnsuccessfulApplicationsCount { get; init; } = 0;
-        public int SharedApplicationsCount { get; set; } = 0;
-        public int AllSharedApplicationsCount { get; set; } = 0;
-        public bool HasNoApplications { get; init; } = false;
+        public int NewApplicationsCount { get; init; }
+        public int EmployerReviewedApplicationsCount { get; init; }
+        public int SuccessfulApplicationsCount { get; init; }
+        public int UnsuccessfulApplicationsCount { get; init; }
+        public int SharedApplicationsCount { get; set; }
+        public int AllSharedApplicationsCount { get; set; }
+        public bool HasNoApplications { get; init; }
 
-        public int ClosedVacanciesCount { get; init; } = 0;
-        public int DraftVacanciesCount { get; init; } = 0;
-        public int ReviewVacanciesCount { get; init; } = 0;
-        public int ReferredVacanciesCount { get; init; } = 0;
-        public int LiveVacanciesCount { get; init; } = 0;
-        public int SubmittedVacanciesCount { get; init; } = 0;
+        public int ClosedVacanciesCount { get; init; }
+        public int DraftVacanciesCount { get; init; }
+        public int ReviewVacanciesCount { get; init; }
+        public int ReferredVacanciesCount { get; init; }
+        public int LiveVacanciesCount { get; init; }
+        public int SubmittedVacanciesCount { get; init; }
 
-
-        public static implicit operator DashboardModel(List<ApplicationReviewsDashboardCountModel> source)
+        public static DashboardModel MapToDashboardModel(ApplicationReviewsDashboardModel app, VacancyDashboardModel vac)
         {
-            return new DashboardModel 
-            {
-                NewApplicationsCount = source.FirstOrDefault(c => c.Status == ApplicationReviewStatus.New)?.Count ?? 0,
-                SharedApplicationsCount = 0,
-                AllSharedApplicationsCount = 0,
-                SuccessfulApplicationsCount = source.FirstOrDefault(c => c.Status == ApplicationReviewStatus.Successful)?.Count ?? 0,
-                UnsuccessfulApplicationsCount = source.FirstOrDefault(c => c.Status == ApplicationReviewStatus.Unsuccessful)?.Count ?? 0,
-                EmployerReviewedApplicationsCount = (source.FirstOrDefault(c => c.Status == ApplicationReviewStatus.EmployerInterviewing)?.Count ?? 0)
-                                                    + (source.FirstOrDefault(c => c.Status == ApplicationReviewStatus.EmployerUnsuccessful)?.Count ?? 0)
+            return new DashboardModel {
+                NewApplicationsCount = app.NewApplicationsCount,
+                SharedApplicationsCount = app.SharedApplicationsCount,
+                AllSharedApplicationsCount = app.AllSharedApplicationsCount,
+                UnsuccessfulApplicationsCount = app.UnsuccessfulApplicationsCount,
+                SuccessfulApplicationsCount = app.SuccessfulApplicationsCount,
+                EmployerReviewedApplicationsCount = app.EmployerReviewedApplicationsCount,
+                HasNoApplications = app.HasNoApplications,
+
+                ClosedVacanciesCount = vac.ClosedVacanciesCount,
+                DraftVacanciesCount = vac.DraftVacanciesCount,
+                LiveVacanciesCount = vac.LiveVacanciesCount,
+                ReviewVacanciesCount = vac.ReviewVacanciesCount,
+                ReferredVacanciesCount = vac.ReferredVacanciesCount,
+                SubmittedVacanciesCount = vac.SubmittedVacanciesCount,
             };
         }
     }

@@ -12,6 +12,8 @@ public interface IVacancyRepository: IReadRepository<VacancyEntity, Guid>, IWrit
     Task<VacancyReference> GetNextVacancyReferenceAsync(CancellationToken cancellationToken);
     Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy, SortOrder sortOrder, CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
+    Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken);
+    Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
@@ -45,6 +47,22 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         return await dataContext
             .VacancyEntities
             .FirstOrDefaultAsync(x => x.VacancyReference == vacancyReference, cancellationToken);
+    }
+
+    public async Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken)
+    {
+        return await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(vacancy => vacancy.AccountId == accountId && vacancy.OwnerType == OwnerType.Employer)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken)
+    {
+        return await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(vacancy => vacancy.Ukprn == ukprn && vacancy.OwnerType == OwnerType.Provider)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<VacancyEntity?> GetOneAsync(Guid key, CancellationToken cancellationToken)
