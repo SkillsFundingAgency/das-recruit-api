@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
-using SFA.DAS.Recruit.Api.Core.Email.ApplicationReview;
+using SFA.DAS.Recruit.Api.Core.Email;
+using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
@@ -15,15 +16,17 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 public class NotificationController : ControllerBase
 {
     [HttpGet, Route("batch/by/sendwhen/{sendWhen:datetime}")]
-    [ProducesResponseType(typeof(IEnumerable<RecruitNotification>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<NotificationEmail>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IResult> GetBatchByDate(
         [FromRoute] DateTime sendWhen,
         [FromServices] INotificationsRepository repository,
+        [FromServices] IEmailFactory emailFactory,
         CancellationToken cancellationToken)
     {
-        var results = await repository.GetBatchByDateAsync(sendWhen, cancellationToken);
-        return TypedResults.Ok(results.ToResponseDto());
+        var recruitNotifications = await repository.GetBatchByDateAsync(sendWhen, cancellationToken);
+        var results = emailFactory.CreateFrom(recruitNotifications);
+        return TypedResults.Ok(results);
     }
     
     [HttpDelete]
@@ -50,7 +53,9 @@ public class NotificationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IResult> CreateApplicationReviewNotifications(
         [FromServices] IApplicationReviewRepository applicationReviewsRepository,
-        [FromServices] IApplicationReviewEmailStrategyFactory factory,
+        [FromServices] INotificationsRepository notificationsRepository,
+        [FromServices] IApplicationReviewNotificationStrategy strategy,
+        [FromServices] IEmailFactory emailfactory,
         [FromRoute] Guid id,
         CancellationToken cancellationToken
         )
@@ -63,8 +68,13 @@ public class NotificationController : ControllerBase
 
         try
         {
-            var strategy = factory.Create(applicationReview);
-            var results = await strategy.ExecuteAsync(applicationReview, cancellationToken);
+            var notificationFactory = strategy.Create(applicationReview);
+            var recruitNotifications = await notificationFactory.CreateAsync(applicationReview, cancellationToken);
+            if (recruitNotifications.Delayed is { Count: > 0 })
+            {
+                await notificationsRepository.InsertManyAsync(recruitNotifications.Delayed, cancellationToken);
+            }
+            var results = emailfactory.CreateFrom(recruitNotifications.Immediate);
             return TypedResults.Ok(results);
         }
         catch (DataIntegrityException ex)

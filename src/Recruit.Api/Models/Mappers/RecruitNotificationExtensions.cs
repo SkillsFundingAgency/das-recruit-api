@@ -20,8 +20,8 @@ public static class RecruitNotificationExtensions
             };
     }
 
-    public static IEnumerable<RecruitNotification> ToResponseDto(this IEnumerable<RecruitNotificationEntity>? entities)
-    {
-        return entities?.Select(x => x.ToResponseDto()!) ?? [];
-    }
+    // public static IEnumerable<RecruitNotification> ToResponseDto(this IEnumerable<RecruitNotificationEntity>? entities)
+    // {
+    //     return entities?.Select(x => x.ToResponseDto()!) ?? [];
+    // }
 }

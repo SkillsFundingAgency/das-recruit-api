@@ -5,17 +5,17 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
-namespace SFA.DAS.Recruit.Api.Core.Email.ApplicationReview;
+namespace SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
 
-internal class EmployerHasReviewedApplicationEmailStrategy(
-    ILogger<EmployerHasReviewedApplicationEmailStrategy> logger,
+public class SharedApplicationReviewedByEmployerNotificationFactory(
+    ILogger<SharedApplicationReviewedByEmployerNotificationFactory> logger,
     IVacancyRepository vacancyRepository,
     IUserRepository userRepository,
-    EmailTemplateHelper emailTemplateHelper) : IApplicationReviewEmailStrategy
+    IEmailTemplateHelper emailTemplateHelper) : IApplicationReviewNotificationFactory
 {
     private const string ProviderManageVacancyUrl = "{0}/{1}/vacancies/{2}/manage";
     
-    public async Task<List<NotificationEmail>> ExecuteAsync(ApplicationReviewEntity applicationReview, CancellationToken cancellationToken)
+    public async Task<RecruitNotificationsResult> CreateAsync(ApplicationReviewEntity applicationReview, CancellationToken cancellationToken)
     {
         var vacancy = await vacancyRepository.GetOneByVacancyReferenceAsync(applicationReview.VacancyReference, cancellationToken);
         if (vacancy == null)
@@ -27,21 +27,27 @@ internal class EmployerHasReviewedApplicationEmailStrategy(
         var providerUsers = await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken);
         providerUsers.ForEach(NotificationPreferenceDefaults.Update);
         var usersRequiringEmail = providerUsers.GetUsersForNotificationType(
-            NotificationTypes.SharedApplicationReviewedByEmployer,
-            vacancy.ReviewRequestedByUserId ?? vacancy.SubmittedByUserId);
+            NotificationTypes.SharedApplicationReviewedByEmployer, vacancy.ReviewRequestedByUserId);
         
         string ukprn = vacancy.Ukprn!.Value.ToString();
-        return usersRequiringEmail.Select(x => new NotificationEmail {
-            TemplateId = emailTemplateHelper.GetTemplateId(EmailTemplates.EmployerHasReviewedSharedApplication),
-            RecipientAddress = x.Email,
-            Tokens = new Dictionary<string, string> {
+        var recruitNotifications = usersRequiringEmail.Select(x => new RecruitNotificationEntity {
+            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately),
+            UserId = x.Id,
+            SendWhen = DateTime.Now,
+            User = x,
+            StaticData = ApiUtils.SerializeOrNull(new Dictionary<string, string> {
                 ["firstName"] = x.Name,
                 ["employer"] = vacancy.EmployerName!,
                 ["advertTitle"] = vacancy.Title!,
                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
                 ["manageVacancyURL"] = string.Format(ProviderManageVacancyUrl, emailTemplateHelper.RecruitProviderBaseUrl, ukprn, vacancy.Id),
                 ["notificationSettingsURL"] = emailTemplateHelper.ProviderManageNotificationsUrl(ukprn)
-            },
-        }).ToList();
+            })!,
+            DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!
+        });
+
+        var results = new RecruitNotificationsResult();
+        results.Immediate.AddRange(recruitNotifications);
+        return results;
     }
 }
