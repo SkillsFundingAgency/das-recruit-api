@@ -88,7 +88,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             x.Tokens["employerName"].Should().Be(vacancy.EmployerName);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
             x.Tokens["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").EmployerManageNotificationsUrl(expectedHashedAccountId));
-            x.Tokens["manageVacancyUrl"].Should().Be($"{new EmailTemplateHelper("local").RecruitEmployerBaseUrl}/accounts/{expectedHashedAccountId}/vacancies/{vacancy.Id}/manage");
+            x.Tokens["manageVacancyURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitEmployerBaseUrl}/accounts/{expectedHashedAccountId}/vacancies/{vacancy.Id}/manage");
             x.Tokens["location"].Should().Be("Recruiting nationally");
         });
     }
@@ -141,7 +141,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             x.Tokens["employerName"].Should().Be(vacancy.EmployerName);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
             x.Tokens["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
-            x.Tokens["manageVacancyUrl"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+            x.Tokens["manageVacancyURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
             x.Tokens["location"].Should().Be("Recruiting nationally");
         });
     }
@@ -225,7 +225,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         dynamicData["advertTitle"].Should().Be(vacancy.Title!);
         dynamicData["employerName"].Should().Be(vacancy.EmployerName);
         dynamicData["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
-        dynamicData["manageVacancyUrl"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+        dynamicData["manageVacancyURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
         dynamicData["location"].Should().Be("Recruiting nationally");
     }
     
@@ -276,7 +276,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         dynamicData["advertTitle"].Should().Be(vacancy.Title!);
         dynamicData["employerName"].Should().Be(vacancy.EmployerName);
         dynamicData["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
-        dynamicData["manageVacancyUrl"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+        dynamicData["manageVacancyURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
         dynamicData["location"].Should().Be("Recruiting nationally");
     }
 }

@@ -64,7 +64,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyUrl"].Should().Be($"{baseUrl}/{vacancy.Ukprn!.Value.ToString()}/vacancies/{vacancy.Id}/manage");
+        tokens["manageVacancyURL"].Should().Be($"{baseUrl}/{vacancy.Ukprn!.Value.ToString()}/vacancies/{vacancy.Id}/manage");
         tokens["notificationSettingsURL"].Should().Be(manageNotificationsUrl);
         tokens["location"].Should().Be("Recruiting nationally");
     }
@@ -127,7 +127,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyUrl"].Should().Be($"{baseUrl}/accounts/{hashedEmployerAccountId}/vacancies/{vacancy.Id}/manage");
+        tokens["manageVacancyURL"].Should().Be($"{baseUrl}/accounts/{hashedEmployerAccountId}/vacancies/{vacancy.Id}/manage");
         tokens["notificationSettingsURL"].Should().Be(manageNotificationsUrl);
         tokens["location"].Should().Be("Recruiting nationally");
     }

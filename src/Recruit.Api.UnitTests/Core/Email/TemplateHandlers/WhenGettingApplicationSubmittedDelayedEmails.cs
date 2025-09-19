@@ -55,7 +55,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                     ["vacancyReference"] = vacancyReference.ToShortString(),
                     ["employerName"] = employerName,
                     ["location"] = location,
-                    ["manageVacancyUrl"] = manageVacancyUrl,
+                    ["manageVacancyURL"] = manageVacancyUrl,
                 })
             },
             new()
@@ -71,7 +71,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                     ["vacancyReference"] = vacancyReference.ToShortString(),
                     ["employerName"] = employerName,
                     ["location"] = location,
-                    ["manageVacancyUrl"] = manageVacancyUrl,
+                    ["manageVacancyURL"] = manageVacancyUrl,
                 })
             }
         };
@@ -134,7 +134,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                 ["vacancyReference"] = vacancyReference.ToShortString(),
                 ["employerName"] = employerName,
                 ["location"] = location,
-                ["manageVacancyUrl"] = manageVacancyUrl,
+                ["manageVacancyURL"] = manageVacancyUrl,
             });
         });
 
@@ -216,7 +216,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                 ["vacancyReference"] = new VacancyReference(vacancyRef++).ToShortString(),
                 ["employerName"] = employerName,
                 ["location"] = location,
-                ["manageVacancyUrl"] = manageVacancyUrl,
+                ["manageVacancyURL"] = manageVacancyUrl,
             });
         });
 
@@ -259,7 +259,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                 ["vacancyReference"] = vacancyReference.ToShortString(),
                 ["employerName"] = employerName,
                 ["location"] = location,
-                ["manageVacancyUrl"] = manageVacancyUrl,
+                ["manageVacancyURL"] = manageVacancyUrl,
             });
         });
 

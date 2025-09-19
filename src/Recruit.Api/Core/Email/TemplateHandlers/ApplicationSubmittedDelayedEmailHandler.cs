@@ -45,7 +45,7 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
                     VacancyReference = new VacancyReference(dynamicData["vacancyReference"]),
                     EmployerName = dynamicData["employerName"],
                     Location = dynamicData["location"],
-                    ManageVacancyUrl = dynamicData["manageVacancyUrl"],
+                    ManageVacancyUrl = dynamicData["manageVacancyURL"],
                     RecruitNotification = x,
                     TemplateId = x.EmailTemplateId
                 };

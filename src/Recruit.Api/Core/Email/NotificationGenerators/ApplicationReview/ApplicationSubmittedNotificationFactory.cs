@@ -80,7 +80,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyUrl"] = ManageVacancyUrl(x),
+                                ["manageVacancyURL"] = ManageVacancyUrl(x),
                                 ["notificationSettingsURL"] = ManageNotificationsUrl(x),
                                 ["location"] = GetLocationText(vacancy),
                             })!,
@@ -104,7 +104,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyUrl"] = ManageVacancyUrl(x),
+                                ["manageVacancyURL"] = ManageVacancyUrl(x),
                                 ["location"] = GetLocationText(vacancy),
                             })!,
                         });
@@ -126,7 +126,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyUrl"] = ManageVacancyUrl(x),
+                                ["manageVacancyURL"] = ManageVacancyUrl(x),
                                 ["location"] = GetLocationText(vacancy),
                             })!,
                         });
