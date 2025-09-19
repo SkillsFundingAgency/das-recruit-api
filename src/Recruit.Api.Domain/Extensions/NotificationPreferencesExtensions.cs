@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Recruit.Api.Domain.Enums;
+﻿using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Domain.Extensions;
@@ -10,8 +11,13 @@ public static class NotificationPreferencesExtensions
         return notificationPreferences.EventPreferences.Single(x => x.Event == eventType);
     }
     
-    public static bool TryGetForEvent(this NotificationPreferences notificationPreferences, NotificationTypes eventType, out NotificationPreference? notificationPreference)
+    public static bool TryGetForEvent(this NotificationPreferences? notificationPreferences, NotificationTypes eventType, [NotNullWhen(true)] out NotificationPreference? notificationPreference)
     {
+        if (notificationPreferences is null)
+        {
+            notificationPreference = null;
+            return false;
+        }
         notificationPreference = notificationPreferences.EventPreferences.FirstOrDefault(x => x.Event == eventType);
         return notificationPreference is not null;
     }

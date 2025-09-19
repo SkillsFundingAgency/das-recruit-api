@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Recruit.Api.Domain.Entities;
+﻿using SFA.DAS.Recruit.Api.Domain.Enums;
+
+namespace SFA.DAS.Recruit.Api.Domain.Entities;
 
 public class ApplicationReviewEntity
 {
@@ -22,6 +24,6 @@ public class ApplicationReviewEntity
     public string? AdditionalQuestion2 { get; set; }
     public string? CandidateFeedback { get; set; }
     public string? EmployerFeedback { get; set; }
-    public string Status { get; set; }
+    public ApplicationReviewStatus Status { get; set; }
     public string? TemporaryReviewStatus { get; set; }
 }

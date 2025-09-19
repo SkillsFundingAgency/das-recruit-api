@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
@@ -26,7 +25,7 @@ internal static class ApplicationReviewExtensions
             Id = entity.Id,
             LegacyApplicationId = entity.LegacyApplicationId,
             ReviewedDate = entity.ReviewedDate,
-            Status = GetApplicationReviewStatusOrDefault(entity.Status),
+            Status = entity.Status,
             TemporaryReviewStatus = entity.TemporaryReviewStatus,
             StatusUpdatedDate = entity.StatusUpdatedDate,
             SubmittedDate = entity.SubmittedDate,
@@ -54,7 +53,7 @@ internal static class ApplicationReviewExtensions
             Id = entity.Id,
             LegacyApplicationId = entity.LegacyApplicationId,
             ReviewedDate = entity.ReviewedDate,
-            Status = GetApplicationReviewStatusOrDefault(entity.Status),
+            Status = entity.Status,
             TemporaryReviewStatus = entity.TemporaryReviewStatus,
             StatusUpdatedDate = entity.StatusUpdatedDate,
             SubmittedDate = entity.SubmittedDate,
@@ -64,7 +63,6 @@ internal static class ApplicationReviewExtensions
             WithdrawnDate = entity.WithdrawnDate,
         };
     }
-
 
     public static PatchApplicationReviewResponse ToPatchResponse(this ApplicationReviewEntity entity)
     {
@@ -83,7 +81,7 @@ internal static class ApplicationReviewExtensions
             Id = entity.Id,
             LegacyApplicationId = entity.LegacyApplicationId,
             ReviewedDate = entity.ReviewedDate,
-            Status = GetApplicationReviewStatusOrDefault(entity.Status),
+            Status = entity.Status,
             TemporaryReviewStatus = entity.TemporaryReviewStatus,
             StatusUpdatedDate = entity.StatusUpdatedDate,
             SubmittedDate = entity.SubmittedDate,
@@ -140,15 +138,5 @@ internal static class ApplicationReviewExtensions
     public static List<GetApplicationReviewResponse> ToGetResponse(this List<ApplicationReviewEntity> entities)
     {
         return entities.Select(ToGetResponse).ToList();
-    }
-    
-    private static ApplicationReviewStatus GetApplicationReviewStatusOrDefault(string applicationReviewStatus)
-    {
-        if(!Enum.TryParse<ApplicationReviewStatus>(applicationReviewStatus,true, out var status))
-        {
-            status = ApplicationReviewStatus.New;
-        }
-
-        return status;
     }
 }

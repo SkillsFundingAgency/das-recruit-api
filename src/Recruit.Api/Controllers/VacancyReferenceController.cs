@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
-using SFA.DAS.Recruit.Api.Data.Vacancy;
+using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Models.Responses;
 
 namespace SFA.DAS.Recruit.Api.Controllers;

@@ -39,9 +39,9 @@ internal class Startup
             {
                 options.ConfigurationNameIncludesVersionNumber = true;
                 options.ConfigurationKeys = configuration["ConfigNames"]!.Split(",");
-                options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
                 options.EnvironmentName = _environmentName;
                 options.PreFixConfigurationKeys = false;
+                options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
             });
 
 #if DEBUG
@@ -98,7 +98,8 @@ internal class Startup
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-        services.AddApplicationDependencies();
+        services.RegisterDasEncodingService(Configuration);
+        services.AddApplicationDependencies(Configuration);
         services.AddDatabaseRegistration(candidateAccountConfiguration!, Configuration["EnvironmentName"]);
         services.AddOpenTelemetryRegistration(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!);
         services.ConfigureHealthChecks();

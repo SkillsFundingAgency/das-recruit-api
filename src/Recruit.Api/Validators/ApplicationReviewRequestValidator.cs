@@ -13,7 +13,6 @@ internal class PutApplicationReviewRequestValidator : AbstractValidator<PutAppli
         RuleFor(req => req.Ukprn).NotNull().NotEmpty();
         RuleFor(req => req.AccountId).NotNull().NotEmpty();
         RuleFor(req => req.CandidateId).NotNull().NotEmpty();
-        RuleFor(req => req.Status).NotNull().NotEmpty();
         RuleFor(req => req.VacancyReference).NotNull().NotEmpty();
         RuleFor(req => req.VacancyTitle).NotNull().NotEmpty();
         RuleFor(req => req.AccountLegalEntityId).NotNull().NotEmpty();
