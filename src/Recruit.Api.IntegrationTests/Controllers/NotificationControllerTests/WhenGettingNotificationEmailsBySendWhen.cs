@@ -2,7 +2,7 @@
 using System.Text.Encodings.Web;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Api.Models.Responses.Notifications;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControllerTests;
 
@@ -47,10 +47,13 @@ public class WhenGettingNotificationEmailsBySendWhen : BaseFixture
 
         // act
         var response = await Client.GetAsync($"{RouteNames.Notifications}/batch/by/sendwhen/{UrlEncoder.Default.Encode(DateTime.Now.ToString("s"))}");
-        var results = await response.Content.ReadAsAsync<List<NotificationEmail>>();
+        var results = await response.Content.ReadAsAsync<GetBatchByDateResponse>();
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        results.Should().HaveCount(1);
+        results.Should().NotBeNull();
+        results.Emails.Should().HaveCount(1);
+        results.Ids.Should().HaveCount(1);
+        results.Ids.Should().Contain(2);
     }
 }

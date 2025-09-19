@@ -48,7 +48,4 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\Email\NotificationGenerators\" />
-  </ItemGroup>
 </Project>

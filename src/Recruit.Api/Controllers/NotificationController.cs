@@ -8,6 +8,7 @@ using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
+using SFA.DAS.Recruit.Api.Models.Responses.Notifications;
 using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
@@ -16,7 +17,7 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 public class NotificationController : ControllerBase
 {
     [HttpGet, Route("batch/by/sendwhen/{sendWhen:datetime}")]
-    [ProducesResponseType(typeof(IEnumerable<NotificationEmail>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetBatchByDateResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IResult> GetBatchByDate(
         [FromRoute] DateTime sendWhen,
@@ -26,7 +27,7 @@ public class NotificationController : ControllerBase
     {
         var recruitNotifications = await repository.GetBatchByDateAsync(sendWhen, cancellationToken);
         var results = emailFactory.CreateFrom(recruitNotifications);
-        return TypedResults.Ok(results);
+        return TypedResults.Ok(new GetBatchByDateResponse(results, recruitNotifications.Select(x => x.Id).ToArray()));
     }
     
     [HttpDelete]
