@@ -14,6 +14,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
     [Route($"{RouteNames.Employer}/{{accountId:long}}/")]
     public class EmployerAccountController([FromServices] IApplicationReviewsProvider applicationReviewsProvider,
         [FromServices] IVacancyProvider vacancyProvider,
+        [FromServices] IAlertsProvider alertsProvider,
         ILogger<ApplicationReviewController> logger) : ControllerBase
     {
         [HttpGet]
@@ -49,9 +50,10 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [HttpGet]
         [Route("applicationReviews/dashboard")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(DashboardModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EmployerDashboardModel), StatusCodes.Status200OK)]
         public async Task<IResult> GetDashboardCountByAccountId(
             [FromRoute][Required] long accountId,
+            [FromQuery] string? userId = null,
             CancellationToken token = default)
         {
             try
@@ -60,9 +62,26 @@ namespace SFA.DAS.Recruit.Api.Controllers
 
                 var applicationReviewsResponse = await applicationReviewsProvider.GetCountByAccountId(accountId, token);
                 var vacancyResponse = await vacancyProvider.GetCountByAccountId(accountId, token);
-                var dashboardModel = DashboardModel.MapToDashboardModel(applicationReviewsResponse, vacancyResponse);
+
+                if (string.IsNullOrEmpty(userId))
+                    return TypedResults.Ok(new EmployerDashboardModel(applicationReviewsResponse,
+                        vacancyResponse));
+
+
+                var employerRevokedTransferredVacanciesAlert = await alertsProvider.GetEmployerTransferredVacanciesAlertByAccountId(accountId, userId, TransferReason.EmployerRevokedPermission, token);
+                var blockedProviderTransferredVacanciesAlert = await alertsProvider.GetEmployerTransferredVacanciesAlertByAccountId(accountId, userId, TransferReason.BlockedByQa, token);
+                var blockedProviderAlert = await alertsProvider.GetBlockedProviderAlertCountByAccountId(accountId, userId, token);
+                var withdrawnByQaVacanciesAlert = await alertsProvider.GetWithDrawnByQaAlertByAccountId(accountId, userId, token);
+                var dashboardModel = new EmployerDashboardModel(applicationReviewsResponse,
+                    vacancyResponse) {
+                    EmployerRevokedTransferredVacanciesAlert = employerRevokedTransferredVacanciesAlert,
+                    BlockedProviderTransferredVacanciesAlert = blockedProviderTransferredVacanciesAlert,
+                    WithDrawnByQaVacanciesAlert = withdrawnByQaVacanciesAlert,
+                    BlockedProviderAlert = blockedProviderAlert
+                };
 
                 return TypedResults.Ok(dashboardModel);
+
             }
             catch (Exception e)
             {

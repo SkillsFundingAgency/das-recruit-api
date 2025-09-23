@@ -2,39 +2,39 @@
 {
     public record DashboardModel
     {
-        public int NewApplicationsCount { get; init; }
-        public int EmployerReviewedApplicationsCount { get; init; }
-        public int SuccessfulApplicationsCount { get; init; }
-        public int UnsuccessfulApplicationsCount { get; init; }
-        public int SharedApplicationsCount { get; set; }
-        public int AllSharedApplicationsCount { get; set; }
-        public bool HasNoApplications { get; init; }
+        public int NewApplicationsCount { get; }
+        public int EmployerReviewedApplicationsCount { get; }
+        public int SuccessfulApplicationsCount { get; }
+        public int UnsuccessfulApplicationsCount { get; }
+        public int SharedApplicationsCount { get; }
+        public int AllSharedApplicationsCount { get; }
+        public bool HasNoApplications { get; }
 
-        public int ClosedVacanciesCount { get; init; }
-        public int DraftVacanciesCount { get; init; }
-        public int ReviewVacanciesCount { get; init; }
-        public int ReferredVacanciesCount { get; init; }
-        public int LiveVacanciesCount { get; init; }
-        public int SubmittedVacanciesCount { get; init; }
+        public int ClosedVacanciesCount { get; }
+        public int DraftVacanciesCount { get; }
+        public int ReviewVacanciesCount { get; }
+        public int ReferredVacanciesCount { get; }
+        public int LiveVacanciesCount { get; }
+        public int SubmittedVacanciesCount { get; }
 
-        public static DashboardModel MapToDashboardModel(ApplicationReviewsDashboardModel app, VacancyDashboardModel vac)
+        protected DashboardModel(
+            ApplicationReviewsDashboardModel app,
+            VacancyDashboardModel vac)
         {
-            return new DashboardModel {
-                NewApplicationsCount = app.NewApplicationsCount,
-                SharedApplicationsCount = app.SharedApplicationsCount,
-                AllSharedApplicationsCount = app.AllSharedApplicationsCount,
-                UnsuccessfulApplicationsCount = app.UnsuccessfulApplicationsCount,
-                SuccessfulApplicationsCount = app.SuccessfulApplicationsCount,
-                EmployerReviewedApplicationsCount = app.EmployerReviewedApplicationsCount,
-                HasNoApplications = app.HasNoApplications,
+            NewApplicationsCount = app.NewApplicationsCount;
+            SharedApplicationsCount = app.SharedApplicationsCount;
+            AllSharedApplicationsCount = app.AllSharedApplicationsCount;
+            UnsuccessfulApplicationsCount = app.UnsuccessfulApplicationsCount;
+            SuccessfulApplicationsCount = app.SuccessfulApplicationsCount;
+            EmployerReviewedApplicationsCount = app.EmployerReviewedApplicationsCount;
+            HasNoApplications = app.HasNoApplications;
 
-                ClosedVacanciesCount = vac.ClosedVacanciesCount,
-                DraftVacanciesCount = vac.DraftVacanciesCount,
-                LiveVacanciesCount = vac.LiveVacanciesCount,
-                ReviewVacanciesCount = vac.ReviewVacanciesCount,
-                ReferredVacanciesCount = vac.ReferredVacanciesCount,
-                SubmittedVacanciesCount = vac.SubmittedVacanciesCount,
-            };
+            ClosedVacanciesCount = vac.ClosedVacanciesCount;
+            DraftVacanciesCount = vac.DraftVacanciesCount;
+            LiveVacanciesCount = vac.LiveVacanciesCount;
+            ReviewVacanciesCount = vac.ReviewVacanciesCount;
+            ReferredVacanciesCount = vac.ReferredVacanciesCount;
+            SubmittedVacanciesCount = vac.SubmittedVacanciesCount;
         }
     }
 }

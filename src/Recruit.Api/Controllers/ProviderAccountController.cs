@@ -14,6 +14,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
     [Route($"{RouteNames.Provider}/{{ukprn:int}}/")]
     public class ProviderAccountController([FromServices] IApplicationReviewsProvider applicationReviewsProvider,
         [FromServices] IVacancyProvider vacancyProvider,
+        [FromServices] IAlertsProvider alertsProvider,
         ILogger<ApplicationReviewController> logger) : ControllerBase
     {
         [HttpGet]
@@ -49,9 +50,10 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [HttpGet]
         [Route("applicationReviews/dashboard")]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(DashboardModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProviderDashboardModel), StatusCodes.Status200OK)]
         public async Task<IResult> GetDashboardCountByUkprn(
             [FromRoute][Required] int ukprn,
+            [FromQuery] string? userId = null,
             CancellationToken token = default)
         {
             try
@@ -60,7 +62,16 @@ namespace SFA.DAS.Recruit.Api.Controllers
 
                 var applicationReviewsResponse = await applicationReviewsProvider.GetCountByUkprn(ukprn, token);
                 var vacancyResponse = await vacancyProvider.GetCountByUkprn(ukprn, token);
-                var dashboardModel = DashboardModel.MapToDashboardModel(applicationReviewsResponse, vacancyResponse);
+
+                if(string.IsNullOrEmpty(userId))
+                    return TypedResults.Ok(new ProviderDashboardModel(applicationReviewsResponse, vacancyResponse));
+
+                var transferredVacanciesAlert = await alertsProvider.GetProviderTransferredVacanciesAlertByUkprn(ukprn, userId, token);
+                var blockedProviderAlert = await alertsProvider.GetWithDrawnByQaAlertByUkprnId(ukprn, userId, token);
+                var dashboardModel = new ProviderDashboardModel(applicationReviewsResponse, vacancyResponse) {
+                    ProviderTransferredVacanciesAlert = transferredVacanciesAlert,
+                    WithdrawnVacanciesAlert = blockedProviderAlert
+                };
 
                 return TypedResults.Ok(dashboardModel);
             }
