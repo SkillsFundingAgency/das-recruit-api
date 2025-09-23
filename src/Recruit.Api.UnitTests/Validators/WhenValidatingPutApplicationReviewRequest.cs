@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
+﻿using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 using SFA.DAS.Recruit.Api.Validators;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators;
@@ -28,7 +29,6 @@ internal class WhenValidatingPutApplicationReviewRequest
             Ukprn = 0,
             AccountId = 0,
             CandidateId = Guid.Empty,
-            Status = null!,
             VacancyReference = 0,
             LegacyApplicationId = null,
             VacancyTitle = null!,
@@ -40,6 +40,6 @@ internal class WhenValidatingPutApplicationReviewRequest
         
         // assert
         result.IsValid.Should().BeFalse();
-        result.Errors.Should().HaveCount(7);
+        result.Errors.Should().HaveCount(6);
     }
 }

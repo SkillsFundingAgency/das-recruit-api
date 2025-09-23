@@ -1,28 +1,25 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Recruit.Api.Application.Providers;
+using SFA.DAS.Encoding;
+using SFA.DAS.Recruit.Api.Core.Email;
+using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
+using SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
 using SFA.DAS.Recruit.Api.Data;
-using SFA.DAS.Recruit.Api.Data.ApplicationReview;
-using SFA.DAS.Recruit.Api.Data.EmployerProfile;
-using SFA.DAS.Recruit.Api.Data.ProhibitedContent;
+using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Data.Vacancy;
-using SFA.DAS.Recruit.Api.Data.User;
 using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
-using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
-using SFA.DAS.Recruit.Api.Validators;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
 [ExcludeFromCodeCoverage]
 public static class AddServiceRegistrationExtension
 {
-    public static void AddApplicationDependencies(this IServiceCollection services)
+    public static void AddApplicationDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         // validators
-        services.AddScoped<IValidator<PutApplicationReviewRequest>, PutApplicationReviewRequestValidator>();
+        services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();
@@ -36,6 +33,18 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVacancyReviewRepository, VacancyReviewRepository>();
         services.AddScoped<IVacancyRepository, VacancyRepository>();
+        
+        // email
+        services.AddSingleton<IEmailTemplateHelper>(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
+        services.AddScoped<ApplicationSharedWithEmployerNotificationFactory>();
+        services.AddScoped<SharedApplicationReviewedByEmployerNotificationFactory>();
+        services.AddScoped<ApplicationSubmittedNotificationFactory>();
+        services.AddScoped<IApplicationReviewNotificationStrategy, ApplicationReviewNotificationStrategy>();
+        
+        // email template handlers
+        services.AddScoped<IEmailTemplateHandler, StaticDataEmailHandler>();
+        services.AddScoped<IEmailTemplateHandler, ApplicationSubmittedDelayedEmailHandler>();
+        services.AddScoped<IEmailFactory, EmailFactory>();
     }
 
     public static void AddDatabaseRegistration(
@@ -68,5 +77,13 @@ public static class AddServiceRegistrationExtension
         services
             .AddHealthChecks()
             .AddCheck<DefaultHealthCheck>("default");
+    }
+    
+    public static void RegisterDasEncodingService(this IServiceCollection services, IConfiguration configuration)
+    {
+        var dasEncodingConfig = new EncodingConfig { Encodings = [] };
+        configuration.GetSection(nameof(dasEncodingConfig.Encodings)).Bind(dasEncodingConfig.Encodings);
+        services.AddSingleton(dasEncodingConfig);
+        services.AddSingleton<IEncodingService, EncodingService>();
     }
 }

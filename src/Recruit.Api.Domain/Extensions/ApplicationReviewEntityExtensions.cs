@@ -7,40 +7,36 @@ public static class ApplicationReviewEntityExtensions
 {
     public static int New(this List<ApplicationReviewEntity> entities)
     {
-        return entities.Count(fil =>
-            fil is {Status: nameof(ApplicationReviewStatus.New), WithdrawnDate: null});
+        return entities.Count(fil => fil is {Status: ApplicationReviewStatus.New, WithdrawnDate: null});
     }
 
     public static int Shared(this List<ApplicationReviewEntity> entities)
     {
-        return entities.Count(e =>
-            e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null });
+        return entities.Count(e => e is { Status: ApplicationReviewStatus.Shared, WithdrawnDate: null });
     }
 
     public static int AllShared(this List<ApplicationReviewEntity> entities)
     {
         var defaultDate = new DateTime(1900, 1, 1, 1, 0, 0, 389, DateTimeKind.Utc);
         return entities.Count(e =>
-            e is { Status: nameof(ApplicationReviewStatus.Shared), WithdrawnDate: null, DateSharedWithEmployer: not null } &&
+            e is { Status: ApplicationReviewStatus.Shared, WithdrawnDate: null, DateSharedWithEmployer: not null } &&
             e.DateSharedWithEmployer > defaultDate);
     }
 
     public static int Successful(this List<ApplicationReviewEntity> entities)
     {
-        return entities.Count(e =>
-            e is { Status: nameof(ApplicationReviewStatus.Successful), WithdrawnDate: null });
+        return entities.Count(e => e is { Status: ApplicationReviewStatus.Successful, WithdrawnDate: null });
     }
 
     public static int Unsuccessful(this List<ApplicationReviewEntity> entities)
     {
-        return entities.Count(e =>
-            e is { Status: nameof(ApplicationReviewStatus.Unsuccessful), WithdrawnDate: null });
+        return entities.Count(e => e is { Status: ApplicationReviewStatus.Unsuccessful, WithdrawnDate: null });
     }
 
     public static int EmployerReviewed(this List<ApplicationReviewEntity> entities)
     {
         return entities.Count(e =>
-            e is { Status: nameof(ApplicationReviewStatus.EmployerUnsuccessful) or nameof(ApplicationReviewStatus.EmployerInterviewing), WithdrawnDate: null });
+            e is { Status: ApplicationReviewStatus.EmployerUnsuccessful or ApplicationReviewStatus.EmployerInterviewing, WithdrawnDate: null });
     }
     public static bool HasNoApplications(this List<ApplicationReviewEntity> entities)
     {

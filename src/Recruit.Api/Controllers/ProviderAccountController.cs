@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Application.Providers;
 using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
