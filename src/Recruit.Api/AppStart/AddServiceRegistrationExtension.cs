@@ -3,7 +3,8 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core.Email;
-using SFA.DAS.Recruit.Api.Core.Email.ApplicationReview;
+using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
+using SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
@@ -36,11 +37,16 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IVacancyRepository, VacancyRepository>();
         
         // email
-        services.AddSingleton(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
-        services.AddScoped<SharedApplicationEmailStrategy>();
-        services.AddScoped<EmployerHasReviewedApplicationEmailStrategy>();
-        services.AddScoped<NewApplicationEmailStrategy>();
-        services.AddScoped<IApplicationReviewEmailStrategyFactory, ApplicationReviewEmailStrategyFactory>();
+        services.AddSingleton<IEmailTemplateHelper>(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
+        services.AddScoped<ApplicationSharedWithEmployerNotificationFactory>();
+        services.AddScoped<SharedApplicationReviewedByEmployerNotificationFactory>();
+        services.AddScoped<ApplicationSubmittedNotificationFactory>();
+        services.AddScoped<IApplicationReviewNotificationStrategy, ApplicationReviewNotificationStrategy>();
+        
+        // email template handlers
+        services.AddScoped<IEmailTemplateHandler, StaticDataEmailHandler>();
+        services.AddScoped<IEmailTemplateHandler, ApplicationSubmittedDelayedEmailHandler>();
+        services.AddScoped<IEmailFactory, EmailFactory>();
     }
 
     public static void AddDatabaseRegistration(

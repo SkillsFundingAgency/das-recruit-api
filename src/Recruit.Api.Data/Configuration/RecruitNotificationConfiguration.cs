@@ -10,13 +10,11 @@ public class RecruitNotificationConfiguration : IEntityTypeConfiguration<Recruit
 {
     public void Configure(EntityTypeBuilder<RecruitNotificationEntity> builder)
     {
-        builder
-            .ToTable("RecruitNotification")
-            .HasOne(x => x.User)
-            .WithOne()
-            .HasForeignKey<RecruitNotificationEntity>(x => x.UserId);
-
+        builder.ToTable("RecruitNotification");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).UseIdentityColumn();
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId);
     }
 }
