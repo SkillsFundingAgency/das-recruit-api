@@ -1,16 +1,21 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using OpenTelemetry.Trace;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data;
+using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
+using SFA.DAS.Recruit.Api.Models.Responses;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -32,32 +37,145 @@ public class VacancyController : Controller
             : TypedResults.Ok(result.ToGetResponse());
     }
 
-    /*
-     This is an example paged endpoint, it can be modified or extended as appropriate
-     */
     [HttpGet, Route($"~/{RouteNames.Account}/{{accountId:long}}/{RouteElements.Vacancies}")]
-    [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedResponse<VacancySummary>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> GetManyByAccountId(
-        [FromServices] IVacancyRepository repository,
+        [FromServices] IVacancyProvider vacancyProvider,
+        [FromServices] IApplicationReviewsProvider applicationReviewsProvider,
         [FromRoute] long accountId,
         PagingParams pagingParams,
         SortingParams<VacancySortColumn> sortingParams,
-        // [FromQuery] FilterParams<VacancyFilterOptions> filterParams
-        CancellationToken cancellationToken)
+        FilteringParams filterParams,
+        CancellationToken cancellationToken = default)
     {
-        var result = await repository.GetManyByAccountIdAsync(
+        ushort page = pagingParams.Page ?? 1;
+        ushort pageSize = pagingParams.PageSize ?? 25;
+        var sortOrder = sortingParams.SortOrder ?? SortOrder.Asc;
+        string searchTerm = filterParams.SearchTerm ?? string.Empty;
+
+        var vacancies = await vacancyProvider.GetPagedVacancyByAccountId(
             accountId,
-            pagingParams.Page ?? 1,
-            pagingParams.PageSize ?? 25,
+            page,
+            pageSize,
             sortingParams.SortColumn.Resolve(),
-            sortingParams.SortOrder ?? SortOrder.Asc,
+            sortOrder,
+            filterParams.FilterBy,
+            searchTerm,
             cancellationToken);
 
-        var response = result.ToPagedResponse(x => x.ToGetResponse());
-        return TypedResults.Ok(response);
+        if (vacancies.TotalCount == 0)
+        {
+            return TypedResults.Ok(vacancies.ToPagedResponse(x => x.ToSummary()));
+        }
+
+        ApplicationReviewStatus? sharedFilter = filterParams.FilterBy switch {
+            FilteringOptions.NewSharedApplications => ApplicationReviewStatus.Shared,
+            FilteringOptions.AllSharedApplications => ApplicationReviewStatus.AllShared,
+            _ => null,
+        };
+
+        // Collect distinct vacancy references
+        var vacancyRefs = vacancies.Items
+            .Where(x => x.VacancyReference.HasValue)
+            .Select(x => x.VacancyReference!.Value)
+            .Distinct()
+            .ToList();
+
+        var applicationReviewStats = await applicationReviewsProvider
+            .GetVacancyReferencesCountByAccountId(accountId, vacancyRefs, sharedFilter, cancellationToken);
+
+        var applicationReviewStatsDict = applicationReviewStats.ToDictionary(x => x.VacancyReference);
+
+        var vacancySummaries = vacancies.ToPagedResponse(v =>
+        {
+            var summary = v.ToSummary();
+
+            if (summary.VacancyReference.HasValue &&
+                applicationReviewStatsDict.TryGetValue(summary.VacancyReference.Value, out var review))
+            {
+                summary.NoOfSuccessfulApplications = review.SuccessfulApplications;
+                summary.NoOfUnsuccessfulApplications = review.UnsuccessfulApplications;
+                summary.NoOfNewApplications = review.NewApplications;
+                summary.NoOfAllSharedApplications =
+                    filterParams.FilterBy == FilteringOptions.AllSharedApplications
+                        ? review.Applications
+                        : review.SharedApplications;
+                summary.NoOfSharedApplications = review.SharedApplications;
+                summary.NoOfEmployerReviewedApplications = review.EmployerReviewedApplications;
+            }
+
+            return summary;
+        });
+
+        return TypedResults.Ok(vacancySummaries);
     }
-    
+
+    [HttpGet, Route($"~/{RouteNames.Provider}/{{ukprn:int}}/{RouteElements.Vacancies}")]
+    [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetManyByUkprnId(
+        [FromServices] IVacancyProvider vacancyProvider,
+        [FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+        [FromRoute] int ukprn,
+        PagingParams pagingParams,
+        SortingParams<VacancySortColumn> sortingParams,
+        FilteringParams filterParams,
+        CancellationToken cancellationToken = default)
+    {
+        ushort page = pagingParams.Page ?? 1;
+        ushort pageSize = pagingParams.PageSize ?? 25;
+        var sortOrder = sortingParams.SortOrder ?? SortOrder.Asc;
+        string searchTerm = filterParams.SearchTerm ?? string.Empty;
+
+        var vacancies = await vacancyProvider.GetPagedVacancyByUkprn(
+            ukprn,
+            page,
+            pageSize,
+            sortingParams.SortColumn.Resolve(),
+            sortOrder,
+            filterParams.FilterBy,
+            searchTerm,
+            cancellationToken);
+
+        if (vacancies.TotalCount == 0)
+        {
+            return TypedResults.Ok(vacancies.ToPagedResponse(x => x.ToSummary()));
+        }
+
+        // Collect distinct vacancy references
+        var vacancyRefs = vacancies.Items
+            .Where(x => x.VacancyReference.HasValue)
+            .Select(x => x.VacancyReference!.Value)
+            .Distinct()
+            .ToList();
+
+        var applicationReviewStats = await applicationReviewsProvider
+            .GetVacancyReferencesCountByUkprn(ukprn, vacancyRefs, cancellationToken);
+
+        var applicationReviewStatsDict = applicationReviewStats.ToDictionary(x => x.VacancyReference);
+
+        var vacancySummaries = vacancies.ToPagedResponse(v =>
+        {
+            var summary = v.ToSummary();
+
+            if (summary.VacancyReference.HasValue &&
+                applicationReviewStatsDict.TryGetValue(summary.VacancyReference.Value, out var review))
+            {
+                summary.NoOfSuccessfulApplications = review.SuccessfulApplications;
+                summary.NoOfUnsuccessfulApplications = review.UnsuccessfulApplications;
+                summary.NoOfNewApplications = review.NewApplications;
+                summary.NoOfAllSharedApplications = review.AllSharedApplications;
+                summary.NoOfSharedApplications = review.SharedApplications;
+                summary.NoOfEmployerReviewedApplications = review.EmployerReviewedApplications;
+            }
+
+            return summary;
+        });
+
+        return TypedResults.Ok(vacancySummaries);
+    }
+
     [HttpPost]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
