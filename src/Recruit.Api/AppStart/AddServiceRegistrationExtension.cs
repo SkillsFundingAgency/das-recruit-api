@@ -23,6 +23,8 @@ public static class AddServiceRegistrationExtension
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();
+        services.AddScoped<IVacancyProvider, VacancyProvider>();
+        services.AddScoped<IAlertsProvider, AlertsProvider>();
 
         // repositories
         services.AddScoped<IApplicationReviewRepository, ApplicationReviewRepository>();

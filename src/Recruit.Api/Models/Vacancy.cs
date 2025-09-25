@@ -1,4 +1,5 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Models;
 
@@ -107,15 +108,6 @@ public class TrainingProvider
     public long? Ukprn { get; set; }
     public string? Name { get; set; }
     public TrainingProviderAddress? Address { get; set; }
-}
-
-public class TransferInfo
-{
-    public long Ukprn { get; set; }
-    public string ProviderName { get; set; }
-    public string LegalEntityName { get; set; }
-    public DateTime TransferredDate { get; set; }
-    public TransferReason Reason { get; set; }
 }
 
 public class Qualification
