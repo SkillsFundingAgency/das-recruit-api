@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using System.Net;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.VacancyReview;
@@ -111,5 +113,24 @@ public class VacancyReviewController: ControllerBase
         return result is null or { Count: 0 }
             ? Results.NotFound()
             : TypedResults.Ok(result.ToGetResponse());
+    }
+
+    [HttpGet, Route($"~/{RouteNames.VacancyReviews}/qa/dashboard")]
+    [ProducesResponseType(typeof(QaDashboard), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+    public async Task<IResult> GetQaDashboard(
+        [FromServices] IVacancyReviewRepository repository,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var result = await repository.GetQaDashboard(cancellationToken);
+
+            return TypedResults.Ok(result);
+        }
+        catch
+        {
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
     }
 }
