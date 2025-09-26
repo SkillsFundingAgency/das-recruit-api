@@ -53,7 +53,6 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [ProducesResponseType(typeof(EmployerDashboardModel), StatusCodes.Status200OK)]
         public async Task<IResult> GetDashboardCountByAccountId(
             [FromRoute][Required] long accountId,
-            [FromQuery] string? userId = null,
             CancellationToken token = default)
         {
             try
@@ -61,19 +60,40 @@ namespace SFA.DAS.Recruit.Api.Controllers
                 logger.LogInformation("Recruit API: Received query to get dashboard stats by account id : {AccountId}", accountId);
 
                 var applicationReviewsResponse = await applicationReviewsProvider.GetCountByAccountId(accountId, token);
+
                 var vacancyResponse = await vacancyProvider.GetCountByAccountId(accountId, token);
 
-                if (string.IsNullOrEmpty(userId))
-                    return TypedResults.Ok(new EmployerDashboardModel(applicationReviewsResponse,
-                        vacancyResponse));
+                var dashboardModel = new EmployerDashboardModel(applicationReviewsResponse, vacancyResponse);
 
+                return TypedResults.Ok(dashboardModel);
+
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Unable to get dashboard stats by account id : An error occurred");
+                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("alerts")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(EmployerAlertsModel), StatusCodes.Status200OK)]
+        public async Task<IResult> GetEmployerAlertsByAccountId(
+            [FromRoute][Required] long accountId,
+            [FromQuery][Required] string userId,
+            CancellationToken token = default)
+        {
+            try
+            {
+                logger.LogInformation("Recruit API: Received query to get employer alerts by account id : {AccountId}", accountId);
 
                 var employerRevokedTransferredVacanciesAlert = await alertsProvider.GetEmployerTransferredVacanciesAlertByAccountId(accountId, userId, TransferReason.EmployerRevokedPermission, token);
                 var blockedProviderTransferredVacanciesAlert = await alertsProvider.GetEmployerTransferredVacanciesAlertByAccountId(accountId, userId, TransferReason.BlockedByQa, token);
                 var blockedProviderAlert = await alertsProvider.GetBlockedProviderAlertCountByAccountId(accountId, userId, token);
                 var withdrawnByQaVacanciesAlert = await alertsProvider.GetWithDrawnByQaAlertByAccountId(accountId, userId, token);
-                var dashboardModel = new EmployerDashboardModel(applicationReviewsResponse,
-                    vacancyResponse) {
+                var dashboardModel = new EmployerAlertsModel
+                {
                     EmployerRevokedTransferredVacanciesAlert = employerRevokedTransferredVacanciesAlert,
                     BlockedProviderTransferredVacanciesAlert = blockedProviderTransferredVacanciesAlert,
                     WithDrawnByQaVacanciesAlert = withdrawnByQaVacanciesAlert,
@@ -85,7 +105,7 @@ namespace SFA.DAS.Recruit.Api.Controllers
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Unable to get dashboard stats by account id : An error occurred");
+                logger.LogError(e, "Unable to get employer alerts by account id : An error occurred");
                 return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }

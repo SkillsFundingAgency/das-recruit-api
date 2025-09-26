@@ -53,7 +53,6 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [ProducesResponseType(typeof(ProviderDashboardModel), StatusCodes.Status200OK)]
         public async Task<IResult> GetDashboardCountByUkprn(
             [FromRoute][Required] int ukprn,
-            [FromQuery] string? userId = null,
             CancellationToken token = default)
         {
             try
@@ -61,23 +60,47 @@ namespace SFA.DAS.Recruit.Api.Controllers
                 logger.LogInformation("Recruit API: Received query to get dashboard stats by ukprn : {ukprn}", ukprn);
 
                 var applicationReviewsResponse = await applicationReviewsProvider.GetCountByUkprn(ukprn, token);
+
                 var vacancyResponse = await vacancyProvider.GetCountByUkprn(ukprn, token);
 
-                if(string.IsNullOrEmpty(userId))
-                    return TypedResults.Ok(new ProviderDashboardModel(applicationReviewsResponse, vacancyResponse));
-
-                var transferredVacanciesAlert = await alertsProvider.GetProviderTransferredVacanciesAlertByUkprn(ukprn, userId, token);
-                var blockedProviderAlert = await alertsProvider.GetWithDrawnByQaAlertByUkprnId(ukprn, userId, token);
-                var dashboardModel = new ProviderDashboardModel(applicationReviewsResponse, vacancyResponse) {
-                    ProviderTransferredVacanciesAlert = transferredVacanciesAlert,
-                    WithdrawnVacanciesAlert = blockedProviderAlert
-                };
+                var dashboardModel = new ProviderDashboardModel(applicationReviewsResponse, vacancyResponse);
 
                 return TypedResults.Ok(dashboardModel);
             }
             catch (Exception e)
             {
                 logger.LogError(e, "Unable to Get dashboard stats by ukprn : An error occurred");
+                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [Route("alerts")]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(EmployerAlertsModel), StatusCodes.Status200OK)]
+        public async Task<IResult> GetProviderAlertsByAccountId(
+            [FromRoute][Required] int ukprn,
+            [FromQuery][Required] string userId,
+            CancellationToken token = default)
+        {
+            try
+            {
+                logger.LogInformation("Recruit API: Received query to get provider alerts by ukprn id : {Ukprn}", ukprn);
+
+                var transferredVacanciesAlert = await alertsProvider.GetProviderTransferredVacanciesAlertByUkprn(ukprn, userId, token);
+                var blockedProviderAlert = await alertsProvider.GetWithDrawnByQaAlertByUkprnId(ukprn, userId, token);
+                var alertsModel = new ProviderAlertsModel
+                {
+                    ProviderTransferredVacanciesAlert = transferredVacanciesAlert,
+                    WithdrawnVacanciesAlert = blockedProviderAlert
+                };
+
+                return TypedResults.Ok(alertsModel);
+
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Unable to get employer provider by ukprn id : An error occurred");
                 return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }

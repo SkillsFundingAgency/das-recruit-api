@@ -8,5 +8,5 @@ public enum ApplicationMethod
     ThroughFindAnApprenticeship,
     ThroughExternalApplicationSite,
     ThroughFindATraineeship,
-    Unknown
+    Unspecified
 }

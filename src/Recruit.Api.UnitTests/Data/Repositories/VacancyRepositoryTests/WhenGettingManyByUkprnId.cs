@@ -44,7 +44,7 @@ internal class WhenGettingManyByUkprnId
     public async Task GetManyByUkprnIdAsync_Should_Filter_ByUkprn()
     {
         // Act
-        var result = await _repository.GetManyByUkprnIdAsync(123, 1, 25, v => v.CreatedDate, SortOrder.Asc, CancellationToken.None);
+        var result = await _repository.GetManyByUkprnIdAsync(123, 1, 25, v => v.CreatedDate, SortOrder.Asc, FilteringOptions.All,"", CancellationToken.None);
 
         // Assert
         result.TotalCount.Should().Be(3);
@@ -55,7 +55,7 @@ internal class WhenGettingManyByUkprnId
     public async Task GetManyByUkprnIdAsync_Should_ApplyDefaultPaging()
     {
         // Act
-        var result = await _repository.GetManyByUkprnIdAsync(123, 1, 25, v => v.CreatedDate, SortOrder.Asc, CancellationToken.None);
+        var result = await _repository.GetManyByUkprnIdAsync(123, 1, 25, v => v.CreatedDate, SortOrder.Asc, FilteringOptions.All, "", CancellationToken.None);
 
         // Assert
         result.PageIndex.Should().Be(1);
@@ -105,7 +105,7 @@ internal class WhenGettingManyByUkprnId
     public async Task GetManyByUkprnIdAsync_Should_ReturnEmptyList_WhenNoMatches()
     {
         // Act
-        var result = await _repository.GetManyByUkprnIdAsync(555, 1, 25, v => v.CreatedDate, SortOrder.Asc, CancellationToken.None);
+        var result = await _repository.GetManyByUkprnIdAsync(555, 1, 25, v => v.CreatedDate, SortOrder.Asc, FilteringOptions.All, "", CancellationToken.None);
 
         // Assert
         result.TotalCount.Should().Be(0);

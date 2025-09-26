@@ -82,39 +82,31 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         string searchTerm = "",
         CancellationToken cancellationToken = default)
     {
-        try
+        var closingSoonThreshold = DateTime.UtcNow.AddDays(ClosingSoonDays);
+
+        IQueryable<VacancyEntity> query = dataContext.VacancyEntities
+            .Where(x => x.Ukprn == ukprn);
+
+        query = ApplyFiltering(query, filteringOptions, closingSoonThreshold);
+        query = ApplySearchTerm(query, searchTerm);
+
+        int count = await query.CountAsync(cancellationToken);
+        if (orderBy is not null)
         {
-            var closingSoonThreshold = DateTime.UtcNow.AddDays(ClosingSoonDays);
-
-            IQueryable<VacancyEntity> query = dataContext.VacancyEntities
-                .Where(x => x.Ukprn == ukprn);
-
-            query = ApplyFiltering(query, filteringOptions, closingSoonThreshold);
-            query = ApplySearchTerm(query, searchTerm);
-
-            int count = await query.CountAsync(cancellationToken);
-            if (orderBy is not null)
-            {
-                query = sortOrder is SortOrder.Desc
-                    ? query.OrderByDescending(orderBy)
-                    : query.OrderBy(orderBy);
-            }
-
-            int skip = (Math.Max(page, (ushort)1) - 1) * pageSize;
-            ushort take = Math.Max(pageSize, (ushort)1);
-
-            var items = await query
-                .Skip(skip)
-                .Take(take)
-                .ToListAsync(cancellationToken);
-
-            return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
+            query = sortOrder is SortOrder.Desc
+                ? query.OrderByDescending(orderBy)
+                : query.OrderBy(orderBy);
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+
+        int skip = (Math.Max(page, (ushort)1) - 1) * pageSize;
+        ushort take = Math.Max(pageSize, (ushort)1);
+
+        var items = await query
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync(cancellationToken);
+
+        return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
     }
 
     public async Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken)
@@ -221,10 +213,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
     private static IQueryable<VacancyEntity> ApplySearchTerm(IQueryable<VacancyEntity> query, string searchTerm)
     {
-        if (string.IsNullOrWhiteSpace(searchTerm))
-        {
-            return query;
-        }
+        if (string.IsNullOrWhiteSpace(searchTerm)) return query;
 
         searchTerm = searchTerm.Trim().ToLowerInvariant();
 

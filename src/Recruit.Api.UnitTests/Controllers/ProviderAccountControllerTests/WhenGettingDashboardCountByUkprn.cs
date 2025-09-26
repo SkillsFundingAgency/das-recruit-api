@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Identity.Client;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -17,11 +16,8 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
             string userId,
             VacancyDashboardModel mockVacancyDashboardModelResponse,
             ApplicationReviewsDashboardModel mockApplicationReviewsDashboardModelResponse,
-            ProviderTransferredVacanciesAlertModel mockProviderTransferredVacanciesAlertModelResponse,
-            WithdrawnVacanciesAlertModel mockWithdrawnVacanciesAlertModelResponse,
             [Frozen] Mock<IApplicationReviewsProvider> providerMock,
             [Frozen] Mock<IVacancyProvider> vacancyMock,
-            [Frozen] Mock<IAlertsProvider> alertsMock,
             [Greedy] ProviderAccountController controller,
             CancellationToken token)
         {
@@ -30,13 +26,9 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
                 .ReturnsAsync(mockApplicationReviewsDashboardModelResponse);
             vacancyMock.Setup(v => v.GetCountByUkprn(ukprn, token))
                 .ReturnsAsync(mockVacancyDashboardModelResponse);
-            alertsMock.Setup(a => a.GetProviderTransferredVacanciesAlertByUkprn(ukprn, userId, token))
-                .ReturnsAsync(mockProviderTransferredVacanciesAlertModelResponse);
-            alertsMock.Setup(a => a.GetWithDrawnByQaAlertByUkprnId(ukprn, userId, token))
-                .ReturnsAsync(mockWithdrawnVacanciesAlertModelResponse);
 
             // Act
-            var result = await controller.GetDashboardCountByUkprn(ukprn, userId, token);
+            var result = await controller.GetDashboardCountByUkprn(ukprn, token);
 
             // Assert
             result.Should().BeOfType<Ok<ProviderDashboardModel>>();
@@ -56,54 +48,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
             okResult.Value.ReviewVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.ReviewVacanciesCount);
             okResult.Value.ReferredVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.ReferredVacanciesCount);
             okResult.Value.SubmittedVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.SubmittedVacanciesCount);
-
-            okResult.Value.ProviderTransferredVacanciesAlert!.Should().BeEquivalentTo(mockProviderTransferredVacanciesAlertModelResponse);
-            okResult.Value.WithdrawnVacanciesAlert!.Should().BeEquivalentTo(mockWithdrawnVacanciesAlertModelResponse);
         }
-
-        [Test, MoqAutoData]
-        public async Task Then_UserId_Is_Null_The_Count_ReturnsOk(
-            int ukprn,
-            VacancyDashboardModel mockVacancyDashboardModelResponse,
-            ApplicationReviewsDashboardModel mockApplicationReviewsDashboardModelResponse,
-            [Frozen] Mock<IApplicationReviewsProvider> providerMock,
-            [Frozen] Mock<IVacancyProvider> vacancyMock,
-            [Frozen] Mock<IAlertsProvider> alertsMock,
-            [Greedy] ProviderAccountController controller,
-            CancellationToken token)
-        {
-            // Arrange
-            providerMock.Setup(p => p.GetCountByUkprn(ukprn, token))
-                .ReturnsAsync(mockApplicationReviewsDashboardModelResponse);
-            vacancyMock.Setup(v => v.GetCountByUkprn(ukprn, token))
-                .ReturnsAsync(mockVacancyDashboardModelResponse);
-
-            // Act
-            var result = await controller.GetDashboardCountByUkprn(ukprn, null, token);
-
-            // Assert
-            result.Should().BeOfType<Ok<ProviderDashboardModel>>();
-            var okResult = result as Ok<ProviderDashboardModel>;
-
-            okResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            okResult.Value.NewApplicationsCount!.Should().Be(mockApplicationReviewsDashboardModelResponse.NewApplicationsCount);
-            okResult.Value.SharedApplicationsCount!.Should().Be(mockApplicationReviewsDashboardModelResponse.SharedApplicationsCount);
-            okResult.Value.AllSharedApplicationsCount!.Should().Be(mockApplicationReviewsDashboardModelResponse.AllSharedApplicationsCount);
-            okResult.Value.UnsuccessfulApplicationsCount!.Should().Be(mockApplicationReviewsDashboardModelResponse.UnsuccessfulApplicationsCount);
-            okResult.Value.EmployerReviewedApplicationsCount!.Should().Be(mockApplicationReviewsDashboardModelResponse.EmployerReviewedApplicationsCount);
-            okResult.Value.HasNoApplications!.Should().Be(mockApplicationReviewsDashboardModelResponse.HasNoApplications);
-
-            okResult.Value.ClosedVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.ClosedVacanciesCount);
-            okResult.Value.DraftVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.DraftVacanciesCount);
-            okResult.Value.LiveVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.LiveVacanciesCount);
-            okResult.Value.ReviewVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.ReviewVacanciesCount);
-            okResult.Value.ReferredVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.ReferredVacanciesCount);
-            okResult.Value.SubmittedVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.SubmittedVacanciesCount);
-
-            alertsMock.Verify(a => a.GetProviderTransferredVacanciesAlertByUkprn(ukprn, "", token), Times.Never);
-            alertsMock.Verify(a => a.GetWithDrawnByQaAlertByUkprnId(ukprn, "", token), Times.Never);
-        }
-
 
         [Test, MoqAutoData]
         public async Task Then_Returns_Exception(
@@ -116,12 +61,11 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
             CancellationToken token)
         {
             // Arrange
-            // Arrange
             providerMock.Setup(p => p.GetCountByUkprn(ukprn, token))
                 .ThrowsAsync(new Exception());
 
             // Act
-            var result = await controller.GetDashboardCountByUkprn(ukprn, userId, token);
+            var result = await controller.GetDashboardCountByUkprn(ukprn, token);
 
             // Assert
             result.Should().BeOfType<ProblemHttpResult>();
