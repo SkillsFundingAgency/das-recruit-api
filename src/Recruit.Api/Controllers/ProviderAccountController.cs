@@ -80,12 +80,14 @@ namespace SFA.DAS.Recruit.Api.Controllers
         [ProducesResponseType(typeof(EmployerAlertsModel), StatusCodes.Status200OK)]
         public async Task<IResult> GetProviderAlertsByAccountId(
             [FromRoute][Required] int ukprn,
-            [FromQuery][Required] string userId,
+            [FromQuery] string? userId = null,
             CancellationToken token = default)
         {
             try
             {
                 logger.LogInformation("Recruit API: Received query to get provider alerts by ukprn id : {Ukprn}", ukprn);
+
+                if (string.IsNullOrEmpty(userId)) return TypedResults.Ok(new EmployerAlertsModel());
 
                 var transferredVacanciesAlert = await alertsProvider.GetProviderTransferredVacanciesAlertByUkprn(ukprn, userId, token);
                 var blockedProviderAlert = await alertsProvider.GetWithDrawnByQaAlertByUkprnId(ukprn, userId, token);
