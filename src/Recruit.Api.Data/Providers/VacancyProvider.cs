@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Recruit.Api.Data.Repositories;
+﻿using System.Linq.Expressions;
+using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -9,6 +10,22 @@ public interface IVacancyProvider
 {
     Task<VacancyDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default);
     Task<VacancyDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default);
+    Task<PaginatedList<VacancyEntity>> GetPagedVacancyByAccountId<TKey>(long accountId,
+        ushort page,
+        ushort pageSize,
+        Expression<Func<VacancyEntity, TKey>> orderBy,
+        SortOrder sortOrder,
+        FilteringOptions filteringOptions,
+        string searchTerm,
+        CancellationToken cancellationToken);
+    Task<PaginatedList<VacancyEntity>> GetPagedVacancyByUkprn<TKey>(int ukprn,
+        ushort page,
+        ushort pageSize,
+        Expression<Func<VacancyEntity, TKey>> orderBy,
+        SortOrder sortOrder,
+        FilteringOptions filteringOptions,
+        string searchTerm,
+        CancellationToken cancellationToken);
 }
 
 public class VacancyProvider(IVacancyRepository vacancyRepository) : IVacancyProvider
@@ -25,6 +42,20 @@ public class VacancyProvider(IVacancyRepository vacancyRepository) : IVacancyPro
     {
         var vacancies = await vacancyRepository.GetAllByUkprn(ukprn, token);
         return GetDashboardModel(vacancies);
+    }
+
+    public async Task<PaginatedList<VacancyEntity>> GetPagedVacancyByAccountId<TKey>(long accountId, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy,
+        SortOrder sortOrder, FilteringOptions filteringOptions, string searchTerm, CancellationToken cancellationToken)
+    {
+        return await vacancyRepository.GetManyByAccountIdAsync(accountId, page, pageSize, orderBy, sortOrder,
+            filteringOptions, searchTerm, cancellationToken);
+    }
+
+    public async Task<PaginatedList<VacancyEntity>> GetPagedVacancyByUkprn<TKey>(int ukprn, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy,
+        SortOrder sortOrder, FilteringOptions filteringOptions, string searchTerm, CancellationToken cancellationToken)
+    {
+        return await vacancyRepository.GetManyByUkprnIdAsync(ukprn, page, pageSize, orderBy, sortOrder,
+            filteringOptions, searchTerm, cancellationToken);
     }
 
     private static VacancyDashboardModel GetDashboardModel(List<VacancyEntity> vacancyEntities)
