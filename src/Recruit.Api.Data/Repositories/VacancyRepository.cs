@@ -1,10 +1,8 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
-using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Data.Repositories;
@@ -51,10 +49,26 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         IQueryable<VacancyEntity> query = dataContext.VacancyEntities
             .Where(x => x.AccountId == accountId);
 
+        // Apply filters
         query = ApplyFiltering(query, filteringOptions, closingSoonThreshold);
+        // Apply search term
         query = ApplySearchTerm(query, searchTerm);
+        // Apply shared filtering if needed
+        query = filteringOptions switch {
+            FilteringOptions.Review => query.Where(x =>
+                x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
 
-        int count = await query.CountAsync(cancellationToken);
+            FilteringOptions.AllSharedApplications
+                or FilteringOptions.NewSharedApplications
+                or FilteringOptions.AllApplications
+                or FilteringOptions.NewApplications
+                => ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
+                    .Where(x => x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
+
+            _ => query.Where(x => x.OwnerType == OwnerType.Employer)
+        };
+
+        // Apply sorting
         if (orderBy is not null)
         {
             query = sortOrder is SortOrder.Desc
@@ -62,6 +76,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 : query.OrderBy(orderBy);
         }
 
+        int count = await query.CountAsync(cancellationToken);
         int skip = (Math.Max(page, (ushort)1) - 1) * pageSize;
         ushort take = Math.Max(pageSize, (ushort)1);
 
@@ -85,21 +100,31 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         var closingSoonThreshold = DateTime.UtcNow.AddDays(ClosingSoonDays);
 
         IQueryable<VacancyEntity> query = dataContext.VacancyEntities
-            .Where(x => x.Ukprn == ukprn);
+            .Where(x => x.Ukprn == ukprn && x.OwnerType == OwnerType.Provider);
 
+        // Apply filters
         query = ApplyFiltering(query, filteringOptions, closingSoonThreshold);
+        // Apply search term
         query = ApplySearchTerm(query, searchTerm);
+        // Apply shared filtering if needed
+        if (filteringOptions is FilteringOptions.EmployerReviewedApplications
+            or FilteringOptions.AllApplications
+            or FilteringOptions.NewApplications)
+        {
+            query = ApplySharedFilteringByUkprn(query, filteringOptions, ukprn);
+        }
 
-        int count = await query.CountAsync(cancellationToken);
+        // Apply sorting
         if (orderBy is not null)
         {
-            query = sortOrder is SortOrder.Desc
+            query = sortOrder == SortOrder.Desc
                 ? query.OrderByDescending(orderBy)
                 : query.OrderBy(orderBy);
         }
 
+        int count = await query.CountAsync(cancellationToken);
         int skip = (Math.Max(page, (ushort)1) - 1) * pageSize;
-        ushort take = Math.Max(pageSize, (ushort)1);
+        int take = Math.Max(pageSize, (ushort)1);
 
         var items = await query
             .Skip(skip)
@@ -195,13 +220,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                                                x.ClosingDate < closingSoonThreshold &&
                                                x.ApplicationMethod == ApplicationMethod.ThroughFindAnApprenticeship),
             FilteringOptions.Transferred => query
-                .AsEnumerable()
-                .Where(v =>
-                {
-                    var info = ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo);
-                    return info?.TransferredDate != null;
-                })
-                .AsQueryable(),
+                .Where(v => v.TransferInfo != null),
             FilteringOptions.NewSharedApplications or FilteringOptions.AllSharedApplications
                                            => query.Where(x =>
                                                (x.Status == VacancyStatus.Live || x.Status == VacancyStatus.Closed) &&
@@ -228,5 +247,92 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         );
 
         return query;
+    }
+    
+    private IQueryable<VacancyEntity> ApplySharedFilteringByUkprn(IQueryable<VacancyEntity> query, FilteringOptions filteringOptions, int ukprn)
+    {
+        var applicationReviewStatusList = filteringOptions switch {
+            FilteringOptions.EmployerReviewedApplications => new[]
+            {
+                ApplicationReviewStatus.EmployerInterviewing,
+                ApplicationReviewStatus.EmployerUnsuccessful
+            },
+            FilteringOptions.AllApplications => new[]
+            {
+                ApplicationReviewStatus.New,
+                ApplicationReviewStatus.Unsuccessful,
+                ApplicationReviewStatus.Successful
+            },
+            FilteringOptions.NewApplications => new[]
+            {
+                ApplicationReviewStatus.New
+            },
+            _ => Array.Empty<ApplicationReviewStatus>()
+        };
+
+        if (!applicationReviewStatusList.Any())
+        {
+            return Enumerable.Empty<VacancyEntity>().AsQueryable();
+        }
+
+        var filtered = dataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(appReview =>
+                appReview.Ukprn == ukprn &&
+                applicationReviewStatusList.Contains(appReview.Status) &&
+                appReview.WithdrawnDate == null);
+
+        return filtered.Join(
+            query,
+            appReview => appReview.VacancyReference,
+            vacancy => vacancy.VacancyReference,
+            (_, vacancy) => vacancy);
+    }
+
+    private IQueryable<VacancyEntity> ApplySharedFilteringByAccountId(IQueryable<VacancyEntity> query, FilteringOptions filteringOptions, long accountId)
+    {
+        IQueryable<ApplicationReviewEntity> appQuery = filteringOptions switch {
+            FilteringOptions.AllSharedApplications =>
+                dataContext.ApplicationReviewEntities
+                    .AsNoTracking()
+                    .Where(appReview =>
+                        appReview.AccountId == accountId &&
+                        appReview.DateSharedWithEmployer != null &&
+                        appReview.WithdrawnDate == null),
+
+            FilteringOptions.NewSharedApplications =>
+                dataContext.ApplicationReviewEntities
+                    .AsNoTracking()
+                    .Where(appReview =>
+                        appReview.AccountId == accountId &&
+                        appReview.Status == ApplicationReviewStatus.Shared &&
+                        appReview.WithdrawnDate == null),
+
+            FilteringOptions.AllApplications =>
+                dataContext.ApplicationReviewEntities
+                    .AsNoTracking()
+                    .Where(appReview =>
+                        appReview.AccountId == accountId &&
+                        (appReview.Status == ApplicationReviewStatus.New
+                         || appReview.Status == ApplicationReviewStatus.Unsuccessful
+                         || appReview.Status == ApplicationReviewStatus.Successful) &&
+                        appReview.WithdrawnDate == null),
+
+            FilteringOptions.NewApplications =>
+                dataContext.ApplicationReviewEntities
+                    .AsNoTracking()
+                    .Where(appReview =>
+                        appReview.AccountId == accountId &&
+                        appReview.Status == ApplicationReviewStatus.New &&
+                        appReview.WithdrawnDate == null),
+
+            _ => Enumerable.Empty<ApplicationReviewEntity>().AsQueryable()
+        };
+
+        return appQuery.Join(
+            query,
+            appReview => appReview.VacancyReference,
+            vacancy => vacancy.VacancyReference,
+            (_, vacancy) => vacancy);
     }
 }

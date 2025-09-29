@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses;
@@ -17,6 +18,7 @@ public class WhenGettingVacanciesByUkprn: BaseFixture
             .Select(x =>
             {
                 x.Ukprn = ukprn;
+                x.OwnerType = OwnerType.Provider;
                 return x;
             }).ToList();
         var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)
@@ -52,6 +54,7 @@ public class WhenGettingVacanciesByUkprn: BaseFixture
             .Select(x =>
             {
                 x.Ukprn = ukprn;
+                x.OwnerType = OwnerType.Provider;
                 return x;
             }).ToList();
         var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)

@@ -24,10 +24,10 @@ internal class WhenGettingManyByUkprnId
         // seed some test data
         _context.VacancyEntities.AddRange(new[]
         {
-            new VacancyEntity { Id = Guid.NewGuid(), Ukprn = 123, Title = "Vac A", ClosingDate = new DateTime(2025, 1, 1), Status = VacancyStatus.Approved },
-            new VacancyEntity { Id = Guid.NewGuid(), Ukprn = 123, Title = "Vac B", ClosingDate = new DateTime(2025, 2, 1), Status = VacancyStatus.Approved },
-            new VacancyEntity { Id = Guid.NewGuid(), Ukprn = 123, Title = "Vac C", ClosingDate = new DateTime(2025, 3, 1), Status = VacancyStatus.Closed },
-            new VacancyEntity { Id = Guid.NewGuid(), Ukprn = 999, Title = "Other Ukprn", ClosingDate = new DateTime(2025, 4, 1), Status = VacancyStatus.Live }
+            new VacancyEntity { Id = Guid.NewGuid(), OwnerType = OwnerType.Provider, Ukprn = 123, Title = "Vac A", ClosingDate = new DateTime(2025, 1, 1), Status = VacancyStatus.Approved },
+            new VacancyEntity { Id = Guid.NewGuid(), OwnerType = OwnerType.Provider, Ukprn = 123, Title = "Vac B", ClosingDate = new DateTime(2025, 2, 1), Status = VacancyStatus.Approved },
+            new VacancyEntity { Id = Guid.NewGuid(), OwnerType = OwnerType.Provider,  Ukprn = 123, Title = "Vac C", ClosingDate = new DateTime(2025, 3, 1), Status = VacancyStatus.Closed },
+            new VacancyEntity { Id = Guid.NewGuid(), OwnerType = OwnerType.Provider, Ukprn = 999, Title = "Other Ukprn", ClosingDate = new DateTime(2025, 4, 1), Status = VacancyStatus.Live }
         });
         _context.SaveChanges();
 
