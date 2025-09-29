@@ -48,8 +48,8 @@ public interface IApplicationReviewRepository
         CancellationToken token = default);
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
-    Task<List<DashboardCountModel>> GetAllByAccountId(long accountId, CancellationToken token = default);
-    Task<List<DashboardCountModel>> GetAllByUkprn(int ukprn, CancellationToken token = default);
+    Task<List<ApplicationReviewsDashboardCountModel>> GetAllByAccountId(long accountId, CancellationToken token = default);
+    Task<List<ApplicationReviewsDashboardCountModel>> GetAllByUkprn(int ukprn, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetByUkprnAndVacancyReferencesAsync(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetByAccountIdAndVacancyReferencesAsync(long accountId, List<long> vacancyReferences, CancellationToken token = default);
     Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
@@ -281,7 +281,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return entity;
     }
 
-    public async Task<List<DashboardCountModel>> GetAllByAccountId(long accountId, CancellationToken token = default)
+    public async Task<List<ApplicationReviewsDashboardCountModel>> GetAllByAccountId(long accountId, CancellationToken token = default)
     {
         return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
@@ -293,7 +293,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
             ).GroupBy(c => c.Status).Select(g => 
-                new DashboardCountModel
+                new ApplicationReviewsDashboardCountModel
                 {
                     Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
                     Count = g.Count()
@@ -301,7 +301,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .ToListAsync(token);
     }
 
-    public async Task<List<DashboardCountModel>> GetAllByUkprn(int ukprn, CancellationToken token = default)
+    public async Task<List<ApplicationReviewsDashboardCountModel>> GetAllByUkprn(int ukprn, CancellationToken token = default)
     {
         return await recruitDataContext.ApplicationReviewEntities
         .AsNoTracking()
@@ -313,7 +313,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
                 vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
             ).GroupBy(c => c.Status).Select(g => 
-            new DashboardCountModel
+            new ApplicationReviewsDashboardCountModel
             {
                 Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
                 Count = g.Count()

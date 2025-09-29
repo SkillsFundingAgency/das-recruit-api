@@ -4,6 +4,7 @@ using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.UnitTests;
 using Address = SFA.DAS.Recruit.Api.Domain.Models.Address;
