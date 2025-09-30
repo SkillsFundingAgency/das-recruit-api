@@ -288,7 +288,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .Where(appReview => appReview.AccountId == accountId && appReview.WithdrawnDate == null)
             .Join(
                 recruitDataContext.VacancyEntities.AsNoTracking()
-                    .Where(vacancy => vacancy.OwnerType == OwnerType.Employer),
+                    .Where(vacancy => vacancy.OwnerType == OwnerType.Employer && vacancy.AccountId == accountId),
                 appReview => appReview.VacancyReference,
                 vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
@@ -308,7 +308,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .Where(appReview => appReview.Ukprn == ukprn && appReview.WithdrawnDate == null)
             .Join(
                 recruitDataContext.VacancyEntities.AsNoTracking()
-                    .Where(vacancy => vacancy.OwnerType == OwnerType.Provider),
+                    .Where(vacancy => vacancy.OwnerType == OwnerType.Provider && vacancy.Ukprn == ukprn),
                 appReview => appReview.VacancyReference,
                 vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
@@ -333,7 +333,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .Where(appReview => appReview.AccountId == accountId && vacancyReferences.Contains(appReview.VacancyReference))
             .Join(
                 recruitDataContext.VacancyEntities.AsNoTracking()
-                    .Where(vacancy => vacancy.OwnerType == OwnerType.Employer),
+                    .Where(vacancy => vacancy.OwnerType == OwnerType.Employer  && vacancy.AccountId == accountId),
                 appReview => appReview.VacancyReference,
                 vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
@@ -353,7 +353,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .Where(appReview => appReview.Ukprn == ukprn && vacancyReferences.Contains(appReview.VacancyReference))
             .Join(
                 recruitDataContext.VacancyEntities.AsNoTracking()
-                    .Where(vacancy => vacancy.OwnerType == OwnerType.Provider),
+                    .Where(vacancy => vacancy.OwnerType == OwnerType.Provider  && vacancy.Ukprn == ukprn),
                 appReview => appReview.VacancyReference,
                 vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
