@@ -2,4 +2,4 @@
 
 namespace SFA.DAS.Recruit.Api.Models.Responses.Notifications;
 
-public record GetBatchByDateResponse(IEnumerable<NotificationEmail> Emails, long[] Ids);
+public record GetBatchByDateResponse(IEnumerable<NotificationEmail> Emails);
