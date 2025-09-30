@@ -249,7 +249,9 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         return query;
     }
     
-    private IQueryable<VacancyEntity> ApplySharedFilteringByUkprn(IQueryable<VacancyEntity> query, FilteringOptions filteringOptions, int ukprn)
+    private IQueryable<VacancyEntity> ApplySharedFilteringByUkprn(IQueryable<VacancyEntity> query,
+        FilteringOptions filteringOptions,
+        int ukprn)
     {
         var applicationReviewStatusList = filteringOptions switch {
             FilteringOptions.EmployerReviewedApplications => new[]
@@ -289,7 +291,9 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             (_, vacancy) => vacancy);
     }
 
-    private IQueryable<VacancyEntity> ApplySharedFilteringByAccountId(IQueryable<VacancyEntity> query, FilteringOptions filteringOptions, long accountId)
+    private IQueryable<VacancyEntity> ApplySharedFilteringByAccountId(IQueryable<VacancyEntity> query,
+        FilteringOptions filteringOptions,
+        long accountId)
     {
         IQueryable<ApplicationReviewEntity> appQuery = filteringOptions switch {
             FilteringOptions.AllSharedApplications =>
