@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
-using SFA.DAS.Recruit.Api.Configuration;
+using SFA.DAS.Recruit.Api.Domain.Configuration;
 
-namespace SFA.DAS.Recruit.Api.Core;
+namespace SFA.DAS.Recruit.Api.Domain.Extensions;
 
 public static class ApiUtils
 {

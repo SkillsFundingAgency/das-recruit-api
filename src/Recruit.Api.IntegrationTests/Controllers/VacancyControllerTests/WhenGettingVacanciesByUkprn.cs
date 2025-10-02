@@ -7,24 +7,24 @@ using SFA.DAS.Recruit.Api.Models.Responses;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
-public class WhenGettingVacanciesByAccountId: BaseFixture
+public class WhenGettingVacanciesByUkprn: BaseFixture
 {
     [Test]
     public async Task Then_The_Vacancies_Are_Returned()
     {
         // arrange
-        long accountId = Fixture.Create<long>();
+        int ukprn = Fixture.Create<int>();
         var items = Fixture.CreateMany<VacancyEntity>(100)
             .Select(x =>
             {
-                x.AccountId = accountId;
-                x.OwnerType = OwnerType.Employer;
+                x.Ukprn = ukprn;
+                x.OwnerType = OwnerType.Provider;
                 return x;
             }).ToList();
         var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)
             .Select(x =>
             {
-                x.AccountId = accountId;
+                x.Ukprn = ukprn;
                 return x;
             }).ToList();
 
@@ -32,7 +32,7 @@ public class WhenGettingVacanciesByAccountId: BaseFixture
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(applicationReviewItems);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Account}/{accountId}/{RouteElements.Vacancies}");
+        var response = await Client.GetAsync($"{RouteNames.Provider}/{ukprn}/{RouteElements.Vacancies}");
         var pagedResponse = await response.Content.ReadAsAsync<PagedResponse<VacancySummary>>();
 
         // assert
@@ -49,18 +49,18 @@ public class WhenGettingVacanciesByAccountId: BaseFixture
     public async Task Then_The_Correct_Paged_Vacancies_Are_Returned()
     {
         // arrange
-        long accountId = Fixture.Create<long>();
+        int ukprn = Fixture.Create<int>();
         var items = Fixture.CreateMany<VacancyEntity>(100)
             .Select(x =>
             {
-                x.AccountId = accountId;
-                x.OwnerType = OwnerType.Employer;
+                x.Ukprn = ukprn;
+                x.OwnerType = OwnerType.Provider;
                 return x;
             }).ToList();
         var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)
             .Select(x =>
             {
-                x.AccountId = accountId;
+                x.Ukprn = ukprn;
                 return x;
             }).ToList();
         var expectedItems = items.OrderBy(x => x.CreatedDate).Skip(20).Take(10).Select(x => x.ToGetResponse());
@@ -69,7 +69,7 @@ public class WhenGettingVacanciesByAccountId: BaseFixture
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(applicationReviewItems);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Account}/{accountId}/{RouteElements.Vacancies}?page=3&pageSize=10&sortOrder=Asc");
+        var response = await Client.GetAsync($"{RouteNames.Provider}/{ukprn}/{RouteElements.Vacancies}?page=3&pageSize=10&sortOrder=Asc");
         var pagedResponse = await response.Content.ReadAsAsync<PagedResponse<VacancySummary>>();
 
         // assert
