@@ -13,8 +13,6 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
     IUserRepository userRepository,
     IEmailTemplateHelper emailTemplateHelper) : IApplicationReviewNotificationFactory
 {
-    private const string ProviderManageVacancyUrl = "{0}/{1}/vacancies/{2}/manage";
-    
     public async Task<RecruitNotificationsResult> CreateAsync(ApplicationReviewEntity applicationReview, CancellationToken cancellationToken)
     {
         var vacancy = await vacancyRepository.GetOneByVacancyReferenceAsync(applicationReview.VacancyReference, cancellationToken);
@@ -40,7 +38,7 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
                 ["employer"] = vacancy.EmployerName!,
                 ["advertTitle"] = vacancy.Title!,
                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                ["manageVacancyURL"] = string.Format(ProviderManageVacancyUrl, emailTemplateHelper.RecruitProviderBaseUrl, ukprn, vacancy.Id),
+                ["manageVacancyURL"] = emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
                 ["notificationSettingsURL"] = emailTemplateHelper.ProviderManageNotificationsUrl(ukprn)
             })!,
             DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!
