@@ -14,7 +14,7 @@ public class VacancyNotificationStrategy(
 {
     public IVacancyNotificationFactory Create(VacancyEntity vacancy)
     {
-        ArgumentNullException.ThrowIfNull(vacancy, nameof(vacancy));
+        ArgumentNullException.ThrowIfNull(vacancy);
 
         return vacancy.Status switch {
             VacancyStatus.Review => vacancySentForReviewNotificationFactory,
