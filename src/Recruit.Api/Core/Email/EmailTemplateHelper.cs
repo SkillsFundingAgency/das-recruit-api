@@ -22,6 +22,7 @@ public class EmailTemplateHelper: IEmailTemplateHelper
                 [new TemplateKey(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly)] = new("68d467ac-339c-42b4-b862-ca06e1cc66e8"),
                 [new TemplateKey(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately)] = new("2f1b70d4-c722-4815-85a0-80a080eac642"),
                 [new TemplateKey(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately)] = new("2b69c0b2-bcc0-4988-82b6-868874e5617b"),
+                [new TemplateKey(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately)] = new("c35e76e7-303b-4b18-bb06-ad98cf68158d"),
             };
 
             RecruitEmployerBaseUrl = "https://recruit.manage-apprenticeships.service.gov.uk";
@@ -37,6 +38,7 @@ public class EmailTemplateHelper: IEmailTemplateHelper
                 [new TemplateKey(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly)] = new("520a434a-2203-49f6-a15a-9e9d1c58c18f"),
                 [new TemplateKey(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately)] = new("feb4191d-a373-4040-9bc6-93c09d8039b5"),
                 [new TemplateKey(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately)] = new("83f6cede-31c3-4dc9-b2ec-922856ba9bdc"),
+                [new TemplateKey(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately)] = new("c445095e-e659-499b-b2ab-81e321a9b591"),
             };
             
             RecruitEmployerBaseUrl = $"https://recruit.{environmentName.ToLower()}-eas.apprenticeships.education.gov.uk";

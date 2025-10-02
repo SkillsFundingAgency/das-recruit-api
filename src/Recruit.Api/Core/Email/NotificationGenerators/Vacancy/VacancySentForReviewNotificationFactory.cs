@@ -17,7 +17,7 @@ public class VacancySentForReviewNotificationFactory(
     
     public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, CancellationToken cancellationToken)
     {
-        if (vacancy is not { OwnerType: OwnerType.Provider, ReviewRequestedByUserId: not null })
+        if (vacancy is not { Status: VacancyStatus.Review, OwnerType: OwnerType.Provider, ReviewRequestedByUserId: not null })
         {
             return new RecruitNotificationsResult();
         }

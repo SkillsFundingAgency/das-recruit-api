@@ -43,6 +43,7 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IApplicationReviewNotificationStrategy, ApplicationReviewNotificationStrategy>();
         
         services.AddScoped<VacancySentForReviewNotificationFactory>();
+        services.AddScoped<VacancySubmittedNotificationFactory>();
         services.AddScoped<IVacancyNotificationStrategy, VacancyNotificationStrategy>();
         
         // email template handlers

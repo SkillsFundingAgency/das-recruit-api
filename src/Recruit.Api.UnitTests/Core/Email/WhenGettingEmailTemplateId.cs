@@ -11,6 +11,8 @@ public class WhenGettingEmailTemplateId
     [MoqInlineAutoData(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, "1c8c9e72-86c1-4fd1-8020-f4fe354a6e79")]
     [MoqInlineAutoData(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, "68d467ac-339c-42b4-b862-ca06e1cc66e8")]
     [MoqInlineAutoData(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately, "2f1b70d4-c722-4815-85a0-80a080eac642")]
+    [MoqInlineAutoData(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately, "2b69c0b2-bcc0-4988-82b6-868874e5617b")]
+    [MoqInlineAutoData(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately, "c35e76e7-303b-4b18-bb06-ad98cf68158d")]
     public void Then_The_Correct_Production_Template_Is_Returned(NotificationTypes notificationType, NotificationFrequency frequency, string expectedTemplateId)
     {
         // arrange
@@ -29,6 +31,8 @@ public class WhenGettingEmailTemplateId
     [MoqInlineAutoData(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, "b793a50f-49f0-4b3f-a4c3-46a8f857e48c")]
     [MoqInlineAutoData(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, "520a434a-2203-49f6-a15a-9e9d1c58c18f")]
     [MoqInlineAutoData(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately, "feb4191d-a373-4040-9bc6-93c09d8039b5")]
+    [MoqInlineAutoData(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately, "83f6cede-31c3-4dc9-b2ec-922856ba9bdc")]
+    [MoqInlineAutoData(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately, "c445095e-e659-499b-b2ab-81e321a9b591")]
     public void Then_The_Correct_Development_Template_Is_Returned(NotificationTypes notificationType, NotificationFrequency frequency, string expectedTemplateId)
     {
         // arrange

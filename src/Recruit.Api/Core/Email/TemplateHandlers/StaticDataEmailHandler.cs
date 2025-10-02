@@ -16,6 +16,7 @@ public class StaticDataEmailHandler: AbstractEmailHandler
         SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately));
         SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately));
         SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately));
+        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately));
     }
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)
