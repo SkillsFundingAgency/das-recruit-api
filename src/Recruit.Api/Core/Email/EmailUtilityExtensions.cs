@@ -48,27 +48,4 @@ public static class EmailUtilityExtensions
     {
         return when.AddDays(1).Date;
     }
-    
-    public static string GetCityNames(this List<Address> addresses)
-    {
-        var cityNames = addresses
-            .Select(address => address.GetLastNonEmptyField())
-            .Distinct()
-            .ToList();
-
-        return cityNames.Count == 1 && addresses.Count > 1
-            ? $"{cityNames[0]} ({addresses.Count} available locations)"
-            : string.Join(", ", cityNames.OrderBy(x => x));
-    }
-    
-    private static string? GetLastNonEmptyField(this Address address)
-    {
-        return new[]
-        {
-            address.AddressLine4,
-            address.AddressLine3,
-            address.AddressLine2,
-            address.AddressLine1,
-        }.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x));
-    }
 }

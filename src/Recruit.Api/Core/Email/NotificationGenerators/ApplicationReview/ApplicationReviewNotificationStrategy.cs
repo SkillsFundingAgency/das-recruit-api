@@ -17,7 +17,7 @@ public class ApplicationReviewNotificationStrategy(
 {
     public IApplicationReviewNotificationFactory Create(ApplicationReviewEntity applicationReview)
     {
-        ArgumentNullException.ThrowIfNull(applicationReview, nameof(applicationReview));
+        ArgumentNullException.ThrowIfNull(applicationReview);
         
         return applicationReview.Status switch {
             ApplicationReviewStatus.EmployerInterviewing => sharedApplicationReviewedByEmployerNotificationFactory,

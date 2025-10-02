@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
+using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
 using SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Providers;
@@ -40,6 +41,10 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<SharedApplicationReviewedByEmployerNotificationFactory>();
         services.AddScoped<ApplicationSubmittedNotificationFactory>();
         services.AddScoped<IApplicationReviewNotificationStrategy, ApplicationReviewNotificationStrategy>();
+        
+        services.AddScoped<VacancySentForReviewNotificationFactory>();
+        services.AddScoped<VacancySubmittedNotificationFactory>();
+        services.AddScoped<IVacancyNotificationStrategy, VacancyNotificationStrategy>();
         
         // email template handlers
         services.AddScoped<IEmailTemplateHandler, StaticDataEmailHandler>();

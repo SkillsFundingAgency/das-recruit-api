@@ -8,5 +8,7 @@ public interface IEmailTemplateHelper
     public string RecruitProviderBaseUrl { get; }
     Guid GetTemplateId(NotificationTypes notificationType, NotificationFrequency notificationFrequency);
     string ProviderManageNotificationsUrl(string ukprn);
+    string ProviderManageVacancyUrl(string ukprn, Guid vacancyId);
     string EmployerManageNotificationsUrl(string hashedAccountId);
+    string EmployerManageVacancyUrl(string hashedAccountId, Guid vacancyId);
 }
