@@ -11,11 +11,11 @@ public class VacancyReviewEntity
     public required long VacancyReference { get; set; }
     [MaxLength(500)]
     public required string VacancyTitle { get; init; }
-    public required DateTime CreatedDate { get; init; }
-    public required DateTime SlaDeadLine { get; init; }
+    public required DateTime CreatedDate { get; set; }
+    public required DateTime SlaDeadLine { get; set; }
     public DateTime? ReviewedDate { get; init; }
     public required ReviewStatus Status { get; set; }
-    public byte SubmissionCount { get; init; }
+    public byte SubmissionCount { get; set; }
     [MaxLength(255)]
     public string? ReviewedByUserEmail { get; init; }
     [MaxLength(255)]

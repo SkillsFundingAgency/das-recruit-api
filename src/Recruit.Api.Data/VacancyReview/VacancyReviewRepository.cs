@@ -60,27 +60,35 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
     public async Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken)
     {
         var now = DateTime.UtcNow;
-        var twelveHoursAgo = now.AddHours(-12);
-        var twentyFourHoursAgo = now.AddHours(-24);
 
-        var query = dataContext.VacancyReviewEntities
+        var dashboard = await dataContext.VacancyReviewEntities
             .Where(rv => rv.Status == ReviewStatus.PendingReview || rv.Status == ReviewStatus.UnderReview)
-            .AsNoTracking();
-
-        var dashboard = await query
+            .AsNoTracking()
             .GroupBy(_ => 1)
             .Select(g => new QaDashboard {
+
+                // Total vacancies currently awaiting review
                 TotalVacanciesForReview = g.Count(),
+
+                // Vacancies that have been resubmitted for review (i.e. more than one submission)
                 TotalVacanciesResubmitted = g
                     .Where(r => r.SubmissionCount > 1)
                     .Select(r => r.VacancyReference)
                     .Distinct()
                     .Count(),
-                TotalVacanciesBrokenSla = g.Count(r => r.SlaDeadLine < now),
+
+                // Vacancies that have breached the SLA (i.e. not reviewed within 24 hours of submission)
+                TotalVacanciesBrokenSla = g.Count(r =>
+                    r.CreatedDate <= now.AddHours(-24)),
+
+                // Vacancies submitted in the last 24 hours, split into two 12 hour periods
+                TotalVacanciesSubmittedLastTwelveHours = g.Count(r =>
+                    r.CreatedDate > now.AddHours(-12)),
+
+                // Vacancies submitted between 12 and 24 hours ago
                 TotalVacanciesSubmittedTwelveTwentyFourHours = g.Count(r =>
-                    r.SubmissionCount == 1 &&
-                    r.CreatedDate <= twentyFourHoursAgo &&
-                    r.CreatedDate > twelveHoursAgo)
+                    r.CreatedDate <= now.AddHours(-12) &&
+                    r.CreatedDate > now.AddHours(-24))
             })
             .FirstOrDefaultAsync(cancellationToken);
 
