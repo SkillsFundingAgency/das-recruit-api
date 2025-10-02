@@ -13,7 +13,8 @@ public class StaticDataEmailHandler: AbstractEmailHandler
     public StaticDataEmailHandler(IEmailTemplateHelper emailTemplateHelper)
     {
         SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately));
+        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Employer));
+        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Provider));
         SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately));
         SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately));
         SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately));

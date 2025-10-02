@@ -60,8 +60,8 @@ public class ApplicationSubmittedNotificationFactory(
         string ukprn = vacancy.Ukprn!.Value.ToString();
         var now = DateTime.Now;
         
-        var results = new RecruitNotificationsResult();
         // process each frequency
+        var results = new RecruitNotificationsResult();
         foreach (var group in usersGroupedByFrequency)
         {
             switch (group.Key)
@@ -69,7 +69,7 @@ public class ApplicationSubmittedNotificationFactory(
                 case NotificationFrequency.Immediately:
                     {
                         var recruitNotifications = group.Select(x => new RecruitNotificationEntity {
-                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately),
+                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, x.UserType),
                             UserId = x.Id,
                             User = x,
                             SendWhen = DateTime.Now,
@@ -90,7 +90,7 @@ public class ApplicationSubmittedNotificationFactory(
                 case NotificationFrequency.Daily:
                     {
                         var recruitNotifications = group.Select(x => new RecruitNotificationEntity {
-                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily),
+                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, x.UserType),
                             UserId = x.Id,
                             User = x,
                             SendWhen = now.GetNextDailySendDate(),
@@ -112,7 +112,7 @@ public class ApplicationSubmittedNotificationFactory(
                 case NotificationFrequency.Weekly:
                     {
                         var recruitNotifications = group.Select(x => new RecruitNotificationEntity {
-                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly),
+                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, x.UserType),
                             UserId = x.Id,
                             User = x,
                             SendWhen = now.GetNextWeeklySendDate(),
