@@ -120,7 +120,7 @@ public class WhenGettingApplicationSharedWithEmployerNotifications
             .Setup(x => x.Encode(applicationReview.AccountId, EncodingType.AccountId))
             .Returns(hashedAccountId);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately))
+            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer))
             .Returns(templateId);
         emailTemplateHelper
             .Setup(x => x.RecruitEmployerBaseUrl)

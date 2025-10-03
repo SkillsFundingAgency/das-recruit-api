@@ -15,13 +15,13 @@ public class WhenGettingStaticDataEmailsOnly
         new StaticDataEmailHandler(emailTemplateHelper.Object);
         
         // assert
-        emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>(), It.IsAny<NotificationFrequency>()), Times.Exactly(4));
+        emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>()), Times.Exactly(4));
         emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>(), It.IsAny<NotificationFrequency>(), It.IsAny<UserType>()), Times.Exactly(2));
         
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately), Times.Once);
+        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer), Times.Once);
+        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer), Times.Once);
+        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.VacancySentForReview), Times.Once);
+        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected), Times.Once);
         
         emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Employer), Times.Once);
         emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Provider), Times.Once);

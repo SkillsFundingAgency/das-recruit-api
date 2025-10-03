@@ -12,12 +12,12 @@ public class StaticDataEmailHandler: AbstractEmailHandler
 {
     public StaticDataEmailHandler(IEmailTemplateHelper emailTemplateHelper)
     {
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately));
+        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer));
         SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Employer));
         SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Provider));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately));
+        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer));
+        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancySentForReview));
+        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected));
     }
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)
@@ -26,7 +26,7 @@ public class StaticDataEmailHandler: AbstractEmailHandler
             TemplateId = record.EmailTemplateId,
             RecipientAddress = record.User.Email,
             Tokens = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(record.StaticData) ?? [],
-            SourceIds = [record.Id]
+            SourceIds = record.Id > 0 ? [record.Id] : null
         });
     }
 }

@@ -6,17 +6,17 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email;
 public class WhenGettingEmailTemplateId
 {
     [Test]
-    [MoqInlineAutoData(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately, "53058846-e369-4396-87b2-015c9d16360a")]
-    [MoqInlineAutoData(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately, "2f1b70d4-c722-4815-85a0-80a080eac642")]
-    [MoqInlineAutoData(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately, "2b69c0b2-bcc0-4988-82b6-868874e5617b")]
-    [MoqInlineAutoData(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately, "c35e76e7-303b-4b18-bb06-ad98cf68158d")]
-    public void Then_The_Correct_Production_Template_Is_Returned(NotificationTypes notificationType, NotificationFrequency frequency, string expectedTemplateId)
+    [MoqInlineAutoData(NotificationTypes.ApplicationSharedWithEmployer, "53058846-e369-4396-87b2-015c9d16360a")]
+    [MoqInlineAutoData(NotificationTypes.SharedApplicationReviewedByEmployer, "2f1b70d4-c722-4815-85a0-80a080eac642")]
+    [MoqInlineAutoData(NotificationTypes.VacancySentForReview, "2b69c0b2-bcc0-4988-82b6-868874e5617b")]
+    [MoqInlineAutoData(NotificationTypes.VacancyApprovedOrRejected, "c35e76e7-303b-4b18-bb06-ad98cf68158d")]
+    public void Then_The_Correct_Production_Template_Is_Returned(NotificationTypes notificationType, string expectedTemplateId)
     {
         // arrange
         var sut = new EmailTemplateHelper("prd");
 
         // act
-        var result = sut.GetTemplateId(notificationType, frequency);
+        var result = sut.GetTemplateId(notificationType);
 
         // assert
         result.ToString().Should().Be(expectedTemplateId);
@@ -42,17 +42,17 @@ public class WhenGettingEmailTemplateId
     }
     
     [Test]
-    [MoqInlineAutoData(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately, "f6fc57e6-7318-473d-8cb5-ca653035391a")]
-    [MoqInlineAutoData(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately, "feb4191d-a373-4040-9bc6-93c09d8039b5")]
-    [MoqInlineAutoData(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately, "83f6cede-31c3-4dc9-b2ec-922856ba9bdc")]
-    [MoqInlineAutoData(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately, "c445095e-e659-499b-b2ab-81e321a9b591")]
-    public void Then_The_Correct_Development_Template_Is_Returned(NotificationTypes notificationType, NotificationFrequency frequency, string expectedTemplateId)
+    [MoqInlineAutoData(NotificationTypes.ApplicationSharedWithEmployer, "f6fc57e6-7318-473d-8cb5-ca653035391a")]
+    [MoqInlineAutoData(NotificationTypes.SharedApplicationReviewedByEmployer, "feb4191d-a373-4040-9bc6-93c09d8039b5")]
+    [MoqInlineAutoData(NotificationTypes.VacancySentForReview, "83f6cede-31c3-4dc9-b2ec-922856ba9bdc")]
+    [MoqInlineAutoData(NotificationTypes.VacancyApprovedOrRejected, "c445095e-e659-499b-b2ab-81e321a9b591")]
+    public void Then_The_Correct_Development_Template_Is_Returned(NotificationTypes notificationType, string expectedTemplateId)
     {
         // arrange
         var sut = new EmailTemplateHelper("local");
 
         // act
-        var result = sut.GetTemplateId(notificationType, frequency);
+        var result = sut.GetTemplateId(notificationType);
 
         // assert
         result.ToString().Should().Be(expectedTemplateId);

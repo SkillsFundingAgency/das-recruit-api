@@ -37,7 +37,7 @@ public class ApplicationSharedWithEmployerNotificationFactory(
         );
         
         var recruitNotifications = usersRequiringEmail.Select(x => new RecruitNotificationEntity {
-            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately),
+            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer),
             UserId = x.Id,
             SendWhen = DateTime.Now,
             User = x,

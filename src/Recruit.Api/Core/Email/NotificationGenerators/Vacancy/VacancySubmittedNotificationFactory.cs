@@ -41,7 +41,7 @@ public class VacancySubmittedNotificationFactory(
         
         var now = DateTime.UtcNow.Date;
         var recruitNotifications = usersRequiringEmail.Select(x => new RecruitNotificationEntity {
-            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately),
+            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected),
             UserId = x.Id,
             SendWhen = now,
             User = x,
