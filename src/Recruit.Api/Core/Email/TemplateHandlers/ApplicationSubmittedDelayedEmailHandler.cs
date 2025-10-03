@@ -60,7 +60,7 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
         foreach (var vacancyGroup in vacancyGroups)
         {
             var vacancyDetails = vacancyGroup.First();
-            sb.AppendLine($"#{vacancyDetails.AdvertTitle} ({vacancyDetails.VacancyReference.ToString()})");
+            sb.AppendLine($"# {vacancyDetails.AdvertTitle} ({vacancyDetails.VacancyReference.ToString()})");
             sb.AppendLine($"{vacancyDetails.EmployerName}");
             sb.AppendLine($"{vacancyDetails.Location}");
             sb.AppendLine($"[View applications]({vacancyDetails.ManageVacancyUrl}) ({vacancyGroup.Count()} new)");
