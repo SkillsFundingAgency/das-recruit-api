@@ -86,7 +86,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately))
+            .Setup(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer))
             .Returns(templateId);
         emailTemplateHelper
             .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))

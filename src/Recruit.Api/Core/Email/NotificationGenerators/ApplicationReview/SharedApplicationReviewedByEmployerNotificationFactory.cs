@@ -29,7 +29,7 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
         
         string ukprn = vacancy.Ukprn!.Value.ToString();
         var recruitNotifications = usersRequiringEmail.Select(x => new RecruitNotificationEntity {
-            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately),
+            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer),
             UserId = x.Id,
             SendWhen = DateTime.Now,
             User = x,

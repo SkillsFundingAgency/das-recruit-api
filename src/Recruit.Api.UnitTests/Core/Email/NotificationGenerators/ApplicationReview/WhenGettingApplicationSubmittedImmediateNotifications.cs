@@ -38,7 +38,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately))
+            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, It.IsAny<UserType>()))
             .Returns(templateId);
         emailTemplateHelper
             .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
@@ -102,7 +102,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
             .Setup(x => x.FindUsersByEmployerAccountIdAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately))
+            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, It.IsAny<UserType>()))
             .Returns(templateId);
         emailTemplateHelper
             .Setup(x => x.EmployerManageNotificationsUrl(hashedEmployerAccountId))

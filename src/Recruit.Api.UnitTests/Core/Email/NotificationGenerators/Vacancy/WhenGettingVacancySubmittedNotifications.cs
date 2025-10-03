@@ -106,7 +106,7 @@ public class WhenGettingVacancySubmittedNotifications
             .Setup(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cts.Token))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately))
+            .Setup(x => x.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected))
             .Returns(templateId);
         emailTemplateHelper
             .Setup(x => x.RecruitProviderBaseUrl)

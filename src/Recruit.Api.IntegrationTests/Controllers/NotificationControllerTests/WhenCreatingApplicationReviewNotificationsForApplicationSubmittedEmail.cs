@@ -215,7 +215,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         var notification = capturedNotifications?.SingleOrDefault();
         notification.Should().NotBeNull();
         notification.UserId.Should().Be(providerUser.Id);
-        notification.EmailTemplateId.Should().Be(new EmailTemplateHelper("local").GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily));
+        notification.EmailTemplateId.Should().Be(new EmailTemplateHelper("local").GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, UserType.Provider));
         notification.SendWhen.Should().BeCloseTo(DateTime.Now.GetNextDailySendDate(), TimeSpan.FromSeconds(5));
         
         var staticData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(notification.StaticData)!;
@@ -266,7 +266,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         var notification = capturedNotifications?.SingleOrDefault();
         notification.Should().NotBeNull();
         notification.UserId.Should().Be(providerUser.Id);
-        notification.EmailTemplateId.Should().Be(new EmailTemplateHelper("local").GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly));
+        notification.EmailTemplateId.Should().Be(new EmailTemplateHelper("local").GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, UserType.Provider));
         notification.SendWhen.Should().BeCloseTo(DateTime.Now.GetNextWeeklySendDate(), TimeSpan.FromSeconds(5));
 
         var staticData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(notification.StaticData)!;

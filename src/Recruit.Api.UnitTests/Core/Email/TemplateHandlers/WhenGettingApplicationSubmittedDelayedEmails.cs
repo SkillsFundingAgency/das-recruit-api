@@ -16,16 +16,16 @@ public class WhenGettingApplicationSubmittedDelayedEmails
         new ApplicationSubmittedDelayedEmailHandler(emailTemplateHelper.Object);
     
         // assert
-        emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>(), It.IsAny<NotificationFrequency>()), Times.Exactly(2));
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly), Times.Once);
+        emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>(), It.IsAny<NotificationFrequency>(), It.IsAny<UserType>()), Times.Exactly(4));
+        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, UserType.Employer), Times.Once);
+        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, UserType.Employer), Times.Once);
+        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, UserType.Provider), Times.Once);
+        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, UserType.Provider), Times.Once);
     }
     
     [Test]
-    [RecruitInlineAutoData(NotificationFrequency.Daily)]
-    [RecruitInlineAutoData(NotificationFrequency.Weekly)]
+    [RecruitAutoData]
     public void Notifications_Are_Generated_Correctly_For_Multiple_Users(
-        NotificationFrequency frequency,
         UserEntity user1,
         UserEntity user2,
         Guid templateId,
@@ -35,12 +35,9 @@ public class WhenGettingApplicationSubmittedDelayedEmails
         string manageVacancyUrl,
         Dictionary<string, string> staticData,
         VacancyReference vacancyReference,
-        Mock<IEmailTemplateHelper> emailTemplateHelper)
+        ApplicationSubmittedDelayedEmailHandler sut)
     {
         // arrange
-        emailTemplateHelper.Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, frequency)).Returns(templateId);
-        var sut = new ApplicationSubmittedDelayedEmailHandler(emailTemplateHelper.Object);
-
         var notifications = new List<RecruitNotificationEntity> {
             new()
             {
@@ -77,7 +74,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
         };
 
         string expectedSnippet = $"""
-                                 #{advertTitle} ({vacancyReference.ToString()})
+                                 # {advertTitle} ({vacancyReference.ToString()})
                                  {employerName}
                                  {location}
                                  [View applications]({manageVacancyUrl}) (1 new)
@@ -105,10 +102,8 @@ public class WhenGettingApplicationSubmittedDelayedEmails
     }
     
     [Test]
-    [RecruitInlineAutoData(NotificationFrequency.Daily)]
-    [RecruitInlineAutoData(NotificationFrequency.Weekly)]
+    [RecruitAutoData]
     public void Notifications_For_A_Single_Vacancy_Are_Combined_Correctly(
-        NotificationFrequency frequency,
         UserEntity user,
         Guid templateId,
         string advertTitle,
@@ -118,11 +113,9 @@ public class WhenGettingApplicationSubmittedDelayedEmails
         Dictionary<string, string> staticData,
         VacancyReference vacancyReference,
         List<RecruitNotificationEntity> notifications,
-        Mock<IEmailTemplateHelper> emailTemplateHelper)
+        ApplicationSubmittedDelayedEmailHandler sut)
     {
         // arrange
-        emailTemplateHelper.Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, frequency)).Returns(templateId);
-        var sut = new ApplicationSubmittedDelayedEmailHandler(emailTemplateHelper.Object);
         notifications.ForEach(x =>
         {
             x.UserId = user.Id;
@@ -139,7 +132,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
         });
 
         string expectedSnippet = $"""
-                                 #{advertTitle} ({vacancyReference.ToString()})
+                                 # {advertTitle} ({vacancyReference.ToString()})
                                  {employerName}
                                  {location}
                                  [View applications]({manageVacancyUrl}) ({notifications.Count} new)
@@ -177,21 +170,21 @@ public class WhenGettingApplicationSubmittedDelayedEmails
         string manageVacancyUrl,
         Dictionary<string, string> staticData,
         List<RecruitNotificationEntity> notifications,
-        Mock<IEmailTemplateHelper> emailTemplateHelper)
+        [Greedy] ApplicationSubmittedDelayedEmailHandler sut)
     {
         // arrange
         string expectedSnippet = $"""
-                                  #{advertTitle} (VAC{vacancyRef})
+                                  # {advertTitle} (VAC{vacancyRef})
                                   {employerName}
                                   {location}
                                   [View applications]({manageVacancyUrl}) (1 new)
 
-                                  #{advertTitle} (VAC{vacancyRef+1})
+                                  # {advertTitle} (VAC{vacancyRef+1})
                                   {employerName}
                                   {location}
                                   [View applications]({manageVacancyUrl}) (1 new)
                                   
-                                  #{advertTitle} (VAC{vacancyRef+2})
+                                  # {advertTitle} (VAC{vacancyRef+2})
                                   {employerName}
                                   {location}
                                   [View applications]({manageVacancyUrl}) (1 new)
@@ -203,8 +196,6 @@ public class WhenGettingApplicationSubmittedDelayedEmails
             { "adverts", expectedSnippet } 
         };
         
-        emailTemplateHelper.Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, frequency)).Returns(templateId);
-        var sut = new ApplicationSubmittedDelayedEmailHandler(emailTemplateHelper.Object);
         notifications.ForEach(x =>
         {
             x.UserId = user.Id;
@@ -219,62 +210,6 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                 ["manageVacancyURL"] = manageVacancyUrl,
             });
         });
-
-        // act
-        var results = sut.CreateNotificationEmails(notifications).ToList();
-
-        // assert
-        results.Should().HaveCount(1);
-        var email = results[0];
-        email.TemplateId.Should().Be(templateId);
-        email.RecipientAddress.Should().Be(user.Email);
-        email.Tokens.Should().HaveCount(staticData.Count + 1);
-        email.Tokens.Should().BeEquivalentTo(expectedTokens);
-    }
-    
-    //[RecruitAutoData]
-    public void Notifications (
-        UserEntity user,
-        Guid templateId,
-        string advertTitle,
-        string employerName,
-        string location,
-        string manageVacancyUrl,
-        Dictionary<string, string> staticData,
-        VacancyReference vacancyReference,
-        List<RecruitNotificationEntity> notifications,
-        Mock<IEmailTemplateHelper> emailTemplateHelper)
-    {
-        // arrange
-        emailTemplateHelper.Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily)).Returns(templateId);
-        var sut = new ApplicationSubmittedDelayedEmailHandler(emailTemplateHelper.Object);
-        notifications.ForEach(x =>
-        {
-            x.UserId = user.Id;
-            x.User = user;
-            x.EmailTemplateId = templateId;
-            x.StaticData = JsonSerializer.Serialize(staticData);
-            x.DynamicData = JsonSerializer.Serialize(new Dictionary<string, string> {
-                ["advertTitle"] = advertTitle,
-                ["vacancyReference"] = vacancyReference.ToShortString(),
-                ["employerName"] = employerName,
-                ["location"] = location,
-                ["manageVacancyURL"] = manageVacancyUrl,
-            });
-        });
-
-        string expectedSnippet = $"""
-                                 #{advertTitle} ({vacancyReference.ToString()})
-                                 {employerName}
-                                 {location}
-                                 [View applications]({manageVacancyUrl}) ({notifications.Count} new)
-                                 
-                                 
-                                 """;
-        
-        var expectedTokens = new Dictionary<string, string>(staticData) {
-            { "adverts", expectedSnippet } 
-        };
 
         // act
         var results = sut.CreateNotificationEmails(notifications).ToList();

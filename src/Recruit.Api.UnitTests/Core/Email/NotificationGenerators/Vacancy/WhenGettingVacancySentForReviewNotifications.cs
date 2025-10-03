@@ -108,7 +108,7 @@ public class WhenGettingVacancySentForReviewNotifications
             .Setup(x => x.Encode(vacancy.AccountId!.Value, EncodingType.AccountId))
             .Returns(hashedEmployerAccountId);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately))
+            .Setup(x => x.GetTemplateId(NotificationTypes.VacancySentForReview))
             .Returns(templateId);
         emailTemplateHelper
             .Setup(x => x.RecruitEmployerBaseUrl)
