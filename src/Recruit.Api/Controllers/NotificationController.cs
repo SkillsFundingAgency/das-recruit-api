@@ -9,7 +9,6 @@ using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Responses.Notifications;
-using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -49,7 +48,7 @@ public class NotificationController : ControllerBase
 
     [HttpPost, Route($"~/{RouteNames.ApplicationReview}/{{id:guid}}/create-notifications")]
     [ProducesResponseType(typeof(IEnumerable<NotificationEmail>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IResult> CreateApplicationReviewNotifications(
@@ -64,7 +63,7 @@ public class NotificationController : ControllerBase
         var applicationReview = await applicationReviewsRepository.GetById(id, cancellationToken);
         if (applicationReview is null)
         {
-            return TypedResults.BadRequest("The specified application review does not exist");
+            return TypedResults.NotFound("The specified application review does not exist");
         }
 
         try
@@ -82,7 +81,7 @@ public class NotificationController : ControllerBase
         {
             return ex.ToResponse();
         }
-        catch (NotSupportedException ex)
+        catch (EntityStateNotSupportedException ex)
         {
             return ex.ToResponse();
         }
@@ -90,7 +89,7 @@ public class NotificationController : ControllerBase
     
     [HttpPost, Route($"~/{RouteNames.Vacancies}/{{id:guid}}/create-notifications")]
     [ProducesResponseType(typeof(IEnumerable<NotificationEmail>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IResult> CreateVacancySubmittedNotifications(
@@ -105,7 +104,7 @@ public class NotificationController : ControllerBase
         var vacancy = await vacancyRepository.GetOneAsync(id, cancellationToken);
         if (vacancy is null)
         {
-            return TypedResults.BadRequest("The specified vacancy does not exist");
+            return TypedResults.NotFound("The specified vacancy does not exist");
         }
 
         try
@@ -119,11 +118,7 @@ public class NotificationController : ControllerBase
             var results = emailfactory.CreateFrom(recruitNotifications.Immediate);
             return TypedResults.Ok(results);
         }
-        catch (DataIntegrityException ex)
-        {
-            return ex.ToResponse();
-        }
-        catch (NotSupportedException ex)
+        catch (EntityStateNotSupportedException ex)
         {
             return ex.ToResponse();
         }

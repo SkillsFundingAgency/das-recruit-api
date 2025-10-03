@@ -7,7 +7,6 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
-using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
 
@@ -31,7 +30,7 @@ public class ApplicationSubmittedNotificationFactory(
         var users = vacancy.OwnerType switch {
             OwnerType.Employer => await userRepository.FindUsersByEmployerAccountIdAsync(applicationReview.AccountId, cancellationToken),
             OwnerType.Provider => await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken),
-            _ => throw new NotSupportedException($"The vacancy owner type '{vacancy.OwnerType}' is not supported")
+            _ => throw new EntityStateNotSupportedException($"The vacancy owner type '{vacancy.OwnerType}' is not supported")
         };
         
         // update with the default notification preferences
