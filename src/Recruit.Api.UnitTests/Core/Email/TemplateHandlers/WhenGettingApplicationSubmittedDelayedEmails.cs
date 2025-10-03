@@ -74,7 +74,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
         };
 
         string expectedSnippet = $"""
-                                 #{advertTitle} ({vacancyReference.ToString()})
+                                 # {advertTitle} ({vacancyReference.ToString()})
                                  {employerName}
                                  {location}
                                  [View applications]({manageVacancyUrl}) (1 new)
@@ -132,7 +132,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
         });
 
         string expectedSnippet = $"""
-                                 #{advertTitle} ({vacancyReference.ToString()})
+                                 # {advertTitle} ({vacancyReference.ToString()})
                                  {employerName}
                                  {location}
                                  [View applications]({manageVacancyUrl}) ({notifications.Count} new)
@@ -174,17 +174,17 @@ public class WhenGettingApplicationSubmittedDelayedEmails
     {
         // arrange
         string expectedSnippet = $"""
-                                  #{advertTitle} (VAC{vacancyRef})
+                                  # {advertTitle} (VAC{vacancyRef})
                                   {employerName}
                                   {location}
                                   [View applications]({manageVacancyUrl}) (1 new)
 
-                                  #{advertTitle} (VAC{vacancyRef+1})
+                                  # {advertTitle} (VAC{vacancyRef+1})
                                   {employerName}
                                   {location}
                                   [View applications]({manageVacancyUrl}) (1 new)
                                   
-                                  #{advertTitle} (VAC{vacancyRef+2})
+                                  # {advertTitle} (VAC{vacancyRef+2})
                                   {employerName}
                                   {location}
                                   [View applications]({manageVacancyUrl}) (1 new)
@@ -210,60 +210,6 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                 ["manageVacancyURL"] = manageVacancyUrl,
             });
         });
-
-        // act
-        var results = sut.CreateNotificationEmails(notifications).ToList();
-
-        // assert
-        results.Should().HaveCount(1);
-        var email = results[0];
-        email.TemplateId.Should().Be(templateId);
-        email.RecipientAddress.Should().Be(user.Email);
-        email.Tokens.Should().HaveCount(staticData.Count + 1);
-        email.Tokens.Should().BeEquivalentTo(expectedTokens);
-    }
-    
-    //[RecruitAutoData]
-    public void Notifications (
-        UserEntity user,
-        Guid templateId,
-        string advertTitle,
-        string employerName,
-        string location,
-        string manageVacancyUrl,
-        Dictionary<string, string> staticData,
-        VacancyReference vacancyReference,
-        List<RecruitNotificationEntity> notifications,
-        ApplicationSubmittedDelayedEmailHandler sut)
-    {
-        // arrange
-        notifications.ForEach(x =>
-        {
-            x.UserId = user.Id;
-            x.User = user;
-            x.EmailTemplateId = templateId;
-            x.StaticData = JsonSerializer.Serialize(staticData);
-            x.DynamicData = JsonSerializer.Serialize(new Dictionary<string, string> {
-                ["advertTitle"] = advertTitle,
-                ["vacancyReference"] = vacancyReference.ToShortString(),
-                ["employerName"] = employerName,
-                ["location"] = location,
-                ["manageVacancyURL"] = manageVacancyUrl,
-            });
-        });
-
-        string expectedSnippet = $"""
-                                 #{advertTitle} ({vacancyReference.ToString()})
-                                 {employerName}
-                                 {location}
-                                 [View applications]({manageVacancyUrl}) ({notifications.Count} new)
-                                 
-                                 
-                                 """;
-        
-        var expectedTokens = new Dictionary<string, string>(staticData) {
-            { "adverts", expectedSnippet } 
-        };
 
         // act
         var results = sut.CreateNotificationEmails(notifications).ToList();
