@@ -22,13 +22,13 @@ public class VacancySubmittedNotificationFactory(
         if (vacancy is { OwnerType: OwnerType.Provider, ReviewRequestedByUserId: not null })
         {
             // this will handle provider vacancies that have been approved by the employer
-            return await HandleProviderOwnedVacancySubmitted(vacancy, cancellationToken);
+            return await HandleProviderOwnedRequiringEmployerReview(vacancy, cancellationToken);
         }
 
         return new RecruitNotificationsResult();
     }
 
-    private async Task<RecruitNotificationsResult> HandleProviderOwnedVacancySubmitted(VacancyEntity vacancy, CancellationToken cancellationToken)
+    private async Task<RecruitNotificationsResult> HandleProviderOwnedRequiringEmployerReview(VacancyEntity vacancy, CancellationToken cancellationToken)
     {
         var usersWhoMightRequireEmail = await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken);
         
