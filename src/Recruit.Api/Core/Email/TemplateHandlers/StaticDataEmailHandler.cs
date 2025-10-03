@@ -19,23 +19,11 @@ public class StaticDataEmailHandler: AbstractEmailHandler
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)
     {
-        var groupedByUser = recruitNotifications.GroupBy(x => x.UserId);
-        List<NotificationEmail> results = [];
-        foreach (var userGroup in groupedByUser)
-        {
-            foreach (var record in userGroup)
-            {
-                var staticData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(record.StaticData) ?? [];
-                var notificationEmail = new NotificationEmail {
-                    TemplateId = record.EmailTemplateId,
-                    RecipientAddress = record.User.Email,
-                    Tokens = staticData
-                };
-
-                results.Add(notificationEmail);
-            }
-        }
-
-        return results;
+        return recruitNotifications.Select(record => new NotificationEmail {
+            TemplateId = record.EmailTemplateId,
+            RecipientAddress = record.User.Email,
+            Tokens = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(record.StaticData) ?? [],
+            SourceIds = [record.Id]
+        });
     }
 }

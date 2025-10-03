@@ -42,12 +42,12 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
                 var dynamicData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(x.DynamicData)!;
                 return new {
                     AdvertTitle = dynamicData["advertTitle"],
-                    VacancyReference = new VacancyReference(dynamicData["vacancyReference"]),
                     EmployerName = dynamicData["employerName"],
                     Location = dynamicData["location"],
                     ManageVacancyUrl = dynamicData["manageVacancyURL"],
                     RecruitNotification = x,
-                    TemplateId = x.EmailTemplateId
+                    TemplateId = x.EmailTemplateId,
+                    VacancyReference = new VacancyReference(dynamicData["vacancyReference"])
                 };
             })
             .GroupBy(x => x.VacancyReference)
@@ -74,7 +74,8 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
         {
             TemplateId = details.TemplateId,
             RecipientAddress = details.RecruitNotification.User.Email,
-            Tokens = tokens
+            Tokens = tokens,
+            SourceIds = templateGroup.Select(x => x.Id).ToList()
         };
     }
 }

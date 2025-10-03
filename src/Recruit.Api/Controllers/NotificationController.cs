@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
@@ -6,8 +7,6 @@ using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Models;
-using SFA.DAS.Recruit.Api.Models;
-using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses.Notifications;
 using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
@@ -16,24 +15,24 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 [ApiController, Route(RouteNames.Notifications)]
 public class NotificationController : ControllerBase
 {
-    [HttpGet, Route("batch/by/sendwhen/{sendWhen:datetime}")]
+    [HttpGet, Route("batch/by/date")]
     [ProducesResponseType(typeof(GetBatchByDateResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IResult> GetBatchByDate(
-        [FromRoute] DateTime sendWhen,
+        [FromQuery, Required] DateTime? dateTime,
         [FromServices] INotificationsRepository repository,
         [FromServices] IEmailFactory emailFactory,
         CancellationToken cancellationToken)
     {
-        var recruitNotifications = await repository.GetBatchByDateAsync(sendWhen, cancellationToken);
+        var recruitNotifications = await repository.GetBatchByDateAsync(dateTime!.Value, cancellationToken);
         var results = emailFactory.CreateFrom(recruitNotifications);
-        return TypedResults.Ok(new GetBatchByDateResponse(results, recruitNotifications.Select(x => x.Id).ToArray()));
+        return TypedResults.Ok(new GetBatchByDateResponse(results));
     }
     
     [HttpDelete]
     [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IResult DeleteMany(
+    public async Task<IResult> DeleteMany(
         [FromQuery] List<long> ids,
         [FromServices] INotificationsRepository repository,
         CancellationToken cancellationToken)
@@ -43,7 +42,7 @@ public class NotificationController : ControllerBase
             return TypedResults.BadRequest();
         }
         
-        Response.OnCompleted(async () => { await repository.DeleteManyAsync(ids, cancellationToken); });
+        await repository.DeleteManyAsync(ids, cancellationToken);
         return TypedResults.NoContent();
     }
 
