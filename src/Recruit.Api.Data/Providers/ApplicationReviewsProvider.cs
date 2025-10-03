@@ -68,6 +68,11 @@ public interface IApplicationReviewsProvider
         bool isAscending = false,
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
+
+    Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default);
+    Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndStatus(long vacancyReference, ApplicationReviewStatus status, bool isTempStatus,
+        CancellationToken token = default);
 }
 
 internal class ApplicationReviewsProvider(
@@ -122,6 +127,24 @@ internal class ApplicationReviewsProvider(
         var vacancyDetails = GetVacancyDetails(appReviews.Items);
         return new PaginatedList<VacancyDetail>(vacancyDetails, appReviews.TotalCount, appReviews.PageIndex,
             appReviews.PageSize);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetAllByIdAsync(ids, token);
+    }
+
+    public async Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetByVacancyReferenceAndCandidateId(vacancyReference, candidateId,
+            token);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndStatus(long vacancyReference, ApplicationReviewStatus status, bool isTempStatus,
+        CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetAllByVacancyReferenceAndStatus(vacancyReference, status,
+            isTempStatus, token);
     }
 
     public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedAccountIdAsync(long accountId,

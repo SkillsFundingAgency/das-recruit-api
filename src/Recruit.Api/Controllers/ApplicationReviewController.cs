@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.Providers;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
@@ -41,6 +42,7 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
+    
     [HttpGet]
     [Route($"{RouteNames.ApplicationReview}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -89,6 +91,83 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
         catch (Exception e)
         {
             logger.LogError(e, "Unable to Get application reviews by vacancyReference : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpPost]
+    [Route($"~/{RouteNames.ApplicationReview}")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(List<GetApplicationReviewResponse>), StatusCodes.Status200OK)]
+    public async Task<IResult> GetManyByIds(
+        [FromBody][Required] List<Guid> ids,
+        CancellationToken token)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get all application reviews by ids");
+
+            var response = await provider.GetAllByIdAsync(ids, token);
+
+            return TypedResults.Ok(response.ToGetResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get application reviews by ids : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
+    [Route($"~/{RouteNames.ApplicationReview}/{{vacancyReference}}/Candidate/{{candidateId:guid}}")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(GetApplicationReviewResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> GetOneByVacancyReferenceAndCandidateId(
+        [FromRoute][Required] long vacancyReference,
+        [FromRoute][Required] Guid candidateId,
+        CancellationToken token)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get all application reviews by vacancyReference and candidateId : {vacancyReference}", vacancyReference);
+
+            var response = await provider.GetByVacancyReferenceAndCandidateId(vacancyReference, candidateId, token);
+
+            return response is null
+                ? Results.NotFound()
+                : TypedResults.Ok(response.ToGetResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get application reviews by vacancyReference and candidateId : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
+    [Route($"~/{RouteNames.ApplicationReview}/{{vacancyReference}}/status/{{status}}")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(GetApplicationReviewResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> GetManyByVacancyReferenceAndStatus(
+        [FromRoute][Required] long vacancyReference,
+        [FromRoute][Required] ApplicationReviewStatus status,
+        [FromQuery] bool includeTemporaryStatus = false,
+        CancellationToken token = default)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get all application reviews by vacancyReference and status : {vacancyReference}", vacancyReference);
+
+            var response = await provider.GetAllByVacancyReferenceAndStatus(vacancyReference, status, includeTemporaryStatus, token);
+
+            return TypedResults.Ok(response.ToGetResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get application reviews by vacancyReference and status : An error occurred");
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
