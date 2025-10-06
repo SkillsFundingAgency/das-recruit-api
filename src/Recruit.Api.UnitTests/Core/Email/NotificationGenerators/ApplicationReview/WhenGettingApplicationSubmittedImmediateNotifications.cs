@@ -16,7 +16,6 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         UserEntity user,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        Guid templateId,
         string manageNotificationsUrl,
         string manageVacancyUrl,
         string baseUrl,
@@ -38,9 +37,6 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, It.IsAny<UserType>()))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
             .Returns(manageNotificationsUrl);
         emailTemplateHelper
@@ -59,7 +55,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         
         var notification = result.Immediate[0];
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ApplicationSubmittedToProviderImmediate);
         notification.DynamicData.Should().Be("{}");
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;
@@ -78,7 +74,6 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         UserEntity user,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        Guid templateId,
         string hashedEmployerAccountId,
         string manageNotificationsUrl,
         string manageVacancyUrl,
@@ -102,9 +97,6 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
             .Setup(x => x.FindUsersByEmployerAccountIdAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, It.IsAny<UserType>()))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.EmployerManageNotificationsUrl(hashedEmployerAccountId))
             .Returns(manageNotificationsUrl);
         emailTemplateHelper
@@ -126,7 +118,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         
         var notification = result.Immediate[0];
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ApplicationSubmittedToEmployerImmediate);
         notification.DynamicData.Should().Be("{}");
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;

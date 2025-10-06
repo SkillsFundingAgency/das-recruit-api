@@ -32,14 +32,15 @@ public class WhenGettingVacancySubmittedNotifications
         vacancy.Status = status;
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.OwnerType = OwnerType.Provider;
-        
+
         // act
         await sut.CreateAsync(vacancy, CancellationToken.None);
 
         // assert
-        userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
+        userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()),
+            Times.Never);
     }
-    
+
     [Test]
     [MoqInlineAutoData(OwnerType.Employer)]
     [MoqInlineAutoData(OwnerType.External)]
@@ -55,14 +56,15 @@ public class WhenGettingVacancySubmittedNotifications
         vacancy.Status = VacancyStatus.Submitted;
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.OwnerType = ownerType;
-        
+
         // act
         await sut.CreateAsync(vacancy, CancellationToken.None);
 
         // assert
-        userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
+        userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()),
+            Times.Never);
     }
-    
+
     [Test, MoqAutoData]
     public async Task Vacancy_That_Has_Not_Be_Sent_For_Review_Will_Not_Be_Processed(
         VacancyEntity vacancy,
@@ -79,15 +81,15 @@ public class WhenGettingVacancySubmittedNotifications
         await sut.CreateAsync(vacancy, CancellationToken.None);
 
         // assert
-        userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
+        userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()),
+            Times.Never);
     }
-    
+
     [Test, RecursiveMoqAutoData]
     public async Task The_Notifications_Contain_The_Correct_Values(
         VacancyEntity vacancy,
         UserEntity user,
         string hashedEmployerAccountId,
-        Guid templateId,
         string baseUrl,
         string notificationSettingsUrl,
         [Frozen] Mock<IUserRepository> userRepository,
@@ -97,7 +99,7 @@ public class WhenGettingVacancySubmittedNotifications
     {
         // arrange
         var cts = new CancellationTokenSource();
-        
+
         vacancy.Status = VacancyStatus.Submitted;
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.OwnerType = OwnerType.Provider;
@@ -105,9 +107,6 @@ public class WhenGettingVacancySubmittedNotifications
         userRepository
             .Setup(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cts.Token))
             .ReturnsAsync([user]);
-        emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected))
-            .Returns(templateId);
         emailTemplateHelper
             .Setup(x => x.RecruitProviderBaseUrl)
             .Returns(baseUrl);
@@ -125,8 +124,9 @@ public class WhenGettingVacancySubmittedNotifications
         notification.UserId.Should().Be(user.Id);
         notification.SendWhen.Should().BeWithin(TimeSpan.FromSeconds(5));
         notification.DynamicData.Should().Be("{}");
-        notification.EmailTemplateId.Should().Be(templateId);
-        var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData, JsonConfig.Options);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ProviderVacancyApprovedByEmployer);
+        var tokens =
+            JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData, JsonConfig.Options);
         tokens!.Count.Should().Be(6);
         tokens["firstName"].Should().Be(user.Name);
         tokens["advertTitle"].Should().Be(vacancy.Title);

@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
@@ -12,12 +11,12 @@ public class StaticDataEmailHandler: AbstractEmailHandler
 {
     public StaticDataEmailHandler(IEmailTemplateHelper emailTemplateHelper)
     {
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Employer));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Provider));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancySentForReview));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected));
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSharedWithEmployer);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderImmediate);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerImmediate);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.SharedApplicationReviewedByEmployer);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancySentForEmployerReview);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancyApprovedByEmployer);
     }
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)

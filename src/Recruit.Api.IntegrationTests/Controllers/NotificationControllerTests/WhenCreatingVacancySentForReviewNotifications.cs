@@ -40,6 +40,7 @@ public class WhenCreatingVacancySentForReviewNotifications: BaseFixture
         vacancy.AccountId = accountId;
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
         employerUser.UserType = UserType.Employer;
         employerUser.EmployerAccounts = [
             new UserEmployerAccountEntity {
@@ -71,7 +72,7 @@ public class WhenCreatingVacancySentForReviewNotifications: BaseFixture
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
             x.Tokens["employerName"].Should().Be(vacancy.EmployerName);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
-            x.Tokens["reviewAdvertURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitEmployerBaseUrl}/accounts/{expectedHashedAccountId}/vacancies/{vacancy.Id}/check-answers");
+            x.Tokens["reviewAdvertURL"].Should().Be($"{templateHelper.RecruitEmployerBaseUrl}/accounts/{expectedHashedAccountId}/vacancies/{vacancy.Id}/check-answers");
             x.Tokens["location"].Should().Be("Recruiting nationally");
         });
     }

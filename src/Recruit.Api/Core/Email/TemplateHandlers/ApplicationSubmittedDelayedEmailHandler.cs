@@ -9,10 +9,10 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
 {
     public ApplicationSubmittedDelayedEmailHandler(IEmailTemplateHelper emailTemplateHelper)
     {
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, UserType.Employer));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, UserType.Employer));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, UserType.Provider));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, UserType.Provider));
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerDaily);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerWeekly);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderDaily);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderWeekly);
     }
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)

@@ -101,7 +101,6 @@ public class WhenGettingApplicationSharedWithEmployerNotifications
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
         string hashedAccountId,
-        Guid templateId,
         string baseUrl,
         [Frozen] Mock<IEncodingService> encodingService,
         [Frozen] Mock<IVacancyRepository> vacancyRepository,
@@ -120,9 +119,6 @@ public class WhenGettingApplicationSharedWithEmployerNotifications
             .Setup(x => x.Encode(applicationReview.AccountId, EncodingType.AccountId))
             .Returns(hashedAccountId);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.RecruitEmployerBaseUrl)
             .Returns(baseUrl);
 
@@ -135,7 +131,7 @@ public class WhenGettingApplicationSharedWithEmployerNotifications
         
         var notification = result.Immediate[0];
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ApplicationSharedWithEmployer);
         notification.DynamicData.Should().Be("{}");
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;

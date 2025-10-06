@@ -10,17 +10,19 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.TemplateHandlers;
 public class WhenGettingApplicationSubmittedDelayedEmails
 {
     [Test, MoqAutoData]
-    public void It_Handles_The_Correct_Templates(Mock<IEmailTemplateHelper> emailTemplateHelper)
+    public void It_Handles_The_Correct_Templates(Mock<IEmailTemplateHelper> emailTemplateHelper, IEmailTemplateIds emailTemplateIds)
     {
-        // arrange/act
-        new ApplicationSubmittedDelayedEmailHandler(emailTemplateHelper.Object);
+        // arrange
+        emailTemplateHelper.Setup(x => x.TemplateIds).Returns(emailTemplateIds);
+        
+        // act
+        var sut = new ApplicationSubmittedDelayedEmailHandler(emailTemplateHelper.Object);
     
         // assert
-        emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>(), It.IsAny<NotificationFrequency>(), It.IsAny<UserType>()), Times.Exactly(4));
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, UserType.Employer), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, UserType.Employer), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, UserType.Provider), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, UserType.Provider), Times.Once);
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerDaily);
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderDaily);
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerWeekly);
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderWeekly);
     }
     
     [Test]

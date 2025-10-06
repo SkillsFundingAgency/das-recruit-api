@@ -42,6 +42,7 @@ public class WhenCreatingVacancyApprovedByEmployerNotifications: BaseFixture
         vacancy.AccountId = accountId;
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
         providerUser.SetEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
@@ -65,7 +66,7 @@ public class WhenCreatingVacancyApprovedByEmployerNotifications: BaseFixture
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
             x.Tokens["employerName"].Should().Be(vacancy.EmployerName);
             x.Tokens["VACcode"].Should().Be(vacancy.VacancyReference.ToString());
-            x.Tokens["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
+            x.Tokens["notificationSettingsURL"].Should().Be(templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
             x.Tokens["location"].Should().Be("Recruiting nationally");
         });
     }

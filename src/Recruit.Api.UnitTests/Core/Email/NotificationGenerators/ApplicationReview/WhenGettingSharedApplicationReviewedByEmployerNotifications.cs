@@ -66,7 +66,6 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         UserEntity user,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        Guid templateId,
         string manageNotificationsUrl,
         string manageVacancyUrl,
         string baseUrl,
@@ -86,9 +85,6 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
             .Returns(manageNotificationsUrl);
         emailTemplateHelper
@@ -107,7 +103,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         
         var notification = result.Immediate[0];
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.SharedApplicationReviewedByEmployer);
         notification.DynamicData.Should().Be("{}");
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;

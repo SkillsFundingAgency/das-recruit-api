@@ -68,7 +68,9 @@ public class ApplicationSubmittedNotificationFactory(
                 case NotificationFrequency.Immediately:
                     {
                         var recruitNotifications = group.Select(x => new RecruitNotificationEntity {
-                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, x.UserType),
+                            EmailTemplateId = x.UserType == UserType.Employer 
+                                ? emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerImmediate
+                                : emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderImmediate,
                             UserId = x.Id,
                             User = x,
                             SendWhen = DateTime.Now,
@@ -89,7 +91,9 @@ public class ApplicationSubmittedNotificationFactory(
                 case NotificationFrequency.Daily:
                     {
                         var recruitNotifications = group.Select(x => new RecruitNotificationEntity {
-                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily, x.UserType),
+                            EmailTemplateId = x.UserType == UserType.Employer 
+                                ? emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerDaily
+                                : emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderDaily,
                             UserId = x.Id,
                             User = x,
                             SendWhen = now.GetNextDailySendDate(),
@@ -111,7 +115,9 @@ public class ApplicationSubmittedNotificationFactory(
                 case NotificationFrequency.Weekly:
                     {
                         var recruitNotifications = group.Select(x => new RecruitNotificationEntity {
-                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly, x.UserType),
+                            EmailTemplateId = x.UserType == UserType.Employer 
+                                ? emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerWeekly
+                                : emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderWeekly,
                             UserId = x.Id,
                             User = x,
                             SendWhen = now.GetNextWeeklySendDate(),

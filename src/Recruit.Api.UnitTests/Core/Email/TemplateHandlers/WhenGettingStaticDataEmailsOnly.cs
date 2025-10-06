@@ -9,22 +9,21 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.TemplateHandlers;
 public class WhenGettingStaticDataEmailsOnly
 {
     [Test, MoqAutoData]
-    public void It_Handles_The_Correct_Templates(Mock<IEmailTemplateHelper> emailTemplateHelper)
+    public void It_Handles_The_Correct_Templates(Mock<IEmailTemplateHelper> emailTemplateHelper, IEmailTemplateIds emailTemplateIds)
     {
-        // arrange/act
-        new StaticDataEmailHandler(emailTemplateHelper.Object);
+        // arrange
+        emailTemplateHelper.Setup(x => x.TemplateIds).Returns(emailTemplateIds);
+        
+        // act
+        var sut = new StaticDataEmailHandler(emailTemplateHelper.Object);
         
         // assert
-        emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>()), Times.Exactly(4));
-        emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>(), It.IsAny<NotificationFrequency>(), It.IsAny<UserType>()), Times.Exactly(2));
-        
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.VacancySentForReview), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected), Times.Once);
-        
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Employer), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately, UserType.Provider), Times.Once);
+        sut.CanHandle(emailTemplateIds.ApplicationSharedWithEmployer);
+        sut.CanHandle(emailTemplateIds.SharedApplicationReviewedByEmployer);
+        sut.CanHandle(emailTemplateIds.ProviderVacancySentForEmployerReview);
+        sut.CanHandle(emailTemplateIds.ProviderVacancyApprovedByEmployer);
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerImmediate);
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderImmediate);
     }
 
     [Test, RecruitAutoData]
