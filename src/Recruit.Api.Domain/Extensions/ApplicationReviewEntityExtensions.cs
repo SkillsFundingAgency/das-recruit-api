@@ -38,6 +38,26 @@ public static class ApplicationReviewEntityExtensions
         return entities.Count(e =>
             e is { Status: ApplicationReviewStatus.EmployerUnsuccessful or ApplicationReviewStatus.EmployerInterviewing, WithdrawnDate: null });
     }
+
+    public static int InReview(this List<ApplicationReviewEntity> entities)
+    {
+        return entities.Count(e =>
+            e is { Status: ApplicationReviewStatus.InReview, WithdrawnDate: null });
+    }
+
+    public static int Interviewing(this List<ApplicationReviewEntity> entities)
+    {
+        return entities.Count(e =>
+            e is { Status: ApplicationReviewStatus.Interviewing, WithdrawnDate: null });
+    }
+
+    public static int EmployerInterviewing(this List<ApplicationReviewEntity> entities)
+    {
+        return entities.Count(e =>
+            e is { Status: ApplicationReviewStatus.EmployerInterviewing, WithdrawnDate: null });
+    }
+
+
     public static bool HasNoApplications(this List<ApplicationReviewEntity> entities)
     {
         return entities.All(e => e.WithdrawnDate != null);

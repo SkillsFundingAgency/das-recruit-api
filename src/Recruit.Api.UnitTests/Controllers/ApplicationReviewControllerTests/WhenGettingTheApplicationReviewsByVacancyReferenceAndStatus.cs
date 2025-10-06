@@ -14,16 +14,15 @@ internal class WhenGettingTheApplicationReviewsByVacancyReferenceAndStatus
     public async Task Get_ReturnsOk_WhenApplicationReviewsExist(
         long vacancyReference,
         ApplicationReviewStatus status,
-        bool includeTemporaryStatus,
         List<ApplicationReviewEntity> mockResponse,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
         [Greedy] ApplicationReviewController controller,
         CancellationToken token)
     {
         // Arrange
-        provider.Setup(p => p.GetAllByVacancyReferenceAndStatus(vacancyReference, status, includeTemporaryStatus, token)).ReturnsAsync(mockResponse);
+        provider.Setup(p => p.GetAllByVacancyReferenceAndTempStatus(vacancyReference, status, token)).ReturnsAsync(mockResponse);
         // Act
-        var result = await controller.GetManyByVacancyReferenceAndStatus(vacancyReference, status, includeTemporaryStatus, token);
+        var result = await controller.GetManyByVacancyReferenceAndTempStatus(vacancyReference, status, token);
         // Assert
         result.Should().BeOfType<Ok<List<GetApplicationReviewResponse>>>();
         var okResult = result as Ok<List<GetApplicationReviewResponse>>;
@@ -34,16 +33,15 @@ internal class WhenGettingTheApplicationReviewsByVacancyReferenceAndStatus
     public async Task Get_Returns_Empty_WhenNoApplicationReviewsExist(
         long vacancyReference,
         ApplicationReviewStatus status,
-        bool includeTemporaryStatus,
         List<ApplicationReviewEntity> mockResponse,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
         [Greedy] ApplicationReviewController controller,
         CancellationToken token)
     {
         // Arrange
-        provider.Setup(p => p.GetAllByVacancyReferenceAndStatus(vacancyReference, status, includeTemporaryStatus, token)).ReturnsAsync([]);
+        provider.Setup(p => p.GetAllByVacancyReferenceAndTempStatus(vacancyReference, status, token)).ReturnsAsync([]);
         // Act
-        var result = await controller.GetManyByVacancyReferenceAndStatus(vacancyReference, status, includeTemporaryStatus, token);
+        var result = await controller.GetManyByVacancyReferenceAndTempStatus(vacancyReference, status, token);
         // Assert
         result.Should().BeOfType<Ok<List<GetApplicationReviewResponse>>>();
         var okResult = result as Ok<List<GetApplicationReviewResponse>>;
@@ -54,7 +52,6 @@ internal class WhenGettingTheApplicationReviewsByVacancyReferenceAndStatus
     public async Task Get_ReturnsInternalServerException_WhenException_Thrown(
         long vacancyReference,
         ApplicationReviewStatus status,
-        bool includeTemporaryStatus,
         List<ApplicationReviewEntity> mockResponse,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
         [Greedy] ApplicationReviewController controller,
@@ -62,11 +59,11 @@ internal class WhenGettingTheApplicationReviewsByVacancyReferenceAndStatus
     {
         // Arrange
         provider
-            .Setup(p => p.GetAllByVacancyReferenceAndStatus(vacancyReference, status, includeTemporaryStatus, token))
+            .Setup(p => p.GetAllByVacancyReferenceAndTempStatus(vacancyReference, status, token))
             .ThrowsAsync(new Exception());
         // Act
         var result = 
-            await controller.GetManyByVacancyReferenceAndStatus(vacancyReference, status, includeTemporaryStatus,
+            await controller.GetManyByVacancyReferenceAndTempStatus(vacancyReference, status,
                 token);
         // Assert
         result.Should().BeOfType<ProblemHttpResult>();

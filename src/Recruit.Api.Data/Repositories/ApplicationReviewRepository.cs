@@ -58,7 +58,7 @@ public interface IApplicationReviewRepository
     Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default);
     Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndStatus(long vacancyReference, ApplicationReviewStatus status, bool isTempStatus,
+    Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status,
         CancellationToken token = default);
 }
 
@@ -216,18 +216,12 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .FirstOrDefaultAsync(token);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndStatus(long vacancyReference, ApplicationReviewStatus status, bool isTempStatus,
-        CancellationToken token = default)
+    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status, CancellationToken token = default)
     {
-        var query = recruitDataContext.ApplicationReviewEntities
+        return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
-            .Where(appReview => appReview.VacancyReference == vacancyReference);
-
-        query = isTempStatus
-            ? query.Where(appReview => appReview.TemporaryReviewStatus == status)
-            : query.Where(appReview => appReview.Status == status);
-
-        return await query.ToListAsync(token);
+            .Where(appReview => appReview.VacancyReference == vacancyReference && appReview.TemporaryReviewStatus == status)
+            .ToListAsync(token);
     }
 
     public async Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId,List<long> vacancyReferences,

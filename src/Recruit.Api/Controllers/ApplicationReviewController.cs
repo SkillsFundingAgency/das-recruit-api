@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
@@ -147,21 +148,44 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
     }
 
     [HttpGet]
-    [Route($"~/{RouteNames.ApplicationReview}/{{vacancyReference}}/status/{{status}}")]
+    [Route($"~/{RouteNames.ApplicationReview}/{{vacancyReference}}/count")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(GetApplicationReviewResponse), StatusCodes.Status200OK)]
-    public async Task<IResult> GetManyByVacancyReferenceAndStatus(
+    [ProducesResponseType(typeof(ApplicationReviewsStats), StatusCodes.Status200OK)]
+    public async Task<IResult> GetStatusCountByVacancyReference(
+        [FromRoute][Required] long vacancyReference,
+        CancellationToken token = default)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get application reviews status count by vacancyReference : {vacancyReference}", vacancyReference);
+
+            var response = await provider.GetStatusCountByVacancyReference(vacancyReference, token);
+
+            return TypedResults.Ok(response);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get get application reviews status count by vacancyReference : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
+    [Route($"~/{RouteNames.ApplicationReview}/{{vacancyReference}}/temp-status/{{status}}")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(List<GetApplicationReviewResponse>), StatusCodes.Status200OK)]
+    public async Task<IResult> GetManyByVacancyReferenceAndTempStatus(
         [FromRoute][Required] long vacancyReference,
         [FromRoute][Required] ApplicationReviewStatus status,
-        [FromQuery] bool includeTemporaryStatus = false,
         CancellationToken token = default)
     {
         try
         {
             logger.LogInformation("Recruit API: Received query to get all application reviews by vacancyReference and status : {vacancyReference}", vacancyReference);
 
-            var response = await provider.GetAllByVacancyReferenceAndStatus(vacancyReference, status, includeTemporaryStatus, token);
+            var response = await provider.GetAllByVacancyReferenceAndTempStatus(vacancyReference, status, token);
 
             return TypedResults.Ok(response.ToGetResponse());
         }

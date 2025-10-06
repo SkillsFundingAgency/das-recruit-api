@@ -71,8 +71,8 @@ public interface IApplicationReviewsProvider
 
     Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default);
     Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndStatus(long vacancyReference, ApplicationReviewStatus status, bool isTempStatus,
-        CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status, CancellationToken token = default);
+    Task<ApplicationReviewsStats> GetStatusCountByVacancyReference(long vacancyReference, CancellationToken token = default);
 }
 
 internal class ApplicationReviewsProvider(
@@ -140,11 +140,31 @@ internal class ApplicationReviewsProvider(
             token);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndStatus(long vacancyReference, ApplicationReviewStatus status, bool isTempStatus,
+    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status,
         CancellationToken token = default)
     {
-        return await applicationReviewRepository.GetAllByVacancyReferenceAndStatus(vacancyReference, status,
-            isTempStatus, token);
+        return await applicationReviewRepository.GetAllByVacancyReferenceAndTempStatus(vacancyReference, status, token);
+    }
+
+    public async Task<ApplicationReviewsStats> GetStatusCountByVacancyReference(long vacancyReference, CancellationToken token = default)
+    {
+        var applicationReviewEntities = await applicationReviewRepository.GetAllByVacancyReference(vacancyReference, token);
+
+        return new ApplicationReviewsStats
+        {
+            VacancyReference = vacancyReference,
+            NewApplications = applicationReviewEntities.New(),
+            SharedApplications = applicationReviewEntities.Shared(),
+            AllSharedApplications = applicationReviewEntities.AllShared(),
+            SuccessfulApplications = applicationReviewEntities.Successful(),
+            UnsuccessfulApplications = applicationReviewEntities.Unsuccessful(),
+            EmployerReviewedApplications = applicationReviewEntities.EmployerReviewed(),
+            Applications = applicationReviewEntities.AllCount(),
+            HasNoApplications = applicationReviewEntities.HasNoApplications(),
+            EmployerInterviewingApplications = applicationReviewEntities.EmployerInterviewing(),
+            InReviewApplications = applicationReviewEntities.InReview(),
+            InterviewingApplications = applicationReviewEntities.Interviewing(),
+        };
     }
 
     public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedAccountIdAsync(long accountId,
