@@ -2,8 +2,8 @@
 
 public class EmailTemplateHelper(IEmailTemplateIds emailTemplateIds, IRecruitBaseUrls recruitBaseUrls): IEmailTemplateHelper
 {
-    public string RecruitEmployerBaseUrl { get; } = recruitBaseUrls.RecruitEmployerBaseUrl;
-    public string RecruitProviderBaseUrl { get; } = recruitBaseUrls.RecruitProviderBaseUrl;
+    public string RecruitEmployerBaseUrl => recruitBaseUrls.RecruitEmployerBaseUrl;
+    public string RecruitProviderBaseUrl => recruitBaseUrls.RecruitProviderBaseUrl;
     public IEmailTemplateIds TemplateIds { get; } = emailTemplateIds;
     public string ProviderManageNotificationsUrl(string ukprn) => $"{RecruitProviderBaseUrl}/{ukprn}/notifications-manage";
     public string ProviderManageVacancyUrl(string ukprn, Guid vacancyId) => $"{RecruitProviderBaseUrl}/{ukprn}/vacancies/{vacancyId}/manage";

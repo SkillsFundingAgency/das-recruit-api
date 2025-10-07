@@ -51,6 +51,7 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<ApplicationSubmittedNotificationFactory>();
         services.AddScoped<IApplicationReviewNotificationStrategy, ApplicationReviewNotificationStrategy>();
         
+        services.AddScoped<VacancyRejectedNotificationFactory>();
         services.AddScoped<VacancySentForReviewNotificationFactory>();
         services.AddScoped<VacancySubmittedNotificationFactory>();
         services.AddScoped<IVacancyNotificationStrategy, VacancyNotificationStrategy>();

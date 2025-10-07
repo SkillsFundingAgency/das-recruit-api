@@ -15,6 +15,7 @@ public class WhenGettingEmailTemplateId
         new object[] { (ProductionEmailTemplateIds x) => x.SharedApplicationReviewedByEmployer, new Guid("2f1b70d4-c722-4815-85a0-80a080eac642") },
         new object[] { (ProductionEmailTemplateIds x) => x.ProviderVacancySentForEmployerReview, new Guid("2b69c0b2-bcc0-4988-82b6-868874e5617b") },
         new object[] { (ProductionEmailTemplateIds x) => x.ProviderVacancyApprovedByEmployer, new Guid("c35e76e7-303b-4b18-bb06-ad98cf68158d") },
+        new object[] { (ProductionEmailTemplateIds x) => x.ProviderVacancyRejectedByEmployer, new Guid("8df54598-fea3-45c2-83f3-cca010a6443c") },
     };
     
     [TestCaseSource(nameof(ProductionTestCases))]
@@ -42,6 +43,7 @@ public class WhenGettingEmailTemplateId
         new object[] { (DevelopmentEmailTemplateIds x) => x.SharedApplicationReviewedByEmployer, new Guid("feb4191d-a373-4040-9bc6-93c09d8039b5") },
         new object[] { (DevelopmentEmailTemplateIds x) => x.ProviderVacancySentForEmployerReview, new Guid("83f6cede-31c3-4dc9-b2ec-922856ba9bdc") },
         new object[] { (DevelopmentEmailTemplateIds x) => x.ProviderVacancyApprovedByEmployer, new Guid("c445095e-e659-499b-b2ab-81e321a9b591") },
+        new object[] { (DevelopmentEmailTemplateIds x) => x.ProviderVacancyRejectedByEmployer, new Guid("6e663255-c59d-4964-bcbe-b5881a14c530") },
     };
     
     [TestCaseSource(nameof(DevelopmentTestCases))]

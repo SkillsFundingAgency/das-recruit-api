@@ -10,6 +10,7 @@ public interface IVacancyNotificationStrategy
 }
 
 public class VacancyNotificationStrategy(
+    VacancyRejectedNotificationFactory vacancyRejectedNotificationFactory,
     VacancySentForReviewNotificationFactory vacancySentForReviewNotificationFactory,
     VacancySubmittedNotificationFactory vacancySubmittedNotificationFactory) : IVacancyNotificationStrategy
 {
@@ -18,6 +19,7 @@ public class VacancyNotificationStrategy(
         ArgumentNullException.ThrowIfNull(vacancy);
 
         return vacancy.Status switch {
+            VacancyStatus.Rejected => vacancyRejectedNotificationFactory,
             VacancyStatus.Review => vacancySentForReviewNotificationFactory,
             VacancyStatus.Submitted => vacancySubmittedNotificationFactory,
             _ => throw new EntityStateNotSupportedException($"Missing email handler: no registered handler for Vacancy Status {vacancy.Status}")

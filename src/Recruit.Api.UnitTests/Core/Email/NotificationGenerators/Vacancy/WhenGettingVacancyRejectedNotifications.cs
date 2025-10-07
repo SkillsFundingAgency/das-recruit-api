@@ -1,0 +1,139 @@
+﻿using System.Text.Json;
+using SFA.DAS.Encoding;
+using SFA.DAS.Recruit.Api.Configuration;
+using SFA.DAS.Recruit.Api.Core.Email;
+using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
+using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
+using SFA.DAS.Recruit.Api.Domain.Models;
+
+namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.NotificationGenerators.Vacancy;
+
+public class WhenGettingVacancyRejectedNotifications
+{
+    [Test]
+    [MoqInlineAutoData(VacancyStatus.Draft)]
+    [MoqInlineAutoData(VacancyStatus.Submitted)]
+    [MoqInlineAutoData(VacancyStatus.Referred)]
+    [MoqInlineAutoData(VacancyStatus.Live)]
+    [MoqInlineAutoData(VacancyStatus.Closed)]
+    [MoqInlineAutoData(VacancyStatus.Approved)]
+    [MoqInlineAutoData(VacancyStatus.Review)]
+    public async Task Vacancy_With_The_Incorrect_Status_Will_Not_Be_Processed(
+        VacancyStatus status,
+        VacancyEntity vacancy,
+        [Frozen] Mock<IUserRepository> userRepository,
+        [Frozen] Mock<IEmailTemplateHelper> emailTemplateHelper,
+        [Greedy] VacancyRejectedNotificationFactory sut)
+    {
+        // arrange
+        vacancy.Status = status;
+        vacancy.ReviewRequestedByUserId = Guid.NewGuid();
+        vacancy.EmployerRejectedReason = "Some reason";
+        vacancy.OwnerType = OwnerType.Provider;
+
+        // act
+        await sut.CreateAsync(vacancy, CancellationToken.None);
+
+        // assert
+        userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test]
+    [RecursiveMoqInlineAutoData(OwnerType.Employer)]
+    [RecursiveMoqInlineAutoData(OwnerType.External)]
+    [RecursiveMoqInlineAutoData(OwnerType.Unknown)]
+    public async Task Vacancy_With_The_Incorrect_OwnerType_Will_Not_Be_Processed(
+        OwnerType ownerType,
+        VacancyEntity vacancy,
+        [Frozen] Mock<IUserRepository> userRepository,
+        [Frozen] Mock<IEmailTemplateHelper> emailTemplateHelper,
+        [Greedy] VacancyRejectedNotificationFactory sut)
+    {
+        // arrange
+        vacancy.Status = VacancyStatus.Rejected;
+        vacancy.ReviewRequestedByUserId = Guid.NewGuid();
+        vacancy.EmployerRejectedReason = "Some reason";
+        vacancy.OwnerType = OwnerType.Employer;
+
+        // act
+        await sut.CreateAsync(vacancy, CancellationToken.None);
+
+        // assert
+        userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Vacancy_That_Has_Not_Been_Rejected_By_An_Employer_Will_Not_Be_Processed(
+        VacancyEntity vacancy,
+        [Frozen] Mock<IUserRepository> userRepository,
+        [Frozen] Mock<IEmailTemplateHelper> emailTemplateHelper,
+        [Greedy] VacancyRejectedNotificationFactory sut)
+    {
+        // arrange
+        vacancy.Status = VacancyStatus.Rejected;
+        vacancy.ReviewRequestedByUserId = Guid.NewGuid();
+        vacancy.EmployerRejectedReason = null;
+        vacancy.OwnerType = OwnerType.Employer;
+
+        // act
+        await sut.CreateAsync(vacancy, CancellationToken.None);
+
+        // assert
+        userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public async Task The_Notifications_Contain_The_Correct_Values(
+        VacancyEntity vacancy,
+        UserEntity user,
+        string hashedEmployerAccountId,
+        string baseUrl,
+        string notificationSettingsUrl,
+        [Frozen] Mock<IUserRepository> userRepository,
+        [Frozen] Mock<IEncodingService> encodingService,
+        [Frozen] Mock<IEmailTemplateHelper> emailTemplateHelper,
+        [Greedy] VacancyRejectedNotificationFactory sut)
+    {
+        // arrange
+        var cts = new CancellationTokenSource();
+
+        vacancy.Status = VacancyStatus.Rejected;
+        vacancy.ReviewRequestedByUserId = Guid.NewGuid();
+        vacancy.EmployerRejectedReason = "Some reason";
+        vacancy.OwnerType = OwnerType.Provider;
+
+        userRepository
+            .Setup(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cts.Token))
+            .ReturnsAsync([user]);
+        emailTemplateHelper
+            .Setup(x => x.RecruitProviderBaseUrl)
+            .Returns(baseUrl);
+        emailTemplateHelper
+            .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
+            .Returns(notificationSettingsUrl);
+
+        // act
+        var results = await sut.CreateAsync(vacancy, cts.Token);
+
+        // assert
+        results.Delayed.Should().BeEmpty();
+        var notification = results.Immediate.Single();
+        notification.User.Should().Be(user);
+        notification.UserId.Should().Be(user.Id);
+        notification.SendWhen.Should().BeWithin(TimeSpan.FromSeconds(5));
+        notification.DynamicData.Should().Be("{}");
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ProviderVacancyRejectedByEmployer);
+        var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData, JsonConfig.Options);
+        tokens!.Count.Should().Be(7);
+        tokens["firstName"].Should().Be(user.Name);
+        tokens["vacancyTitle"].Should().Be(vacancy.Title);
+        tokens["vacancyReference"].Should().Be(new VacancyReference(vacancy.VacancyReference).ToShortString());
+        tokens["employerName"].Should().Be(vacancy.EmployerName);
+        tokens["location"].Should().Be(vacancy.GetLocationText(JsonConfig.Options));
+        tokens["notificationSettingsURL"].Should().Be(notificationSettingsUrl);
+        tokens["rejectedEmployerVacancyURL"].Should().Be($"{emailTemplateHelper.Object.RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/check-your-answers");
+    }
+}

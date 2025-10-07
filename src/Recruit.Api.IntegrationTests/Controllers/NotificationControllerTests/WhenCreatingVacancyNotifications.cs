@@ -10,7 +10,6 @@ public class WhenCreatingVacancyNotifications: BaseFixture
 {
     [Test]
     [MoqInlineAutoData(VacancyStatus.Draft)]
-    [MoqInlineAutoData(VacancyStatus.Rejected)]
     [MoqInlineAutoData(VacancyStatus.Referred)]
     [MoqInlineAutoData(VacancyStatus.Live)]
     [MoqInlineAutoData(VacancyStatus.Closed)]
