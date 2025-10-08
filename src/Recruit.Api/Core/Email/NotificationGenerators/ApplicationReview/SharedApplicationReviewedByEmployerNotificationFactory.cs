@@ -23,7 +23,6 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
         }
         
         var providerUsers = await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken);
-        providerUsers.ForEach(NotificationPreferenceDefaults.Update);
         var usersRequiringEmail = providerUsers.GetUsersForNotificationType(
             NotificationTypes.SharedApplicationReviewedByEmployer, vacancy.ReviewRequestedByUserId);
         
