@@ -6,4 +6,6 @@ public record QaDashboard
     public int TotalVacanciesBrokenSla { get; set; } = 0;
     public int TotalVacanciesResubmitted { get; set; } = 0;
     public int TotalVacanciesSubmittedTwelveTwentyFourHours { get; set; } = 0;
+    public int TotalVacanciesSubmittedLastTwelveHours { get; set; } = 0;
+
 }
