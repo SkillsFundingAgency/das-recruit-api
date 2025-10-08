@@ -32,6 +32,36 @@ public class VacancyController : Controller
             : TypedResults.Ok(result.ToGetResponse());
     }
 
+    [HttpGet, Route("{vacancyReference:long}/closed")]
+    [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetOneClosedVacancyByVacancyReference(
+        [FromServices] IVacancyRepository repository,
+        [FromRoute] long vacancyReference,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetOneClosedVacancyByVacancyReference(vacancyReference, cancellationToken);
+
+        return result is null
+            ? Results.NotFound()
+            : TypedResults.Ok(result.ToGetResponse());
+    }
+
+    [HttpPost, Route("closed")]
+    [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetManyClosedVacanciesByVacancyReferences(
+        [FromServices] IVacancyRepository repository,
+        [FromBody] PostClosedVacanciesRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetManyClosedVacanciesByVacancyReference(request.VacancyReferences, cancellationToken);
+
+        return TypedResults.Ok(result
+            .Select(v => v.ToGetResponse())
+            .ToList());
+    }
+
     /*
      This is an example paged endpoint, it can be modified or extended as appropriate
      */
