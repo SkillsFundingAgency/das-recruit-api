@@ -1,10 +1,8 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
-using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfile;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyReviewControllerTests;
 internal class WhenGettingQaDashboard : BaseFixture
@@ -56,6 +54,7 @@ internal class WhenGettingQaDashboard : BaseFixture
         qaDashboard.TotalVacanciesBrokenSla.Should().Be(0);
         qaDashboard.TotalVacanciesResubmitted.Should().Be(0);
         qaDashboard.TotalVacanciesSubmittedTwelveTwentyFourHours.Should().Be(0);
+        qaDashboard.TotalVacanciesSubmittedLastTwelveHours.Should().Be(0);
     }
 
     [Test]

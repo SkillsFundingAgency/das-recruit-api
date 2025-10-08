@@ -52,7 +52,6 @@ public class UserController
             return TypedResults.NotFound();
         }
         
-        NotificationPreferenceDefaults.Update(result);
         return TypedResults.Ok(result.ToGetResponse());
     }
     
@@ -65,7 +64,6 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByEmployerAccountIdAsync(employerAccountId, cancellationToken);
-        NotificationPreferenceDefaults.Update(result);
         if (notificationType is null)
         {
             return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
@@ -93,7 +91,6 @@ public class UserController
         CancellationToken cancellationToken)
     {
         var result = await repository.FindUsersByUkprnAsync(ukprn, cancellationToken);
-        NotificationPreferenceDefaults.Update(result);
         if (notificationType is null)
         {
             return TypedResults.Ok(result.Select(x => x.ToGetResponse()));
@@ -120,13 +117,12 @@ public class UserController
         [FromRoute] string dfeUserId,
         CancellationToken cancellationToken)
     {
-        var result = await repository.FindUsersByDfeUserIdAsync(dfeUserId, cancellationToken);
+        var result = await repository.FindUserByDfeUserIdAsync(dfeUserId, cancellationToken);
         if (result is null)
         {
             return TypedResults.NotFound();
         }
         
-        NotificationPreferenceDefaults.Update(result); 
         return TypedResults.Ok(result.ToGetResponse());
     }
     
@@ -144,7 +140,6 @@ public class UserController
             return TypedResults.NotFound();
         }
         
-        NotificationPreferenceDefaults.Update(result);
         return TypedResults.Ok(result.ToGetResponse());
     }
     
