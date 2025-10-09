@@ -30,13 +30,14 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.20" />
     
     <PackageReference Include="SFA.DAS.Api.Common" Version="17.1.135" />
+    
+    <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
     <PackageReference Include="System.Text.Json" Version="8.0.6" />
 
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Recruit.Api.Application\Recruit.Api.Application.csproj" />
     <ProjectReference Include="..\Recruit.Api.Data\Recruit.Api.Data.csproj" />
     <ProjectReference Include="..\Recruit.Api.Domain\Recruit.Api.Domain.csproj" />
   </ItemGroup>

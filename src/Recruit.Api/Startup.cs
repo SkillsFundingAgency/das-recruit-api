@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
-using FluentValidation;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -40,9 +39,9 @@ internal class Startup
             {
                 options.ConfigurationNameIncludesVersionNumber = true;
                 options.ConfigurationKeys = configuration["ConfigNames"]!.Split(",");
-                options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
                 options.EnvironmentName = _environmentName;
                 options.PreFixConfigurationKeys = false;
+                options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
             });
 
 #if DEBUG
@@ -98,9 +97,9 @@ internal class Startup
                 options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
-        services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-        
-        services.AddApplicationDependencies();
+
+        services.RegisterDasEncodingService(Configuration);
+        services.AddApplicationDependencies(Configuration);
         services.AddDatabaseRegistration(candidateAccountConfiguration!, Configuration["EnvironmentName"]);
         services.AddOpenTelemetryRegistration(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!);
         services.ConfigureHealthChecks();

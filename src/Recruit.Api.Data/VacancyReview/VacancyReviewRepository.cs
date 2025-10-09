@@ -8,6 +8,7 @@ namespace SFA.DAS.Recruit.Api.Data.VacancyReview;
 public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, Guid>, IWriteRepository<VacancyReviewEntity, Guid>
 {
     Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
+    Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken);
 }
 
 public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyReviewRepository
@@ -54,5 +55,43 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             .Where(x => x.VacancyReference == vacancyReference)
             .OrderBy(x => x.CreatedDate)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken)
+    {
+        var now = DateTime.UtcNow;
+
+        var dashboard = await dataContext.VacancyReviewEntities
+            .Where(rv => rv.Status == ReviewStatus.PendingReview || rv.Status == ReviewStatus.UnderReview)
+            .AsNoTracking()
+            .GroupBy(_ => 1)
+            .Select(g => new QaDashboard {
+
+                // Total vacancies currently awaiting review
+                TotalVacanciesForReview = g.Count(),
+
+                // Vacancies that have been resubmitted for review (i.e. more than one submission)
+                TotalVacanciesResubmitted = g
+                    .Where(r => r.SubmissionCount > 1)
+                    .Select(r => r.VacancyReference)
+                    .Distinct()
+                    .Count(),
+
+                // Vacancies that have breached the SLA (i.e. not reviewed within 24 hours of submission)
+                TotalVacanciesBrokenSla = g.Count(r =>
+                    r.CreatedDate <= now.AddHours(-24)),
+
+                // Vacancies submitted in the last 24 hours, split into two 12 hour periods
+                TotalVacanciesSubmittedLastTwelveHours = g.Count(r =>
+                    r.CreatedDate > now.AddHours(-12)),
+
+                // Vacancies submitted between 12 and 24 hours ago
+                TotalVacanciesSubmittedTwelveTwentyFourHours = g.Count(r =>
+                    r.CreatedDate <= now.AddHours(-12) &&
+                    r.CreatedDate > now.AddHours(-24))
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return dashboard ?? new QaDashboard();
     }
 }

@@ -63,8 +63,8 @@ CREATE TABLE dbo.[Vacancy] (
     [Wage_WeeklyHours]                          decimal             NULL,
     [Wage_WageType]                             nvarchar(40)        NULL, -- max is currently 33 chars
     [Wage_FixedWageYearlyAmount]                decimal             NULL,
-    [Wage_WageAdditionalInformation]            nvarchar(1000)       NULL,
-    [Wage_CompanyBenefitsInformation]           nvarchar(500)       NULL,
+    [Wage_WageAdditionalInformation]            nvarchar(2000)      NULL,
+    [Wage_CompanyBenefitsInformation]           nvarchar(2000)      NULL,
     [ClosureReason]                             nvarchar(30)        NULL, -- max is currently 21 chars
     [TransferInfo]                              nvarchar(500)       NULL, -- json serialise
     [AdditionalQuestion1]                       nvarchar(500)       NULL,
@@ -79,4 +79,6 @@ CREATE TABLE dbo.[Vacancy] (
     INDEX [IX_Vacancy_VacancyReference] NONCLUSTERED(VacancyReference),
     INDEX [IX_Vacancy_Account_Owner_Status] NONCLUSTERED(AccountId, OwnerType, Status),
     INDEX [IX_Vacancy_Ukprn_Owner_Status] NONCLUSTERED(Ukprn, OwnerType, Status),
+    INDEX [IX_Vacancy_Account_Owner] NONCLUSTERED(Ukprn, OwnerType),
+    INDEX [IX_Vacancy_Ukprn_Owner] NONCLUSTERED(AccountId, OwnerType),
 )
