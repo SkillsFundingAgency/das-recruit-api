@@ -13,7 +13,7 @@ public interface IVacancyRepository: IReadRepository<VacancyEntity, Guid>, IWrit
     Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy, SortOrder sortOrder, CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
-    Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReference(List<long> vacancyReference, CancellationToken cancellationToken);
+    Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReference, CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
@@ -97,17 +97,17 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             .AsNoTracking()
             .FirstOrDefaultAsync(
                 x => x.VacancyReference == vacancyReference.Value 
-                     && (x.Status == VacancyStatus.Closed || x.Status == VacancyStatus.Live),
+                     && x.Status == VacancyStatus.Closed,
                 cancellationToken);
     }
 
-    public async Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReference(List<long> vacancyReferences, CancellationToken cancellationToken)
+    public async Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReferences, CancellationToken cancellationToken)
     {
         return await dataContext.VacancyEntities
             .AsNoTracking()
             .Where(
                 x => vacancyReferences.Contains(x.VacancyReference.GetValueOrDefault())
-                     && (x.Status == VacancyStatus.Closed || x.Status == VacancyStatus.Live))
+                     && x.Status == VacancyStatus.Closed)
             .ToListAsync(cancellationToken);
     }
 }

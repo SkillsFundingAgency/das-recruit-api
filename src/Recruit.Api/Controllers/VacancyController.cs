@@ -55,7 +55,7 @@ public class VacancyController : Controller
         [FromBody] PostClosedVacanciesRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await repository.GetManyClosedVacanciesByVacancyReference(request.VacancyReferences, cancellationToken);
+        var result = await repository.GetManyClosedVacanciesByVacancyReferences(request.VacancyReferences, cancellationToken);
 
         return TypedResults.Ok(result
             .Select(v => v.ToGetResponse())

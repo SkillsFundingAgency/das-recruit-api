@@ -27,7 +27,7 @@ internal class WhenGettingClosedVacanciesByVacancyReferences
             .ReturnsDbSet(data);
         
         // Act
-        var result = await repository.GetManyClosedVacanciesByVacancyReference(vacancyReferences, CancellationToken.None);
+        var result = await repository.GetManyClosedVacanciesByVacancyReferences(vacancyReferences, CancellationToken.None);
         
         // Assert
         result.Should().NotBeNull();

@@ -20,7 +20,6 @@ internal class WhenGettingClosedVacancyByVacancyReference
         var data = new List<VacancyEntity>
         {
             new() { VacancyReference = vacancyReference.Value, Status = VacancyStatus.Closed },
-            new() { VacancyReference = 99999, Status = VacancyStatus.Live }
         }.AsQueryable();
 
         context.Setup(x => x.VacancyEntities)
@@ -36,32 +35,6 @@ internal class WhenGettingClosedVacancyByVacancyReference
     }
 
     [Test, RecursiveMoqAutoData]
-    public async Task GetClosedVacancyByVacancyReference_ShouldReturnLiveVacancy_WhenItExists(
-        [Frozen] Mock<IRecruitDataContext> context,
-        [Greedy] VacancyRepository repository,
-        CancellationToken token)
-    {
-        // Arrange
-        VacancyReference vacancyReference = 10000000;
-
-        var data = new List<VacancyEntity>
-        {
-            new() { VacancyReference = 12345, Status = VacancyStatus.Closed },
-            new() { VacancyReference = vacancyReference.Value, Status = VacancyStatus.Live }
-        }.AsQueryable();
-
-        context.Setup(x => x.VacancyEntities)
-            .ReturnsDbSet(data);
-
-        // Act
-        var result = await repository.GetOneClosedVacancyByVacancyReference(vacancyReference, CancellationToken.None);
-
-        // Assert
-        result.Should().NotBeNull();
-        result!.Status.Should().Be(VacancyStatus.Live);
-    }
-
-    [Test, RecursiveMoqAutoData]
     public async Task GetClosedVacancyByVacancyReference_ShouldReturnNull_WhenVacancyNotFound(
         [Frozen] Mock<IRecruitDataContext> context,
         [Greedy] VacancyRepository repository,
@@ -73,7 +46,6 @@ internal class WhenGettingClosedVacancyByVacancyReference
         var data = new List<VacancyEntity>
         {
             new() { VacancyReference = 12345, Status = VacancyStatus.Closed },
-            new() { VacancyReference = 99999, Status = VacancyStatus.Live }
         }.AsQueryable();
 
         context.Setup(x => x.VacancyEntities)

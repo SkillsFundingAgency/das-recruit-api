@@ -32,7 +32,7 @@ internal class WhenGettingManyClosedVacancies
             vacancyEntity.Status = VacancyStatus.Closed;
         }
         
-        repository.Setup(x => x.GetManyClosedVacanciesByVacancyReference(new List<long> { vacancyReference }, It.IsAny<CancellationToken>()))
+        repository.Setup(x => x.GetManyClosedVacanciesByVacancyReferences(new List<long> { vacancyReference }, It.IsAny<CancellationToken>()))
             .ReturnsAsync(entities);
         // Act
         var result = await controller.GetManyClosedVacanciesByVacancyReferences(repository.Object, 
