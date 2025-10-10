@@ -38,13 +38,13 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
     public async Task Then_Notifications_Are_Created(
         ApplicationReviewStatus applicationReviewStatus,
         string expectedHashedAccountId,
-        
         List<UserEntity> users,
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy)
     {
         // arrange
         applicationReview.Status = applicationReviewStatus;
+        vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         var expectedUserNames = users.Take(2).Select(x => x.Name).ToList();
         foreach (var user in users)
