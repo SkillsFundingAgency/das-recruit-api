@@ -1,0 +1,71 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - group: sql-server-test 
+
+steps:
+# Azure login + create SQL resources
+- task: AzureCLI@2
+  displayName: 'Provision temporary Azure SQL'
+  inputs:
+    azureSubscription: SFA-DAS-DevTest-ARM
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az group create -n $(rgName) -l $(location)
+
+      az sql server create \
+        -g $(rgName) -n $(sqlServer) \
+        -u $(sqlUser) -p "$(sqlPass)" \
+        --enable-public-network true
+
+      # allow Azure services to connect (hosted agents)
+      az sql server firewall-rule create \
+        -g $(rgName) -s $(sqlServer) -n AllowAzure \
+        --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+
+      az sql db create -g $(rgName) -s $(sqlServer) -n $(sqlDB) \
+        --edition Basic
+
+      echo "ADO_CONNSTR=Server=tcp:$(sqlServer).database.windows.net,1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlUser);Password=$(sqlPass);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" >> $GITHUB_ENV 2>/dev/null || true
+      echo "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(sqlServer).database.windows.net,1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlUser);Password=$(sqlPass);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
+
+# (Optional) run schema/migrations for tests
+- script: |
+    dotnet tool install --global dotnet-ef
+    export PATH="$PATH:$HOME/.dotnet/tools"
+    # adjust project paths as needed:
+    # dotnet ef database update --project src/App/App.csproj --startup-project tests/Tests/Tests.csproj --connection "$(ADO_CONNSTR)"
+  displayName: 'Apply DB migrations (optional)'
+  condition: succeeded()
+
+# Unit tests
+- script: |
+    dotnet test --configuration Release --filter "TestCategory!=Integration"
+  displayName: 'Run Unit Tests'
+
+# Integration tests (point at Azure SQL)
+- script: |
+    export ConnectionStrings__Integration="$(ADO_CONNSTR)"
+    dotnet test --configuration Release --filter "TestCategory=Integration"
+  displayName: 'Run Integration Tests'
+
+# Cleanup (best-effort)
+- task: AzureCLI@2
+  displayName: 'Tear down Azure SQL'
+  condition: always()
+  inputs:
+    azureSubscription: SFA-DAS-DevTest-ARM
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az group delete -n $(rgName) --yes --no-wait
