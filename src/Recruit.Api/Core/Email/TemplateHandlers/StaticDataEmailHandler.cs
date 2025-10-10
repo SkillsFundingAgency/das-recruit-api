@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
@@ -12,11 +11,12 @@ public class StaticDataEmailHandler: AbstractEmailHandler
 {
     public StaticDataEmailHandler(IEmailTemplateHelper emailTemplateHelper)
     {
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately));
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSharedWithEmployer);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderImmediate);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerImmediate);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.SharedApplicationReviewedByEmployer);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancySentForEmployerReview);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancyApprovedByEmployer);
     }
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)
@@ -25,7 +25,7 @@ public class StaticDataEmailHandler: AbstractEmailHandler
             TemplateId = record.EmailTemplateId,
             RecipientAddress = record.User.Email,
             Tokens = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(record.StaticData) ?? [],
-            SourceIds = [record.Id]
+            SourceIds = record.Id > 0 ? [record.Id] : null
         });
     }
 }

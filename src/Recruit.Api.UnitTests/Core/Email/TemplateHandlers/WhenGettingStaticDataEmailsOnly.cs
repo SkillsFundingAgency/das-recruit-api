@@ -9,19 +9,21 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.TemplateHandlers;
 public class WhenGettingStaticDataEmailsOnly
 {
     [Test, MoqAutoData]
-    public void It_Handles_The_Correct_Templates(Mock<IEmailTemplateHelper> emailTemplateHelper)
+    public void It_Handles_The_Correct_Templates(Mock<IEmailTemplateHelper> emailTemplateHelper, IEmailTemplateIds emailTemplateIds)
     {
-        // arrange/act
-        new StaticDataEmailHandler(emailTemplateHelper.Object);
+        // arrange
+        emailTemplateHelper.Setup(x => x.TemplateIds).Returns(emailTemplateIds);
+        
+        // act
+        var sut = new StaticDataEmailHandler(emailTemplateHelper.Object);
         
         // assert
-        emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>(), It.IsAny<NotificationFrequency>()), Times.Exactly(5));
-        
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.VacancyApprovedOrRejected, NotificationFrequency.Immediately), Times.Once);
+        sut.CanHandle(emailTemplateIds.ApplicationSharedWithEmployer);
+        sut.CanHandle(emailTemplateIds.SharedApplicationReviewedByEmployer);
+        sut.CanHandle(emailTemplateIds.ProviderVacancySentForEmployerReview);
+        sut.CanHandle(emailTemplateIds.ProviderVacancyApprovedByEmployer);
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerImmediate);
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderImmediate);
     }
 
     [Test, RecruitAutoData]

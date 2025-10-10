@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Recruit.Api.Domain.Entities;
+﻿using SFA.DAS.Recruit.Api.Core.Exceptions;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
@@ -19,7 +20,7 @@ public class VacancyNotificationStrategy(
         return vacancy.Status switch {
             VacancyStatus.Review => vacancySentForReviewNotificationFactory,
             VacancyStatus.Submitted => vacancySubmittedNotificationFactory,
-            _ => throw new NotSupportedException($"Missing email handler: no registered handler for Vacancy Status {vacancy.Status}")
+            _ => throw new EntityStateNotSupportedException($"Missing email handler: no registered handler for Vacancy Status {vacancy.Status}")
         };
     }
 }

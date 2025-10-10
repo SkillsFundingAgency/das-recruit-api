@@ -36,7 +36,16 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IVacancyRepository, VacancyRepository>();
         
         // email
-        services.AddSingleton<IEmailTemplateHelper>(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
+        string env = configuration["ResourceEnvironmentName"] ?? "local";
+        bool isProduction = env.Equals("PRD", StringComparison.CurrentCultureIgnoreCase);
+        services.AddSingleton<IRecruitBaseUrls>(isProduction
+            ? new ProductionRecruitBaseUrls()
+            : new DevelopmentRecruitBaseUrls(env));
+        services.AddSingleton<IEmailTemplateIds>(isProduction
+            ? new ProductionEmailTemplateIds()
+            : new DevelopmentEmailTemplateIds());
+        
+        services.AddSingleton<IEmailTemplateHelper, EmailTemplateHelper>();
         services.AddScoped<ApplicationSharedWithEmployerNotificationFactory>();
         services.AddScoped<SharedApplicationReviewedByEmployerNotificationFactory>();
         services.AddScoped<ApplicationSubmittedNotificationFactory>();

@@ -16,7 +16,6 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         UserEntity user,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        Guid templateId,
         string manageNotificationsUrl,
         string manageVacancyUrl,
         string baseUrl,
@@ -38,9 +37,6 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
             .Returns(manageNotificationsUrl);
         emailTemplateHelper
@@ -59,7 +55,7 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
 
         var notification = result.Delayed[0];
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ApplicationSubmittedToProviderWeekly);
         notification.SendWhen.Should().Be(DateTime.Now.GetNextWeeklySendDate());
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;
@@ -81,7 +77,6 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         UserEntity user,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        Guid templateId,
         string hashedEmployerAccountId,
         string manageNotificationsUrl,
         string manageVacancyUrl,
@@ -105,9 +100,6 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
             .Setup(x => x.FindUsersByEmployerAccountIdAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.EmployerManageNotificationsUrl(hashedEmployerAccountId))
             .Returns(manageNotificationsUrl);
         emailTemplateHelper
@@ -129,7 +121,7 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
 
         var notification = result.Delayed[0];
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ApplicationSubmittedToEmployerWeekly);
         notification.SendWhen.Should().Be(DateTime.Now.GetNextWeeklySendDate());
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;

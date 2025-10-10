@@ -87,7 +87,6 @@ public class WhenGettingVacancySentForReviewNotifications
         VacancyEntity vacancy,
         UserEntity user,
         string hashedEmployerAccountId,
-        Guid templateId,
         string baseUrl,
         [Frozen] Mock<IUserRepository> userRepository,
         [Frozen] Mock<IEncodingService> encodingService,
@@ -108,9 +107,6 @@ public class WhenGettingVacancySentForReviewNotifications
             .Setup(x => x.Encode(vacancy.AccountId!.Value, EncodingType.AccountId))
             .Returns(hashedEmployerAccountId);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.VacancySentForReview, NotificationFrequency.Immediately))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.RecruitEmployerBaseUrl)
             .Returns(baseUrl);
 
@@ -124,7 +120,7 @@ public class WhenGettingVacancySentForReviewNotifications
         notification.UserId.Should().Be(user.Id);
         notification.SendWhen.Should().BeWithin(TimeSpan.FromSeconds(5));
         notification.DynamicData.Should().Be("{}");
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ProviderVacancySentForEmployerReview);
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData, JsonConfig.Options);
         tokens!.Count.Should().Be(7);
         tokens["firstName"].Should().Be(user.Name);
