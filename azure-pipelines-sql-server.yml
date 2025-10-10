@@ -4,7 +4,11 @@ pool:
   name: DAS - Continuous Integration Agents
 
 variables:
-  - group: sql-server-test 
+- name: SolutionBaseName
+  value: Recruit.Api
+- name: BuildConfiguration
+  value: release
+- group: sql-server-test 
 
 resources:
   repositories:
@@ -12,6 +16,13 @@ resources:
 
 stages:
 - stage: Build
+  jobs:
+  - template: pipeline-templates/job/code-build.yml
+    parameters:
+      SolutionBaseName: $(SolutionBaseName)
+      BuildConfiguration: $(BuildConfiguration)
+
+- stage: Test
   jobs:
   - job:
     steps:
