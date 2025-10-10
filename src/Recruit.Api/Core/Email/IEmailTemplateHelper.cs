@@ -1,10 +1,8 @@
 ﻿namespace SFA.DAS.Recruit.Api.Core.Email;
 
-public interface IEmailTemplateHelper
+public interface IEmailTemplateHelper: IRecruitBaseUrls
 {
     IEmailTemplateIds TemplateIds { get; }
-    string RecruitEmployerBaseUrl { get; }
-    string RecruitProviderBaseUrl { get; }
     string ProviderManageNotificationsUrl(string ukprn);
     string ProviderManageVacancyUrl(string ukprn, Guid vacancyId);
     string EmployerManageNotificationsUrl(string hashedAccountId);
