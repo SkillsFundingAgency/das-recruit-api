@@ -143,7 +143,7 @@ public class VacancyController : Controller
 
         // Collect distinct vacancy references
         var vacancyRefs = vacancies.Items
-            .Where(x => x.VacancyReference.HasValue)
+            .Where(x => x.VacancyReference is not null)
             .Select(x => x.VacancyReference!.Value)
             .Distinct()
             .ToList();

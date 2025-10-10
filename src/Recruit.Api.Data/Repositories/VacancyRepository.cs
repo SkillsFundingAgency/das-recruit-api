@@ -1,3 +1,4 @@
+﻿using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
@@ -272,23 +273,23 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             _ => Array.Empty<ApplicationReviewStatus>()
         };
 
-        if (!applicationReviewStatusList.Any())
+        if (applicationReviewStatusList.Length == 0)
         {
-            return Enumerable.Empty<VacancyEntity>().AsQueryable();
+            return query.Where(_ => false);
         }
 
-        var filtered = dataContext.ApplicationReviewEntities
+        var filteredVacancyRefs = dataContext.ApplicationReviewEntities
             .AsNoTracking()
             .Where(appReview =>
                 appReview.Ukprn == ukprn &&
                 applicationReviewStatusList.Contains(appReview.Status) &&
-                appReview.WithdrawnDate == null);
+                appReview.WithdrawnDate == null)
+            .Select(appReview => appReview.VacancyReference)
+            .Distinct();
 
-        return filtered.Join(
-            query,
-            appReview => appReview.VacancyReference,
-            vacancy => vacancy.VacancyReference,
-            (_, vacancy) => vacancy);
+        return query
+            .Where(v => v.VacancyReference.HasValue)
+            .Where(v => filteredVacancyRefs.Contains(v.VacancyReference.GetValueOrDefault()));
     }
 
     private IQueryable<VacancyEntity> ApplySharedFilteringByAccountId(IQueryable<VacancyEntity> query,
@@ -333,10 +334,18 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             _ => Enumerable.Empty<ApplicationReviewEntity>().AsQueryable()
         };
 
-        return appQuery.Join(
-            query,
-            appReview => appReview.VacancyReference,
-            vacancy => vacancy.VacancyReference,
-            (_, vacancy) => vacancy);
+        if (appQuery.Expression.Type == typeof(EnumerableQuery<ApplicationReviewEntity>))
+        {
+            // No results possible – return empty query using same provider
+            return query.Where(_ => false);
+        }
+
+        var filteredVacancyRefs = appQuery
+            .Select(appReview => appReview.VacancyReference)
+            .Distinct();
+
+        return query
+            .Where(v => v.VacancyReference.HasValue)
+            .Where(v => filteredVacancyRefs.Contains(v.VacancyReference.GetValueOrDefault()));
     }
 }
