@@ -18,6 +18,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         ApplicationReviewEntity applicationReview,
         Guid templateId,
         string manageNotificationsUrl,
+        string manageVacancyUrl,
         string baseUrl,
         [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
@@ -43,6 +44,9 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
             .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
             .Returns(manageNotificationsUrl);
         emailTemplateHelper
+            .Setup(x => x.ProviderManageVacancyUrl(vacancy.Ukprn!.Value.ToString(), vacancy.Id))
+            .Returns(manageVacancyUrl);
+        emailTemplateHelper
             .Setup(x => x.RecruitProviderBaseUrl)
             .Returns(baseUrl);
 
@@ -64,7 +68,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyURL"].Should().Be($"{baseUrl}/{vacancy.Ukprn!.Value.ToString()}/vacancies/{vacancy.Id}/manage");
+        tokens["manageVacancyURL"].Should().Be(manageVacancyUrl);
         tokens["notificationSettingsURL"].Should().Be(manageNotificationsUrl);
         tokens["location"].Should().Be("Recruiting nationally");
     }
@@ -77,6 +81,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         Guid templateId,
         string hashedEmployerAccountId,
         string manageNotificationsUrl,
+        string manageVacancyUrl,
         string baseUrl,
         [Frozen] Mock<IEncodingService> encodingService,
         [Frozen] Mock<IVacancyRepository> vacancyRepository,
@@ -103,6 +108,9 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
             .Setup(x => x.EmployerManageNotificationsUrl(hashedEmployerAccountId))
             .Returns(manageNotificationsUrl);
         emailTemplateHelper
+            .Setup(x => x.EmployerManageVacancyUrl(hashedEmployerAccountId, vacancy.Id))
+            .Returns(manageVacancyUrl);
+        emailTemplateHelper
             .Setup(x => x.RecruitEmployerBaseUrl)
             .Returns(baseUrl);
         encodingService
@@ -127,7 +135,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyURL"].Should().Be($"{baseUrl}/accounts/{hashedEmployerAccountId}/vacancies/{vacancy.Id}/manage");
+        tokens["manageVacancyURL"].Should().Be(manageVacancyUrl);
         tokens["notificationSettingsURL"].Should().Be(manageNotificationsUrl);
         tokens["location"].Should().Be("Recruiting nationally");
     }

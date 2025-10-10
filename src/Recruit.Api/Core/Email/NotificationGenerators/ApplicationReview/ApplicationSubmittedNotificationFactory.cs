@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Encoding;
+using SFA.DAS.Recruit.Api.Configuration;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain;
@@ -17,9 +18,6 @@ public class ApplicationSubmittedNotificationFactory(
     IEncodingService encodingService,
     IEmailTemplateHelper emailTemplateHelper) : IApplicationReviewNotificationFactory
 {
-    private const string ApplicationReviewEmployerUrl = "{0}/accounts/{1}/vacancies/{2}/manage";
-    private const string ApplicationReviewProviderUrl = "{0}/{1}/vacancies/{2}/manage";
-    
     public async Task<RecruitNotificationsResult> CreateAsync(ApplicationReviewEntity applicationReview, CancellationToken cancellationToken)
     {
         var vacancy = await vacancyRepository.GetOneByVacancyReferenceAsync(applicationReview.VacancyReference, cancellationToken);
@@ -79,7 +77,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
                                 ["manageVacancyURL"] = ManageVacancyUrl(x),
                                 ["notificationSettingsURL"] = ManageNotificationsUrl(x),
-                                ["location"] = GetLocationText(vacancy),
+                                ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                             DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!
                         });
@@ -102,7 +100,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
                                 ["manageVacancyURL"] = ManageVacancyUrl(x),
-                                ["location"] = GetLocationText(vacancy),
+                                ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                         });
                         results.Delayed.AddRange(recruitNotifications);
@@ -124,7 +122,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
                                 ["manageVacancyURL"] = ManageVacancyUrl(x),
-                                ["location"] = GetLocationText(vacancy),
+                                ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                         });
                         results.Delayed.AddRange(recruitNotifications);
@@ -139,24 +137,13 @@ public class ApplicationSubmittedNotificationFactory(
         string ManageNotificationsUrl(UserEntity user) => user.UserType switch {
             UserType.Employer => emailTemplateHelper.EmployerManageNotificationsUrl(hashedEmployerAccountId),
             UserType.Provider => emailTemplateHelper.ProviderManageNotificationsUrl(ukprn),
+            _ => string.Empty
         };
 
         string ManageVacancyUrl(UserEntity user) => user.UserType switch {
-            UserType.Employer => string.Format(ApplicationReviewEmployerUrl, emailTemplateHelper.RecruitEmployerBaseUrl, hashedEmployerAccountId, vacancy.Id),
-            UserType.Provider => string.Format(ApplicationReviewProviderUrl, emailTemplateHelper.RecruitProviderBaseUrl, ukprn, vacancy.Id),
+            UserType.Employer => emailTemplateHelper.EmployerManageVacancyUrl(hashedEmployerAccountId, vacancy.Id),
+            UserType.Provider => emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
+            _ => string.Empty
         };
-    }
-
-    private static string GetLocationText(VacancyEntity vacancy)
-    {
-        if (vacancy.EmployerLocationOption == AvailableWhere.AcrossEngland)
-        {
-            return "Recruiting nationally";
-        }
-        
-        var addresses = ApiUtils.DeserializeOrNull<List<Address>>(vacancy.EmployerLocations);
-        return addresses is null
-            ? string.Empty
-            : addresses.GetCityNames();
     }
 }
