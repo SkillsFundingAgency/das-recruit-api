@@ -9,8 +9,10 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
 {
     public ApplicationSubmittedDelayedEmailHandler(IEmailTemplateHelper emailTemplateHelper)
     {
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly));
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerDaily);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerWeekly);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderDaily);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderWeekly);
     }
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)
@@ -58,7 +60,7 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
         foreach (var vacancyGroup in vacancyGroups)
         {
             var vacancyDetails = vacancyGroup.First();
-            sb.AppendLine($"#{vacancyDetails.AdvertTitle} ({vacancyDetails.VacancyReference.ToString()})");
+            sb.AppendLine($"# {vacancyDetails.AdvertTitle} ({vacancyDetails.VacancyReference.ToString()})");
             sb.AppendLine($"{vacancyDetails.EmployerName}");
             sb.AppendLine($"{vacancyDetails.Location}");
             sb.AppendLine($"[View applications]({vacancyDetails.ManageVacancyUrl}) ({vacancyGroup.Count()} new)");

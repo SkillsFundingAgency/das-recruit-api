@@ -109,8 +109,8 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         UserEntity user,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        Guid templateId,
         string manageNotificationsUrl,
+        string manageVacancyUrl,
         string baseUrl,
         [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
@@ -129,11 +129,11 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
             .Returns(manageNotificationsUrl);
+        emailTemplateHelper
+            .Setup(x => x.ProviderManageVacancyUrl(vacancy.Ukprn!.Value.ToString(), vacancy.Id))
+            .Returns(manageVacancyUrl);
         emailTemplateHelper
             .Setup(x => x.RecruitProviderBaseUrl)
             .Returns(baseUrl);
@@ -147,7 +147,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         
         var notification = result.Immediate[0];
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.SharedApplicationReviewedByEmployer);
         notification.DynamicData.Should().Be("{}");
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;
@@ -156,7 +156,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         tokens["employer"].Should().Be(vacancy.EmployerName);
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyURL"].Should().Be($"{baseUrl}/{vacancy.Ukprn!.Value.ToString()}/vacancies/{vacancy.Id}/manage");
+        tokens["manageVacancyURL"].Should().Be(manageVacancyUrl);
         tokens["notificationSettingsURL"].Should().Be(manageNotificationsUrl);
     }
     

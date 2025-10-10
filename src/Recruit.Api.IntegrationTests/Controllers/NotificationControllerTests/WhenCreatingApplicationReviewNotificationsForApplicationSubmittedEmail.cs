@@ -4,6 +4,7 @@ using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.UnitTests;
 using Address = SFA.DAS.Recruit.Api.Domain.Models.Address;
@@ -63,6 +64,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             }
         ];
         employerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
@@ -87,8 +89,8 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
             x.Tokens["employerName"].Should().Be(vacancy.EmployerName);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
-            x.Tokens["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").EmployerManageNotificationsUrl(expectedHashedAccountId));
-            x.Tokens["manageVacancyURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitEmployerBaseUrl}/accounts/{expectedHashedAccountId}/vacancies/{vacancy.Id}/manage");
+            x.Tokens["notificationSettingsURL"].Should().Be(templateHelper.EmployerManageNotificationsUrl(expectedHashedAccountId));
+            x.Tokens["manageVacancyURL"].Should().Be($"{templateHelper.RecruitEmployerBaseUrl}/accounts/{expectedHashedAccountId}/vacancies/{vacancy.Id}/manage");
             x.Tokens["location"].Should().Be("Recruiting nationally");
         });
     }
@@ -105,6 +107,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
 
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
@@ -140,8 +143,8 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
             x.Tokens["employerName"].Should().Be(vacancy.EmployerName);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
-            x.Tokens["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
-            x.Tokens["manageVacancyURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+            x.Tokens["notificationSettingsURL"].Should().Be(templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
+            x.Tokens["manageVacancyURL"].Should().Be($"{templateHelper.RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
             x.Tokens["location"].Should().Be("Recruiting nationally");
         });
     }
@@ -193,6 +196,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
         providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
@@ -214,18 +218,18 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         var notification = capturedNotifications?.SingleOrDefault();
         notification.Should().NotBeNull();
         notification.UserId.Should().Be(providerUser.Id);
-        notification.EmailTemplateId.Should().Be(new EmailTemplateHelper("local").GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily));
+        notification.EmailTemplateId.Should().Be(templateHelper.TemplateIds.ApplicationSubmittedToProviderDaily);
         notification.SendWhen.Should().BeCloseTo(DateTime.Now.GetNextDailySendDate(), TimeSpan.FromSeconds(5));
         
         var staticData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(notification.StaticData)!;
         staticData["firstName"].Should().Be(providerUser.Name);
-        staticData["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
+        staticData["notificationSettingsURL"].Should().Be(templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
 
         var dynamicData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(notification.DynamicData)!;
         dynamicData["advertTitle"].Should().Be(vacancy.Title!);
         dynamicData["employerName"].Should().Be(vacancy.EmployerName);
         dynamicData["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
-        dynamicData["manageVacancyURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+        dynamicData["manageVacancyURL"].Should().Be($"{templateHelper.RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
         dynamicData["location"].Should().Be("Recruiting nationally");
     }
     
@@ -248,6 +252,8 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
         Server.DataContext.Setup(x => x.UserEntities).ReturnsDbSet([providerUser]);
+        
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
 
         IEnumerable<RecruitNotificationEntity>? capturedNotifications = null;
         Server.DataContext
@@ -265,18 +271,18 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         var notification = capturedNotifications?.SingleOrDefault();
         notification.Should().NotBeNull();
         notification.UserId.Should().Be(providerUser.Id);
-        notification.EmailTemplateId.Should().Be(new EmailTemplateHelper("local").GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly));
+        notification.EmailTemplateId.Should().Be(templateHelper.TemplateIds.ApplicationSubmittedToProviderWeekly);
         notification.SendWhen.Should().BeCloseTo(DateTime.Now.GetNextWeeklySendDate(), TimeSpan.FromSeconds(5));
 
         var staticData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(notification.StaticData)!;
         staticData["firstName"].Should().Be(providerUser.Name);
-        staticData["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
+        staticData["notificationSettingsURL"].Should().Be(templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
 
         var dynamicData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(notification.DynamicData)!;
         dynamicData["advertTitle"].Should().Be(vacancy.Title!);
         dynamicData["employerName"].Should().Be(vacancy.EmployerName);
         dynamicData["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString());
-        dynamicData["manageVacancyURL"].Should().Be($"{new EmailTemplateHelper("local").RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+        dynamicData["manageVacancyURL"].Should().Be($"{templateHelper.RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
         dynamicData["location"].Should().Be("Recruiting nationally");
     }
 }
