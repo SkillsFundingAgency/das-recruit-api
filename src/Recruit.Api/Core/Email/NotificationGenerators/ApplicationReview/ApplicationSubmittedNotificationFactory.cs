@@ -36,9 +36,6 @@ public class ApplicationSubmittedNotificationFactory(
             _ => throw new NotSupportedException($"The vacancy owner type '{vacancy.OwnerType}' is not supported")
         };
         
-        // update with the default notification preferences
-        users.ForEach(NotificationPreferenceDefaults.Update);
-        
         // filter down to those who actually want to receive the notification
         var usersRequiringEmail = users.GetUsersForNotificationType(
             NotificationTypes.ApplicationSubmitted,
