@@ -1,7 +1,7 @@
 trigger: none
 
 pool:
-  vmImage: DAS - Continuous Integration Agents
+  name: DAS - Continuous Integration Agents
 
 variables:
   - group: sql-server-test 
