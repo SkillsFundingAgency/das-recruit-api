@@ -33,4 +33,10 @@ CREATE TABLE dbo.[ApplicationReview] (
     INDEX [IX_ApplicationReview_VacancyRef] NONCLUSTERED(VacancyReference),
     INDEX [IX_ApplicationReview_Status] NONCLUSTERED(Status),
     INDEX [IX_ApplicationReview_AccountId_DateSharedWithEmployer_Status_WithdrawnDate]  NONCLUSTERED([AccountId], [DateSharedWithEmployer])  INCLUDE ([Status], [WithdrawnDate])
-)
+    INDEX IX_ApplicationReviewEntities_Ukprn_Status_WithdrawnDate
+        ON ApplicationReviewEntities (Ukprn, Status, WithdrawnDate)
+    INCLUDE (VacancyReference);
+    INDEX IX_ApplicationReview_Account_Status_Withdrawn
+        ON ApplicationReviewEntities (AccountId, Status, WithdrawnDate)
+    INCLUDE (VacancyReference);
+    )
