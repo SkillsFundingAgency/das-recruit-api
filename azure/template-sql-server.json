@@ -101,7 +101,7 @@
               "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
             },
             "sqlStorageAccountName": {
-              "value": "[concat(variables('resourceNamePrefix'), '-str')]"
+              "value": "[concat(replace(variables('resourceNamePrefix'), '-', ''), 'str')]"
             },
             "threatDetectionEmailAddress": {
               "value": "[parameters('threatDetectionEmailAddress')]"
