@@ -52,11 +52,12 @@
             "contentVersion": "1.0.0.0"
           },
           "parameters": {
-            "storageAccountName": {
-              "value": "[concat(variables('resourceNamePrefix'), '-str')]"
-            },
             "allowSharedKeyAccess": {
               "value": true
+            },
+            "location": "[parameters('location')]",
+            "storageAccountName": {
+              "value": "[concat(variables('resourceNamePrefix'), '-str')]"
             }
           }
         },
@@ -76,32 +77,32 @@
             "contentVersion": "1.0.0.0"
           },
           "parameters": {
-            "sqlServerName": {
-              "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
-            },
-            "sqlServerLocation": {
-              "value": "[parameters('location')]"
-            },
             "sqlServerActiveDirectoryAdminLogin": {
               "value": "[parameters('sqlServerActiveDirectoryAdminLogin')]"
             },
             "sqlServerActiveDirectoryAdminObjectId": {
               "value": "[parameters('sqlServerActiveDirectoryAdminObjectId')]"
             },
+            "sqlServerAdminPassword": {
+              "value": "[parameters('sqlServerPassword')]"
+            },
             "sqlServerAdminUserName": {
               "value": "[parameters('sqlServerUser')]"
             },
-            "sqlServerAdminPassword": {
-              "value": "[parameters('sqlServerPassword')]"
+            "sqlServerLocation": {
+              "value": "[parameters('location')]"
             },
             "sqlServerMinimalTlsVersion": {
               "value": "[parameters('sqlServerMinimalTlsVersion')]"
             },
-            "threatDetectionEmailAddress": {
-              "value": "[parameters('threatDetectionEmailAddress')]"
+            "sqlServerName": {
+              "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
             },
             "sqlStorageAccountName": {
               "value": "[concat(variables('resourceNamePrefix'), '-str')]"
+            },
+            "threatDetectionEmailAddress": {
+              "value": "[parameters('threatDetectionEmailAddress')]"
             }
           }
         },
@@ -125,7 +126,7 @@
               "name": "AllowAzure"
             },
             "ipAddresses": {
-              "value": ["0.0.0.0", "0.0.0.0"]
+              "value": ["0.0.0.0"]
             },
             "serverName": {
               "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
