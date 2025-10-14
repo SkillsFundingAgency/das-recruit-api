@@ -35,7 +35,13 @@ public class VacancyProvider(IVacancyRepository vacancyRepository) : IVacancyPro
     public async Task<VacancyDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
     {
         var vacancies = await vacancyRepository.GetAllByAccountId(accountId, token);
-        return GetDashboardModel(vacancies);
+        var sharedVacancies = await vacancyRepository.GetAllSharedByAccountId(accountId, token);
+        
+        var dashboardModel = GetDashboardModel(vacancies);
+        var sharedDashboardModel = GetDashboardModel(sharedVacancies);
+
+        dashboardModel.ReviewVacanciesCount = sharedDashboardModel.ReviewVacanciesCount;
+        return dashboardModel;
     }
 
     public async Task<VacancyDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
@@ -60,28 +66,46 @@ public class VacancyProvider(IVacancyRepository vacancyRepository) : IVacancyPro
 
     private static VacancyDashboardModel GetDashboardModel(List<VacancyEntity> vacancyEntities)
     {
-        var counts = vacancyEntities
-            .GroupBy(v => v.Status)
-            .ToDictionary(g => g.Key, g => g.Count());
+        if (vacancyEntities.Count == 0)
+            return new VacancyDashboardModel();
 
-        var closingSoonThreshold = DateTime.UtcNow.AddDays(ClosingSoonDays);
+        var now = DateTime.UtcNow;
+        var threshold = now.AddDays(ClosingSoonDays);
 
-        var closingSoonVacancies = vacancyEntities
-            .Where(v => v.Status == VacancyStatus.Live && v.ClosingDate <= closingSoonThreshold)
-            .ToList();
+        int closed = 0, draft = 0, review = 0, referred = 0, rejected = 0, live = 0, submitted = 0;
+        int closingSoon = 0, closingSoonWithNoApps = 0;
 
-        return new VacancyDashboardModel
+        foreach (var v in vacancyEntities)
         {
-            ClosedVacanciesCount = counts.GetValueOrDefault(VacancyStatus.Closed),
-            DraftVacanciesCount = counts.GetValueOrDefault(VacancyStatus.Draft),
-            ReviewVacanciesCount = counts.GetValueOrDefault(VacancyStatus.Review),
-            ReferredVacanciesCount = counts.GetValueOrDefault(VacancyStatus.Referred)
-                                     + counts.GetValueOrDefault(VacancyStatus.Rejected),
-            LiveVacanciesCount = counts.GetValueOrDefault(VacancyStatus.Live),
-            SubmittedVacanciesCount = counts.GetValueOrDefault(VacancyStatus.Submitted),
-            ClosingSoonVacanciesCount = closingSoonVacancies.Count,
-            ClosingSoonWithNoApplications = closingSoonVacancies
-                .Count(v => v.ApplicationMethod == ApplicationMethod.ThroughFindAnApprenticeship)
+            switch (v.Status)
+            {
+                case VacancyStatus.Closed: closed++; break;
+                case VacancyStatus.Draft: draft++; break;
+                case VacancyStatus.Review: review++; break;
+                case VacancyStatus.Referred: referred++; break;
+                case VacancyStatus.Rejected: rejected++; break;
+                case VacancyStatus.Live:
+                    live++;
+                    if (v.ClosingDate <= threshold)
+                    {
+                        closingSoon++;
+                        if (v.ApplicationMethod == ApplicationMethod.ThroughFindAnApprenticeship)
+                            closingSoonWithNoApps++;
+                    }
+                    break;
+                case VacancyStatus.Submitted: submitted++; break;
+            }
+        }
+
+        return new VacancyDashboardModel {
+            ClosedVacanciesCount = closed,
+            DraftVacanciesCount = draft,
+            ReviewVacanciesCount = review,
+            ReferredVacanciesCount = referred + rejected,
+            LiveVacanciesCount = live,
+            SubmittedVacanciesCount = submitted,
+            ClosingSoonVacanciesCount = closingSoon,
+            ClosingSoonWithNoApplications = closingSoonWithNoApps
         };
     }
 }

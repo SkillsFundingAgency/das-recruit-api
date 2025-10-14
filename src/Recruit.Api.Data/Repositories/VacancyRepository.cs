@@ -28,6 +28,7 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
         CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken);
+    Task<List<VacancyEntity>> GetAllSharedByAccountId(long accountId, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReference, CancellationToken cancellationToken);
@@ -148,6 +149,15 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         return await dataContext.VacancyEntities
             .AsNoTracking()
             .Where(vacancy => vacancy.AccountId == accountId && vacancy.OwnerType == OwnerType.Employer)
+            .ToListAsync(cancellationToken);
+    }
+    public async Task<List<VacancyEntity>> GetAllSharedByAccountId(long accountId, CancellationToken cancellationToken)
+    {
+        return await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(vacancy => vacancy.AccountId == accountId 
+                              && (vacancy.OwnerType == OwnerType.Employer 
+                                  || vacancy.OwnerType == OwnerType.Provider))
             .ToListAsync(cancellationToken);
     }
 

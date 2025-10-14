@@ -6,7 +6,7 @@ public sealed record VacancyDashboardModel
 {
     public int ClosedVacanciesCount { get; init; }
     public int DraftVacanciesCount { get; init; }
-    public int ReviewVacanciesCount { get; init; }
+    public int ReviewVacanciesCount { get; set; }
     public int ReferredVacanciesCount { get; init; }
     public int LiveVacanciesCount { get; init; }
     public int SubmittedVacanciesCount { get; init; }
