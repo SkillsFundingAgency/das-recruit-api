@@ -57,7 +57,7 @@ stages:
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
   jobs:
-  - deployment: DeployWebApp
+  - deployment: DeploySQLServer
     condition: ${{ parameters.deployServer }}
     environment: DEV
     strategy:
@@ -80,6 +80,7 @@ stages:
               ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
               IsMultiRepoCheckout: true
   - job: Test
+    dependsOn: Deploy
     steps:
     # Azure login + create SQL resources
     - task: AzureCLI@2
