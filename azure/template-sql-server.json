@@ -11,6 +11,9 @@
       "sqlServerActiveDirectoryAdminObjectId": {
         "type": "string"
       },
+      "sqlServerMinimalTlsVersion": {
+        "type": "string"
+      },
       "sqlServerPassword": {
         "type": "securestring"
       },
@@ -77,20 +80,20 @@
             "sqlServerLocation": {
               "value": "[parameters('location')]"
             },
-            "sqlServerAdminUserName": {
-              "value": "[parameters('sqlServerUser')]"
-            },
-            "sqlServerAdminPassword": {
-              "value": "[parameters('sqlServerPassword')]"
-            },
             "sqlServerActiveDirectoryAdminLogin": {
               "value": "[parameters('sqlServerActiveDirectoryAdminLogin')]"
             },
             "sqlServerActiveDirectoryAdminObjectId": {
               "value": "[parameters('sqlServerActiveDirectoryAdminObjectId')]"
             },
+            "sqlServerAdminUserName": {
+              "value": "[parameters('sqlServerUser')]"
+            },
+            "sqlServerAdminPassword": {
+              "value": "[parameters('sqlServerPassword')]"
+            },
             "sqlServerMinimalTlsVersion": {
-              "value": "1.2"
+              "value": "[parameters('sqlServerMinimalTlsVersion')]"
             },
             "threatDetectionEmailAddress": {
               "value": "[parameters('threatDetectionEmailAddress')]"

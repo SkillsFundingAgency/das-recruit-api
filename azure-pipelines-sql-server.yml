@@ -79,7 +79,7 @@ stages:
               ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
               IsMultiRepoCheckout: true
               TemplateSecrets:
-                sqlServerPassword: $(sqlServerPassword)
+                SqlServerPassword: $(sqlServerPassword)
   - job: Test
     dependsOn: DeploySQLServer
     steps:
