@@ -59,7 +59,7 @@
               "value": "[parameters('location')]"
             },
             "storageAccountName": {
-              "value": "[concat(variables('resourceNamePrefix'), '-str')]"
+              "value": "[concat(replace(variables('resourceNamePrefix'), '-', ''), 'str')]"
             }
           }
         },
