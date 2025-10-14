@@ -96,7 +96,7 @@
               "value": "[parameters('threatDetectionEmailAddress')]"
             },
             "sqlStorageAccountName": {
-              "value": "dasatsharedstr"
+              "value": "[concat(variables('resourceNamePrefix'), '-str')]"
             }
           }
         },
