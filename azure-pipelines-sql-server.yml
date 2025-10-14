@@ -91,7 +91,7 @@ stages:
         inlineScript: |
           set -eou pipefail
 
-          az sql db create -g $(resourceGroupName) -s $(sqlServerName) -n $(sqlDB) \
+          az sql db create -g "$(resourceGroupName)" -s "$(sqlServerName)" -n "$(sqlDB)" \
             --edition Basic
 
           echo "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(sqlServerName).database.windows.net,1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
@@ -130,4 +130,4 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az sql db delete --name $(sqlDB) --resource-group $(resourceGroupName) --server $(sqlServerName)
+          az sql db delete --name "$(sqlDB)" --resource-group "$(resourceGroupName)" --server "$(sqlServerName)"
