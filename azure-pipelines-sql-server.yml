@@ -10,10 +10,6 @@ pool:
   name: DAS - Continuous Integration Agents
 
 variables:
-- name: SolutionBaseName
-  value: CI.Test
-- name: BuildConfiguration
-  value: release
 - name: ServiceConnection
   value: SFA-DAS-DevTest-ARM
 - group: DevTest Management Resources
@@ -36,10 +32,27 @@ resources:
 stages:
 - stage: Build
   jobs:
-  - template: pipeline-templates/job/code-build.yml
-    parameters:
-      SolutionBaseName: ${{ variables.SolutionBaseName }}
-      BuildConfiguration: ${{ variables.BuildConfiguration }}
+  - job: CodeBuild
+    workspace:
+      clean: all
+    variables:
+    - group: BUILD Management Resources
+    steps:
+    - checkout: self
+      fetchDepth: 0
+    - task: CopyFiles@2
+      displayName: Copy Files to $(build.artifactstagingdirectory)/publish
+      inputs:
+        Contents: |
+          azure/**
+        TargetFolder: $(build.artifactstagingdirectory)/publish
+        OverWrite: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Build Artifact
+      inputs:
+        targetPath: $(build.artifactstagingdirectory)/publish
+        artifactName: drop
 
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
@@ -63,8 +76,8 @@ stages:
               SubscriptionId: $(SubscriptionId)
               Location: $(location)
               Environment: DEV
-              TemplatePath: $(Pipeline.Workspace)/${{ variables.SolutionBaseName }}/azure/template-sql-server.json
-              ParametersPath: $(Pipeline.Workspace)/${{ variables.SolutionBaseName }}/azure/template-sql-server.parameters.json
+              TemplatePath: $(Pipeline.Workspace)/drop/azure/template-sql-server.json
+              ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
               IsMultiRepoCheckout: true
   - job: Test
     steps:
