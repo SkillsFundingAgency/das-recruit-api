@@ -5,17 +5,17 @@
       "location": {
         "type": "string"
       },
+      "sqlServerActiveDirectoryAdminLogin": {
+        "type": "string"
+      },
+      "sqlServerActiveDirectoryAdminObjectId": {
+        "type": "string"
+      },
       "sqlServerPassword": {
         "type": "securestring"
       },
       "sqlServerUser": {
         "type": "string"
-      },
-      "sqlServerActiveDirectoryAdminLogin": {
-        "type": "string"
-      },
-      "sqlServerActiveDirectoryAdminObjectId": {
-        "type": "securestring"
       },
       "tags": {
         "type": "object"
