@@ -12,7 +12,7 @@
         "type": "string"
       },
       "sqlServerPassword": {
-        "type": "securestring"
+        "type": "string"
       },
       "sqlServerUser": {
         "type": "string"
