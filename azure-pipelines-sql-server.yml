@@ -1,11 +1,5 @@
 trigger: none
 
-parameters:
-- name: deployServer
-  displayName: Deploy SQL Server
-  type: boolean
-  default: false
-
 pool:
   name: DAS - Continuous Integration Agents
 
@@ -57,7 +51,6 @@ stages:
   displayName: Deploy SQL DB and Run Tests
   jobs:
   - deployment: DeploySQLServer
-    condition: ${{ parameters.deployServer }}
     environment: DEV
     strategy:
       runOnce:
