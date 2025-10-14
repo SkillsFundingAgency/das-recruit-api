@@ -1,0 +1,134 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "type": "string"
+      },
+      "sqlServerPassword": {
+        "type": "securestring"
+      },
+      "sqlServerUser": {
+        "type": "string"
+      },
+      "sqlServerActiveDirectoryAdminLogin": {
+        "type": "string"
+      },
+      "sqlServerActiveDirectoryAdminObjectId": {
+        "type": "securestring"
+      },
+      "tags": {
+        "type": "object"
+      },
+      "threatDetectionEmailAddress": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
+      "resourceNamePrefix": "das-ci-tests"
+    },
+    "resources": [
+      {
+        "apiVersion": "2025-04-01",
+        "name": "[concat(variables('resourceNamePrefix'), '-rg')]",
+        "type": "Microsoft.Resources/resourceGroups",
+        "location": "[parameters('location')]",
+        "tags": "[parameters('tags')]",
+        "properties": {}
+      },
+      {
+        "apiVersion": "2025-04-01",
+        "name": "ci-tests-storage-deployment",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('deploymentUrlBase'),'storage-account-arm.json')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "storageAccountName": {
+              "value": "[concat(variables('resourceNamePrefix'), '-str')]"
+            },
+            "allowSharedKeyAccess": {
+              "value": true
+            }
+          }
+        },
+        "dependsOn": [
+          "[concat(variables('resourceNamePrefix'), '-rg')]"
+        ]
+      },
+      {
+        "apiVersion": "2025-04-01",
+        "name": "ci-tests-sql-server-deployment",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('deploymentUrlBase'),'sql-server.json')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "sqlServerName": {
+              "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
+            },
+            "sqlServerLocation": {
+              "value": "[parameters('location')]"
+            },
+            "sqlServerAdminUserName": {
+              "value": "[parameters('sqlServerUser')]"
+            },
+            "sqlServerAdminPassword": {
+              "value": "[parameters('sqlServerPassword')]"
+            },
+            "sqlServerActiveDirectoryAdminLogin": {
+              "value": "[parameters('sqlServerActiveDirectoryAdminLogin')]"
+            },
+            "sqlServerActiveDirectoryAdminObjectId": {
+              "value": "[parameters('sqlServerActiveDirectoryAdminObjectId')]"
+            },
+            "sqlServerMinimalTlsVersion": {
+              "value": "1.2"
+            },
+            "threatDetectionEmailAddress": {
+              "value": "[parameters('threatDetectionEmailAddress')]"
+            },
+            "sqlStorageAccountName": {
+              "value": "dasatsharedstr"
+            }
+          }
+        },
+        "dependsOn": [
+          "ci-tests-storage-deployment"
+        ]
+      },
+      {
+        "apiVersion": "2025-04-01",
+        "name": "ci-tests-sql-server-firewall-rule-deployment",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+            "uri": "[uri(variables('deploymentUrlBase'),'sql-server-firewall-rules.json')]",
+            "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+            "firewallRuleNamePrefix": {
+              "name": "AllowAzure"
+            },
+            "ipAddresses": {
+              "value": ["0.0.0.0", "0.0.0.0"]
+            },
+            "serverName": {
+              "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
+            }
+          }
+        },
+        "dependsOn": [
+          "ci-tests-sql-server-deployment"
+        ]
+      }
+    ]
+}

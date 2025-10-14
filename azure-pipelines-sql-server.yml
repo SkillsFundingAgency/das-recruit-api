@@ -1,14 +1,23 @@
 trigger: none
 
+parameters:
+- name: deployServer
+  displayName: Deploy SQL Server
+  type: boolean
+  default: false
+
 pool:
   name: DAS - Continuous Integration Agents
 
 variables:
 - name: SolutionBaseName
-  value: Recruit.Api
+  value: CI.Test
 - name: BuildConfiguration
   value: release
-- group: sql-server-test 
+- name: ServiceConnection
+  value: SFA-DAS-DevTest-ARM
+- group: DevTest Management Resources
+- group: das-ci-tests
 
 resources:
   repositories:
@@ -29,32 +38,45 @@ stages:
   jobs:
   - template: pipeline-templates/job/code-build.yml
     parameters:
-      SolutionBaseName: $(SolutionBaseName)
-      BuildConfiguration: $(BuildConfiguration)
+      SolutionBaseName: ${{ variables.SolutionBaseName }}
+      BuildConfiguration: ${{ variables.BuildConfiguration }}
 
-- stage: Test
+- stage: Deploy
+  displayName: Deploy SQL DB and Run Tests
   jobs:
-  - job:
+  - deployment: DeployWebApp
+    condition: ${{ parameters.depoyServer }}
+    environment: DEV
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: azure-pipelines-templates/deploy/step/wait-azure-devops-deployment.yml@das-platform-building-blocks
+            parameters:
+              ServiceConnection: ${{ variables.ServiceConnection }}
+              EnvironmentId: $(Environment.Id)
+              PipelineName: $(Build.DefinitionName)
+              RunId: $(Build.BuildId)
+          - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
+            parameters:
+              ServiceConnection: ${{ variables.ServiceConnection }}
+              SubscriptionId: $(SubscriptionId)
+              Location: $(location)
+              Environment: DEV
+              TemplatePath: $(Pipeline.Workspace)/${{ variables.SolutionBaseName }}/azure/template-sql-server.json
+              ParametersPath: $(Pipeline.Workspace)/${{ variables.SolutionBaseName }}/azure/template-sql-server.parameters.json
+              IsMultiRepoCheckout: true
+  - job: Test
     steps:
     # Azure login + create SQL resources
     - task: AzureCLI@2
-      displayName: 'Provision temporary Azure SQL'
+      displayName: Provision Temporary SQL DB
       inputs:
-        azureSubscription: SFA-DAS-DevTest-ARM
+        azureSubscription: ${{ variables.ServiceConnection }}
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az group create -n $(rgName) -l $(location)
-
-          az sql server create \
-            -g $(rgName) -n $(sqlServer) \
-            -u $(sqlUser) -p "$(sqlPass)" \
-            --enable-public-network true
-
-          # allow Azure services to connect (hosted agents)
-          az sql server firewall-rule create \
-            -g $(rgName) -s $(sqlServer) -n AllowAzure \
-            --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+          exit -eou pipefail
 
           az sql db create -g $(rgName) -s $(sqlServer) -n $(sqlDB) \
             --edition Basic
@@ -81,7 +103,7 @@ stages:
         dotnet test --configuration Release --filter "TestCategory!=Integration"
       displayName: 'Run Unit Tests'
 
-    # Integration tests (point at Azure SQL)
+    # Integration tests (point SQL DB)
     - script: |
         export ConnectionStrings__Integration="$(ADO_CONNSTR)"
         dotnet test --configuration Release --filter "TestCategory=Integration"
@@ -89,11 +111,11 @@ stages:
 
     # Cleanup (best-effort)
     - task: AzureCLI@2
-      displayName: 'Tear down Azure SQL'
+      displayName: 'Tear down SQL DB'
       condition: always()
       inputs:
-        azureSubscription: SFA-DAS-DevTest-ARM
+        azureSubscription: ${{ variables.ServiceConnection }}
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az group delete -n $(rgName) --yes --no-wait
+          az sql db delete --name $(sqlDB) --resource-group "das-ci-tests-rg" --server "das-ci-tests-sql"
