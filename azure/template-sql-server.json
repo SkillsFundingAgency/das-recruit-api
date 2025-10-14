@@ -139,5 +139,15 @@
           "ci-tests-sql-server-deployment"
         ]
       }
-    ]
+    ],
+    "outputs": {
+        "ResourceGroupName": {
+            "type": "string",
+            "value": "[concat(variables('resourceNamePrefix'), '-rg')]"
+        },
+        "sqlServerName": {
+            "type": "string",
+            "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
+        }
+    }
 }
