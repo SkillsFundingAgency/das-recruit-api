@@ -44,6 +44,7 @@
         "apiVersion": "2025-04-01",
         "name": "ci-tests-storage-deployment",
         "type": "Microsoft.Resources/deployments",
+        "location": "[parameters('location')]",
         "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -67,6 +68,7 @@
         "apiVersion": "2025-04-01",
         "name": "ci-tests-sql-server-deployment",
         "type": "Microsoft.Resources/deployments",
+        "location": "[parameters('location')]",
         "properties": {
           "mode": "Incremental",
           "templateLink": {
@@ -111,6 +113,7 @@
         "apiVersion": "2025-04-01",
         "name": "ci-tests-sql-server-firewall-rule-deployment",
         "type": "Microsoft.Resources/deployments",
+        "location": "[parameters('location')]",
         "properties": {
           "mode": "Incremental",
           "templateLink": {
