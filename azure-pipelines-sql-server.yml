@@ -45,7 +45,7 @@ stages:
   displayName: Deploy SQL DB and Run Tests
   jobs:
   - deployment: DeployWebApp
-    condition: ${{ parameters.depoyServer }}
+    condition: ${{ parameters.deployServer }}
     environment: DEV
     strategy:
       runOnce:
