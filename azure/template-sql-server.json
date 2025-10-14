@@ -55,7 +55,9 @@
             "allowSharedKeyAccess": {
               "value": true
             },
-            "storageAccountLocation": "[parameters('location')]",
+            "storageAccountLocation": {
+              "value": "[parameters('location')]"
+            },
             "storageAccountName": {
               "value": "[concat(variables('resourceNamePrefix'), '-str')]"
             }
