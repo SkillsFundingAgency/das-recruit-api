@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -30,6 +29,8 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
     Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken);
+    Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
+    Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReference, CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
@@ -199,6 +200,26 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     public async Task<VacancyReference> GetNextVacancyReferenceAsync(CancellationToken cancellationToken)
     {
         return await dataContext.GetNextVacancyReferenceAsync(cancellationToken);
+    }
+
+    public async Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken)
+    {
+        return await dataContext.VacancyEntities
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                x => x.VacancyReference == vacancyReference.Value 
+                     && x.Status == VacancyStatus.Closed,
+                cancellationToken);
+    }
+
+    public async Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReferences, CancellationToken cancellationToken)
+    {
+        return await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(
+                x => vacancyReferences.Contains(x.VacancyReference.GetValueOrDefault())
+                     && x.Status == VacancyStatus.Closed)
+            .ToListAsync(cancellationToken);
     }
 
     private static IQueryable<VacancyEntity> ApplyFiltering(IQueryable<VacancyEntity> query,
