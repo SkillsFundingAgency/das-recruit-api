@@ -80,8 +80,8 @@ stages:
     displayName: Run Integration Tests
     dependsOn: DeploySQLServer
     variables:
-      resourceGroupName: $[ dependencies.DeploySQLServer.outputs['ArmOutputsDEV.resourceGroupName'] ]  
-      sqlServerName: $[ dependencies.DeploySQLServer.outputs['ArmOutputsDEV.sqlServerName'] ]  
+      resourceGroupName: das-ci-tests-rg  
+      sqlServerName: das-ci-tests-sql
     steps:
     # Azure login + create SQL resources
     - task: AzureCLI@2
@@ -93,8 +93,7 @@ stages:
         inlineScript: |
           set -eou pipefail
 
-          az sql db create -g "$(resourceGroupName)" -s "$(sqlServerName)" -n "$(sqlDB)" \
-            --edition Basic
+          az sql db create -g "$(resourceGroupName)" -s "$(sqlServerName)" -n "$(sqlDB)" --edition Basic
 
           echo "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(sqlServerName).database.windows.net,1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
