@@ -75,6 +75,8 @@ stages:
               # TemplateSecrets:
               #   sqlServerPassword: $(sqlServerPassword)
   - job: Test
+    pool:
+      vmImage: 'ubuntu-latest'
     displayName: Run Integration Tests
     dependsOn: DeploySQLServer
     variables:
