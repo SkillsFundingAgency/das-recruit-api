@@ -13,7 +13,7 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/3.0.14
+    ref: refs/head/dasd-13987 # change back to tags/3.0.14
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
@@ -130,4 +130,4 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az sql db delete --name "$(sqlDB)" --resource-group "$(resourceGroupName)" --server "$(sqlServerName)"
+          az sql db delete --name "$(sqlDB)" --resource-group "$(resourceGroupName)" --server "$(sqlServerName)" --yes
