@@ -34,9 +34,6 @@ internal class WhenGettingDashboardCountByAccountId
         vacancyRepositoryMock
             .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
-        vacancyRepositoryMock
-            .Setup(r => r.GetAllSharedByAccountId(accountId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(sharedVacancies);
 
         // Act
         var result = await vacancyProvider.GetCountByAccountId(accountId);
@@ -61,9 +58,6 @@ internal class WhenGettingDashboardCountByAccountId
         // Arrange
         vacancyRepositoryMock
             .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync([]);
-        vacancyRepositoryMock
-            .Setup(r => r.GetAllSharedByAccountId(accountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         // Act

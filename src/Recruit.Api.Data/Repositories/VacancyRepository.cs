@@ -28,7 +28,6 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
         CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken);
-    Task<List<VacancyEntity>> GetAllSharedByAccountId(long accountId, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReference, CancellationToken cancellationToken);
@@ -67,6 +66,13 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 or FilteringOptions.NewApplications
                 => ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
                     .Where(x => x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
+
+            // Apply the filter to include InReview vacancies as well.
+            FilteringOptions.All => query
+                .Where(x =>
+                    (x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer) &&
+                    x.Status == VacancyStatus.Review)
+                .Union(query.Where(x => x.OwnerType == OwnerType.Employer)),
 
             _ => query.Where(x => x.OwnerType == OwnerType.Employer)
         };
@@ -146,18 +152,16 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
     public async Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken)
     {
-        return await dataContext.VacancyEntities
+        var employerQuery = dataContext.VacancyEntities
             .AsNoTracking()
-            .Where(vacancy => vacancy.AccountId == accountId && vacancy.OwnerType == OwnerType.Employer)
-            .ToListAsync(cancellationToken);
-    }
-    public async Task<List<VacancyEntity>> GetAllSharedByAccountId(long accountId, CancellationToken cancellationToken)
-    {
-        return await dataContext.VacancyEntities
+            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer);
+
+        var providerQuery = dataContext.VacancyEntities
             .AsNoTracking()
-            .Where(vacancy => vacancy.AccountId == accountId 
-                              && (vacancy.OwnerType == OwnerType.Employer 
-                                  || vacancy.OwnerType == OwnerType.Provider))
+            .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && (v.OwnerType == OwnerType.Provider || v.OwnerType == OwnerType.Employer));
+
+        return await employerQuery
+            .Union(providerQuery)
             .ToListAsync(cancellationToken);
     }
 

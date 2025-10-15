@@ -35,13 +35,7 @@ public class VacancyProvider(IVacancyRepository vacancyRepository) : IVacancyPro
     public async Task<VacancyDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
     {
         var vacancies = await vacancyRepository.GetAllByAccountId(accountId, token);
-        var sharedVacancies = await vacancyRepository.GetAllSharedByAccountId(accountId, token);
-        
-        var dashboardModel = GetDashboardModel(vacancies);
-        var sharedDashboardModel = GetDashboardModel(sharedVacancies);
-
-        dashboardModel.ReviewVacanciesCount = sharedDashboardModel.ReviewVacanciesCount;
-        return dashboardModel;
+        return GetDashboardModel(vacancies);
     }
 
     public async Task<VacancyDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
