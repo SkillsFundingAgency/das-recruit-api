@@ -49,30 +49,31 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         var closingSoonThreshold = DateTime.UtcNow.AddDays(ClosingSoonDays);
 
         IQueryable<VacancyEntity> query = dataContext.VacancyEntities
+            .AsNoTracking()
             .Where(x => x.AccountId == accountId);
 
-        // Apply filters
+        // Apply filters and search
         query = ApplyFiltering(query, filteringOptions, closingSoonThreshold);
-        // Apply search term
         query = ApplySearchTerm(query, searchTerm);
-        // Apply shared filtering if needed
-        query = filteringOptions switch {
-            FilteringOptions.Review => query.Where(x =>
-                x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
 
-            FilteringOptions.AllSharedApplications
-                or FilteringOptions.NewSharedApplications
-                or FilteringOptions.AllApplications
-                or FilteringOptions.NewApplications
-                => ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
+        // Apply owner-type filtering
+        query = filteringOptions switch {
+            FilteringOptions.Review =>
+                query.Where(x => x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
+
+            FilteringOptions.AllSharedApplications or FilteringOptions.NewSharedApplications =>
+                ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
                     .Where(x => x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
 
-            // Apply the filter to include InReview vacancies as well.
-            FilteringOptions.All => query
-                .Where(x =>
-                    (x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer) &&
-                    x.Status == VacancyStatus.Review)
-                .Union(query.Where(x => x.OwnerType == OwnerType.Employer)),
+            FilteringOptions.NewApplications or FilteringOptions.AllApplications =>
+                ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
+                    .Where(x => x.OwnerType == OwnerType.Employer),
+
+            FilteringOptions.All =>
+                query.Where(x =>
+                    x.OwnerType == OwnerType.Employer ||
+                    ((x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer)
+                     && x.Status == VacancyStatus.Review)),
 
             _ => query.Where(x => x.OwnerType == OwnerType.Employer)
         };
@@ -80,14 +81,15 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         // Apply sorting
         if (orderBy is not null)
         {
-            query = sortOrder is SortOrder.Desc
+            query = sortOrder == SortOrder.Desc
                 ? query.OrderByDescending(orderBy)
                 : query.OrderBy(orderBy);
         }
 
+        // Paging
         int count = await query.CountAsync(cancellationToken);
         int skip = (Math.Max(page, (ushort)1) - 1) * pageSize;
-        ushort take = Math.Max(pageSize, (ushort)1);
+        int take = Math.Max(pageSize, (ushort)1);
 
         var items = await query
             .Skip(skip)
@@ -241,27 +243,42 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         DateTime closingSoonThreshold)
     {
         return filteringOptions switch {
+            // --- Simple status-based filters ---
             FilteringOptions.Draft => query.Where(x => x.Status == VacancyStatus.Draft),
             FilteringOptions.Review => query.Where(x => x.Status == VacancyStatus.Review),
             FilteringOptions.Submitted => query.Where(x => x.Status == VacancyStatus.Submitted),
             FilteringOptions.Live => query.Where(x => x.Status == VacancyStatus.Live),
             FilteringOptions.Closed => query.Where(x => x.Status == VacancyStatus.Closed),
-            FilteringOptions.Referred => query.Where(x => x.Status == VacancyStatus.Referred || x.Status == VacancyStatus.Rejected),
-            FilteringOptions.NewApplications or FilteringOptions.AllApplications
-                                           => query.Where(x => x.Status == VacancyStatus.Live || x.Status == VacancyStatus.Closed),
-            FilteringOptions.ClosingSoon => query.Where(x => x.Status == VacancyStatus.Live && x.ClosingDate < closingSoonThreshold),
-            FilteringOptions.ClosingSoonWithNoApplications
-                                           => query.Where(x =>
-                                               x.Status == VacancyStatus.Live &&
-                                               x.ClosingDate < closingSoonThreshold &&
-                                               x.ApplicationMethod == ApplicationMethod.ThroughFindAnApprenticeship),
-            FilteringOptions.Transferred => query
-                .Where(v => v.TransferInfo != null),
-            FilteringOptions.NewSharedApplications or FilteringOptions.AllSharedApplications
-                                           => query.Where(x =>
-                                               (x.Status == VacancyStatus.Live || x.Status == VacancyStatus.Closed) &&
-                                               x.OwnerType == OwnerType.Provider),
-            FilteringOptions.Dashboard => query.Where(x => x.Status == VacancyStatus.Live || x.Status == VacancyStatus.Closed),
+            FilteringOptions.Referred => query.Where(x =>
+                                            x.Status == VacancyStatus.Referred ||
+                                            x.Status == VacancyStatus.Rejected),
+            FilteringOptions.Transferred => query.Where(v => v.TransferInfo != null),
+
+            // --- Application-based filters ---
+            FilteringOptions.NewApplications or FilteringOptions.AllApplications =>
+                query.Where(x => x.Status == VacancyStatus.Live || x.Status == VacancyStatus.Closed),
+
+            FilteringOptions.NewSharedApplications or FilteringOptions.AllSharedApplications =>
+                query.Where(x =>
+                    (x.Status == VacancyStatus.Live || x.Status == VacancyStatus.Closed) &&
+                    x.OwnerType == OwnerType.Provider),
+
+            // --- Dashboard-specific filters ---
+            FilteringOptions.ClosingSoon =>
+                query.Where(x =>
+                    x.Status == VacancyStatus.Live &&
+                    x.ClosingDate <= closingSoonThreshold),
+
+            FilteringOptions.ClosingSoonWithNoApplications =>
+                query.Where(x =>
+                    x.Status == VacancyStatus.Live &&
+                    x.ClosingDate <= closingSoonThreshold &&
+                    x.ApplicationMethod == ApplicationMethod.ThroughFindAnApprenticeship),
+
+            FilteringOptions.Dashboard =>
+                query.Where(x =>
+                    x.Status == VacancyStatus.Live || x.Status == VacancyStatus.Closed),
+
             _ => query
         };
     }
