@@ -31,5 +31,5 @@ CREATE TABLE dbo.[VacancyReview] (
     INDEX [IX_VacancyReview_AccountLegalEntityId] NONCLUSTERED(AccountLegalEntityId),
     INDEX [IX_VacancyReview_Ukprn] NONCLUSTERED(Ukprn),
     INDEX [IX_VacancyReview_UkprnOwnerType] NONCLUSTERED(Ukprn,OwnerType,Status),
-    INDEX [IX_VacancyReview_AccountIdOwnerType] NONCLUSTERED(AccountId,OwnerType,Status),
+    INDEX [IX_VacancyReview_AccountIdOwnerType] NONCLUSTERED(AccountId,OwnerType,Status)
 )
