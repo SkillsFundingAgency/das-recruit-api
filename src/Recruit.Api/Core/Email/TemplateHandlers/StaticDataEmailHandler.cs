@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;

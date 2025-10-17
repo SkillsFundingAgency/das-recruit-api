@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using SFA.DAS.Encoding;
-using SFA.DAS.Recruit.Api.Configuration;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
