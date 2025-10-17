@@ -55,7 +55,11 @@ public interface IApplicationReviewRepository
     Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReference(long vacancyReference, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId, List<long> vacancyReferences,CancellationToken token = default);
-    Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId, List<long> vacancyReferences, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default);
+    Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status,
+        CancellationToken token = default);
 }
 
 internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
@@ -180,7 +184,7 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await query.CountAsync(token);
     }
 
-    public async Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,List<long> vacancyReferences,
+    public async Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId, List<long> vacancyReferences,
         CancellationToken token = default)
     {
         var query = recruitDataContext.ApplicationReviewEntities
@@ -193,6 +197,33 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
 
         return await query.ToListAsync(token);
     }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default)
+    {
+        return await recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(appReview => ids.Contains(appReview.Id))
+            .ToListAsync(token);
+    }
+
+    public async Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default)
+    {
+        return await recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(appReview => appReview.VacancyReference == vacancyReference 
+                                && appReview.CandidateId == candidateId
+                                && appReview.WithdrawnDate == null)
+            .FirstOrDefaultAsync(token);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status, CancellationToken token = default)
+    {
+        return await recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(appReview => appReview.VacancyReference == vacancyReference && appReview.TemporaryReviewStatus == status)
+            .ToListAsync(token);
+    }
+
     public async Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId,List<long> vacancyReferences,
         CancellationToken token = default)
     {
