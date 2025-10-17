@@ -19,10 +19,10 @@ public class WhenGettingApplicationSubmittedDelayedEmails
         var sut = new ApplicationSubmittedDelayedEmailHandler(emailTemplateHelper.Object);
     
         // assert
-        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerDaily);
-        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderDaily);
-        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerWeekly);
-        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderWeekly);
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerDaily).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderDaily).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerWeekly).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderWeekly).Should().BeTrue();
     }
     
     [Test]

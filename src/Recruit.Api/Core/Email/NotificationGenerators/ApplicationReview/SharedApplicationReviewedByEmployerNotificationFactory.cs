@@ -1,6 +1,5 @@
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
@@ -21,6 +20,11 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
         {
             logger.LogError("Whilst processing application review '{ApplicationReviewId}' the associated vacancy could not be found", applicationReview.Id);
             throw new DataIntegrityException();
+        }
+        
+        if (vacancy is not { OwnerType: OwnerType.Provider, Ukprn: not null })
+        {
+            return new RecruitNotificationsResult();
         }
         
         var providerUsers = await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken);
