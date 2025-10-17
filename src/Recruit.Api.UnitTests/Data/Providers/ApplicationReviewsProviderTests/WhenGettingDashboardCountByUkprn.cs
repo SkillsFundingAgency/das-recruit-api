@@ -22,15 +22,15 @@ internal class WhenGettingDashboardCountByUkprn
         // Arrange
         repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, token))
             .ReturnsAsync([
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.New,
                     Count = newCount
                 },
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.Successful,
                     Count = successfulCount
                 },
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.Unsuccessful,
                     Count = unsuccessfulCount
                 }

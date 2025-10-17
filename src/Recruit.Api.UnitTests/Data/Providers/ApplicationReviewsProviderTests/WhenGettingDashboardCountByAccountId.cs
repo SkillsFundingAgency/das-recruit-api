@@ -28,23 +28,23 @@ internal class WhenGettingDashboardCountByAccountId
         repositoryMock.Setup(x => x.GetAllSharedCountByAccountId(accountId, token)).ReturnsAsync(allSharedCount);
         repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, token))
             .ReturnsAsync([
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.New,
                     Count = newCount
                 },
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.Successful,
                     Count = successfulCount
                 },
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.Unsuccessful,
                     Count = unsuccessfulCount
                 },
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.EmployerInterviewing,
                     Count = employerInterviewingCount
                 },
-                new DashboardCountModel {
+                new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.EmployerUnsuccessful,
                     Count = employerUnsuccessfulCount
                 }

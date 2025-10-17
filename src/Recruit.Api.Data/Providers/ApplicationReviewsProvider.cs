@@ -25,9 +25,9 @@ public interface IApplicationReviewsProvider
         bool isAscending = false,
         CancellationToken token = default);
 
-    Task<DashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default);
+    Task<ApplicationReviewsDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default);
 
-    Task<DashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default);
+    Task<ApplicationReviewsDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default);
 
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
 
@@ -187,20 +187,20 @@ internal class ApplicationReviewsProvider(
         return await applicationReviewRepository.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
-    public async Task<DashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
+    public async Task<ApplicationReviewsDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
     {
         var dashboardCount = await applicationReviewRepository.GetAllByAccountId(accountId, token);
         int sharedApplicationReviewsCount = await applicationReviewRepository.GetSharedCountByAccountId(accountId, token);
         int allSharedApplicationReviewsCount = await applicationReviewRepository.GetAllSharedCountByAccountId(accountId, token);
 
-        var dashboardModel = (DashboardModel)dashboardCount;
+        var dashboardModel = (ApplicationReviewsDashboardModel)dashboardCount;
         dashboardModel.SharedApplicationsCount = sharedApplicationReviewsCount;
         dashboardModel.AllSharedApplicationsCount = allSharedApplicationReviewsCount;
 
         return dashboardModel;
     }
 
-    public async Task<DashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
+    public async Task<ApplicationReviewsDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
     {
         return await applicationReviewRepository.GetAllByUkprn(ukprn, token);
     }

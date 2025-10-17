@@ -38,5 +38,13 @@ internal class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<A
         builder.Property(x => x.AdditionalQuestion1).HasColumnName("AdditionalQuestion1").HasColumnType("nvarchar(max)");
         builder.Property(x => x.AdditionalQuestion2).HasColumnName("AdditionalQuestion2").HasColumnType("nvarchar(max)");
         builder.Property(x => x.VacancyTitle).HasColumnName("VacancyTitle").HasColumnType("nvarchar(500)").IsRequired();
+
+        builder
+            .HasIndex(a => new { a.AccountId, a.Status, a.WithdrawnDate })
+            .HasDatabaseName("IX_ApplicationReview_Account_Status_Withdrawn");
+
+        builder
+            .HasIndex(a => new { a.AccountId, a.DateSharedWithEmployer, a.WithdrawnDate })
+            .HasDatabaseName("IX_ApplicationReview_Account_Shared_Withdrawn");
     }
 }
