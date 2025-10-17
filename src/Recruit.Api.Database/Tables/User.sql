@@ -17,5 +17,6 @@ CREATE TABLE dbo.[User] (
     CONSTRAINT [PK_User] PRIMARY KEY (Id),
     INDEX [IX_User_DfEUserId] NONCLUSTERED(DfEUserId),
     INDEX [IX_User_IdamsUserId] NONCLUSTERED(IdamsUserId),
-    INDEX [IX_User_Ukprn] NONCLUSTERED(Ukprn)
+    INDEX [IX_User_Ukprn] NONCLUSTERED(Ukprn),
+    INDEX [IX_User_Email] NONCLUSTERED(Email)
 )
