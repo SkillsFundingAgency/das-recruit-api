@@ -6,9 +6,12 @@ namespace SFA.DAS.Recruit.Api.Domain;
 
 public static class NotificationPreferenceDefaults
 {
-    public static void Update(UserEntity user)
+    public static void Update(UserEntity? user)
     {
-        ArgumentNullException.ThrowIfNull(user);
+        if (user is null)
+        {
+            return;
+        }
         user.NotificationPreferences ??= new NotificationPreferences();
         
         switch (user.UserType)
@@ -24,13 +27,9 @@ public static class NotificationPreferenceDefaults
         }
     }
 
-    public static void Update(List<UserEntity> users)
+    public static void Update(List<UserEntity>? users)
     {
-        ArgumentNullException.ThrowIfNull(users);
-        foreach (var user in users)
-        {
-            Update(user);
-        }
+        users?.ForEach(Update);
     }
 }
 

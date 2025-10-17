@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
+using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 
 namespace SFA.DAS.Recruit.Api.Data.Repositories;
@@ -10,16 +11,19 @@ public interface IUserRepository : IReadRepository<UserEntity, Guid>, IWriteRepo
     Task<List<UserEntity>> FindUsersByEmployerAccountIdAsync(long employerAccountId, CancellationToken cancellationToken);
     Task<List<UserEntity>> FindUsersByUkprnAsync(long ukprn, CancellationToken cancellationToken);
     Task<UserEntity?> FindUserByIdamsAsync(string idams, CancellationToken cancellationToken);
-    Task<UserEntity?> FindUsersByDfeUserIdAsync(string dfeUserId, CancellationToken cancellationToken);
+    Task<UserEntity?> FindUserByDfeUserIdAsync(string dfeUserId, CancellationToken cancellationToken);
 }
 
 public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
 {
     public async Task<UserEntity?> GetOneAsync(Guid key, CancellationToken cancellationToken)
     {
-        return await dataContext.UserEntities
+        var user = await dataContext.UserEntities
             .Include(x => x.EmployerAccounts)
             .FirstOrDefaultAsync(x => x.Id == key, cancellationToken);
+        
+        NotificationPreferenceDefaults.Update(user);
+        return user;
     }
 
     public async Task<UpsertResult<UserEntity>> UpsertOneAsync(UserEntity entity, CancellationToken cancellationToken)
@@ -63,10 +67,13 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
 
     public async Task<UserEntity?> FindByUserIdAsync(string userId, CancellationToken cancellationToken)
     {
-        return await dataContext.UserEntities
+        var user = await dataContext.UserEntities
             .Include(x => x.EmployerAccounts)
             .Where(x => x.IdamsUserId == userId || x.DfEUserId == userId || x.Id.ToString() == userId)
             .FirstOrDefaultAsync(cancellationToken);
+
+        NotificationPreferenceDefaults.Update(user);
+        return user;
     }
 
     public async Task<List<UserEntity>> FindUsersByEmployerAccountIdAsync(long employerAccountId, CancellationToken cancellationToken)
@@ -77,24 +84,33 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
             .Where(x => x.EmployerAccountId == employerAccountId)
             .ToListAsync(cancellationToken);
         
-        return results.Select(x => x.User).ToList();
+        var users = results.Select(x => x.User).ToList();
+        NotificationPreferenceDefaults.Update(users);
+        return users;
     }
 
     public async Task<List<UserEntity>> FindUsersByUkprnAsync(long ukprn, CancellationToken cancellationToken)
     {
-        return await dataContext
+        var users = await dataContext
             .UserEntities
             .Where(x => x.Ukprn == ukprn)
             .ToListAsync(cancellationToken);
+
+        NotificationPreferenceDefaults.Update(users);
+        return users;
     }
 
     public async Task<UserEntity?> FindUserByIdamsAsync(string idams, CancellationToken cancellationToken)
     {
-        return await dataContext.UserEntities.SingleOrDefaultAsync(x => x.IdamsUserId == idams, cancellationToken);
+        var user = await dataContext.UserEntities.SingleOrDefaultAsync(x => x.IdamsUserId == idams, cancellationToken);
+        NotificationPreferenceDefaults.Update(user);
+        return user;
     }
 
-    public async Task<UserEntity?> FindUsersByDfeUserIdAsync(string dfeUserId, CancellationToken cancellationToken)
+    public async Task<UserEntity?> FindUserByDfeUserIdAsync(string dfeUserId, CancellationToken cancellationToken)
     {
-        return await dataContext.UserEntities.SingleOrDefaultAsync(x => x.DfEUserId == dfeUserId, cancellationToken);
+        var user = await dataContext.UserEntities.SingleOrDefaultAsync(x => x.DfEUserId == dfeUserId, cancellationToken);
+        NotificationPreferenceDefaults.Update(user);
+        return user;
     }
 }
