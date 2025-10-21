@@ -68,6 +68,11 @@ public interface IApplicationReviewsProvider
         bool isAscending = false,
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
+
+    Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default);
+    Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status, CancellationToken token = default);
+    Task<ApplicationReviewsStats> GetStatusCountByVacancyReference(long vacancyReference, CancellationToken token = default);
 }
 
 internal class ApplicationReviewsProvider(
@@ -122,6 +127,44 @@ internal class ApplicationReviewsProvider(
         var vacancyDetails = GetVacancyDetails(appReviews.Items);
         return new PaginatedList<VacancyDetail>(vacancyDetails, appReviews.TotalCount, appReviews.PageIndex,
             appReviews.PageSize);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetAllByIdAsync(ids, token);
+    }
+
+    public async Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetByVacancyReferenceAndCandidateId(vacancyReference, candidateId,
+            token);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status,
+        CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetAllByVacancyReferenceAndTempStatus(vacancyReference, status, token);
+    }
+
+    public async Task<ApplicationReviewsStats> GetStatusCountByVacancyReference(long vacancyReference, CancellationToken token = default)
+    {
+        var applicationReviewEntities = await applicationReviewRepository.GetAllByVacancyReference(vacancyReference, token);
+
+        return new ApplicationReviewsStats
+        {
+            VacancyReference = vacancyReference,
+            NewApplications = applicationReviewEntities.New(),
+            SharedApplications = applicationReviewEntities.Shared(),
+            AllSharedApplications = applicationReviewEntities.AllShared(),
+            SuccessfulApplications = applicationReviewEntities.Successful(),
+            UnsuccessfulApplications = applicationReviewEntities.Unsuccessful(),
+            EmployerReviewedApplications = applicationReviewEntities.EmployerReviewed(),
+            Applications = applicationReviewEntities.AllCount(),
+            HasNoApplications = applicationReviewEntities.HasNoApplications(),
+            EmployerInterviewingApplications = applicationReviewEntities.EmployerInterviewing(),
+            InReviewApplications = applicationReviewEntities.InReview(),
+            InterviewingApplications = applicationReviewEntities.Interviewing(),
+        };
     }
 
     public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedAccountIdAsync(long accountId,
