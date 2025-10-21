@@ -18,12 +18,12 @@ public class WhenGettingStaticDataEmailsOnly
         var sut = new StaticDataEmailHandler(emailTemplateHelper.Object);
         
         // assert
-        sut.CanHandle(emailTemplateIds.ApplicationSharedWithEmployer);
-        sut.CanHandle(emailTemplateIds.SharedApplicationReviewedByEmployer);
-        sut.CanHandle(emailTemplateIds.ProviderVacancySentForEmployerReview);
-        sut.CanHandle(emailTemplateIds.ProviderVacancyApprovedByEmployer);
-        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerImmediate);
-        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderImmediate);
+        sut.CanHandle(emailTemplateIds.ApplicationSharedWithEmployer).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.SharedApplicationReviewedByEmployer).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ProviderVacancySentForEmployerReview).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ProviderVacancyApprovedByEmployer).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerImmediate).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderImmediate).Should().BeTrue();
     }
 
     [Test, RecruitAutoData]

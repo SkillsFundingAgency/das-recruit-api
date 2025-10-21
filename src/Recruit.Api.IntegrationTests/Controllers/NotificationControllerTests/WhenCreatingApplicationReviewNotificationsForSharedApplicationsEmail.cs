@@ -43,6 +43,7 @@ public class WhenCreatingApplicationReviewNotificationsForSharedApplicationsEmai
         // arrange
         applicationReview.Status = ApplicationReviewStatus.Shared;
         vacancy.VacancyReference = applicationReview.VacancyReference;
+        vacancy.OwnerType = OwnerType.Provider;
         var expectedUserNames = users.Select(x => x.Name).ToList();
         var expectedEmailAddresses = users.Select(x => x.Email).ToList();
         
