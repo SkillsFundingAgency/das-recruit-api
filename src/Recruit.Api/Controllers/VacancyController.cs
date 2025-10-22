@@ -35,6 +35,38 @@ public class VacancyController : Controller
             : TypedResults.Ok(result.ToGetResponse());
     }
 
+    [HttpGet, Route("{vacancyReference:long}/live")]
+    [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetOneLiveVacancyByVacancyReference(
+        [FromServices] IVacancyRepository repository,
+        [FromRoute] long vacancyReference,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetOneLiveVacancyByVacancyReferenceAsync(vacancyReference, cancellationToken);
+
+        return result is null
+            ? Results.NotFound()
+            : TypedResults.Ok(result.ToGetResponse());
+    }
+
+    [HttpGet, Route("live")]
+    [ProducesResponseType(typeof(PagedResponse<Vacancy>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetManyLiveVacancies(
+        [FromServices] IVacancyRepository repository,
+        PagingParams pagingParams,
+        [FromQuery] DateTime? closingDate,
+        CancellationToken cancellationToken)
+    {
+        ushort page = pagingParams.Page ?? 1;
+        ushort pageSize = pagingParams.PageSize ?? 25;
+
+        var vacancies = await repository.GetManyLiveVacancies(page, pageSize, closingDate, cancellationToken);
+
+        return TypedResults.Ok(vacancies.ToPagedResponse(x => x.ToGetResponse()));
+    }
+
     [HttpGet, Route("{vacancyReference:long}/closed")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
