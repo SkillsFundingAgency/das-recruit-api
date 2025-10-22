@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -36,8 +35,6 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
 {
-    private const int ClosingSoonDays = 5;
-
     public async Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
         ushort page = 1,
         ushort pageSize = 25,
@@ -47,21 +44,21 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         string searchTerm = "",
         CancellationToken cancellationToken = default)
     {
-        var closingSoonThreshold = DateTime.UtcNow.AddDays(ClosingSoonDays);
-
+        // Start with the minimal base query
         IQueryable<VacancyEntity> query = dataContext.VacancyEntities
             .AsNoTracking()
             .Where(x => x.AccountId == accountId);
 
-        // Apply filters and search
+        //  Apply shared base filters in a consistent order
         query = ApplyBasicFiltering(query, filteringOptions);
-        query = ApplyClosingSoonFilterByAccountId(query, filteringOptions, closingSoonThreshold, accountId);
-        query = ApplySearchTerm(query, searchTerm);
+
+        // Apply closing soon filters if relevant
+        query = ApplyClosingSoonFilterByAccountId(query, filteringOptions, accountId);
 
         // Apply owner-type filtering
         query = filteringOptions switch {
-            FilteringOptions.Review =>
-                query.Where(x => x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
+            FilteringOptions.Review => query.Where(x =>
+                x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
 
             FilteringOptions.AllSharedApplications or FilteringOptions.NewSharedApplications =>
                 ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
@@ -71,32 +68,31 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
                     .Where(x => x.OwnerType == OwnerType.Employer),
 
-            FilteringOptions.All =>
-                query.Where(x =>
-                    x.OwnerType == OwnerType.Employer ||
-                    ((x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer)
-                     && x.Status == VacancyStatus.Review)),
+            FilteringOptions.All => query.Where(x =>
+                x.OwnerType == OwnerType.Employer ||
+                ((x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer) &&
+                 x.Status == VacancyStatus.Review)),
 
             _ => query.Where(x => x.OwnerType == OwnerType.Employer)
         };
 
+        // Apply search term
+        query = ApplySearchTerm(query, searchTerm);
+
         // Apply sorting
         if (orderBy is not null)
-        {
-            query = sortOrder == SortOrder.Desc
-                ? query.OrderByDescending(orderBy)
-                : query.OrderBy(orderBy);
-        }
+            query = sortOrder == SortOrder.Desc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
 
-        // Paging
-        int count = await query.CountAsync(cancellationToken);
+        // Apply paging efficiently
         int skip = (Math.Max(page, (ushort)1) - 1) * pageSize;
         int take = Math.Max(pageSize, (ushort)1);
 
+        int count = await query.CountAsync(cancellationToken);
         var items = await query
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
+
 
         return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
     }
@@ -110,18 +106,13 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         string searchTerm = "",
         CancellationToken cancellationToken = default)
     {
-        var closingSoonThreshold = DateTime.UtcNow.AddDays(ClosingSoonDays);
-
+        // Start with the minimal base query
         IQueryable<VacancyEntity> query = dataContext.VacancyEntities
             .Where(x => x.Ukprn == ukprn && x.OwnerType == OwnerType.Provider);
 
         // Apply filters
         query = ApplyBasicFiltering(query, filteringOptions);
-        query = ApplyClosingSoonFilterByUkprn(query, filteringOptions, closingSoonThreshold, ukprn);
-
-        // Apply search term
-        query = ApplySearchTerm(query, searchTerm);
-        
+        query = ApplyClosingSoonFilterByUkprn(query, filteringOptions, ukprn);
 
         // Apply shared filtering if needed
         if (filteringOptions is FilteringOptions.EmployerReviewedApplications
@@ -131,6 +122,9 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             query = ApplySharedFilteringByUkprn(query, filteringOptions, ukprn);
         }
 
+        // Apply search term
+        query = ApplySearchTerm(query, searchTerm);
+
         // Apply sorting
         if (orderBy is not null)
         {
@@ -139,10 +133,11 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 : query.OrderBy(orderBy);
         }
 
-        int count = await query.CountAsync(cancellationToken);
+        // Apply paging efficiently
         int skip = (Math.Max(page, (ushort)1) - 1) * pageSize;
         int take = Math.Max(pageSize, (ushort)1);
 
+        int count = await query.CountAsync(cancellationToken);
         var items = await query
             .Skip(skip)
             .Take(take)
@@ -248,7 +243,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         FilteringOptions filteringOptions)
     {
         return filteringOptions switch {
-            // --- Simple status-based filters ---
+            // Simple status-based filters
             FilteringOptions.Draft => query.Where(x => x.Status == VacancyStatus.Draft),
             FilteringOptions.Review => query.Where(x => x.Status == VacancyStatus.Review),
             FilteringOptions.Submitted => query.Where(x => x.Status == VacancyStatus.Submitted),
@@ -259,7 +254,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                                             x.Status == VacancyStatus.Rejected),
             FilteringOptions.Transferred => query.Where(v => v.TransferInfo != null),
 
-            // --- Application-based filters ---
+            // Application-based filters
             FilteringOptions.NewApplications or FilteringOptions.AllApplications =>
                 query.Where(x => x.Status == VacancyStatus.Live || x.Status == VacancyStatus.Closed),
 
@@ -397,60 +392,61 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     private IQueryable<VacancyEntity> ApplyClosingSoonFilterByAccountId(
         IQueryable<VacancyEntity> query,
         FilteringOptions filteringOptions,
-        DateTime closingSoonThreshold,
-        long accountId)
-    {
-        switch (filteringOptions)
-        {
-            case FilteringOptions.ClosingSoon:
-                return query.Where(x =>
-                    x.Status == VacancyStatus.Live &&
-                    x.ClosingDate <= closingSoonThreshold);
-            case FilteringOptions.ClosingSoonWithNoApplications:
-                {
-                    var activeApplications = dataContext.ApplicationReviewEntities
-                        .AsNoTracking()
-                        .Where(a => a.WithdrawnDate == null && a.AccountId == accountId)
-                        .Select(a => a.VacancyReference);
-
-                    return query.Where(v =>
-                        v.Status == VacancyStatus.Live &&
-                        v.ClosingDate <= closingSoonThreshold &&
-                        v.ApplicationMethod == ApplicationMethod.ThroughFindAnApprenticeship &&
-                        v.VacancyReference.HasValue &&
-                        !activeApplications.Contains(v.VacancyReference.Value));
-                }
-            default:
-                return query;
-        }
-    }
+        long accountId) => ApplyClosingSoonFilter(query, filteringOptions, accountId: accountId);
 
     private IQueryable<VacancyEntity> ApplyClosingSoonFilterByUkprn(
         IQueryable<VacancyEntity> query,
         FilteringOptions filteringOptions,
-        DateTime closingSoonThreshold,
-        int ukprn)
+        int ukprn) => ApplyClosingSoonFilter(query, filteringOptions, ukprn: ukprn);
+
+
+    private IQueryable<VacancyEntity> ApplyClosingSoonFilter(
+        IQueryable<VacancyEntity> query,
+        FilteringOptions filteringOptions,
+        long? accountId = null,
+        int? ukprn = null)
     {
+        var closingSoonThreshold = DateTime.UtcNow.AddDays(5);
+
+        var baseFilter = query.Where(x =>
+            x.Status == VacancyStatus.Live &&
+            x.ClosingDate <= closingSoonThreshold);
+
         switch (filteringOptions)
         {
             case FilteringOptions.ClosingSoon:
-                return query.Where(x =>
-                    x.Status == VacancyStatus.Live &&
-                    x.ClosingDate <= closingSoonThreshold);
+                return baseFilter;
+
             case FilteringOptions.ClosingSoonWithNoApplications:
                 {
-                    var activeApplications = dataContext.ApplicationReviewEntities
-                        .AsNoTracking()
-                        .Where(a => a.WithdrawnDate == null && a.Ukprn == ukprn)
-                        .Select(a => a.VacancyReference);
+                    IQueryable<long> activeApplications;
 
-                    return query.Where(v =>
-                        v.Status == VacancyStatus.Live &&
-                        v.ClosingDate <= closingSoonThreshold &&
-                        v.ApplicationMethod == ApplicationMethod.ThroughFindAnApprenticeship &&
-                        v.VacancyReference.HasValue &&
-                        !activeApplications.Contains(v.VacancyReference.Value));
+                    if (accountId.HasValue)
+                    {
+                        activeApplications = dataContext.ApplicationReviewEntities
+                            .AsNoTracking()
+                            .Where(a => a.WithdrawnDate == null && a.AccountId == accountId)
+                            .Select(a => a.VacancyReference);
+                    }
+                    else if (ukprn.HasValue)
+                    {
+                        activeApplications = dataContext.ApplicationReviewEntities
+                            .AsNoTracking()
+                            .Where(a => a.WithdrawnDate == null && a.Ukprn == ukprn)
+                            .Select(a => a.VacancyReference);
+                    }
+                    else
+                    {
+                        return baseFilter;
+                    }
+
+                    return baseFilter
+                        .Where(v =>
+                            v.ApplicationMethod == ApplicationMethod.ThroughFindAnApprenticeship &&
+                            v.VacancyReference.HasValue &&
+                            !activeApplications.Contains(v.VacancyReference.Value));
                 }
+
             default:
                 return query;
         }
