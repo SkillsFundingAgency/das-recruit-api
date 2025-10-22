@@ -29,6 +29,9 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
     Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken);
+
+    Task<VacancyEntity?> GetOneLiveVacancyByVacancyReferenceAsync(VacancyReference vacancyReference, CancellationToken cancellationToken);
+    Task<PaginatedList<VacancyEntity>> GetManyLiveVacancies(int page, int pageSize, DateTime? closingDate, CancellationToken cancellationToken = default);
     Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReference, CancellationToken cancellationToken);
 }
@@ -151,6 +154,49 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         return await dataContext
             .VacancyEntities
             .FirstOrDefaultAsync(x => x.VacancyReference == vacancyReference, cancellationToken);
+    }
+
+    public async Task<VacancyEntity?> GetOneLiveVacancyByVacancyReferenceAsync(VacancyReference vacancyReference, CancellationToken cancellationToken)
+    {
+        var dateTimeNow = DateTime.UtcNow.Date;
+        return await dataContext
+            .VacancyEntities
+            .FirstOrDefaultAsync(x => x.VacancyReference == vacancyReference.Value
+                                      && x.Status == VacancyStatus.Live
+                                      && x.ClosingDate > dateTimeNow, cancellationToken);
+    }
+
+    public async Task<PaginatedList<VacancyEntity>> GetManyLiveVacancies(int page, int pageSize, DateTime? closingDate, CancellationToken cancellationToken = default)
+    {
+        page = Math.Max(page, 1);
+        pageSize = Math.Max(pageSize, 1);
+
+        int skip = (page - 1) * pageSize;
+
+        IQueryable<VacancyEntity> query = dataContext
+            .VacancyEntities
+            .Where(v => v.Status == VacancyStatus.Live)
+            .AsNoTracking();
+
+        if (closingDate.HasValue)
+        {
+            var startDate = closingDate.Value.Date;
+            var endDate = startDate.AddDays(1);
+            query = query.Where(v => v.ClosingDate >= startDate && v.ClosingDate < endDate);
+        }
+        else
+        {
+            var dateTimeNow = DateTime.UtcNow.Date;
+            query = query.Where(v => v.ClosingDate >= dateTimeNow);
+        }
+        
+        int count = await query.CountAsync(cancellationToken);
+        var items = await query
+            .OrderByDescending(v => v.ClosingDate)
+            .Skip(skip)
+            .Take(pageSize).ToListAsync(cancellationToken);
+
+        return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
     }
 
     public async Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken)
