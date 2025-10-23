@@ -34,11 +34,16 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
     public async Task Then_When_No_Users_Are_Found_No_Notifications_Are_Generated(
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
+        [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
         [Greedy] SharedApplicationReviewedByEmployerNotificationFactory sut)
     {
         // arrange
-        applicationReview.Vacancy = vacancy;
+        long? capturedVacancyId = null;
+        vacancyRepository
+            .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .Callback((long x, CancellationToken _) => capturedVacancyId = x)
+            .ReturnsAsync(vacancy);
 
         long? capturedUkprn = null;
         userRepository
@@ -50,6 +55,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
 
         // assert
+        capturedVacancyId.Should().Be(applicationReview.VacancyReference);
         capturedUkprn.Should().Be(vacancy.Ukprn);
         result.Delayed.Should().BeEmpty();
         result.Immediate.Should().BeEmpty();
@@ -63,6 +69,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         string manageNotificationsUrl,
         string manageVacancyUrl,
         string baseUrl,
+        [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
         [Frozen] Mock<IEmailTemplateHelper> emailTemplateHelper,
         [Greedy] SharedApplicationReviewedByEmployerNotificationFactory sut)
@@ -70,8 +77,10 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         // arrange
         user.UserType = UserType.Provider;
         user.SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
-        applicationReview.Vacancy = vacancy;
-
+        
+        vacancyRepository
+            .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vacancy);
         userRepository
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
@@ -112,6 +121,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         [MinLength(4), MaxLength(4)] UserEntity[] users,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
+        [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
         [Greedy] SharedApplicationReviewedByEmployerNotificationFactory sut)
     {
@@ -130,8 +140,10 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
 
         var expectedIds = users.Take(2).Select(x => x.Id).ToList();
         var unexpectedIds = users.Skip(2).Take(2).Select(x => x.Id).ToList();
-        applicationReview.Vacancy = vacancy;
-
+        
+        vacancyRepository
+            .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vacancy);
         userRepository
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(users.ToList());

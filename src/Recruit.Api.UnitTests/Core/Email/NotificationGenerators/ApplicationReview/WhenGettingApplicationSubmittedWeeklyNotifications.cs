@@ -19,6 +19,7 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         string manageNotificationsUrl,
         string manageVacancyUrl,
         string baseUrl,
+        [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
         [Frozen] Mock<IEmailTemplateHelper> emailTemplateHelper,
         [Greedy] ApplicationSubmittedNotificationFactory sut)
@@ -28,8 +29,10 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Provider;
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Weekly);
-        applicationReview.Vacancy = vacancy;
-
+        
+        vacancyRepository
+            .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vacancy);
         userRepository
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
@@ -79,6 +82,7 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         string manageVacancyUrl,
         string baseUrl,
         [Frozen] Mock<IEncodingService> encodingService,
+        [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
         [Frozen] Mock<IEmailTemplateHelper> emailTemplateHelper,
         [Greedy] ApplicationSubmittedNotificationFactory sut)
@@ -88,8 +92,10 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Employer;
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Weekly);
-        applicationReview.Vacancy = vacancy;
-
+        
+        vacancyRepository
+            .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vacancy);
         userRepository
             .Setup(x => x.FindUsersByEmployerAccountIdAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);

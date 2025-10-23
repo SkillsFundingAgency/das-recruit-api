@@ -14,17 +14,14 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControlle
 
 public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEmail : BaseFixture
 {
-    [Test, RecursiveMoqAutoData]
+    [Test, MoqAutoData]
     public async Task And_No_Users_Are_Found_Then_No_Notifications_Are_Created(
         List<ApplicationReviewEntity> applicationReviews,
         List<VacancyEntity> vacancies)
     {
         // arrange
-        vacancies[0].OwnerType = OwnerType.Provider;
         applicationReviews[1].Status = ApplicationReviewStatus.New;
         vacancies[0].VacancyReference = applicationReviews[1].VacancyReference;
-        vacancies[0].ApplicationReviews = [applicationReviews[1]];
-        applicationReviews[1].Vacancy = vacancies[0];
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(applicationReviews);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet(vacancies);
@@ -50,7 +47,6 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
     {
         // arrange
         applicationReview.Status = ApplicationReviewStatus.New;
-        applicationReview.Vacancy = vacancy;
         vacancy.OwnerType = OwnerType.Employer;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
@@ -108,7 +104,6 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
     {
         // arrange
         applicationReview.Status = ApplicationReviewStatus.New;
-        applicationReview.Vacancy = vacancy;
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
@@ -163,7 +158,6 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
     {
         // arrange
         applicationReview.Status = ApplicationReviewStatus.New;
-        applicationReview.Vacancy = vacancy;
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         vacancy.EmployerLocationOption = AvailableWhere.MultipleLocations;
@@ -195,7 +189,6 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
     {
         // arrange
         applicationReview.Status = ApplicationReviewStatus.New;
-        applicationReview.Vacancy = vacancy;
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
@@ -248,7 +241,6 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
     {
         // arrange
         applicationReview.Status = ApplicationReviewStatus.New;
-        applicationReview.Vacancy = vacancy;
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
