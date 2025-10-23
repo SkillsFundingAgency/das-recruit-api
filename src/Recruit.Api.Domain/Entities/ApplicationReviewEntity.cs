@@ -26,4 +26,6 @@ public class ApplicationReviewEntity
     public string? EmployerFeedback { get; set; }
     public ApplicationReviewStatus Status { get; set; }
     public ApplicationReviewStatus? TemporaryReviewStatus { get; set; }
+    
+    public virtual VacancyEntity? Vacancy { get; set; }
 }

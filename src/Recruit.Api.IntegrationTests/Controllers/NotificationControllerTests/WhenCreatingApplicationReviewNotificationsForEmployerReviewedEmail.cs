@@ -9,7 +9,7 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControlle
 
 public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail: BaseFixture
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task And_No_Users_Are_Found_Then_No_Notifications_Are_Created(
         List<ApplicationReviewEntity> applicationReviews,
         List<VacancyEntity> vacancies)
@@ -45,6 +45,7 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
         // arrange
         applicationReview.Status = applicationReviewStatus;
         vacancy.VacancyReference = applicationReview.VacancyReference;
+        applicationReview.Vacancy = vacancy;
         var expectedUserNames = users.Take(2).Select(x => x.Name).ToList();
         foreach (var user in users)
         {

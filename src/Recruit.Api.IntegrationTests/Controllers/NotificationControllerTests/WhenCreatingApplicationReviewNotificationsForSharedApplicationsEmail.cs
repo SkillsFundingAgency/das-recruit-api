@@ -9,7 +9,7 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControlle
 
 public class WhenCreatingApplicationReviewNotificationsForSharedApplicationsEmail : BaseFixture
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task And_No_Users_Are_Found_Then_No_Notifications_Are_Created(
         List<ApplicationReviewEntity> applicationReviews,
         List<VacancyEntity> vacancies)

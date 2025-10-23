@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.Providers.ApplicationReviewsProvide
     [TestFixture]
     internal class WhenUpserting
     {
-        [Test, MoqAutoData]
+        [Test, RecursiveMoqAutoData]
         public async Task Upsert_Returns_Repository_Value(
             List<ApplicationReviewEntity> entities,
             ApplicationReviewEntity existingEntity,

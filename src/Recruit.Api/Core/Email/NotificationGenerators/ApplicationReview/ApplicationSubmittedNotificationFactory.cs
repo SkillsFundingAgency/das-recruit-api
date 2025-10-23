@@ -11,14 +11,13 @@ namespace SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationRevie
 
 public class ApplicationSubmittedNotificationFactory(
     ILogger<ApplicationSubmittedNotificationFactory> logger,
-    IVacancyRepository vacancyRepository,
     IUserRepository userRepository,
     IEncodingService encodingService,
     IEmailTemplateHelper emailTemplateHelper) : IApplicationReviewNotificationFactory
 {
     public async Task<RecruitNotificationsResult> CreateAsync(ApplicationReviewEntity applicationReview, CancellationToken cancellationToken)
     {
-        var vacancy = await vacancyRepository.GetOneByVacancyReferenceAsync(applicationReview.VacancyReference, cancellationToken);
+        var vacancy = applicationReview.Vacancy;
         if (vacancy == null)
         {
             logger.LogError("Whilst processing application review '{ApplicationReviewId}' the associated vacancy could not be found", applicationReview.Id);

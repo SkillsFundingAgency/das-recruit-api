@@ -28,5 +28,11 @@ public class VacancyEntityConfiguration : IEntityTypeConfiguration<VacancyEntity
         builder.Property(x => x.ClosureReason).HasConversion(v => v.ToString(), v => Enum.Parse<ClosureReason>(v!));
         builder.Property(x => x.Wage_FixedWageYearlyAmount).HasColumnType("decimal");
         builder.Property(x => x.Wage_WeeklyHours).HasColumnType("decimal");
+        
+        builder
+            .HasMany(c => c.ApplicationReviews)
+            .WithOne(c => c.Vacancy).IsRequired(false)
+            .HasForeignKey(c => c.VacancyReference).IsRequired(false)
+            .HasPrincipalKey(c => c.VacancyReference).IsRequired(false);
     }
 }

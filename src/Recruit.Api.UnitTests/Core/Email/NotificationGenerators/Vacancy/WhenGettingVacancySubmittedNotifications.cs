@@ -14,13 +14,13 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.NotificationGenerators.Vacanc
 public class WhenGettingVacancySubmittedNotifications
 {
     [Test]
-    [MoqInlineAutoData(VacancyStatus.Draft)]
-    [MoqInlineAutoData(VacancyStatus.Rejected)]
-    [MoqInlineAutoData(VacancyStatus.Referred)]
-    [MoqInlineAutoData(VacancyStatus.Live)]
-    [MoqInlineAutoData(VacancyStatus.Closed)]
-    [MoqInlineAutoData(VacancyStatus.Approved)]
-    [MoqInlineAutoData(VacancyStatus.Review)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Draft)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Rejected)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Referred)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Live)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Closed)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Approved)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Review)]
     public async Task Vacancy_With_The_Incorrect_Status_Will_Not_Be_Processed(
         VacancyStatus status,
         VacancyEntity vacancy,
@@ -42,9 +42,9 @@ public class WhenGettingVacancySubmittedNotifications
     }
 
     [Test]
-    [MoqInlineAutoData(OwnerType.Employer)]
-    [MoqInlineAutoData(OwnerType.External)]
-    [MoqInlineAutoData(OwnerType.Unknown)]
+    [RecursiveMoqInlineAutoData(OwnerType.Employer)]
+    [RecursiveMoqInlineAutoData(OwnerType.External)]
+    [RecursiveMoqInlineAutoData(OwnerType.Unknown)]
     public async Task Vacancy_With_The_Incorrect_OwnerType_Will_Not_Be_Processed(
         OwnerType ownerType,
         VacancyEntity vacancy,
@@ -65,7 +65,7 @@ public class WhenGettingVacancySubmittedNotifications
             Times.Never);
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Vacancy_That_Has_Not_Be_Sent_For_Review_Will_Not_Be_Processed(
         VacancyEntity vacancy,
         [Frozen] Mock<IUserRepository> userRepository,
