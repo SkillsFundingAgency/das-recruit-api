@@ -30,18 +30,13 @@ public class WhenGettingApplicationSubmittedNotifications
     public async Task Then_If_No_Users_Are_Found_For_A_Provider_Created_Vacancy_Then_No_Notifications_Are_Generated(
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
         [Greedy] ApplicationSubmittedNotificationFactory sut)
     {
         // arrange
         vacancy.OwnerType = OwnerType.Provider;
-        
-        long? capturedVacancyId = null;
-        vacancyRepository
-            .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .Callback((long x, CancellationToken _) => capturedVacancyId = x)
-            .ReturnsAsync(vacancy);
+        applicationReview.Vacancy = vacancy;
+
 
         long? capturedUkprn = null;
         userRepository
@@ -53,7 +48,6 @@ public class WhenGettingApplicationSubmittedNotifications
         var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
 
         // assert
-        capturedVacancyId.Should().Be(applicationReview.VacancyReference);
         capturedUkprn.Should().Be(vacancy.Ukprn);
         result.Delayed.Should().BeEmpty();
         result.Immediate.Should().BeEmpty();
@@ -63,18 +57,13 @@ public class WhenGettingApplicationSubmittedNotifications
     public async Task Then_If_No_Users_Are_Found_For_An_Employer_Created_Vacancy_Then_No_Notifications_Are_Generated(
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
         [Greedy] ApplicationSubmittedNotificationFactory sut)
     {
         // arrange
         vacancy.OwnerType = OwnerType.Employer;
-        
-        long? capturedVacancyId = null;
-        vacancyRepository
-            .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .Callback((long x, CancellationToken _) => capturedVacancyId = x)
-            .ReturnsAsync(vacancy);
+        applicationReview.Vacancy = vacancy;
+
 
         long? capturedAccountId = null;
         userRepository
@@ -86,7 +75,6 @@ public class WhenGettingApplicationSubmittedNotifications
         var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
 
         // assert
-        capturedVacancyId.Should().Be(applicationReview.VacancyReference);
         capturedAccountId.Should().Be(applicationReview.AccountId);
         result.Delayed.Should().BeEmpty();
         result.Immediate.Should().BeEmpty();
@@ -97,7 +85,6 @@ public class WhenGettingApplicationSubmittedNotifications
         List<UserEntity> users,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
         [Greedy] ApplicationSubmittedNotificationFactory sut)
     {
@@ -106,10 +93,7 @@ public class WhenGettingApplicationSubmittedNotifications
         users.ForEach(x => x.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Never));
         users[0].SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.UserSubmittedVacancies, NotificationFrequency.Never);
         vacancy.ReviewRequestedByUserId = users[0].Id;
-        
-        vacancyRepository
-            .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(vacancy);
+        applicationReview.Vacancy = vacancy;
 
         userRepository
             .Setup(x => x.FindUsersByEmployerAccountIdAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))

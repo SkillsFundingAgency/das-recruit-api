@@ -7,7 +7,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.Providers.ApplicationReviewsProvide
 [TestFixture]
 internal class WhenUpdating
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Update_Returns_Repository_Value(
         ApplicationReviewEntity updatedEntity,
         [Frozen] Mock<IApplicationReviewRepository> repositoryMock,

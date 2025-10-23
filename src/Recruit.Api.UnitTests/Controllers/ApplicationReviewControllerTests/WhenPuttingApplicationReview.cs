@@ -14,7 +14,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerT
 [TestFixture]
 public class WhenPuttingApplicationReview
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Put_Returns_Created_When_New_Application_Review_Is_Created(Guid id,
         PutApplicationReviewRequest request,
         ApplicationReviewEntity applicationReview,
@@ -41,10 +41,10 @@ public class WhenPuttingApplicationReview
         // Assert
         passedApplicationReview.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
         createdResult.Should().NotBeNull();
-        createdResult.Value.Should().BeEquivalentTo(applicationReview);
+        createdResult.Value.Should().BeEquivalentTo(applicationReview, options => options.Excluding(c=>c.Vacancy));
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Put_Returns_Ok_When_Existing_Application_Review_Is_Updated(
         Guid id,
         PutApplicationReviewRequest request,
@@ -69,7 +69,7 @@ public class WhenPuttingApplicationReview
         response.Id.Should().Be(id);
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Put_ReturnsBadRequest_WhenExistingApplicationReviewIsUpdated(
         Guid id,
         PutApplicationReviewRequest request,
@@ -91,7 +91,7 @@ public class WhenPuttingApplicationReview
         result.Should().BeOfType<ValidationProblem>();
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Put_ReturnsInternalException_WhenExistingApplicationReviewIsUpdated(
         Guid id,
         PutApplicationReviewRequest request,

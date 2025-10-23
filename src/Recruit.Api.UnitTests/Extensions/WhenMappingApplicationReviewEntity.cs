@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Extensions;
 
 internal class WhenMappingApplicationReviewEntity
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public void To_GetApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         //Arrange
@@ -16,11 +16,11 @@ internal class WhenMappingApplicationReviewEntity
         var result = entity.ToGetResponse();
         
         // assert
-        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status));
+        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status).Excluding(c=>c.Vacancy));
         result.Status.Should().Be(ApplicationReviewStatus.InReview);
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public void To_PatchApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         //Arrange
@@ -30,11 +30,11 @@ internal class WhenMappingApplicationReviewEntity
         var result = entity.ToPatchResponse();
         
         // assert
-        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status));
+        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status).Excluding(c=>c.Vacancy));
         result.Status.Should().Be(ApplicationReviewStatus.InReview);
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public void To_ApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         //Arrange
@@ -44,7 +44,7 @@ internal class WhenMappingApplicationReviewEntity
         var result = entity.ToGetResponse();
         
         // assert
-        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status));
+        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status).Excluding(c=>c.Vacancy));
         result.Status.Should().Be(ApplicationReviewStatus.InReview);
     }
 }

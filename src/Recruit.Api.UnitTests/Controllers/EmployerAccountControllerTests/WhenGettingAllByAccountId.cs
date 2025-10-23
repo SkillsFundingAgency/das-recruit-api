@@ -11,7 +11,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
 [TestFixture]
 public class WhenGettingAllByAccountId
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GetAllByAccountId_ReturnsOk_WhenApplicationReviewsExist(
         long accountId,
         int pageNumber,
@@ -39,7 +39,7 @@ public class WhenGettingAllByAccountId
         okResult.Value!.ApplicationReviews.Count().Should().Be(mockResponse.Count);
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GetAllByAccountId_Returns_Empty_WhenNoApplicationReviewsExist(
         long accountId,
         int pageNumber,

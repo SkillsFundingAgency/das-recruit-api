@@ -14,13 +14,13 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.NotificationGenerators.Vacanc
 public class WhenGettingVacancyRejectedNotifications
 {
     [Test]
-    [MoqInlineAutoData(VacancyStatus.Draft)]
-    [MoqInlineAutoData(VacancyStatus.Submitted)]
-    [MoqInlineAutoData(VacancyStatus.Referred)]
-    [MoqInlineAutoData(VacancyStatus.Live)]
-    [MoqInlineAutoData(VacancyStatus.Closed)]
-    [MoqInlineAutoData(VacancyStatus.Approved)]
-    [MoqInlineAutoData(VacancyStatus.Review)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Draft)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Submitted)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Referred)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Live)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Closed)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Approved)]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Review)]
     public async Task Vacancy_With_The_Incorrect_Status_Will_Not_Be_Processed(
         VacancyStatus status,
         VacancyEntity vacancy,
@@ -65,7 +65,7 @@ public class WhenGettingVacancyRejectedNotifications
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Vacancy_That_Has_Not_Been_Rejected_By_An_Employer_Will_Not_Be_Processed(
         VacancyEntity vacancy,
         [Frozen] Mock<IUserRepository> userRepository,

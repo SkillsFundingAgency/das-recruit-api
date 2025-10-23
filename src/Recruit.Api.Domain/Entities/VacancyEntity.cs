@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.Domain.Entities;
@@ -76,4 +77,6 @@ public class VacancyEntity
     public string? ProviderReviewFieldIndicators {get; set;}
     public Guid? SubmittedByUserId { get; set; }
     public Guid? ReviewRequestedByUserId { get; set; }
+    public virtual ICollection<ApplicationReviewEntity>? ApplicationReviews { get; set; }
+    
 }
