@@ -292,12 +292,26 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     public async Task<List<(int, bool)>> GetEmployerVacanciesClosingSoonWithApplications(long accountId,
         CancellationToken cancellationToken)
     {
-        var entity = await dataContext.VacancyEntities.Where(c =>
-                c.AccountId == accountId && c.OwnerType == OwnerType.Employer && c.Status == VacancyStatus.Live && c.ClosingDate<= DateTime.UtcNow.AddDays(ClosingSoonDays))
-            .Include(c => c.ApplicationReviews).GroupBy(c => c.ApplicationReviews != null)
+        var query = from v in dataContext.VacancyEntities
+            join ar in dataContext.ApplicationReviewEntities
+                on v.VacancyReference equals ar.VacancyReference into arGroup
+            from ar in arGroup.DefaultIfEmpty() // Left join
+            where v.AccountId == accountId
+                  && v.OwnerType == OwnerType.Employer
+                  && v.Status == VacancyStatus.Live
+                  && v.ClosingDate <= DateTime.UtcNow.AddDays(ClosingSoonDays)
+            group ar by v into g
+            select new
+            {
+                HasApplications = g.Any(x => x != null)
+            };
+
+        var grouped = await query
+            .GroupBy(x => x.HasApplications)
+            .Select(g => new { Count = g.Count(), HasApplications = g.Key })
             .ToListAsync(cancellationToken);
 
-        return entity.Select((c) => (c.Count(), c.Key)).ToList();
+        return grouped.Select(g => (g.Count, g.HasApplications)).ToList();
     }
 
     public async Task<List<VacancyDashboardCountModel>> GetProviderDashboard(int ukprn, CancellationToken cancellationToken)
@@ -320,12 +334,26 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     }
     public async Task<List<(int, bool)>> GetProviderVacanciesClosingSoonWithApplications(int ukprn, CancellationToken cancellationToken)
     {
-        var entity = await dataContext.VacancyEntities.Where(c =>
-                c.Ukprn == ukprn && c.OwnerType == OwnerType.Provider && c.Status == VacancyStatus.Live && c.ClosingDate<= DateTime.UtcNow.AddDays(ClosingSoonDays))
-            .Include(c => c.ApplicationReviews).GroupBy(c => c.ApplicationReviews != null)
+        var query = from v in dataContext.VacancyEntities
+            join ar in dataContext.ApplicationReviewEntities
+                on v.VacancyReference equals ar.VacancyReference into arGroup
+            from ar in arGroup.DefaultIfEmpty() // Left join
+            where v.Ukprn == ukprn
+                  && v.OwnerType == OwnerType.Provider
+                  && v.Status == VacancyStatus.Live
+                  && v.ClosingDate <= DateTime.UtcNow.AddDays(ClosingSoonDays)
+            group ar by v into g
+            select new
+            {
+                HasApplications = g.Any(x => x != null)
+            };
+
+        var grouped = await query
+            .GroupBy(x => x.HasApplications)
+            .Select(g => new { Count = g.Count(), HasApplications = g.Key })
             .ToListAsync(cancellationToken);
 
-        return entity.Select((c) => (c.Count(), c.Key)).ToList();
+        return grouped.Select(g => (g.Count, g.HasApplications)).ToList();
     }
 
     private static IQueryable<VacancyEntity> ApplyBasicFiltering(IQueryable<VacancyEntity> query,

@@ -41,10 +41,10 @@ public class WhenPuttingApplicationReview
         // Assert
         passedApplicationReview.Should().BeEquivalentTo(request, options => options.ExcludingMissingMembers());
         createdResult.Should().NotBeNull();
-        createdResult.Value.Should().BeEquivalentTo(applicationReview, options => options.Excluding(c=>c.Vacancy));
+        createdResult.Value.Should().BeEquivalentTo(applicationReview);
     }
 
-    [Test, RecursiveMoqAutoData]
+    [Test, MoqAutoData]
     public async Task Put_Returns_Ok_When_Existing_Application_Review_Is_Updated(
         Guid id,
         PutApplicationReviewRequest request,

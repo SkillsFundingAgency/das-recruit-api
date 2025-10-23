@@ -77,6 +77,4 @@ public class VacancyEntity
     public string? ProviderReviewFieldIndicators {get; set;}
     public Guid? SubmittedByUserId { get; set; }
     public Guid? ReviewRequestedByUserId { get; set; }
-    public virtual ICollection<ApplicationReviewEntity>? ApplicationReviews { get; set; }
-    
 }

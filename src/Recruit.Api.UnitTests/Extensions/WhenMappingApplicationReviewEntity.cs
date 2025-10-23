@@ -16,7 +16,7 @@ internal class WhenMappingApplicationReviewEntity
         var result = entity.ToGetResponse();
         
         // assert
-        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status).Excluding(c=>c.Vacancy));
+        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status));
         result.Status.Should().Be(ApplicationReviewStatus.InReview);
     }
     
@@ -30,7 +30,7 @@ internal class WhenMappingApplicationReviewEntity
         var result = entity.ToPatchResponse();
         
         // assert
-        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status).Excluding(c=>c.Vacancy));
+        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status));
         result.Status.Should().Be(ApplicationReviewStatus.InReview);
     }
     
@@ -44,7 +44,7 @@ internal class WhenMappingApplicationReviewEntity
         var result = entity.ToGetResponse();
         
         // assert
-        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status).Excluding(c=>c.Vacancy));
+        result.Should().BeEquivalentTo(entity, options => options.Excluding(c=>c.Status));
         result.Status.Should().Be(ApplicationReviewStatus.InReview);
     }
 }

@@ -45,7 +45,6 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
         // arrange
         applicationReview.Status = applicationReviewStatus;
         vacancy.VacancyReference = applicationReview.VacancyReference;
-        applicationReview.Vacancy = vacancy;
         var expectedUserNames = users.Take(2).Select(x => x.Name).ToList();
         foreach (var user in users)
         {
