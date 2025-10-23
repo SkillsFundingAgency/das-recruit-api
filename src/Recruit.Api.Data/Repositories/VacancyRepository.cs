@@ -62,7 +62,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
             FilteringOptions.AllSharedApplications or FilteringOptions.NewSharedApplications =>
                 ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
-                    .Where(x => x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
+                    .Where(x => x.OwnerType == OwnerType.Provider),
 
             FilteringOptions.NewApplications or FilteringOptions.AllApplications =>
                 ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
@@ -70,8 +70,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
             FilteringOptions.All => query.Where(x =>
                 x.OwnerType == OwnerType.Employer ||
-                ((x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer) &&
-                 x.Status == VacancyStatus.Review)),
+                (x.OwnerType == OwnerType.Provider && x.Status == VacancyStatus.Review)),
 
             _ => query.Where(x => x.OwnerType == OwnerType.Employer)
         };
@@ -275,16 +274,20 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     {
         if (string.IsNullOrWhiteSpace(searchTerm)) return query;
 
-        searchTerm = searchTerm.Trim().ToLowerInvariant();
+        searchTerm = searchTerm.Trim();
 
         // Try parsing the vacancy reference
         bool isValidVacancyReference = long.TryParse(
             searchTerm.Replace("vac", "", StringComparison.CurrentCultureIgnoreCase), out long vacancyReference);
 
+        if (isValidVacancyReference)
+        {
+            query = query.Where(x => x.VacancyReference == vacancyReference);
+            return query;
+        }
+        
         query = query.Where(v =>
-            (!string.IsNullOrEmpty(v.Title) && v.Title.ToLower().Contains(searchTerm)) ||
-            (!string.IsNullOrEmpty(v.LegalEntityName) && v.LegalEntityName.ToLower().Contains(searchTerm)) ||
-            (isValidVacancyReference && v.VacancyReference == vacancyReference)
+            v.Title!.Contains(searchTerm) || v.LegalEntityName!.Contains(searchTerm)
         );
 
         return query;
