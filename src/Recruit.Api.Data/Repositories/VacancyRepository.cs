@@ -62,7 +62,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
             FilteringOptions.AllSharedApplications or FilteringOptions.NewSharedApplications =>
                 ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
-                    .Where(x => x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
+                    .Where(x => x.OwnerType == OwnerType.Provider),
 
             FilteringOptions.NewApplications or FilteringOptions.AllApplications =>
                 ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
@@ -70,8 +70,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
             FilteringOptions.All => query.Where(x =>
                 x.OwnerType == OwnerType.Employer ||
-                ((x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer) &&
-                 x.Status == VacancyStatus.Review)),
+                (x.OwnerType == OwnerType.Provider && x.Status == VacancyStatus.Review)),
 
             _ => query.Where(x => x.OwnerType == OwnerType.Employer)
         };
