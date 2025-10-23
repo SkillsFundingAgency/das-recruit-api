@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -236,6 +236,92 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 x => vacancyReferences.Contains(x.VacancyReference.GetValueOrDefault())
                      && x.Status == VacancyStatus.Closed)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<VacancyDashboardCountModel>> GetEmployerDashboard(long accountId, CancellationToken cancellationToken)
+    {
+        var entity = await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(c => c.AccountId == accountId && c.OwnerType == OwnerType.Employer)
+            .Select(c=>
+                new {
+                    c.Id,
+                    c.Status
+                })
+            .GroupBy(c => c.Status)
+            .ToListAsync(cancellationToken);
+
+        return entity.Select((c) => new VacancyDashboardCountModel {
+            Status = c.Key,
+            Count = c.Count()
+        }).ToList();
+    }
+
+    public async Task<List<(int, bool)>> GetEmployerVacanciesClosingSoonWithApplications(long accountId,
+        CancellationToken cancellationToken)
+    {
+        var query = from v in dataContext.VacancyEntities
+            join ar in dataContext.ApplicationReviewEntities
+                on v.VacancyReference equals ar.VacancyReference into arGroup
+            from ar in arGroup.DefaultIfEmpty() // Left join
+            where v.AccountId == accountId
+                  && v.OwnerType == OwnerType.Employer
+                  && v.Status == VacancyStatus.Live
+                  && v.ClosingDate <= DateTime.UtcNow.AddDays(ClosingSoonDays)
+            group ar by v into g
+            select new
+            {
+                HasApplications = g.Any(x => x != null)
+            };
+
+        var grouped = await query
+            .GroupBy(x => x.HasApplications)
+            .Select(g => new { Count = g.Count(), HasApplications = g.Key })
+            .ToListAsync(cancellationToken);
+
+        return grouped.Select(g => (g.Count, g.HasApplications)).ToList();
+    }
+
+    public async Task<List<VacancyDashboardCountModel>> GetProviderDashboard(int ukprn, CancellationToken cancellationToken)
+    {
+        var entity = await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(c => c.Ukprn == ukprn && c.OwnerType == OwnerType.Provider)
+            .Select(c=>
+            new {
+                c.Id,
+                c.Status
+            })
+            .GroupBy(c => c.Status)
+            .ToListAsync(cancellationToken);
+
+        return entity.Select((c) => new VacancyDashboardCountModel {
+            Status = c.Key,
+            Count = c.Count()
+        }).ToList();
+    }
+    public async Task<List<(int, bool)>> GetProviderVacanciesClosingSoonWithApplications(int ukprn, CancellationToken cancellationToken)
+    {
+        var query = from v in dataContext.VacancyEntities
+            join ar in dataContext.ApplicationReviewEntities
+                on v.VacancyReference equals ar.VacancyReference into arGroup
+            from ar in arGroup.DefaultIfEmpty() // Left join
+            where v.Ukprn == ukprn
+                  && v.OwnerType == OwnerType.Provider
+                  && v.Status == VacancyStatus.Live
+                  && v.ClosingDate <= DateTime.UtcNow.AddDays(ClosingSoonDays)
+            group ar by v into g
+            select new
+            {
+                HasApplications = g.Any(x => x != null)
+            };
+
+        var grouped = await query
+            .GroupBy(x => x.HasApplications)
+            .Select(g => new { Count = g.Count(), HasApplications = g.Key })
+            .ToListAsync(cancellationToken);
+
+        return grouped.Select(g => (g.Count, g.HasApplications)).ToList();
     }
 
     private static IQueryable<VacancyEntity> ApplyBasicFiltering(IQueryable<VacancyEntity> query,
