@@ -58,7 +58,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         // Apply owner-type filtering
         query = filteringOptions switch {
             FilteringOptions.Review => query.Where(x =>
-                x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
+                x.OwnerType == OwnerType.Provider),
 
             FilteringOptions.AllSharedApplications or FilteringOptions.NewSharedApplications =>
                 ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
@@ -160,7 +160,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
         var providerQuery = dataContext.VacancyEntities
             .AsNoTracking()
-            .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && (v.OwnerType == OwnerType.Provider || v.OwnerType == OwnerType.Employer));
+            .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && v.OwnerType == OwnerType.Provider);
 
         return await employerQuery
             .Union(providerQuery)
