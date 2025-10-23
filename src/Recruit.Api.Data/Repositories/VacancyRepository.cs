@@ -274,16 +274,20 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     {
         if (string.IsNullOrWhiteSpace(searchTerm)) return query;
 
-        searchTerm = searchTerm.Trim().ToLowerInvariant();
+        searchTerm = searchTerm.Trim();
 
         // Try parsing the vacancy reference
         bool isValidVacancyReference = long.TryParse(
             searchTerm.Replace("vac", "", StringComparison.CurrentCultureIgnoreCase), out long vacancyReference);
 
+        if (isValidVacancyReference)
+        {
+            query = query.Where(x => x.VacancyReference == vacancyReference);
+            return query;
+        }
+        
         query = query.Where(v =>
-            (!string.IsNullOrEmpty(v.Title) && v.Title.ToLower().Contains(searchTerm)) ||
-            (!string.IsNullOrEmpty(v.LegalEntityName) && v.LegalEntityName.ToLower().Contains(searchTerm)) ||
-            (isValidVacancyReference && v.VacancyReference == vacancyReference)
+            v.Title!.Contains(searchTerm) || v.LegalEntityName!.Contains(searchTerm)
         );
 
         return query;
