@@ -35,6 +35,7 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
 {
+    private const int ClosingSoonDays = 5;
     public async Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
         ushort page = 1,
         ushort pageSize = 25,
