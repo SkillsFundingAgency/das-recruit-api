@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -76,7 +77,8 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
         optionsBuilder.UseLazyLoadingProxies();
         
         // Note: useful to keep here
-        //optionsBuilder.LogTo(message => Debug.WriteLine(message));
+        optionsBuilder.LogTo(message => Debug.WriteLine(message));
+        optionsBuilder.EnableDetailedErrors();
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
