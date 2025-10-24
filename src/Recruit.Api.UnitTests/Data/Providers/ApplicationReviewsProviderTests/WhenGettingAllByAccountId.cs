@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.Providers.ApplicationReviewsProvide
 [TestFixture]
 internal class WhenGettingAllByAccountId
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GetAllByAccountId_ShouldReturnPaginatedList_WhenCalledWithValidParameters(
         long accountId,
         int pageNumber,

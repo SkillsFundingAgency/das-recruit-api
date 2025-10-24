@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.Domain.Entities;

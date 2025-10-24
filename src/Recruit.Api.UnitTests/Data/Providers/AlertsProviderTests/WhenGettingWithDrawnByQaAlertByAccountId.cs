@@ -66,7 +66,7 @@ internal class WhenGettingWithDrawnByQaAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllClosedEmployerVacanciesByClosureReason(accountId,ClosureReason.WithdrawnByQa,userEntity.ClosedVacanciesWithdrawnByQaAlertDismissedOn!.Value,  It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -105,7 +105,7 @@ internal class WhenGettingWithDrawnByQaAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllClosedEmployerVacanciesByClosureReason(accountId,ClosureReason.WithdrawnByQa,userEntity.ClosedVacanciesWithdrawnByQaAlertDismissedOn!.Value,  It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -153,7 +153,7 @@ internal class WhenGettingWithDrawnByQaAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllClosedEmployerVacanciesByClosureReason(accountId,ClosureReason.WithdrawnByQa,userEntity.ClosedVacanciesWithdrawnByQaAlertDismissedOn!.Value,  It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         // Act

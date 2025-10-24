@@ -10,8 +10,8 @@ public sealed record VacancyDashboardModel
     public int ReferredVacanciesCount { get; init; }
     public int LiveVacanciesCount { get; init; }
     public int SubmittedVacanciesCount { get; init; }
-    public int ClosingSoonVacanciesCount { get; init; }
-    public int ClosingSoonWithNoApplications { get; init; }
+    public int ClosingSoonVacanciesCount { get; set; }
+    public int ClosingSoonWithNoApplications { get; set; }
 
 
     public static implicit operator VacancyDashboardModel(List<VacancyDashboardCountModel> source)

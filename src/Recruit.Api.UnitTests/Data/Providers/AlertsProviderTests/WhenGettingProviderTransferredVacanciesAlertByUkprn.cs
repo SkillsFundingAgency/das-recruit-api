@@ -72,7 +72,7 @@ internal class WhenGettingProviderTransferredVacanciesAlertByUkprn
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByUkprn(ukprnId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllByUkprn(ukprnId, It.IsAny<CancellationToken>(), true))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -111,7 +111,7 @@ internal class WhenGettingProviderTransferredVacanciesAlertByUkprn
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByUkprn(ukprnId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllByUkprn(ukprnId, It.IsAny<CancellationToken>(), true))
             .ReturnsAsync(vacancies);
 
         // Act

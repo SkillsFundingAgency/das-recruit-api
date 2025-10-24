@@ -11,7 +11,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
 [TestFixture]
 public class WhenGettingAllByUkprn
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GetAllByUkprn_ReturnsOk_WhenApplicationReviewsExist(
         int ukprn,
         int pageNumber,
@@ -39,7 +39,7 @@ public class WhenGettingAllByUkprn
         okResult.Value!.ApplicationReviews.Count().Should().Be(mockResponse.Count);
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GetAllByUkprn_Returns_Empty_WhenNoApplicationReviewsExist(
         int ukprn,
         int pageNumber,

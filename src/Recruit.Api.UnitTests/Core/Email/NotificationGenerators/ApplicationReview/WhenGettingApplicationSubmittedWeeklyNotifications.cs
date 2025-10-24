@@ -16,8 +16,8 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         UserEntity user,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        Guid templateId,
         string manageNotificationsUrl,
+        string manageVacancyUrl,
         string baseUrl,
         [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
@@ -37,11 +37,11 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
             .Returns(manageNotificationsUrl);
+        emailTemplateHelper
+            .Setup(x => x.ProviderManageVacancyUrl(vacancy.Ukprn!.Value.ToString(), vacancy.Id))
+            .Returns(manageVacancyUrl);
         emailTemplateHelper
             .Setup(x => x.RecruitProviderBaseUrl)
             .Returns(baseUrl);
@@ -55,7 +55,7 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
 
         var notification = result.Delayed[0];
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ApplicationSubmittedToProviderWeekly);
         notification.SendWhen.Should().Be(DateTime.Now.GetNextWeeklySendDate());
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;
@@ -68,7 +68,7 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyURL"].Should().Be($"{baseUrl}/{vacancy.Ukprn!.Value.ToString()}/vacancies/{vacancy.Id}/manage");
+        tokens["manageAdvertURL"].Should().Be(manageVacancyUrl);
         tokens["location"].Should().Be("Recruiting nationally");
     }
     
@@ -77,9 +77,9 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         UserEntity user,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        Guid templateId,
         string hashedEmployerAccountId,
         string manageNotificationsUrl,
+        string manageVacancyUrl,
         string baseUrl,
         [Frozen] Mock<IEncodingService> encodingService,
         [Frozen] Mock<IVacancyRepository> vacancyRepository,
@@ -100,11 +100,11 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
             .Setup(x => x.FindUsersByEmployerAccountIdAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.EmployerManageNotificationsUrl(hashedEmployerAccountId))
             .Returns(manageNotificationsUrl);
+        emailTemplateHelper
+            .Setup(x => x.EmployerManageVacancyUrl(hashedEmployerAccountId, vacancy.Id))
+            .Returns(manageVacancyUrl);
         emailTemplateHelper
             .Setup(x => x.RecruitEmployerBaseUrl)
             .Returns(baseUrl);
@@ -121,7 +121,7 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
 
         var notification = result.Delayed[0];
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.ApplicationSubmittedToEmployerWeekly);
         notification.SendWhen.Should().Be(DateTime.Now.GetNextWeeklySendDate());
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;
@@ -134,7 +134,7 @@ public class WhenGettingApplicationSubmittedWeekyNotifications
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyURL"].Should().Be($"{baseUrl}/accounts/{hashedEmployerAccountId}/vacancies/{vacancy.Id}/manage");
+        tokens["manageAdvertURL"].Should().Be(manageVacancyUrl);
         tokens["location"].Should().Be("Recruiting nationally");
     }
 }

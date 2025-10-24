@@ -41,7 +41,7 @@ internal class WhenGettingFactory
     [Test]
     [RecursiveMoqInlineAutoData(ApplicationReviewStatus.EmployerUnsuccessful)]
     [RecursiveMoqInlineAutoData(ApplicationReviewStatus.EmployerInterviewing)]
-    public void Then_The_Shared_Application_Revewied_By_Employer_Factory_Is_Returned_For_Reviewed_Application_Reviews(
+    public void Then_The_Shared_Application_Reviewed_By_Employer_Factory_Is_Returned_For_Reviewed_Application_Reviews(
         ApplicationReviewStatus status,
         ApplicationReviewEntity applicationReview,
         [Frozen] SharedApplicationReviewedByEmployerNotificationFactory expectedFactory,

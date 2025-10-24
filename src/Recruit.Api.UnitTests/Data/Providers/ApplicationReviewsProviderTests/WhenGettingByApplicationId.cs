@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.Providers.ApplicationReviewsProvide
 
 internal class WhenGettingByApplicationId
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GetByApplicationId_ShouldReturnEntity_WhenEntityExists(
         Guid applicationId,
         ApplicationReviewEntity entity,
@@ -25,7 +25,7 @@ internal class WhenGettingByApplicationId
         result.Should().BeEquivalentTo(entity);
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GetById_ShouldReturnNull_WhenEntityDoesNotExist(
         ApplicationReviewEntity entity,
         [Frozen] Mock<IApplicationReviewRepository> repositoryMock,

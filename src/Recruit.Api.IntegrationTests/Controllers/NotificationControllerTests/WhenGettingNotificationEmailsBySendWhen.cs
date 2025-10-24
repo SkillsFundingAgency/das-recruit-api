@@ -46,14 +46,12 @@ public class WhenGettingNotificationEmailsBySendWhen : BaseFixture
         Server.DataContext.Setup(x => x.RecruitNotifications).ReturnsDbSet(Items);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Notifications}/batch/by/sendwhen/{UrlEncoder.Default.Encode(DateTime.Now.ToString("s"))}");
+        var response = await Client.GetAsync($"{RouteNames.Notifications}/batch/by/date?dateTime={UrlEncoder.Default.Encode(DateTime.Now.ToString("s"))}");
         var results = await response.Content.ReadAsAsync<GetBatchByDateResponse>();
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         results.Should().NotBeNull();
         results.Emails.Should().HaveCount(1);
-        results.Ids.Should().HaveCount(1);
-        results.Ids.Should().Contain(2);
     }
 }

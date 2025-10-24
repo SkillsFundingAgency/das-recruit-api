@@ -114,7 +114,7 @@ public class WhenGettingUsersForNotificationTyp
     }
     
     [Test, RecursiveMoqAutoData]
-    public void Then_The_Default_Behaviour_Is_That_The_User_Should_Be_Notified(List<UserEntity> users)
+    public void Then_The_Default_Behaviour_When_The_User_Has_A_Preference_Is_That_The_User_Should_Be_Notified(List<UserEntity> users)
     {
         // arrange
         foreach (var user in users)
@@ -138,5 +138,23 @@ public class WhenGettingUsersForNotificationTyp
         result.Should().Contain(users[0]);
         result.Should().Contain(users[1]);
         result.Should().Contain(users[2]);
+    }
+    
+    [Test, RecursiveMoqAutoData]
+    public void Then_If_A_User_Does_Not_Have_A_Preference_For_The_Specific_Notification_Type_Then_They_Should_Not_Be_Notified(List<UserEntity> users)
+    {
+        // arrange
+        foreach (var user in users)
+        {
+            user.NotificationPreferences = new NotificationPreferences {
+                EventPreferences = []
+            };
+        }
+        
+        // act
+        var result = users.GetUsersForNotificationType(NotificationTypes.SharedApplicationReviewedByEmployer);
+
+        // assert
+        result.Should().BeEmpty();
     }
 }

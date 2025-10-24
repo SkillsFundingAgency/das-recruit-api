@@ -9,7 +9,7 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControlle
 
 public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail: BaseFixture
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task And_No_Users_Are_Found_Then_No_Notifications_Are_Created(
         List<ApplicationReviewEntity> applicationReviews,
         List<VacancyEntity> vacancies)
@@ -38,7 +38,6 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
     public async Task Then_Notifications_Are_Created(
         ApplicationReviewStatus applicationReviewStatus,
         string expectedHashedAccountId,
-        
         List<UserEntity> users,
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy)
@@ -52,6 +51,7 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
             user.Ukprn = vacancy.Ukprn;
             user.UserType = UserType.Provider;
         }
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
 
         // Make this the originating user
         vacancy.ReviewRequestedByUserId = users[0].Id;
@@ -105,8 +105,8 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
             x.Tokens["employer"].Should().Be(vacancy.EmployerName!);
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString()!);
-            x.Tokens["manageVacancyURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
-            x.Tokens["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
+            x.Tokens["manageAdvertURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+            x.Tokens["notificationSettingsURL"].Should().Be(templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
         });
     }
 }

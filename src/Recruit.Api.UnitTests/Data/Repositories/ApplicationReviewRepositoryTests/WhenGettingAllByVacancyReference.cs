@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.Repositories.ApplicationReviewRepos
     [TestFixture]
     internal class WhenGettingAllByVacancyReference
     {
-        [Test, MoqAutoData]
+        [Test, RecursiveMoqAutoData]
         public async Task GettingApplicationReviewsByVacancyReference(
             long vacancyReference,
             CancellationToken token,
