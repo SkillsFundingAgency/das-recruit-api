@@ -85,4 +85,6 @@ CREATE TABLE dbo.[Vacancy] (
     INDEX [IX_Vacancy_Ukprn_Owner_Status_ClosingDate] NONCLUSTERED(Ukprn, OwnerType, Status, ClosingDate),
     INDEX [IX_Vacancy_Account_Owner] NONCLUSTERED(Ukprn, OwnerType),
     INDEX [IX_Vacancy_Ukprn_Owner] NONCLUSTERED(AccountId, OwnerType),
+    INDEX [IX_Vacancy_AccountId_OwnerType_Status_CreatedDate] NONCLUSTERED(AccountId, OwnerType, Status, CreatedDate DESC),
+    INDEX [IX_Vacancy_Ukprn_OwnerType_Status_CreatedDate] NONCLUSTERED(Ukprn, OwnerType, Status, CreatedDate DESC)
 )
