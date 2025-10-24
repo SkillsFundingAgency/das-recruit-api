@@ -38,7 +38,7 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
                 ["employer"] = vacancy.EmployerName!,
                 ["advertTitle"] = vacancy.Title!,
                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                ["manageVacancyURL"] = emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
+                ["manageAdvertURL"] = emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
                 ["notificationSettingsURL"] = emailTemplateHelper.ProviderManageNotificationsUrl(ukprn)
             })!,
             DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!

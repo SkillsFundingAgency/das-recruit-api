@@ -75,7 +75,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyURL"] = ManageVacancyUrl(x),
+                                ["manageAdvertURL"] = ManageAdvertUrl(x),
                                 ["notificationSettingsURL"] = ManageNotificationsUrl(x),
                                 ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
@@ -101,7 +101,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyURL"] = ManageVacancyUrl(x),
+                                ["manageAdvertURL"] = ManageAdvertUrl(x),
                                 ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                         });
@@ -125,7 +125,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyURL"] = ManageVacancyUrl(x),
+                                ["manageAdvertURL"] = ManageAdvertUrl(x),
                                 ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                         });
@@ -144,7 +144,7 @@ public class ApplicationSubmittedNotificationFactory(
             _ => string.Empty
         };
 
-        string ManageVacancyUrl(UserEntity user) => user.UserType switch {
+        string ManageAdvertUrl(UserEntity user) => user.UserType switch {
             UserType.Employer => emailTemplateHelper.EmployerManageVacancyUrl(hashedEmployerAccountId, vacancy.Id),
             UserType.Provider => emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
             _ => string.Empty
