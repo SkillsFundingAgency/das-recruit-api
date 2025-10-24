@@ -112,7 +112,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         tokens["employer"].Should().Be(vacancy.EmployerName);
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyURL"].Should().Be(manageVacancyUrl);
+        tokens["manageAdvertURL"].Should().Be(manageVacancyUrl);
         tokens["notificationSettingsURL"].Should().Be(manageNotificationsUrl);
     }
     

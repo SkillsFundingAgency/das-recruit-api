@@ -105,7 +105,7 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
             x.Tokens["employer"].Should().Be(vacancy.EmployerName!);
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString()!);
-            x.Tokens["manageVacancyURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+            x.Tokens["manageAdvertURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
             x.Tokens["notificationSettingsURL"].Should().Be(templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
         });
     }

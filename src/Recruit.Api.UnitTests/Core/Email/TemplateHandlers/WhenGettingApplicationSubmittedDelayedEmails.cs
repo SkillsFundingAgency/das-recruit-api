@@ -54,7 +54,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                     ["vacancyReference"] = vacancyReference.ToShortString(),
                     ["employerName"] = employerName,
                     ["location"] = location,
-                    ["manageVacancyURL"] = manageVacancyUrl,
+                    ["manageAdvertURL"] = manageVacancyUrl,
                 })
             },
             new()
@@ -70,7 +70,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                     ["vacancyReference"] = vacancyReference.ToShortString(),
                     ["employerName"] = employerName,
                     ["location"] = location,
-                    ["manageVacancyURL"] = manageVacancyUrl,
+                    ["manageAdvertURL"] = manageVacancyUrl,
                 })
             }
         };
@@ -129,7 +129,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                 ["vacancyReference"] = vacancyReference.ToShortString(),
                 ["employerName"] = employerName,
                 ["location"] = location,
-                ["manageVacancyURL"] = manageVacancyUrl,
+                ["manageAdvertURL"] = manageVacancyUrl,
             });
         });
 
@@ -209,7 +209,7 @@ public class WhenGettingApplicationSubmittedDelayedEmails
                 ["vacancyReference"] = new VacancyReference(vacancyRef++).ToShortString(),
                 ["employerName"] = employerName,
                 ["location"] = location,
-                ["manageVacancyURL"] = manageVacancyUrl,
+                ["manageAdvertURL"] = manageVacancyUrl,
             });
         });
 
