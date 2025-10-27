@@ -1,7 +1,7 @@
 -- Notes:
 -- text fields sizes are set to their current validation maximums, unless otherwise noted
 
-CREATE TABLE dbo.[Vacancy] (
+CREATE TABLE dbo.[Vacancy2] (
     [Id]	                                    uniqueidentifier    NOT NULL default NEWSEQUENTIALID(),
     [VacancyReference]                          bigint              NULL, -- default next value for VacancyReference,
     [AccountId]                                 bigint              NULL, -- converted from EmployerAccountId e.g. MEZSGQ
@@ -74,7 +74,7 @@ CREATE TABLE dbo.[Vacancy] (
     [HasOptedToAddQualifications]               bit                 NULL,
     [EmployerReviewFieldIndicators]             nvarchar(max)       NULL, -- json serialised
     [ProviderReviewFieldIndicators]             nvarchar(max)       NULL, -- json serialised
-    
+
     CONSTRAINT [PK_Vacancy] PRIMARY KEY (Id),
     INDEX [IX_Vacancy_VacancyReference] NONCLUSTERED(VacancyReference),
     INDEX [IX_Vacancy_Account_Owner_Status] NONCLUSTERED(AccountId, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[Ukprn]),
@@ -83,10 +83,10 @@ CREATE TABLE dbo.[Vacancy] (
     INDEX [IX_Vacancy_Ukprn_Owner_Status] NONCLUSTERED(Ukprn, OwnerType, Status),
     INDEX [IX_Vacancy_Ukprn_Owner_Status_TransferInfo] NONCLUSTERED(Ukprn, OwnerType, Status, TransferInfo),
     INDEX [IX_Vacancy_Ukprn_Owner_Status_ClosingDate] NONCLUSTERED(Ukprn, OwnerType, Status, ClosingDate),
-    INDEX [IX_Vacancy_Account_Owner] NONCLUSTERED(Ukprn, OwnerType) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]),
-    INDEX [IX_Vacancy_Ukprn_Owner] NONCLUSTERED(AccountId, OwnerType) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]),
-    INDEX [IX_Vacancy_AccountId_OwnerType_Status_CreatedDate] NONCLUSTERED(AccountId, OwnerType, Status, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]),
-    INDEX [IX_Vacancy_Ukprn_OwnerType_Status_CreatedDate] NONCLUSTERED(Ukprn, OwnerType, Status, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]),
-    INDEX [IX_Vacancy_Employer] NONCLUSTERED(AccountId, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]) WHERE OwnerType = 'Employer',
-    INDEX [IX_Vacancy_ProviderReview] NONCLUSTERED(AccountId, CreatedDate DESC)  INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]) WHERE OwnerType = 'Provider' AND Status = 'Review'
-)
+    INDEX [IX_Vacancy_Account_Owner] NONCLUSTERED(Ukprn, OwnerType) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status]),
+    INDEX [IX_Vacancy_Ukprn_Owner] NONCLUSTERED(AccountId, OwnerType) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [Ukprn]),
+    INDEX [IX_Vacancy_AccountId_OwnerType_Status_CreatedDate] NONCLUSTERED(AccountId, OwnerType, Status, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[Ukprn]),
+    INDEX [IX_Vacancy_Ukprn_OwnerType_Status_CreatedDate] NONCLUSTERED(Ukprn, OwnerType, Status, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions]),
+    INDEX [IX_Vacancy_Employer] NONCLUSTERED(AccountId, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType],  [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]) WHERE OwnerType = 'Employer',
+    INDEX [IX_Vacancy_ProviderReview] NONCLUSTERED(AccountId, CreatedDate DESC)  INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType],  [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]) WHERE OwnerType = 'Provider' AND Status = 'Review'
+    )
