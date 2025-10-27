@@ -10,7 +10,7 @@ namespace SFA.DAS.Recruit.Api.Data.Repositories;
 public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWriteRepository<VacancyEntity, Guid>
 {
     Task<VacancyReference> GetNextVacancyReferenceAsync(CancellationToken cancellationToken);
-    Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
+    Task<PaginatedList<VacancySummaryEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
         ushort page,
         ushort pageSize,
         Expression<Func<VacancyEntity, TKey>> orderBy,
@@ -18,7 +18,7 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
         FilteringOptions filteringOptions,
         string searchTerm,
         CancellationToken cancellationToken);
-    Task<PaginatedList<VacancyEntity>> GetManyByUkprnIdAsync<TKey>(int ukprn,
+    Task<PaginatedList<VacancySummaryEntity>> GetManyByUkprnIdAsync<TKey>(int ukprn,
         ushort page,
         ushort pageSize,
         Expression<Func<VacancyEntity, TKey>> orderBy,
@@ -44,7 +44,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 {
     private const int ClosingSoonDays = 5;
     
-    public async Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
+    public async Task<PaginatedList<VacancySummaryEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
         ushort page = 1,
         ushort pageSize = 25,
         Expression<Func<VacancyEntity, TKey>>? orderBy = null,
@@ -96,16 +96,30 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         int take = Math.Max(pageSize, (ushort)1);
 
         int count = await query.CountAsync(cancellationToken);
-        var items = await query
+        var items = await query.Select(c=>new VacancySummaryEntity {
+                Id = c.Id,
+                Title = c.Title,
+                VacancyReference = c.VacancyReference,
+                Status = c.Status,
+                ClosingDate = c.ClosingDate,
+                ApplicationMethod = c.ApplicationMethod,
+                ApprenticeshipType = c.ApprenticeshipType,
+                CreatedDate = c.CreatedDate,
+                LegalEntityName = c.LegalEntityName,
+                TransferInfo = c.TransferInfo,
+                OwnerType = c.OwnerType,
+                HasSubmittedAdditionalQuestions = c.HasSubmittedAdditionalQuestions ?? false,
+                Ukprn = c.Ukprn
+            })
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
 
 
-        return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
+        return new PaginatedList<VacancySummaryEntity>(items, count, page, pageSize);
     }
 
-    public async Task<PaginatedList<VacancyEntity>> GetManyByUkprnIdAsync<TKey>(int ukprn,
+    public async Task<PaginatedList<VacancySummaryEntity>> GetManyByUkprnIdAsync<TKey>(int ukprn,
         ushort page = 1,
         ushort pageSize = 25,
         Expression<Func<VacancyEntity, TKey>>? orderBy = null,
@@ -146,12 +160,26 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         int take = Math.Max(pageSize, (ushort)1);
 
         int count = await query.CountAsync(cancellationToken);
-        var items = await query
+        var items = await query.Select(c=>new VacancySummaryEntity {
+                Id = c.Id,
+                Title = c.Title,
+                VacancyReference = c.VacancyReference,
+                Status = c.Status,
+                ClosingDate = c.ClosingDate,
+                ApplicationMethod = c.ApplicationMethod,
+                ApprenticeshipType = c.ApprenticeshipType,
+                CreatedDate = c.CreatedDate,
+                LegalEntityName = c.LegalEntityName,
+                TransferInfo = c.TransferInfo,
+                OwnerType = c.OwnerType,
+                HasSubmittedAdditionalQuestions = c.HasSubmittedAdditionalQuestions ?? false,
+                Ukprn = c.Ukprn
+            })
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
 
-        return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
+        return new PaginatedList<VacancySummaryEntity>(items, count, page, pageSize);
     }
 
     public async Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken)
