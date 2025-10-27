@@ -10,7 +10,7 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControlle
 
 public class WhenCreatingVacancyApprovedByEmployerNotifications: BaseFixture
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task And_No_Users_Are_Found_Then_No_Notifications_Are_Created(VacancyEntity vacancy)
     {
         // arrange

@@ -64,7 +64,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyURL"].Should().Be(manageVacancyUrl);
+        tokens["manageAdvertURL"].Should().Be(manageVacancyUrl);
         tokens["notificationSettingsURL"].Should().Be(manageNotificationsUrl);
         tokens["location"].Should().Be("Recruiting nationally");
     }
@@ -127,7 +127,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyURL"].Should().Be(manageVacancyUrl);
+        tokens["manageAdvertURL"].Should().Be(manageVacancyUrl);
         tokens["notificationSettingsURL"].Should().Be(manageNotificationsUrl);
         tokens["location"].Should().Be("Recruiting nationally");
     }

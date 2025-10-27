@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Data.Configuration;
 
@@ -28,6 +30,7 @@ internal class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<A
         builder.Property(x => x.SubmittedDate).HasColumnName("SubmittedDate").HasColumnType("DateTime");
         builder.Property(x => x.Status).HasColumnName("Status").HasColumnType("nvarchar(50)").IsRequired();
         builder.Property(x => x.TemporaryReviewStatus).HasColumnName("TemporaryReviewStatus").HasColumnType("nvarchar(50)");
+        builder.Property(x => x.TemporaryReviewStatus).HasConversion(v => v.ToString(), ar => (ApplicationReviewStatus)Enum.Parse(typeof(ApplicationReviewStatus), ar));
         builder.Property(x => x.StatusUpdatedDate).HasColumnName("StatusUpdatedDate").HasColumnType("DateTime");
         builder.Property(x => x.VacancyReference).HasColumnName("VacancyReference").HasColumnType("bigint").IsRequired();
         builder.Property(x => x.LegacyApplicationId).HasColumnName("LegacyApplicationId").HasColumnType("uniqueidentifier");
@@ -35,5 +38,13 @@ internal class ApplicationReviewEntityConfiguration : IEntityTypeConfiguration<A
         builder.Property(x => x.AdditionalQuestion1).HasColumnName("AdditionalQuestion1").HasColumnType("nvarchar(max)");
         builder.Property(x => x.AdditionalQuestion2).HasColumnName("AdditionalQuestion2").HasColumnType("nvarchar(max)");
         builder.Property(x => x.VacancyTitle).HasColumnName("VacancyTitle").HasColumnType("nvarchar(500)").IsRequired();
+
+        builder
+            .HasIndex(a => new { a.AccountId, a.Status, a.WithdrawnDate })
+            .HasDatabaseName("IX_ApplicationReview_Account_Status_Withdrawn");
+
+        builder
+            .HasIndex(a => new { a.AccountId, a.DateSharedWithEmployer, a.WithdrawnDate })
+            .HasDatabaseName("IX_ApplicationReview_Account_Shared_Withdrawn");
     }
 }

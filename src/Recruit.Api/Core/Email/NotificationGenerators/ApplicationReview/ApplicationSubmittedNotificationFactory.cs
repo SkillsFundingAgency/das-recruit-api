@@ -1,8 +1,7 @@
 ﻿using SFA.DAS.Encoding;
-using SFA.DAS.Recruit.Api.Configuration;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain;
+using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
@@ -76,7 +75,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyURL"] = ManageVacancyUrl(x),
+                                ["manageAdvertURL"] = ManageAdvertUrl(x),
                                 ["notificationSettingsURL"] = ManageNotificationsUrl(x),
                                 ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
@@ -102,7 +101,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyURL"] = ManageVacancyUrl(x),
+                                ["manageAdvertURL"] = ManageAdvertUrl(x),
                                 ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                         });
@@ -126,7 +125,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyURL"] = ManageVacancyUrl(x),
+                                ["manageAdvertURL"] = ManageAdvertUrl(x),
                                 ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                         });
@@ -145,7 +144,7 @@ public class ApplicationSubmittedNotificationFactory(
             _ => string.Empty
         };
 
-        string ManageVacancyUrl(UserEntity user) => user.UserType switch {
+        string ManageAdvertUrl(UserEntity user) => user.UserType switch {
             UserType.Employer => emailTemplateHelper.EmployerManageVacancyUrl(hashedEmployerAccountId, vacancy.Id),
             UserType.Provider => emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
             _ => string.Empty

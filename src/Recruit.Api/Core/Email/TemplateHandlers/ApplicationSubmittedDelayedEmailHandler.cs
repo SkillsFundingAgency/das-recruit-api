@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
@@ -46,7 +47,7 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
                     AdvertTitle = dynamicData["advertTitle"],
                     EmployerName = dynamicData["employerName"],
                     Location = dynamicData["location"],
-                    ManageVacancyUrl = dynamicData["manageVacancyURL"],
+                    ManageAdvertUrl = dynamicData["manageAdvertURL"],
                     RecruitNotification = x,
                     TemplateId = x.EmailTemplateId,
                     VacancyReference = new VacancyReference(dynamicData["vacancyReference"])
@@ -63,7 +64,7 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
             sb.AppendLine($"# {vacancyDetails.AdvertTitle} ({vacancyDetails.VacancyReference.ToString()})");
             sb.AppendLine($"{vacancyDetails.EmployerName}");
             sb.AppendLine($"{vacancyDetails.Location}");
-            sb.AppendLine($"[View applications]({vacancyDetails.ManageVacancyUrl}) ({vacancyGroup.Count()} new)");
+            sb.AppendLine($"[View applications]({vacancyDetails.ManageAdvertUrl}) ({vacancyGroup.Count()} new)");
             sb.AppendLine();
         }
 

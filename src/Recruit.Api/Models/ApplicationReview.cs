@@ -21,7 +21,7 @@ public record ApplicationReview
     public long AccountLegalEntityId {get; init; }
     public long VacancyReference {get; init; }
     public ApplicationReviewStatus Status {get; init; } 
-    public string? TemporaryReviewStatus { get; init; }
+    public ApplicationReviewStatus? TemporaryReviewStatus { get; init; }
     public string? AdditionalQuestion1 {get; init; }
     public string? AdditionalQuestion2 {get; init; }
     public string? CandidateFeedback {get; init; }

@@ -1,6 +1,7 @@
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
@@ -169,7 +170,31 @@ public static class VacancyExtensions
             },
         };
     }
-    
+
+    private static VacancySummary ToSummaryDto(this VacancySummaryEntity entity)
+    {
+        ArgumentNullException.ThrowIfNull(entity);
+        var transferInfo = ApiUtils.DeserializeOrNull<TransferInfo>(entity.TransferInfo);
+        return new VacancySummary {
+            Id = entity.Id,
+            VacancyReference = entity.VacancyReference,
+            Title = entity.Title,
+            ClosingDate = entity.ClosingDate,
+            Status = entity.Status,
+            CreatedDate = entity.CreatedDate,
+            ApplicationMethod = entity.ApplicationMethod,
+            LegalEntityName = entity.LegalEntityName,
+            TransferInfoUkprn = transferInfo?.Ukprn,
+            TransferInfoProviderName = transferInfo?.ProviderName,
+            TransferInfoReason = transferInfo?.Reason,
+            TransferInfoTransferredDate = transferInfo?.TransferredDate,
+            ApprenticeshipType = entity.ApprenticeshipType,
+            IsTraineeship = false,
+            IsTaskListCompleted = entity.OwnerType is OwnerType.Employer or OwnerType.Provider && entity.HasSubmittedAdditionalQuestions
+        };
+    }
+
+
     public static Vacancy ToGetResponse(this VacancyEntity entity)
     {
         return ToResponseDto(entity);
@@ -264,5 +289,10 @@ public static class VacancyExtensions
             Wage_WeeklyHours = request.Wage?.WeeklyHours,
             Wage_WorkingWeekDescription = request.Wage?.WorkingWeekDescription
         };
+    }
+
+    public static VacancySummary ToSummary(this VacancySummaryEntity entity)
+    {
+        return ToSummaryDto(entity);
     }
 }

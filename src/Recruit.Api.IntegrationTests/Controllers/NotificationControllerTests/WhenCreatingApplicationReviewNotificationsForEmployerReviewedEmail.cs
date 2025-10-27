@@ -9,7 +9,7 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControlle
 
 public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail: BaseFixture
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task And_No_Users_Are_Found_Then_No_Notifications_Are_Created(
         List<ApplicationReviewEntity> applicationReviews,
         List<VacancyEntity> vacancies)
@@ -106,7 +106,7 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
             x.Tokens["employer"].Should().Be(vacancy.EmployerName!);
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString()!);
-            x.Tokens["manageVacancyURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+            x.Tokens["manageAdvertURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
             x.Tokens["notificationSettingsURL"].Should().Be(templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
         });
     }

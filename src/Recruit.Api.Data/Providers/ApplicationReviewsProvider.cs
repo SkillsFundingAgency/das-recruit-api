@@ -25,9 +25,9 @@ public interface IApplicationReviewsProvider
         bool isAscending = false,
         CancellationToken token = default);
 
-    Task<DashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default);
+    Task<ApplicationReviewsDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default);
 
-    Task<DashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default);
+    Task<ApplicationReviewsDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default);
 
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
 
@@ -68,6 +68,11 @@ public interface IApplicationReviewsProvider
         bool isAscending = false,
         List<ApplicationReviewStatus>? status = null,
         CancellationToken token = default);
+
+    Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default);
+    Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default);
+    Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status, CancellationToken token = default);
+    Task<ApplicationReviewsStats> GetStatusCountByVacancyReference(long vacancyReference, CancellationToken token = default);
 }
 
 internal class ApplicationReviewsProvider(
@@ -124,6 +129,44 @@ internal class ApplicationReviewsProvider(
             appReviews.PageSize);
     }
 
+    public async Task<List<ApplicationReviewEntity>> GetAllByIdAsync(List<Guid> ids, CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetAllByIdAsync(ids, token);
+    }
+
+    public async Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetByVacancyReferenceAndCandidateId(vacancyReference, candidateId,
+            token);
+    }
+
+    public async Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status,
+        CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetAllByVacancyReferenceAndTempStatus(vacancyReference, status, token);
+    }
+
+    public async Task<ApplicationReviewsStats> GetStatusCountByVacancyReference(long vacancyReference, CancellationToken token = default)
+    {
+        var applicationReviewEntities = await applicationReviewRepository.GetAllByVacancyReference(vacancyReference, token);
+
+        return new ApplicationReviewsStats
+        {
+            VacancyReference = vacancyReference,
+            NewApplications = applicationReviewEntities.New(),
+            SharedApplications = applicationReviewEntities.Shared(),
+            AllSharedApplications = applicationReviewEntities.AllShared(),
+            SuccessfulApplications = applicationReviewEntities.Successful(),
+            UnsuccessfulApplications = applicationReviewEntities.Unsuccessful(),
+            EmployerReviewedApplications = applicationReviewEntities.EmployerReviewed(),
+            Applications = applicationReviewEntities.AllCount(),
+            HasNoApplications = applicationReviewEntities.HasNoApplications(),
+            EmployerInterviewingApplications = applicationReviewEntities.EmployerInterviewing(),
+            InReviewApplications = applicationReviewEntities.InReview(),
+            InterviewingApplications = applicationReviewEntities.Interviewing(),
+        };
+    }
+
     public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedAccountIdAsync(long accountId,
         int pageNumber,
         int pageSize,
@@ -144,20 +187,20 @@ internal class ApplicationReviewsProvider(
         return await applicationReviewRepository.GetAllByUkprn(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
     }
 
-    public async Task<DashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
+    public async Task<ApplicationReviewsDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
     {
         var dashboardCount = await applicationReviewRepository.GetAllByAccountId(accountId, token);
         int sharedApplicationReviewsCount = await applicationReviewRepository.GetSharedCountByAccountId(accountId, token);
         int allSharedApplicationReviewsCount = await applicationReviewRepository.GetAllSharedCountByAccountId(accountId, token);
 
-        var dashboardModel = (DashboardModel)dashboardCount;
+        var dashboardModel = (ApplicationReviewsDashboardModel)dashboardCount;
         dashboardModel.SharedApplicationsCount = sharedApplicationReviewsCount;
         dashboardModel.AllSharedApplicationsCount = allSharedApplicationReviewsCount;
 
         return dashboardModel;
     }
 
-    public async Task<DashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
+    public async Task<ApplicationReviewsDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
     {
         return await applicationReviewRepository.GetAllByUkprn(ukprn, token);
     }

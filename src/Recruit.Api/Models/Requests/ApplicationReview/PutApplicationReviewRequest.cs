@@ -18,7 +18,7 @@ public class PutApplicationReviewRequest
     public long AccountLegalEntityId { get; set; }
     public long VacancyReference { get; set; }
     public ApplicationReviewStatus Status { get; set; }
-    public string? TemporaryReviewStatus { get; init; }
+    public ApplicationReviewStatus? TemporaryReviewStatus { get; init; }
     public string VacancyTitle { get; init; }
     public string? AdditionalQuestion1 { get; init; }
     public string? AdditionalQuestion2 { get; init; }
