@@ -35,7 +35,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
             _ => DateTime.MinValue
         };
 
-        var vacancies = await vacancyRepository.GetAllByAccountId(accountId, token, true);
+        var vacancies = await vacancyRepository.GetAllTransferInfoByAccountId(accountId, token, true);
 
         var transferredProviders = vacancies
             .Select(v => ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo))
@@ -130,7 +130,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var lastDismissedDate = userEntity.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn
             .GetValueOrDefault(DateTime.MinValue);
 
-        var vacancies = await vacancyRepository.GetAllByUkprn(ukprn, token, true);
+        var vacancies = await vacancyRepository.GetAllTransferInfoByUkprn(ukprn, token, true);
 
         var legalEntityNames = vacancies
             .Select(v => ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo))
