@@ -1,7 +1,7 @@
 -- Notes:
 -- text fields sizes are set to their current validation maximums, unless otherwise noted
 
-CREATE TABLE dbo.[Vacancy2] (
+CREATE TABLE dbo.[Vacancy] (
     [Id]	                                    uniqueidentifier    NOT NULL default NEWSEQUENTIALID(),
     [VacancyReference]                          bigint              NULL, -- default next value for VacancyReference,
     [AccountId]                                 bigint              NULL, -- converted from EmployerAccountId e.g. MEZSGQ
