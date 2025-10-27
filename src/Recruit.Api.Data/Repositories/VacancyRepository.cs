@@ -185,23 +185,26 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByAccountId(long accountId, CancellationToken cancellationToken, bool withTransferInfo = false)
     {
         var employerQuery = dataContext.VacancyEntities
-            .AsNoTracking()
             .Select(c=> new VacancyTransferSummaryEntity {
                 AccountId = c.AccountId,
                 OwnerType = c.OwnerType,
                 TransferInfo = c.TransferInfo,
+                Status = c.Status,
+                Ukprn = c.Ukprn
             })
+            .AsNoTracking()
             .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer)
             .Where(vacancy => !withTransferInfo || vacancy.TransferInfo != null);
 
         var providerQuery = dataContext.VacancyEntities
-            .AsNoTracking()
             .Select(c=> new VacancyTransferSummaryEntity {
                 AccountId = c.AccountId,
                 OwnerType = c.OwnerType,
                 TransferInfo = c.TransferInfo,
-                Status = c.Status
+                Status = c.Status,
+                Ukprn = c.Ukprn
             })
+            .AsNoTracking()
             .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && v.OwnerType == OwnerType.Provider)
             .Where(vacancy => !withTransferInfo || vacancy.TransferInfo != null);
 
