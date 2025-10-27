@@ -42,7 +42,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
         // Arrange
         userEntity.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn = new DateTime(2024, 01, 01);
 
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyTransferSummaryEntity>
         {
             new() { TransferInfo = MakeTransferInfo("Provider B", TransferReason.EmployerRevokedPermission, new DateTime(2024, 02, 01)), Status = VacancyStatus.Closed},
             new() { TransferInfo = MakeTransferInfo("Provider A", TransferReason.EmployerRevokedPermission, new DateTime(2024, 03, 01)), Status = VacancyStatus.Closed },
@@ -55,7 +55,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>(), true))
+            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>(), true))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -79,7 +79,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
         // Arrange
         userEntity.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn = new DateTime(2025, 01, 01);
 
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyTransferSummaryEntity>
         {
             new() { TransferInfo = MakeTransferInfo("Provider X", TransferReason.EmployerRevokedPermission, new DateTime(2024, 01, 01)), Status = VacancyStatus.Closed}
         };
@@ -89,7 +89,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>(), true))
+            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>(), true))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -112,7 +112,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
         // Arrange
         userEntity.TransferredVacanciesBlockedProviderAlertDismissedOn = new DateTime(2024, 01, 01);
 
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyTransferSummaryEntity>
         {
             new() { TransferInfo = MakeTransferInfo("Provider Y", TransferReason.BlockedByQa, new DateTime(2024, 02, 01)), Status = VacancyStatus.Approved}
         };
@@ -122,7 +122,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>(), true))
+            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>(), true))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -145,7 +145,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
         // Arrange
         userEntity.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn = DateTime.MinValue;
 
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyTransferSummaryEntity>
         {
             new() { TransferInfo = MakeTransferInfo(null, TransferReason.EmployerRevokedPermission, DateTime.UtcNow), Status = VacancyStatus.Closed},
             new() { TransferInfo = MakeTransferInfo("   ", TransferReason.EmployerRevokedPermission, DateTime.UtcNow), Status = VacancyStatus.Approved}
@@ -156,7 +156,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>(), true))
+            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>(), true))
             .ReturnsAsync(vacancies);
 
         // Act
