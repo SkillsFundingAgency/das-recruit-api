@@ -35,7 +35,8 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVacancyReviewRepository, VacancyReviewRepository>();
         services.AddScoped<IVacancyRepository, VacancyRepository>();
-        
+        services.AddScoped<IReportRepository, ReportRepository>();
+
         // email
         services.AddSingleton<IEmailTemplateHelper>(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
         services.AddScoped<ApplicationSharedWithEmployerNotificationFactory>();
