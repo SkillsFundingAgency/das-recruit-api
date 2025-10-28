@@ -55,7 +55,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>(), true))
+            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -89,7 +89,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>(), true))
+            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -122,7 +122,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>(), true))
+            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -156,7 +156,7 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>(), true))
+            .Setup(r => r.GetAllTransferInfoByAccountId(accountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         // Act
