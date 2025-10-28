@@ -150,7 +150,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;
         tokens.Should().HaveCount(6);
         tokens["firstName"].Should().Be(user.Name);
-        tokens["employer"].Should().Be(vacancy.EmployerName);
+        tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
         tokens["manageAdvertURL"].Should().Be(manageVacancyUrl);

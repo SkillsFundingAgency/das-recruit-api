@@ -39,7 +39,7 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
             User = x,
             StaticData = ApiUtils.SerializeOrNull(new Dictionary<string, string> {
                 ["firstName"] = x.Name,
-                ["employer"] = vacancy.EmployerName!,
+                ["employerName"] = vacancy.EmployerName!,
                 ["advertTitle"] = vacancy.Title!,
                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
                 ["manageAdvertURL"] = emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
