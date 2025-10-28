@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -57,9 +58,10 @@ public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportR
                     VacancyTitle = v.Title,
                     EmployerName = v.EmployerName,
                     ApplicationStatus = app.Status,
+                    ApprenticeshipType = v.ApprenticeshipType ?? ApprenticeshipTypes.Standard,
                     ApplicationSubmittedDate = app.SubmittedDate,
                     AvailableWhere = v.EmployerLocationOption,
-                    ProgrammeId = v.ProgrammeId,
+                    ProgrammeId = Convert.ToInt32(v.ProgrammeId),
                     TrainingProviderName = v.TrainingProvider_Name,
                     VacancyClosingDate = v.ClosedDate ?? v.ClosingDate,
                     NumberOfDaysApplicationAtThisStatus = EF.Functions.DateDiffDay(

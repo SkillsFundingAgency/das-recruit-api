@@ -9,10 +9,11 @@ public record ApplicationReviewReport
     public string? VacancyTitle { get; set; }
     public string? EmployerName { get; set; }
     public string? TrainingProviderName { get; set; }
-    public string? ProgrammeId { get; set; }
+    public int ProgrammeId { get; set; }
     public DateTime? VacancyClosingDate { get; set; }
     public DateTime? ApplicationSubmittedDate { get; set; }
     public AvailableWhere? AvailableWhere { get; set; }
     public ApplicationReviewStatus ApplicationStatus { get; set; }
+    public ApprenticeshipTypes ApprenticeshipType { get; set; }
     public int? NumberOfDaysApplicationAtThisStatus { get; set; }
 }

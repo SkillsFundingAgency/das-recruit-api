@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.Report;
@@ -15,7 +16,7 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     [Route($"{RouteNames.Reports}/{{ukprn:int}}/{RouteElements.Provider}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Report), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<Report>), StatusCodes.Status200OK)]
     public async Task<IResult> GetByUkprn(
         [FromServices] IReportRepository reportRepository,
         [FromRoute] int ukprn,
@@ -64,7 +65,7 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     [Route($"{RouteNames.Reports}/{{reportId:guid}}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(Report), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ApplicationReviewReport>), StatusCodes.Status200OK)]
     public async Task<IResult> Generate(
         [FromServices] IReportRepository reportRepository,
         [FromRoute] Guid reportId,
