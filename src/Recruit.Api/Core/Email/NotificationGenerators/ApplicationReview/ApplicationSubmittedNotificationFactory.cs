@@ -53,7 +53,7 @@ public class ApplicationSubmittedNotificationFactory(
         
         string? hashedEmployerAccountId = encodingService.Encode(applicationReview.AccountId, EncodingType.AccountId);
         string ukprn = vacancy.Ukprn!.Value.ToString();
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
         
         // process each frequency
         var results = new RecruitNotificationsResult();
@@ -69,7 +69,7 @@ public class ApplicationSubmittedNotificationFactory(
                                 : emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderImmediate,
                             UserId = x.Id,
                             User = x,
-                            SendWhen = DateTime.Now,
+                            SendWhen = now,
                             StaticData = ApiUtils.SerializeOrNull(new Dictionary<string, string> {
                                 ["firstName"] = x.Name,
                                 ["advertTitle"] = vacancy.Title!,

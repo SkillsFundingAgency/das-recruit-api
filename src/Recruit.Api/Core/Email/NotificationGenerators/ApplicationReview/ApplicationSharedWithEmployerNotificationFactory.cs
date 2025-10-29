@@ -44,7 +44,7 @@ public class ApplicationSharedWithEmployerNotificationFactory(
         var recruitNotifications = usersRequiringEmail.Select(x => new RecruitNotificationEntity {
             EmailTemplateId = emailTemplateHelper.TemplateIds.ApplicationSharedWithEmployer,
             UserId = x.Id,
-            SendWhen = DateTime.Now,
+            SendWhen = DateTime.UtcNow,
             User = x,
             StaticData = ApiUtils.SerializeOrNull(new Dictionary<string, string> {
                 ["firstName"] = x.Name,
