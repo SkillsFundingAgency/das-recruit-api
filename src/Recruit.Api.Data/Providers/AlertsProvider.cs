@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -35,7 +35,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
             _ => DateTime.MinValue
         };
 
-        var vacancies = await vacancyRepository.GetAllByAccountId(accountId, token);
+        var vacancies = await vacancyRepository.GetAllTransferInfoByAccountId(accountId, token, true);
 
         var transferredProviders = vacancies
             .Select(v => ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo))
@@ -133,7 +133,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var lastDismissedDate = userEntity.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn
             .GetValueOrDefault(DateTime.MinValue);
 
-        var vacancies = await vacancyRepository.GetAllByUkprn(ukprn, token);
+        var vacancies = await vacancyRepository.GetAllTransferInfoByUkprn(ukprn, token, true);
 
         var legalEntityNames = vacancies
             .Select(v => ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo))

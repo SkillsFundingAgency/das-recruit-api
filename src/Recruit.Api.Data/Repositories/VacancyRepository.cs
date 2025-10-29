@@ -27,8 +27,8 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
         string searchTerm,
         CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
-    Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken);
-    Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken);
+    Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByAccountId(long accountId, CancellationToken cancellationToken, bool withTransferInfo = false);
+    Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByUkprn(int ukprn, CancellationToken cancellationToken, bool withTransferInfo = false);
     Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReference, CancellationToken cancellationToken);
 }
@@ -182,15 +182,28 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             .FirstOrDefaultAsync(x => x.VacancyReference == vacancyReference, cancellationToken);
     }
 
-    public async Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken)
+    public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByAccountId(long accountId, CancellationToken cancellationToken, bool withTransferInfo = false)
     {
         var employerQuery = dataContext.VacancyEntities
             .AsNoTracking()
-            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer);
+            .Select(c=> new VacancyTransferSummaryEntity {
+                AccountId = c.AccountId,
+                OwnerType = c.OwnerType,
+                TransferInfo = c.TransferInfo,
+            })
+            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer)
+            .Where(vacancy => !withTransferInfo || vacancy.TransferInfo != null);
 
         var providerQuery = dataContext.VacancyEntities
             .AsNoTracking()
-            .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && v.OwnerType == OwnerType.Provider);
+            .Select(c=> new VacancyTransferSummaryEntity {
+                AccountId = c.AccountId,
+                OwnerType = c.OwnerType,
+                TransferInfo = c.TransferInfo,
+                Status = c.Status
+            })
+            .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && v.OwnerType == OwnerType.Provider)
+            .Where(vacancy => !withTransferInfo || vacancy.TransferInfo != null);
 
         return await employerQuery
             .Union(providerQuery)
@@ -199,8 +212,35 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
     public async Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken)
     {
+        var vacancies = await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer && v.ClosureReason == closureReason && v.ClosedDate > lastDismissedDate)
+            .ToListAsync(cancellationToken);
+
+        return vacancies;
+    }
+
+    public async Task<List<VacancyEntity>> GetAllClosedProviderrVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken)
+    {
+        var vacancies = await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(v => v.Ukprn == ukprn && v.OwnerType == OwnerType.Provider && v.ClosureReason == closureReason && v.ClosedDate > lastDismissedDate)
+            .ToListAsync(cancellationToken);
+
+        return vacancies;
+    }
+
+    public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByUkprn(int ukprn, CancellationToken cancellationToken, bool withTransferInfo = false)
+    {
         return await dataContext.VacancyEntities
             .AsNoTracking()
+            .Select(c=> new VacancyTransferSummaryEntity {
+                AccountId = c.AccountId,
+                OwnerType = c.OwnerType,
+                TransferInfo = c.TransferInfo,
+                Status = c.Status,
+                Ukprn = c.Ukprn
+            })
             .Where(vacancy => vacancy.Ukprn == ukprn && vacancy.OwnerType == OwnerType.Provider)
             .ToListAsync(cancellationToken);
     }
