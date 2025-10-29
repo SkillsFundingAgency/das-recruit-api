@@ -1,6 +1,5 @@
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
@@ -23,6 +22,11 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
             throw new DataIntegrityException();
         }
         
+        if (vacancy is not { OwnerType: OwnerType.Provider, Ukprn: not null })
+        {
+            return new RecruitNotificationsResult();
+        }
+        
         var providerUsers = await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken);
         var usersRequiringEmail = providerUsers.GetUsersForNotificationType(
             NotificationTypes.SharedApplicationReviewedByEmployer, vacancy.ReviewRequestedByUserId);
@@ -35,10 +39,10 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
             User = x,
             StaticData = ApiUtils.SerializeOrNull(new Dictionary<string, string> {
                 ["firstName"] = x.Name,
-                ["employer"] = vacancy.EmployerName!,
+                ["employerName"] = vacancy.EmployerName!,
                 ["advertTitle"] = vacancy.Title!,
                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                ["manageVacancyURL"] = emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
+                ["manageAdvertURL"] = emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
                 ["notificationSettingsURL"] = emailTemplateHelper.ProviderManageNotificationsUrl(ukprn)
             })!,
             DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!

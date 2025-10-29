@@ -44,6 +44,7 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
     {
         // arrange
         applicationReview.Status = applicationReviewStatus;
+        vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         var expectedUserNames = users.Take(2).Select(x => x.Name).ToList();
         foreach (var user in users)
@@ -102,10 +103,10 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
         {
             x.Tokens.Should().HaveCount(6);
             expectedUserNames.Should().Contain(x.Tokens["firstName"]);
-            x.Tokens["employer"].Should().Be(vacancy.EmployerName!);
+            x.Tokens["employerName"].Should().Be(vacancy.EmployerName!);
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
             x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString()!);
-            x.Tokens["manageVacancyURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+            x.Tokens["manageAdvertURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
             x.Tokens["notificationSettingsURL"].Should().Be(templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
         });
     }

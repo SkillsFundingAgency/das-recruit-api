@@ -25,6 +25,11 @@ public class ApplicationSharedWithEmployerNotificationFactory(
             logger.LogError("Whilst processing application review '{ApplicationReviewId}' the associated vacancy could not be found", applicationReview.Id);
             throw new DataIntegrityException();
         }
+
+        if (vacancy is not { OwnerType: OwnerType.Provider, Ukprn: not null })
+        {
+            return new RecruitNotificationsResult();
+        }
         
         var usersRequiringEmail = await userRepository.FindUsersByEmployerAccountIdAsync(applicationReview.AccountId, cancellationToken);
 
