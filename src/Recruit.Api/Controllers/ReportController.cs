@@ -14,6 +14,33 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 public class ReportController(ILogger<ReportController> logger) : ControllerBase
 {
     [HttpGet]
+    [Route($"{{reportId:guid}}")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Report), StatusCodes.Status200OK)]
+    public async Task<IResult> GetOne(
+        [FromServices] IReportRepository reportRepository,
+        [FromRoute] Guid reportId,
+        CancellationToken token)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received request to get report for report Id: {ReportId}", reportId);
+
+            var reports = await reportRepository.GetOneAsync(reportId, token);
+
+            return reports == null 
+                ? TypedResults.NotFound() 
+                : TypedResults.Ok(reports.ToResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to get report : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
     [Route($"{{ukprn:int}}/{RouteElements.Provider}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
@@ -61,9 +88,9 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
-
+    
     [HttpGet]
-    [Route($"{{reportId:guid}}")]
+    [Route($"generate/{{reportId:guid}}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(List<ApplicationReviewReport>), StatusCodes.Status200OK)]
@@ -82,7 +109,7 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Unable to get reports : An error occurred");
+            logger.LogError(e, "Unable to generate report : An error occurred");
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
