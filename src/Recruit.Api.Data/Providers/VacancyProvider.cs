@@ -10,7 +10,7 @@ public interface IVacancyProvider
 {
     Task<VacancyDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default);
     Task<VacancyDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default);
-    Task<PaginatedList<VacancyEntity>> GetPagedVacancyByAccountId<TKey>(long accountId,
+    Task<PaginatedList<VacancySummaryEntity>> GetPagedVacancyByAccountId<TKey>(long accountId,
         ushort page,
         ushort pageSize,
         Expression<Func<VacancyEntity, TKey>> orderBy,
@@ -18,7 +18,7 @@ public interface IVacancyProvider
         FilteringOptions filteringOptions,
         string searchTerm,
         CancellationToken cancellationToken);
-    Task<PaginatedList<VacancyEntity>> GetPagedVacancyByUkprn<TKey>(int ukprn,
+    Task<PaginatedList<VacancySummaryEntity>> GetPagedVacancyByUkprn<TKey>(int ukprn,
         ushort page,
         ushort pageSize,
         Expression<Func<VacancyEntity, TKey>> orderBy,
@@ -44,14 +44,14 @@ public class VacancyProvider(IVacancyRepository vacancyRepository) : IVacancyPro
         return GetDashboardModel(vacancies);
     }
 
-    public async Task<PaginatedList<VacancyEntity>> GetPagedVacancyByAccountId<TKey>(long accountId, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy,
+    public async Task<PaginatedList<VacancySummaryEntity>> GetPagedVacancyByAccountId<TKey>(long accountId, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy,
         SortOrder sortOrder, FilteringOptions filteringOptions, string searchTerm, CancellationToken cancellationToken)
     {
         return await vacancyRepository.GetManyByAccountIdAsync(accountId, page, pageSize, orderBy, sortOrder,
             filteringOptions, searchTerm, cancellationToken);
     }
 
-    public async Task<PaginatedList<VacancyEntity>> GetPagedVacancyByUkprn<TKey>(int ukprn, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy,
+    public async Task<PaginatedList<VacancySummaryEntity>> GetPagedVacancyByUkprn<TKey>(int ukprn, ushort page, ushort pageSize, Expression<Func<VacancyEntity, TKey>> orderBy,
         SortOrder sortOrder, FilteringOptions filteringOptions, string searchTerm, CancellationToken cancellationToken)
     {
         return await vacancyRepository.GetManyByUkprnIdAsync(ukprn, page, pageSize, orderBy, sortOrder,
