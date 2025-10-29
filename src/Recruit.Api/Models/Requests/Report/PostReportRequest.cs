@@ -1,12 +1,14 @@
-﻿using SFA.DAS.Recruit.Api.Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.Models.Requests.Report;
 
 public record PostReportRequest
 {
-    public string Name { get; init; } = null!;
-    public Guid UserId { get; init; }
-    public string CreatedBy { get; init; } = null!;
+    public required string Name { get; init; }
+    public required Guid UserId { get; init; }
+    [MaxLength(50)]
+    public required string CreatedBy { get; init; }
     public required DateTime FromDate { get; init; }
     public required DateTime ToDate { get; init; }
     public int? Ukprn { get; init; }

@@ -7,14 +7,14 @@ using SFA.DAS.Recruit.Api.Domain.Models;
 namespace SFA.DAS.Recruit.Api.Domain.Entities;
 public class ReportEntity
 {
-    public Guid Id { get; set; }
-    public Guid UserId { get; set; }
+    public required Guid Id { get; set; }
+    public required Guid UserId { get; set; }
     [MaxLength(50)]
     public string? CreatedBy { get; set; }
     public required string Name { get; set; }
     public ReportType Type { get; set; }
     public ReportOwnerType OwnerType { get; set; }
-    public DateTime CreatedDate { get; set; }
+    public required DateTime CreatedDate { get; set; }
     [MaxLength(1000)] 
     public required string DynamicCriteria { get; set; } = null!;
     private bool TryGetCriteria(out ReportCriteria? criteria)

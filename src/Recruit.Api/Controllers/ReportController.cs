@@ -10,10 +10,11 @@ using SFA.DAS.Recruit.Api.Models.Requests.Report;
 namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController]
+[Route($"{RouteNames.Reports}")]
 public class ReportController(ILogger<ReportController> logger) : ControllerBase
 {
     [HttpGet]
-    [Route($"{RouteNames.Reports}/{{ukprn:int}}/{RouteElements.Provider}")]
+    [Route($"{{ukprn:int}}/{RouteElements.Provider}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(List<Report>), StatusCodes.Status200OK)]
@@ -38,7 +39,7 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     }
 
     [HttpGet]
-    [Route($"{RouteNames.Reports}/{RouteElements.Qa}")]
+    [Route($"{RouteElements.Qa}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Report), StatusCodes.Status200OK)]
@@ -62,7 +63,7 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     }
 
     [HttpGet]
-    [Route($"{RouteNames.Reports}/{{reportId:guid}}")]
+    [Route($"{{reportId:guid}}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(List<ApplicationReviewReport>), StatusCodes.Status200OK)]
@@ -87,7 +88,6 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     }
 
     [HttpPost]
-    [Route($"{RouteNames.Reports}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Report), StatusCodes.Status201Created)]
