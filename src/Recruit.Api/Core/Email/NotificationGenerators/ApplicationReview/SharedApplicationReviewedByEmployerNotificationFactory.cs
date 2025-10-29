@@ -49,7 +49,7 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
         });
 
         var results = new RecruitNotificationsResult();
-        results.Immediate.AddRange(recruitNotifications);
+        results.Delayed.AddRange(recruitNotifications);
         return results;
     }
 }

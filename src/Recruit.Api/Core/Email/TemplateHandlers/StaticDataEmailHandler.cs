@@ -15,7 +15,6 @@ public class StaticDataEmailHandler: AbstractEmailHandler
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSharedWithEmployer);
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderImmediate);
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerImmediate);
-        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.SharedApplicationReviewedByEmployer);
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancySentForEmployerReview);
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancyApprovedByEmployer);
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancyRejectedByEmployer);

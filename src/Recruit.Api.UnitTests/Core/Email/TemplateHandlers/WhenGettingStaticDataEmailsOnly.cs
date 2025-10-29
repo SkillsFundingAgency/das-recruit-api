@@ -2,7 +2,6 @@
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.TemplateHandlers;
 
@@ -19,7 +18,6 @@ public class WhenGettingStaticDataEmailsOnly
         
         // assert
         sut.CanHandle(emailTemplateIds.ApplicationSharedWithEmployer).Should().BeTrue();
-        sut.CanHandle(emailTemplateIds.SharedApplicationReviewedByEmployer).Should().BeTrue();
         sut.CanHandle(emailTemplateIds.ProviderVacancySentForEmployerReview).Should().BeTrue();
         sut.CanHandle(emailTemplateIds.ProviderVacancyApprovedByEmployer).Should().BeTrue();
         sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerImmediate).Should().BeTrue();
