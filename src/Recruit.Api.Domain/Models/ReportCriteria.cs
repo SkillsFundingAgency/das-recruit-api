@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 
 namespace SFA.DAS.Recruit.Api.Domain.Models;
 public record ReportCriteria

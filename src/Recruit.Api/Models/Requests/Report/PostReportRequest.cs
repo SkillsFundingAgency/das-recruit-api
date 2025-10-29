@@ -5,6 +5,7 @@ namespace SFA.DAS.Recruit.Api.Models.Requests.Report;
 
 public record PostReportRequest
 {
+    public required Guid Id { get; init; }
     public required string Name { get; init; }
     public required Guid UserId { get; init; }
     [MaxLength(50)]

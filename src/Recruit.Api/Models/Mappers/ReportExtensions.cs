@@ -24,7 +24,7 @@ public static class ReportExtensions
             OwnerType = request.OwnerType,
             Type = request.Type,
             UserId = request.UserId,
-            Id = Guid.NewGuid(),
+            Id = request.Id,
             DynamicCriteria = System.Text.Json.JsonSerializer.Serialize(new Domain.Models.ReportCriteria
             {
                 FromDate = request.FromDate,
