@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Recruit.Api.Data.Providers;
+using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -42,7 +42,7 @@ internal class WhenGettingBlockedProviderAlertCountByAccountId
         // Arrange
         userEntity.ClosedVacanciesBlockedProviderAlertDismissedOn = new DateTime(2024, 01, 01);
 
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyClosureSummaryEntity>
         {
             new() {
                 Status = VacancyStatus.Closed,
@@ -67,7 +67,7 @@ internal class WhenGettingBlockedProviderAlertCountByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllClosedEmployerVacanciesByClosureReason(accountId,ClosureReason.BlockedByQa, userEntity.ClosedVacanciesBlockedProviderAlertDismissedOn!.Value, It.IsAny<CancellationToken>(), null))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -180,9 +180,9 @@ internal class WhenGettingBlockedProviderAlertCountByAccountId
         // Arrange
         userEntity.ClosedVacanciesBlockedProviderAlertDismissedOn = DateTime.MinValue;
 
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyClosureSummaryEntity>
         {
-            new VacancyEntity
+            new ()
             {
                 Status = VacancyStatus.Closed,
                 ClosedDate = DateTime.UtcNow,
@@ -191,7 +191,7 @@ internal class WhenGettingBlockedProviderAlertCountByAccountId
                 VacancyReference = 111,
                 TransferInfo = MakeTransferInfo("Provider A")
             },
-            new VacancyEntity
+            new ()
             {
                 Status = VacancyStatus.Closed,
                 ClosedDate = DateTime.UtcNow,
@@ -200,7 +200,7 @@ internal class WhenGettingBlockedProviderAlertCountByAccountId
                 VacancyReference = 222,
                 TransferInfo = MakeTransferInfo("Provider A") // duplicate
             },
-            new VacancyEntity
+            new ()
             {
                 Status = VacancyStatus.Closed,
                 ClosedDate = DateTime.UtcNow,
@@ -216,7 +216,7 @@ internal class WhenGettingBlockedProviderAlertCountByAccountId
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByAccountId(accountId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllClosedEmployerVacanciesByClosureReason(accountId,ClosureReason.BlockedByQa, userEntity.ClosedVacanciesBlockedProviderAlertDismissedOn!.Value, It.IsAny<CancellationToken>(), null))
             .ReturnsAsync(vacancies);
 
         // Act

@@ -127,21 +127,17 @@ internal class WhenGettingWithDrawnByQaAlertByUkprn
             UserType = UserType.Employer,
             ClosedVacanciesWithdrawnByQaAlertDismissedOn = DateTime.MinValue
         };
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyClosureSummaryEntity>
         {
                 new() {
-                    Id = Guid.NewGuid(),
                     Title = "B Vacancy",
                     VacancyReference = 1002,
-                    Status = VacancyStatus.Closed,
                     ClosureReason = ClosureReason.WithdrawnByQa,
                     ClosedDate = DateTime.UtcNow
                 },
                 new() {
-                    Id = Guid.NewGuid(),
                     Title = "A Vacancy",
                     VacancyReference = 1001,
-                    Status = VacancyStatus.Closed,
                     ClosureReason = ClosureReason.WithdrawnByQa,
                     ClosedDate = DateTime.UtcNow
                 }
