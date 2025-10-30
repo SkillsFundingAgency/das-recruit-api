@@ -1,7 +1,7 @@
 ﻿CREATE TABLE dbo.[Report]
 (
     [Id]	                uniqueidentifier    NOT NULL,
-    [UserId]                uniqueidentifier    NOT NULL,
+    [UserId]                nvarchar(200)       NOT NULL,                   -- User Id or DfEUserId of the report owner
     [Name]                  nvarchar(100)       NOT NULL,                   -- Name of the report
     [OwnerType]             nvarchar(20)        NOT NULL,				    -- Type of owner (e.g., 'Provider', 'Qa')
     [Type]                  nvarchar(20)        NOT NULL,				    -- Type of owner (e.g., 'ProviderApplications', 'QaApplications')
