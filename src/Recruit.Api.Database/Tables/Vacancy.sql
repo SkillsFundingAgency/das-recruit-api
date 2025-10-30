@@ -78,8 +78,8 @@ CREATE TABLE dbo.[Vacancy] (
     CONSTRAINT [PK_Vacancy] PRIMARY KEY (Id),
     INDEX [IX_Vacancy_VacancyReference] NONCLUSTERED(VacancyReference),
     
-    INDEX [IX_Vacancy_Account_Owner_Status] NONCLUSTERED(AccountId, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[Ukprn]),
-    INDEX [IX_Vacancy_Ukprn_Owner_Status] NONCLUSTERED(Ukprn, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[AccountId]),
+    INDEX [IX_Vacancy_Account_Owner_Status] NONCLUSTERED(AccountId, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[Ukprn]) WHERE OwnerType = 'Employer',
+    INDEX [IX_Vacancy_Ukprn_Owner_Status] NONCLUSTERED(Ukprn, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[AccountId])  WHERE OwnerType = 'Provider',
     
     --Dashboard alerts
     INDEX [IX_Vacancy_Account_Owner_Status_TransferInfo] NONCLUSTERED(AccountId, OwnerType, Status, TransferInfo) INCLUDE(Ukprn) WHERE TransferInfo IS NOT null AND OwnerType = 'Employer',
