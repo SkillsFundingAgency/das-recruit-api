@@ -21,12 +21,15 @@ internal class WhenGeneratingReports
             .Setup(x => x.Generate(reportId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(entities);
 
+        repository.Setup(x => x.IncrementReportDownloadCountAsync(reportId, token));
+
         // act
         var result = await sut.Generate(repository.Object, reportId, token);
         var payload = (result as Ok<GetApplicationReviewReportResponse>)?.Value;
 
         // assert
         repository.Verify(x => x.Generate(reportId, token), Times.Once());
+        repository.Verify(x => x.IncrementReportDownloadCountAsync(reportId, token), Times.Once());
         payload.Should().NotBeNull();
         payload.ApplicationReviewReports.Should().BeEquivalentTo(entities, options => options.ExcludingMissingMembers());
     }

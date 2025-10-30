@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Threading;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -11,6 +12,7 @@ public interface IReportRepository : IReadRepository<ReportEntity, Guid>, IWrite
     Task<List<ApplicationReviewReport>> Generate(Guid reportId, CancellationToken token);
     Task<List<ReportEntity>> GetManyByUkprn(int ukprn, CancellationToken token);
     Task<List<ReportEntity>> GetMany(CancellationToken token);
+    Task IncrementReportDownloadCountAsync(Guid reportId, CancellationToken token);
 }
 public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportRepository
 {
@@ -105,6 +107,16 @@ public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportR
             .Where(r => r.OwnerType == ReportOwnerType.Provider
                         && r.Criteria != null)
             .ToListAsync(token);
+    }
+
+    public async Task IncrementReportDownloadCountAsync(Guid reportId, CancellationToken cancellationToken)
+    {
+        var existingEntity = await GetOneAsync(reportId, cancellationToken);
+        if (existingEntity is not null)
+        {
+            existingEntity.DownloadCount += 1;
+            await recruitDataContext.SaveChangesAsync(cancellationToken);
+        }
     }
 
     public async Task<ReportEntity?> GetOneAsync(Guid key, CancellationToken cancellationToken)

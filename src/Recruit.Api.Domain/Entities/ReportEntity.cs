@@ -16,6 +16,7 @@ public class ReportEntity
     public ReportType Type { get; set; }
     public ReportOwnerType OwnerType { get; set; }
     public required DateTime CreatedDate { get; set; }
+    public int DownloadCount { get; set; } = 0;
     [MaxLength(1000)] 
     public required string DynamicCriteria { get; set; } = null!;
     private bool TryGetCriteria(out ReportCriteria? criteria)

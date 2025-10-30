@@ -14,7 +14,7 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 public class ReportController(ILogger<ReportController> logger) : ControllerBase
 {
     [HttpGet]
-    [Route($"{{reportId:guid}}")]
+    [Route("{reportId:guid}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Report), StatusCodes.Status200OK)]
@@ -90,7 +90,7 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     }
     
     [HttpGet]
-    [Route($"generate/{{reportId:guid}}")]
+    [Route("generate/{reportId:guid}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(List<ApplicationReviewReport>), StatusCodes.Status200OK)]
@@ -104,6 +104,8 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
             logger.LogInformation("Recruit API: Received request to generate report for report Id: {ReportId}", reportId);
             
             var reports = await reportRepository.Generate(reportId, token);
+
+            await reportRepository.IncrementReportDownloadCountAsync(reportId, token);
 
             return TypedResults.Ok(reports.ToGetResponse());
         }

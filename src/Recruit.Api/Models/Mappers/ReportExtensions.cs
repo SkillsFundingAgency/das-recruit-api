@@ -25,6 +25,7 @@ public static class ReportExtensions
             Type = request.Type,
             UserId = request.UserId,
             Id = request.Id,
+            DownloadCount = 0,
             DynamicCriteria = System.Text.Json.JsonSerializer.Serialize(new Domain.Models.ReportCriteria
             {
                 FromDate = request.FromDate,
@@ -45,6 +46,7 @@ public static class ReportExtensions
             CreatedDate = entity.CreatedDate,
             UserId = entity.UserId,
             CreatedBy = entity.CreatedBy,
+            DownloadCount = entity.DownloadCount,
             DynamicCriteria = entity.DynamicCriteria
         };
     }

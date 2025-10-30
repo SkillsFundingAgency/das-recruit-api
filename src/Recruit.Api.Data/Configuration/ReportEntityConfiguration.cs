@@ -21,6 +21,7 @@ internal class ReportEntityConfiguration : IEntityTypeConfiguration<ReportEntity
         builder.Property(x => x.OwnerType).HasConversion(v => v.ToString(), v => Enum.Parse<ReportOwnerType>(v)).IsRequired();
         builder.Property(x => x.CreatedDate).HasColumnName("CreatedDate").HasColumnType("DateTime").IsRequired();
         builder.Property(x => x.CreatedBy).HasColumnName("CreatedBy").HasColumnType("nvarchar(50)");
+        builder.Property(x => x.DownloadCount).HasColumnName("DownloadCount").HasColumnType("int").HasDefaultValue(0).IsRequired();
         builder.Property(x => x.DynamicCriteria).HasColumnName("DynamicCriteria").HasColumnType("nvarchar(max)").IsRequired();
 
         builder
