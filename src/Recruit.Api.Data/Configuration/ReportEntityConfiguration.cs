@@ -15,7 +15,7 @@ internal class ReportEntityConfiguration : IEntityTypeConfiguration<ReportEntity
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id).HasColumnName("Id").HasColumnType("uniqueidentifier").IsRequired();
-        builder.Property(x => x.UserId).HasColumnName("UserId").HasColumnType("uniqueidentifier").IsRequired();
+        builder.Property(x => x.UserId).HasColumnName("UserId").HasColumnType("nvarchar(100)").IsRequired();
         builder.Property(x => x.Name).IsRequired().HasColumnName("Name").HasColumnType("nvarchar(100)");
         builder.Property(x => x.Type).HasConversion(v => v.ToString(), v => Enum.Parse<ReportType>(v)).IsRequired();
         builder.Property(x => x.OwnerType).HasConversion(v => v.ToString(), v => Enum.Parse<ReportOwnerType>(v)).IsRequired();

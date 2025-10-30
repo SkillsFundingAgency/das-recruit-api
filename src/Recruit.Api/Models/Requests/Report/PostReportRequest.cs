@@ -7,7 +7,8 @@ public record PostReportRequest
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; }
-    public required Guid UserId { get; init; }
+    [MaxLength(200)]
+    public required string UserId { get; init; }
     [MaxLength(50)]
     public required string CreatedBy { get; init; }
     public required DateTime FromDate { get; init; }

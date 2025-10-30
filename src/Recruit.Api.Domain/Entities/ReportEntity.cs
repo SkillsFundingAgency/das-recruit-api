@@ -8,7 +8,8 @@ namespace SFA.DAS.Recruit.Api.Domain.Entities;
 public class ReportEntity
 {
     public required Guid Id { get; set; }
-    public required Guid UserId { get; set; }
+    [MaxLength(200)]
+    public required string UserId { get; set; }
     [MaxLength(50)]
     public string? CreatedBy { get; set; }
     public required string Name { get; set; }
