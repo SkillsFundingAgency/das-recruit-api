@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.Repositories;
@@ -11,7 +12,8 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController]
 [Route($"{RouteNames.Reports}")]
-public class ReportController(ILogger<ReportController> logger) : ControllerBase
+public class ReportController(ILogger<ReportController> logger) 
+    : ControllerBase
 {
     [HttpGet]
     [Route("{reportId:guid}")]
@@ -20,8 +22,8 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     [ProducesResponseType(typeof(Report), StatusCodes.Status200OK)]
     public async Task<IResult> GetOne(
         [FromServices] IReportRepository reportRepository,
-        [FromRoute] Guid reportId,
-        CancellationToken token)
+        [FromRoute, Required] Guid reportId,
+        CancellationToken token = default)
     {
         try
         {
@@ -47,8 +49,8 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     [ProducesResponseType(typeof(List<Report>), StatusCodes.Status200OK)]
     public async Task<IResult> GetByUkprn(
         [FromServices] IReportRepository reportRepository,
-        [FromRoute] int ukprn,
-        CancellationToken token)
+        [FromRoute, Required] int ukprn,
+        CancellationToken token = default)
     {
         try
         {
@@ -72,7 +74,7 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     [ProducesResponseType(typeof(Report), StatusCodes.Status200OK)]
     public async Task<IResult> GetMany(
         [FromServices] IReportRepository reportRepository,
-        CancellationToken token)
+        CancellationToken token = default)
     {
         try
         {
@@ -96,8 +98,8 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     [ProducesResponseType(typeof(List<ApplicationReviewReport>), StatusCodes.Status200OK)]
     public async Task<IResult> Generate(
         [FromServices] IReportRepository reportRepository,
-        [FromRoute] Guid reportId,
-        CancellationToken token)
+        [FromRoute, Required] Guid reportId,
+        CancellationToken token = default)
     {
         try
         {
@@ -123,7 +125,7 @@ public class ReportController(ILogger<ReportController> logger) : ControllerBase
     public async Task<IResult> Create(
         [FromServices] IReportRepository reportRepository,
         [FromBody] PostReportRequest request,
-        CancellationToken token)
+        CancellationToken token = default)
     {
         try
         {
