@@ -91,7 +91,7 @@
         "databaseName": "[concat(replace(variables('resourceNamePrefix'), 'api', ''), '-db')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
         "privateLinkScopeName": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-shared-ampls'))]",
-        "configNames": "SFA.DAS.Recruit.Api_2.0"
+        "configNames": "SFA.DAS.Recruit.Api_2.0,SFA.DAS.Encoding_1.0"
     },
     "resources": [
         {

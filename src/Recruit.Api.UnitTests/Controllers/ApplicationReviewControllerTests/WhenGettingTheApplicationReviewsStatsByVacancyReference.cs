@@ -26,7 +26,7 @@ internal class WhenGettingTheApplicationReviewsStatsByVacancyReference
         okResult!.Value.Should().BeEquivalentTo(mockResponse);
     }
 
-   [Test, MoqAutoData]
+   [Test, RecursiveMoqAutoData]
     public async Task Get_ReturnsInternalServerException_WhenException_Thrown(
         long vacancyReference,
         List<ApplicationReviewEntity> mockResponse,

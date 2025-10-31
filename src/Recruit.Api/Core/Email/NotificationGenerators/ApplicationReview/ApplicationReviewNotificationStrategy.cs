@@ -1,6 +1,6 @@
-﻿using SFA.DAS.Recruit.Api.Domain.Entities;
+﻿using SFA.DAS.Recruit.Api.Core.Exceptions;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
-using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
 
@@ -17,14 +17,14 @@ public class ApplicationReviewNotificationStrategy(
 {
     public IApplicationReviewNotificationFactory Create(ApplicationReviewEntity applicationReview)
     {
-        ArgumentNullException.ThrowIfNull(applicationReview, nameof(applicationReview));
+        ArgumentNullException.ThrowIfNull(applicationReview);
         
         return applicationReview.Status switch {
             ApplicationReviewStatus.EmployerInterviewing => sharedApplicationReviewedByEmployerNotificationFactory,
             ApplicationReviewStatus.EmployerUnsuccessful => sharedApplicationReviewedByEmployerNotificationFactory,
             ApplicationReviewStatus.New => applicationSubmittedNotificationFactory,
             ApplicationReviewStatus.Shared => applicationSharedWithEmployerNotificationFactory,
-            _ => throw new NotSupportedException($"Missing email handler: no registered handler for Application Review Status {applicationReview.Status}")
+            _ => throw new EntityStateNotSupportedException($"Missing email handler: no registered handler for Application Review Status {applicationReview.Status}")
         };
     }
 }

@@ -10,7 +10,7 @@ namespace SFA.DAS.Recruit.Api.Data.Repositories;
 public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWriteRepository<VacancyEntity, Guid>
 {
     Task<VacancyReference> GetNextVacancyReferenceAsync(CancellationToken cancellationToken);
-    Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
+    Task<PaginatedList<VacancySummaryEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
         ushort page,
         ushort pageSize,
         Expression<Func<VacancyEntity, TKey>> orderBy,
@@ -18,7 +18,7 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
         FilteringOptions filteringOptions,
         string searchTerm,
         CancellationToken cancellationToken);
-    Task<PaginatedList<VacancyEntity>> GetManyByUkprnIdAsync<TKey>(int ukprn,
+    Task<PaginatedList<VacancySummaryEntity>> GetManyByUkprnIdAsync<TKey>(int ukprn,
         ushort page,
         ushort pageSize,
         Expression<Func<VacancyEntity, TKey>> orderBy,
@@ -27,15 +27,24 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
         string searchTerm,
         CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
-    Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken);
-    Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken);
+    Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByAccountId(long accountId, CancellationToken cancellationToken);
+    Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByUkprn(int ukprn, CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReference, CancellationToken cancellationToken);
+    Task<List<VacancyDashboardCountModel>> GetEmployerDashboard(long accountId, CancellationToken cancellationToken);
+    Task<List<(int, bool)>> GetEmployerVacanciesClosingSoonWithApplications(long accountId, CancellationToken cancellationToken);
+    Task<List<VacancyDashboardCountModel>> GetProviderDashboard(int ukprn, CancellationToken cancellationToken);
+    Task<List<(int, bool)>> GetProviderVacanciesClosingSoonWithApplications(int ukprn, CancellationToken cancellationToken);
+
+    Task<List<VacancyClosureSummaryEntity>> GetAllClosedEmployerVacanciesByClosureReason(long accountId, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken, VacancyStatus? status = null);
+    Task<List<VacancyClosureSummaryEntity>> GetAllClosedProviderrVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
 {
-    public async Task<PaginatedList<VacancyEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
+    private const int ClosingSoonDays = 5;
+    
+    public async Task<PaginatedList<VacancySummaryEntity>> GetManyByAccountIdAsync<TKey>(long accountId,
         ushort page = 1,
         ushort pageSize = 25,
         Expression<Func<VacancyEntity, TKey>>? orderBy = null,
@@ -58,11 +67,11 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         // Apply owner-type filtering
         query = filteringOptions switch {
             FilteringOptions.Review => query.Where(x =>
-                x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
+                x.OwnerType == OwnerType.Provider),
 
             FilteringOptions.AllSharedApplications or FilteringOptions.NewSharedApplications =>
                 ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
-                    .Where(x => x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer),
+                    .Where(x => x.OwnerType == OwnerType.Provider),
 
             FilteringOptions.NewApplications or FilteringOptions.AllApplications =>
                 ApplySharedFilteringByAccountId(query, filteringOptions, accountId)
@@ -70,8 +79,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
             FilteringOptions.All => query.Where(x =>
                 x.OwnerType == OwnerType.Employer ||
-                ((x.OwnerType == OwnerType.Provider || x.OwnerType == OwnerType.Employer) &&
-                 x.Status == VacancyStatus.Review)),
+                (x.OwnerType == OwnerType.Provider && x.Status == VacancyStatus.Review)),
 
             _ => query.Where(x => x.OwnerType == OwnerType.Employer)
         };
@@ -88,16 +96,30 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         int take = Math.Max(pageSize, (ushort)1);
 
         int count = await query.CountAsync(cancellationToken);
-        var items = await query
+        var items = await query.Select(c=>new VacancySummaryEntity {
+                Id = c.Id,
+                Title = c.Title,
+                VacancyReference = c.VacancyReference,
+                Status = c.Status,
+                ClosingDate = c.ClosingDate,
+                ApplicationMethod = c.ApplicationMethod,
+                ApprenticeshipType = c.ApprenticeshipType,
+                CreatedDate = c.CreatedDate,
+                LegalEntityName = c.LegalEntityName,
+                TransferInfo = c.TransferInfo,
+                OwnerType = c.OwnerType,
+                HasSubmittedAdditionalQuestions = c.HasSubmittedAdditionalQuestions ?? false,
+                Ukprn = c.Ukprn
+            })
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
 
 
-        return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
+        return new PaginatedList<VacancySummaryEntity>(items, count, page, pageSize);
     }
 
-    public async Task<PaginatedList<VacancyEntity>> GetManyByUkprnIdAsync<TKey>(int ukprn,
+    public async Task<PaginatedList<VacancySummaryEntity>> GetManyByUkprnIdAsync<TKey>(int ukprn,
         ushort page = 1,
         ushort pageSize = 25,
         Expression<Func<VacancyEntity, TKey>>? orderBy = null,
@@ -138,12 +160,26 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         int take = Math.Max(pageSize, (ushort)1);
 
         int count = await query.CountAsync(cancellationToken);
-        var items = await query
+        var items = await query.Select(c=>new VacancySummaryEntity {
+                Id = c.Id,
+                Title = c.Title,
+                VacancyReference = c.VacancyReference,
+                Status = c.Status,
+                ClosingDate = c.ClosingDate,
+                ApplicationMethod = c.ApplicationMethod,
+                ApprenticeshipType = c.ApprenticeshipType,
+                CreatedDate = c.CreatedDate,
+                LegalEntityName = c.LegalEntityName,
+                TransferInfo = c.TransferInfo,
+                OwnerType = c.OwnerType,
+                HasSubmittedAdditionalQuestions = c.HasSubmittedAdditionalQuestions ?? false,
+                Ukprn = c.Ukprn
+            })
             .Skip(skip)
             .Take(take)
             .ToListAsync(cancellationToken);
 
-        return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
+        return new PaginatedList<VacancySummaryEntity>(items, count, page, pageSize);
     }
 
     public async Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken)
@@ -153,26 +189,90 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             .FirstOrDefaultAsync(x => x.VacancyReference == vacancyReference, cancellationToken);
     }
 
-    public async Task<List<VacancyEntity>> GetAllByAccountId(long accountId, CancellationToken cancellationToken)
+    public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByAccountId(long accountId, CancellationToken cancellationToken)
     {
         var employerQuery = dataContext.VacancyEntities
+            .Select(c => new VacancyTransferSummaryEntity {
+                AccountId = c.AccountId,
+                OwnerType = c.OwnerType,
+                TransferInfo = c.TransferInfo,
+                Status = c.Status,
+                Ukprn = c.Ukprn
+            })
             .AsNoTracking()
-            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer);
-
+            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer && v.TransferInfo != null);
+            
         var providerQuery = dataContext.VacancyEntities
+            .Select(c=> new VacancyTransferSummaryEntity {
+                AccountId = c.AccountId,
+                OwnerType = c.OwnerType,
+                TransferInfo = c.TransferInfo,
+                Status = c.Status,
+                Ukprn = c.Ukprn
+            })
             .AsNoTracking()
-            .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && (v.OwnerType == OwnerType.Provider || v.OwnerType == OwnerType.Employer));
+            .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && v.OwnerType == OwnerType.Provider && v.TransferInfo != null);
 
         return await employerQuery
             .Union(providerQuery)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<VacancyEntity>> GetAllByUkprn(int ukprn, CancellationToken cancellationToken)
+    public async Task<List<VacancyClosureSummaryEntity>> GetAllClosedEmployerVacanciesByClosureReason(long accountId, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken, VacancyStatus? status = null)
+    {
+        var vacancies = await dataContext.VacancyEntities
+            .Select(c=>new VacancyClosureSummaryEntity {
+                VacancyReference = c.VacancyReference,
+                Title = c.Title,
+                AccountId = c.AccountId,
+                OwnerType = c.OwnerType,
+                ClosedDate = c.ClosedDate,
+                ClosureReason = c.ClosureReason,
+                Ukprn = c.Ukprn,
+                TransferInfo = c.TransferInfo,
+                Status = c.Status
+            })
+            .AsNoTracking()
+            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer && v.ClosureReason == closureReason && v.ClosedDate > lastDismissedDate)
+            .Where(v=> status == null || v.Status == status)
+            .ToListAsync(cancellationToken);
+
+        return vacancies;
+    }
+
+    public async Task<List<VacancyClosureSummaryEntity>> GetAllClosedProviderrVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken)
+    {
+        var vacancies = await dataContext.VacancyEntities
+            .Select(c=>new VacancyClosureSummaryEntity {
+                VacancyReference = c.VacancyReference,
+                Title = c.Title,
+                AccountId = c.AccountId,
+                OwnerType = c.OwnerType,
+                ClosedDate = c.ClosedDate,
+                ClosureReason = c.ClosureReason,
+                Ukprn = c.Ukprn,
+                TransferInfo = c.TransferInfo,
+                Status = c.Status
+            })
+            .AsNoTracking()
+            .Where(v => v.Ukprn == ukprn && v.OwnerType == OwnerType.Provider && v.ClosureReason == closureReason && v.ClosedDate > lastDismissedDate)
+            .ToListAsync(cancellationToken);
+
+        return vacancies;
+    }
+
+    public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByUkprn(int ukprn, CancellationToken cancellationToken)
     {
         return await dataContext.VacancyEntities
             .AsNoTracking()
-            .Where(vacancy => vacancy.Ukprn == ukprn && vacancy.OwnerType == OwnerType.Provider)
+            .Select(c=> new VacancyTransferSummaryEntity {
+                AccountId = c.AccountId,
+                OwnerType = c.OwnerType,
+                TransferInfo = c.TransferInfo,
+                Status = c.Status,
+                Ukprn = c.Ukprn
+            })
+            .Where(vacancy => vacancy.Ukprn == ukprn && vacancy.OwnerType == OwnerType.Provider && vacancy.TransferInfo != null)
             .ToListAsync(cancellationToken);
     }
 
@@ -239,6 +339,92 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<List<VacancyDashboardCountModel>> GetEmployerDashboard(long accountId, CancellationToken cancellationToken)
+    {
+        var entity = await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(c => c.AccountId == accountId && c.OwnerType == OwnerType.Employer)
+            .Select(c=>
+                new {
+                    c.Id,
+                    c.Status
+                })
+            .GroupBy(c => c.Status)
+            .ToListAsync(cancellationToken);
+
+        return entity.Select((c) => new VacancyDashboardCountModel {
+            Status = c.Key,
+            Count = c.Count()
+        }).ToList();
+    }
+
+    public async Task<List<(int, bool)>> GetEmployerVacanciesClosingSoonWithApplications(long accountId,
+        CancellationToken cancellationToken)
+    {
+        var query = from v in dataContext.VacancyEntities
+            join ar in dataContext.ApplicationReviewEntities
+                on v.VacancyReference equals ar.VacancyReference into arGroup
+            from ar in arGroup.DefaultIfEmpty() // Left join
+            where v.AccountId == accountId
+                  && v.OwnerType == OwnerType.Employer
+                  && v.Status == VacancyStatus.Live
+                  && v.ClosingDate <= DateTime.UtcNow.AddDays(ClosingSoonDays)
+            group ar by v into g
+            select new
+            {
+                HasApplications = g.Any(x => x != null)
+            };
+
+        var grouped = await query
+            .GroupBy(x => x.HasApplications)
+            .Select(g => new { Count = g.Count(), HasApplications = g.Key })
+            .ToListAsync(cancellationToken);
+
+        return grouped.Select(g => (g.Count, g.HasApplications)).ToList();
+    }
+
+    public async Task<List<VacancyDashboardCountModel>> GetProviderDashboard(int ukprn, CancellationToken cancellationToken)
+    {
+        var entity = await dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(c => c.Ukprn == ukprn && c.OwnerType == OwnerType.Provider)
+            .Select(c=>
+            new {
+                c.Id,
+                c.Status
+            })
+            .GroupBy(c => c.Status)
+            .ToListAsync(cancellationToken);
+
+        return entity.Select((c) => new VacancyDashboardCountModel {
+            Status = c.Key,
+            Count = c.Count()
+        }).ToList();
+    }
+    public async Task<List<(int, bool)>> GetProviderVacanciesClosingSoonWithApplications(int ukprn, CancellationToken cancellationToken)
+    {
+        var query = from v in dataContext.VacancyEntities
+            join ar in dataContext.ApplicationReviewEntities
+                on v.VacancyReference equals ar.VacancyReference into arGroup
+            from ar in arGroup.DefaultIfEmpty() // Left join
+            where v.Ukprn == ukprn
+                  && v.OwnerType == OwnerType.Provider
+                  && v.Status == VacancyStatus.Live
+                  && v.ClosingDate <= DateTime.UtcNow.AddDays(ClosingSoonDays)
+            group ar by v into g
+            select new
+            {
+                HasApplications = g.Any(x => x != null)
+            };
+
+        var grouped = await query
+            .GroupBy(x => x.HasApplications)
+            .Select(g => new { Count = g.Count(), HasApplications = g.Key })
+            .ToListAsync(cancellationToken);
+
+        return grouped.Select(g => (g.Count, g.HasApplications)).ToList();
+    }
+
     private static IQueryable<VacancyEntity> ApplyBasicFiltering(IQueryable<VacancyEntity> query,
         FilteringOptions filteringOptions)
     {
@@ -275,16 +461,20 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     {
         if (string.IsNullOrWhiteSpace(searchTerm)) return query;
 
-        searchTerm = searchTerm.Trim().ToLowerInvariant();
+        searchTerm = searchTerm.Trim();
 
         // Try parsing the vacancy reference
         bool isValidVacancyReference = long.TryParse(
             searchTerm.Replace("vac", "", StringComparison.CurrentCultureIgnoreCase), out long vacancyReference);
 
+        if (isValidVacancyReference)
+        {
+            query = query.Where(x => x.VacancyReference == vacancyReference);
+            return query;
+        }
+        
         query = query.Where(v =>
-            (!string.IsNullOrEmpty(v.Title) && v.Title.ToLower().Contains(searchTerm)) ||
-            (!string.IsNullOrEmpty(v.LegalEntityName) && v.LegalEntityName.ToLower().Contains(searchTerm)) ||
-            (isValidVacancyReference && v.VacancyReference == vacancyReference)
+            v.Title!.Contains(searchTerm) || v.LegalEntityName!.Contains(searchTerm)
         );
 
         return query;

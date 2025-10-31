@@ -1,7 +1,7 @@
-﻿using SFA.DAS.Recruit.Api.Core.Email;
+﻿using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
-namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email;
+namespace SFA.DAS.Recruit.Api.UnitTests.Domain.Extensions;
 
 public class WhenGettingCityNames
 {

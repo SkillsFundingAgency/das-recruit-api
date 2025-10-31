@@ -1,12 +1,10 @@
-﻿using SFA.DAS.Recruit.Api.Domain.Enums;
+﻿namespace SFA.DAS.Recruit.Api.Core.Email;
 
-namespace SFA.DAS.Recruit.Api.Core.Email;
-
-public interface IEmailTemplateHelper
+public interface IEmailTemplateHelper: IRecruitBaseUrls
 {
-    string RecruitEmployerBaseUrl { get; }
-    public string RecruitProviderBaseUrl { get; }
-    Guid GetTemplateId(NotificationTypes notificationType, NotificationFrequency notificationFrequency);
+    IEmailTemplateIds TemplateIds { get; }
     string ProviderManageNotificationsUrl(string ukprn);
+    string ProviderManageVacancyUrl(string ukprn, Guid vacancyId);
     string EmployerManageNotificationsUrl(string hashedAccountId);
+    string EmployerManageVacancyUrl(string hashedAccountId, Guid vacancyId);
 }

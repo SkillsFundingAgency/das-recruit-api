@@ -9,7 +9,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerT
 
 internal class WhenGettingTheApplicationReviewByApplicationId
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Get_ReturnsOk_WhenApplicationReviewExists(
         Guid applicationId,
         ApplicationReviewEntity mockResponse,
@@ -29,7 +29,7 @@ internal class WhenGettingTheApplicationReviewByApplicationId
         okResult!.Value.Should().BeEquivalentTo(mockResponse.ToPutResponse());
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Get_ReturnsNotFound_WhenApplicationReviewDoesNotExist(
         Guid applicationId,
         ApplicationReviewEntity mockResponse,
@@ -47,7 +47,7 @@ internal class WhenGettingTheApplicationReviewByApplicationId
         result.Should().BeOfType<NotFound>();
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Get_ReturnsInternalServerException_WhenException_Thrown(
         Guid applicationId,
         ApplicationReviewEntity mockResponse,
