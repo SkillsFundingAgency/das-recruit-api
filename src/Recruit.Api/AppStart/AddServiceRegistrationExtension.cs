@@ -61,6 +61,7 @@ public static class AddServiceRegistrationExtension
         // email template handlers
         services.AddScoped<IEmailTemplateHandler, StaticDataEmailHandler>();
         services.AddScoped<IEmailTemplateHandler, ApplicationSubmittedDelayedEmailHandler>();
+        services.AddScoped<IEmailTemplateHandler, SharedApplicationReviewedByEmployerDelayedEmailHandler>();
         services.AddScoped<IEmailFactory, EmailFactory>();
     }
 

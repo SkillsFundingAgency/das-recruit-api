@@ -139,10 +139,9 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
 
         // assert
-        result.Delayed.Should().BeEmpty();
-        result.Immediate.Should().HaveCount(1);
+        result.Immediate.Should().BeEmpty();
         
-        var notification = result.Immediate[0];
+        var notification = result.Delayed.Single();
         notification.UserId.Should().Be(user.Id);
         notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.SharedApplicationReviewedByEmployer);
         notification.DynamicData.Should().Be("{}");
@@ -193,8 +192,8 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
 
         // assert
-        result.Immediate.Should().HaveCount(2);
-        result.Immediate.Should().AllSatisfy(x =>
+        result.Delayed.Should().HaveCount(2);
+        result.Delayed.Should().AllSatisfy(x =>
         {
             expectedIds.Should().Contain(x.UserId);
             unexpectedIds.Should().NotContain(x.UserId);
