@@ -25,7 +25,7 @@ internal class WhenGettingWithDrawnByQaAlertByUkprn
         result.ClosedVacancies.Should().BeEmpty();
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GetWithDrawnByQaAlertByUkprnId_NoVacancies_ReturnsEmptyList(int ukprnId,
         string userId,
         [Frozen] Mock<IVacancyRepository> vacancyRepositoryMock,
@@ -42,74 +42,12 @@ internal class WhenGettingWithDrawnByQaAlertByUkprn
         };
         userRepositoryMock.Setup(x => x.FindByUserIdAsync(userId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
-        vacancyRepositoryMock.Setup(x => x.GetAllByUkprn(ukprnId, It.IsAny<CancellationToken>()))
+        vacancyRepositoryMock.Setup(x => x.GetAllClosedProviderVacanciesByClosureReason(ukprnId, ClosureReason.WithdrawnByQa, It.IsAny<DateTime>(),It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         var result = await sut.GetWithDrawnByQaAlertByUkprnId(ukprnId, userId, token);
 
         result.ClosedVacancies.Should().BeEmpty();
-    }
-
-    [Test, MoqAutoData]
-    public async Task GetWithDrawnByQaAlertByUkprnId_FiltersVacanciesByStatusAndClosureReasonAndDate(int ukprnId,
-        string userId,
-        [Frozen] Mock<IVacancyRepository> vacancyRepositoryMock,
-        [Frozen] Mock<IUserRepository> userRepositoryMock,
-        [Greedy] AlertsProvider sut,
-        CancellationToken token)
-    {
-        var dismissedDate = new DateTime(2024, 1, 1);
-        var user = new UserEntity {
-            Id = Guid.NewGuid(),
-            Name = "Test User",
-            Email = "test@test.com",
-            UserType = UserType.Employer,
-            ClosedVacanciesWithdrawnByQaAlertDismissedOn = dismissedDate
-        };
-        var vacancies = new List<VacancyEntity>
-        {
-                new() {
-                    Id = Guid.NewGuid(),
-                    Title = "Vacancy 1",
-                    VacancyReference = 1001,
-                    Status = VacancyStatus.Closed,
-                    ClosureReason = ClosureReason.WithdrawnByQa,
-                    ClosedDate = dismissedDate.AddDays(1)
-                },
-                new() {
-                    Id = Guid.NewGuid(),
-                    Title = "Vacancy 2",
-                    VacancyReference = 1002,
-                    Status = VacancyStatus.Closed,
-                    ClosureReason = ClosureReason.WithdrawnByQa,
-                    ClosedDate = dismissedDate.AddDays(-1) // before dismissed date
-                },
-                new() {
-                    Id = Guid.NewGuid(),
-                    Title = "Vacancy 3",
-                    VacancyReference = 1003,
-                    Status = VacancyStatus.Live,
-                    ClosureReason = ClosureReason.WithdrawnByQa,
-                    ClosedDate = dismissedDate.AddDays(2)
-                },
-                new() {
-                    Id = Guid.NewGuid(),
-                    Title = "Vacancy 4",
-                    VacancyReference = 1004,
-                    Status = VacancyStatus.Closed,
-                    ClosureReason = ClosureReason.BlockedByQa,
-                    ClosedDate = dismissedDate.AddDays(2)
-                }
-            };
-        userRepositoryMock.Setup(x => x.FindByUserIdAsync(userId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(user);
-        vacancyRepositoryMock.Setup(x => x.GetAllByUkprn(ukprnId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(vacancies);
-
-        var result = await sut.GetWithDrawnByQaAlertByUkprnId(ukprnId, userId, token);
-
-        result.ClosedVacancies.Should().ContainSingle()
-            .And.Contain("Vacancy 1 (VAC1001)");
     }
 
     [Test, MoqAutoData]
@@ -127,28 +65,24 @@ internal class WhenGettingWithDrawnByQaAlertByUkprn
             UserType = UserType.Employer,
             ClosedVacanciesWithdrawnByQaAlertDismissedOn = DateTime.MinValue
         };
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyClosureSummaryEntity>
         {
                 new() {
-                    Id = Guid.NewGuid(),
                     Title = "B Vacancy",
                     VacancyReference = 1002,
-                    Status = VacancyStatus.Closed,
                     ClosureReason = ClosureReason.WithdrawnByQa,
                     ClosedDate = DateTime.UtcNow
                 },
                 new() {
-                    Id = Guid.NewGuid(),
                     Title = "A Vacancy",
                     VacancyReference = 1001,
-                    Status = VacancyStatus.Closed,
                     ClosureReason = ClosureReason.WithdrawnByQa,
                     ClosedDate = DateTime.UtcNow
                 }
             };
         userRepositoryMock.Setup(x => x.FindByUserIdAsync(userId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
-        vacancyRepositoryMock.Setup(x => x.GetAllByUkprn(ukprnId, It.IsAny<CancellationToken>()))
+        vacancyRepositoryMock.Setup(x => x.GetAllClosedProviderVacanciesByClosureReason(ukprnId, ClosureReason.WithdrawnByQa, user.ClosedVacanciesWithdrawnByQaAlertDismissedOn!.Value, It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         var result = await sut.GetWithDrawnByQaAlertByUkprnId(ukprnId, userId, token);

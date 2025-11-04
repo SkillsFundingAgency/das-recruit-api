@@ -10,7 +10,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerT
 internal class WhenGettingApplicationReviewsByIds
 {
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Get_ReturnsOk_WhenApplicationReviewExists(
         List<Guid> applicationIds,
         List<ApplicationReviewEntity> mockResponse,
@@ -30,7 +30,7 @@ internal class WhenGettingApplicationReviewsByIds
         okResult!.Value.Should().BeEquivalentTo(mockResponse.ToGetResponse());
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Get_Returns_Empty_WhenApplicationReviewDoesNotExist(
         List<Guid> applicationIds,
         List<ApplicationReviewEntity> mockResponse,
@@ -50,7 +50,7 @@ internal class WhenGettingApplicationReviewsByIds
         okResult!.Value.Should().BeEmpty();
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Get_ReturnsInternalServerException_WhenException_Thrown(
         List<Guid> applicationIds,
         List<ApplicationReviewEntity> mockResponse,

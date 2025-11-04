@@ -9,17 +9,17 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControlle
 public class WhenCreatingApplicationReviewNotifications : BaseFixture
 {
     [Test]
-    [MoqInlineAutoData(ApplicationReviewStatus.Successful)]
-    [MoqInlineAutoData(ApplicationReviewStatus.Unsuccessful)]
-    [MoqInlineAutoData(ApplicationReviewStatus.PendingShared)]
-    [MoqInlineAutoData(ApplicationReviewStatus.PendingToMakeUnsuccessful)]
-    [MoqInlineAutoData(ApplicationReviewStatus.InReview)]
-    [MoqInlineAutoData(ApplicationReviewStatus.Interviewing)]
-    [MoqInlineAutoData(ApplicationReviewStatus.AllShared)]
-    public async Task And_No_Handler_Is_Registered_For_The_Status_Then_InternalServerError_Returned(ApplicationReviewStatus status, List<ApplicationReviewEntity> applicationReviews)
+    [RecursiveMoqInlineAutoData(ApplicationReviewStatus.Successful)]
+    [RecursiveMoqInlineAutoData(ApplicationReviewStatus.Unsuccessful)]
+    [RecursiveMoqInlineAutoData(ApplicationReviewStatus.PendingShared)]
+    [RecursiveMoqInlineAutoData(ApplicationReviewStatus.PendingToMakeUnsuccessful)]
+    [RecursiveMoqInlineAutoData(ApplicationReviewStatus.InReview)]
+    [RecursiveMoqInlineAutoData(ApplicationReviewStatus.Interviewing)]
+    [RecursiveMoqInlineAutoData(ApplicationReviewStatus.AllShared)]
+    public async Task And_No_Handler_Is_Registered_For_The_Status_Then_NotImplemented_Returned(ApplicationReviewStatus status, List<ApplicationReviewEntity> applicationReviews)
     {
         // arrange
-        applicationReviews[1].Status = ApplicationReviewStatus.PendingShared;
+        applicationReviews[1].Status = status;
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(applicationReviews);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([]);
 
@@ -34,7 +34,7 @@ public class WhenCreatingApplicationReviewNotifications : BaseFixture
     }
     
     [Test, MoqAutoData]
-    public async Task And_ApplicationReview_Does_Not_Exist_Then_BadRequest_Returned(Guid id)
+    public async Task And_ApplicationReview_Does_Not_Exist_Then_NotFound_Returned(Guid id)
     {
         // arrange
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([]);
@@ -43,10 +43,10 @@ public class WhenCreatingApplicationReviewNotifications : BaseFixture
         var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{id}/create-notifications", null);
 
         // assert
-        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task And_Vacancy_Does_Not_Exist_Then_InternalServerError_Returned(List<ApplicationReviewEntity> applicationReviews)
     {
         // arrange

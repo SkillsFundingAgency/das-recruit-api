@@ -2,34 +2,35 @@
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Data.Providers.VacancyProviderTests;
 [TestFixture]
 internal class WhenGettingDashboardCountByUkprn
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GetCountByUkprn_ShouldReturnCorrectDashboardModel(
         int ukprn,
         [Frozen] Mock<IVacancyRepository> vacancyRepositoryMock,
         [Greedy] VacancyProvider vacancyProvider)
     {
         // Arrange
-        var now = DateTime.UtcNow;
-        var vacancies = new List<VacancyEntity>
-        {
-            new() { Status = VacancyStatus.Closed },
-            new() { Status = VacancyStatus.Draft },
-            new() { Status = VacancyStatus.Review },
-            new() { Status = VacancyStatus.Referred },
-            new() { Status = VacancyStatus.Rejected },
-            new() { Status = VacancyStatus.Live, ClosingDate = now.AddDays(3), ApplicationMethod = ApplicationMethod.ThroughFindAnApprenticeship },
-            new() { Status = VacancyStatus.Live, ClosingDate = now.AddDays(10), ApplicationMethod = ApplicationMethod.ThroughFindAnApprenticeship },
-            new() { Status = VacancyStatus.Submitted },
-        };
-
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByUkprn(ukprn, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(vacancies);
+            .Setup(r => r.GetProviderDashboard(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(
+            [
+                new VacancyDashboardCountModel { Status = VacancyStatus.Closed, Count = 1 },
+                new VacancyDashboardCountModel { Status = VacancyStatus.Draft, Count = 1 },
+                new VacancyDashboardCountModel { Status = VacancyStatus.Review, Count = 1 },
+                new VacancyDashboardCountModel { Status = VacancyStatus.Referred, Count = 1 },
+                new VacancyDashboardCountModel { Status = VacancyStatus.Rejected, Count = 1 },
+                new VacancyDashboardCountModel { Status = VacancyStatus.Submitted, Count = 1 },
+                new VacancyDashboardCountModel { Status = VacancyStatus.Live, Count = 2 }
+            ]);
+        
+        vacancyRepositoryMock
+            .Setup(r => r.GetProviderVacanciesClosingSoonWithApplications(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<(int,bool)>{(3,true),(1,false)});
 
         // Act
         var result = await vacancyProvider.GetCountByUkprn(ukprn);
@@ -41,8 +42,8 @@ internal class WhenGettingDashboardCountByUkprn
         result.ReferredVacanciesCount.Should().Be(2); // Referred + Rejected
         result.LiveVacanciesCount.Should().Be(2);
         result.SubmittedVacanciesCount.Should().Be(1);
-        result.ClosingSoonVacanciesCount.Should().Be(1); // Only one Live within 5 days
-        result.ClosingSoonWithNoApplications.Should().Be(1); // ApplicationMethod == ThroughFindAnApprenticeship
+        result.ClosingSoonVacanciesCount.Should().Be(4); 
+        result.ClosingSoonWithNoApplications.Should().Be(1); 
     }
 
     [Test, MoqAutoData]
@@ -53,7 +54,10 @@ internal class WhenGettingDashboardCountByUkprn
     {
         // Arrange
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetProviderDashboard(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+        vacancyRepositoryMock
+            .Setup(r => r.GetProviderVacanciesClosingSoonWithApplications(ukprn, It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         // Act

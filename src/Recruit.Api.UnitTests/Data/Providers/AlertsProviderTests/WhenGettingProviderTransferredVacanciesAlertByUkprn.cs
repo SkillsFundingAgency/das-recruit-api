@@ -42,7 +42,7 @@ internal class WhenGettingProviderTransferredVacanciesAlertByUkprn
         // Arrange
         userEntity.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn = new DateTime(2024, 01, 01);
 
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyTransferSummaryEntity>
         {
             new() {
                 TransferInfo = MakeTransferInfo("Zeta Ltd",
@@ -72,7 +72,7 @@ internal class WhenGettingProviderTransferredVacanciesAlertByUkprn
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByUkprn(ukprnId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllTransferInfoByUkprn(ukprnId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         // Act
@@ -95,7 +95,7 @@ internal class WhenGettingProviderTransferredVacanciesAlertByUkprn
         // Arrange
         userEntity.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn = new DateTime(2024, 01, 01);
 
-        var vacancies = new List<VacancyEntity>
+        var vacancies = new List<VacancyTransferSummaryEntity>
         {
             new() {
                 TransferInfo = MakeTransferInfo("Old Corp",
@@ -111,7 +111,7 @@ internal class WhenGettingProviderTransferredVacanciesAlertByUkprn
             .ReturnsAsync(userEntity);
 
         vacancyRepositoryMock
-            .Setup(r => r.GetAllByUkprn(ukprnId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllTransferInfoByUkprn(ukprnId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         // Act

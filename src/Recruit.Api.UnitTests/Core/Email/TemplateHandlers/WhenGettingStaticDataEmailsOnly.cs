@@ -2,24 +2,26 @@
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.TemplateHandlers;
 
 public class WhenGettingStaticDataEmailsOnly
 {
     [Test, MoqAutoData]
-    public void It_Handles_The_Correct_Templates(Mock<IEmailTemplateHelper> emailTemplateHelper)
+    public void It_Handles_The_Correct_Templates(Mock<IEmailTemplateHelper> emailTemplateHelper, IEmailTemplateIds emailTemplateIds)
     {
-        // arrange/act
-        new StaticDataEmailHandler(emailTemplateHelper.Object);
+        // arrange
+        emailTemplateHelper.Setup(x => x.TemplateIds).Returns(emailTemplateIds);
+        
+        // act
+        var sut = new StaticDataEmailHandler(emailTemplateHelper.Object);
         
         // assert
-        emailTemplateHelper.Verify(x => x.GetTemplateId(It.IsAny<NotificationTypes>(), It.IsAny<NotificationFrequency>()), Times.Exactly(3));
-        
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSharedWithEmployer, NotificationFrequency.Immediately), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately), Times.Once);
-        emailTemplateHelper.Verify(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately), Times.Once);
+        sut.CanHandle(emailTemplateIds.ApplicationSharedWithEmployer).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ProviderVacancySentForEmployerReview).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ProviderVacancyApprovedByEmployer).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToEmployerImmediate).Should().BeTrue();
+        sut.CanHandle(emailTemplateIds.ApplicationSubmittedToProviderImmediate).Should().BeTrue();
     }
 
     [Test, RecruitAutoData]
