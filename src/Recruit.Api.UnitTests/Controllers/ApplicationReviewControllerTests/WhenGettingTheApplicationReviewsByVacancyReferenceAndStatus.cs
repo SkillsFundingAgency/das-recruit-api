@@ -10,7 +10,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerT
 [TestFixture]
 internal class WhenGettingTheApplicationReviewsByVacancyReferenceAndStatus
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Get_ReturnsOk_WhenApplicationReviewsExist(
         long vacancyReference,
         ApplicationReviewStatus status,
@@ -29,7 +29,7 @@ internal class WhenGettingTheApplicationReviewsByVacancyReferenceAndStatus
         okResult!.Value.Should().BeEquivalentTo(mockResponse.ToGetResponse());
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Get_Returns_Empty_WhenNoApplicationReviewsExist(
         long vacancyReference,
         ApplicationReviewStatus status,
@@ -48,7 +48,7 @@ internal class WhenGettingTheApplicationReviewsByVacancyReferenceAndStatus
         okResult!.Value.Should().BeEmpty();
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Get_ReturnsInternalServerException_WhenException_Thrown(
         long vacancyReference,
         ApplicationReviewStatus status,

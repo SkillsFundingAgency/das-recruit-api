@@ -1,6 +1,5 @@
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
@@ -14,8 +13,6 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
     IUserRepository userRepository,
     IEmailTemplateHelper emailTemplateHelper) : IApplicationReviewNotificationFactory
 {
-    private const string ProviderManageVacancyUrl = "{0}/{1}/vacancies/{2}/manage";
-    
     public async Task<RecruitNotificationsResult> CreateAsync(ApplicationReviewEntity applicationReview, CancellationToken cancellationToken)
     {
         var vacancy = await vacancyRepository.GetOneByVacancyReferenceAsync(applicationReview.VacancyReference, cancellationToken);
@@ -25,30 +22,34 @@ public class SharedApplicationReviewedByEmployerNotificationFactory(
             throw new DataIntegrityException();
         }
         
+        if (vacancy is not { OwnerType: OwnerType.Provider, Ukprn: not null })
+        {
+            return new RecruitNotificationsResult();
+        }
+        
         var providerUsers = await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken);
-        providerUsers.ForEach(NotificationPreferenceDefaults.Update);
         var usersRequiringEmail = providerUsers.GetUsersForNotificationType(
             NotificationTypes.SharedApplicationReviewedByEmployer, vacancy.ReviewRequestedByUserId);
         
         string ukprn = vacancy.Ukprn!.Value.ToString();
         var recruitNotifications = usersRequiringEmail.Select(x => new RecruitNotificationEntity {
-            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately),
+            EmailTemplateId = emailTemplateHelper.TemplateIds.SharedApplicationReviewedByEmployer,
             UserId = x.Id,
-            SendWhen = DateTime.Now,
+            SendWhen = DateTime.UtcNow.GetNextDailySendDate(),
             User = x,
             StaticData = ApiUtils.SerializeOrNull(new Dictionary<string, string> {
                 ["firstName"] = x.Name,
-                ["employer"] = vacancy.EmployerName!,
+                ["employerName"] = vacancy.EmployerName!,
                 ["advertTitle"] = vacancy.Title!,
                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                ["manageVacancyURL"] = string.Format(ProviderManageVacancyUrl, emailTemplateHelper.RecruitProviderBaseUrl, ukprn, vacancy.Id),
+                ["manageAdvertURL"] = emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
                 ["notificationSettingsURL"] = emailTemplateHelper.ProviderManageNotificationsUrl(ukprn)
             })!,
             DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!
         });
 
         var results = new RecruitNotificationsResult();
-        results.Immediate.AddRange(recruitNotifications);
+        results.Delayed.AddRange(recruitNotifications);
         return results;
     }
 }

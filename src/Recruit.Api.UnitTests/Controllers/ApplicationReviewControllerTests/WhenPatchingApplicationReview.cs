@@ -11,7 +11,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ApplicationReviewControllerT
 [TestFixture]
 public class WhenPatchingApplicationReview
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Patch_Returns_Ok_When_Application_Review_Is_Patched(
         Guid id,
         JsonPatchDocument<ApplicationReview> patchDocument,
@@ -34,7 +34,7 @@ public class WhenPatchingApplicationReview
         response.Id.Should().Be(id);
     }
 
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Patch_Returns_NotFound_When_Application_Review_Does_Not_Exist(
         Guid id,
         JsonPatchDocument<ApplicationReview> patchDocument,
@@ -57,7 +57,7 @@ public class WhenPatchingApplicationReview
     }
 
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task When_Application_Not_Found_By_Id_Found_By_ApplicationId_And_Updated(
         Guid id,
         JsonPatchDocument<ApplicationReview> patchDocument,
@@ -81,7 +81,7 @@ public class WhenPatchingApplicationReview
         response.Id.Should().Be(applicationReview.Id);
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task Patch_ReturnsInternalServerException_WhenApplicationReview_Throws_Exception(
         Guid id,
         JsonPatchDocument<ApplicationReview> patchDocument,

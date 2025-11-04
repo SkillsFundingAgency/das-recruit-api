@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.Providers.ApplicationReviewsProvide
     [TestFixture]
     internal class WhenGettingVacancyReferencesCountByAccountId
     {
-        [Test, MoqAutoData]
+        [Test, RecursiveMoqAutoData]
         public async Task GettingVacancyReferencesCountByAccountId_ShouldReturnStats(
             long accountId,
             CancellationToken token,
@@ -96,7 +96,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.Providers.ApplicationReviewsProvide
             repositoryMock.Verify(repo => repo.GetByAccountIdAndVacancyReferencesAsync(accountId, vacancyReferences, token), Times.Once);
         }
 
-        [Test, MoqAutoData]
+        [Test, RecursiveMoqAutoData]
         public async Task GettingVacancyReferencesCountByAccountId_Given_WithDrawnDate_ShouldReturnStats(
             long accountId,
             CancellationToken token,

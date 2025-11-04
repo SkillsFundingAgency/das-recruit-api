@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Extensions;
 
 internal class WhenMappingApplicationReviewEntity
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public void To_GetApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         //Arrange
@@ -20,7 +20,7 @@ internal class WhenMappingApplicationReviewEntity
         result.Status.Should().Be(ApplicationReviewStatus.InReview);
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public void To_PatchApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         //Arrange
@@ -34,7 +34,7 @@ internal class WhenMappingApplicationReviewEntity
         result.Status.Should().Be(ApplicationReviewStatus.InReview);
     }
     
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public void To_ApplicationReviewResponse_Then_The_Entity_Is_Mapped(ApplicationReviewEntity entity)
     {
         //Arrange

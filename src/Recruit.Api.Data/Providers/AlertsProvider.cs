@@ -35,7 +35,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
             _ => DateTime.MinValue
         };
 
-        var vacancies = await vacancyRepository.GetAllByAccountId(accountId, token);
+        var vacancies = await vacancyRepository.GetAllTransferInfoByAccountId(accountId, token);
 
         var transferredProviders = vacancies
             .Select(v => ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo))
@@ -67,12 +67,9 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var lastDismissedDate = userEntity
             .ClosedVacanciesBlockedProviderAlertDismissedOn.GetValueOrDefault(DateTime.MinValue);
 
-        var vacancies = await vacancyRepository.GetAllByAccountId(accountId, token);
+        var vacancies = await vacancyRepository.GetAllClosedEmployerVacanciesByClosureReason(accountId,ClosureReason.BlockedByQa,lastDismissedDate, token);
 
         var blockedTransfers = vacancies
-            .Where(v => v is { Status: VacancyStatus.Closed } 
-                        && v.ClosedDate > lastDismissedDate 
-                        && v.ClosureReason == ClosureReason.BlockedByQa)
             .Select(v => new {
                 VacancyTitle = $"{v.Title} (VAC{v.VacancyReference})",
                 TransferInfo = ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo)
@@ -105,12 +102,9 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var lastDismissedDate = userEntity.ClosedVacanciesWithdrawnByQaAlertDismissedOn
             .GetValueOrDefault(DateTime.MinValue);
 
-        var vacancies = await vacancyRepository.GetAllByAccountId(accountId, token);
+        var vacancies = await vacancyRepository.GetAllClosedEmployerVacanciesByClosureReason(accountId,ClosureReason.WithdrawnByQa,lastDismissedDate, token, VacancyStatus.Closed);
 
         var blockedTransfers = vacancies
-            .Where(v => v is { Status: VacancyStatus.Closed } 
-                        && v.ClosedDate > lastDismissedDate 
-                        && v.ClosureReason == ClosureReason.WithdrawnByQa)
             .Select(v => $"{v.Title} (VAC{v.VacancyReference})")
             .ToList();
 
@@ -133,7 +127,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var lastDismissedDate = userEntity.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn
             .GetValueOrDefault(DateTime.MinValue);
 
-        var vacancies = await vacancyRepository.GetAllByUkprn(ukprn, token);
+        var vacancies = await vacancyRepository.GetAllTransferInfoByUkprn(ukprn, token);
 
         var legalEntityNames = vacancies
             .Select(v => ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo))
@@ -162,11 +156,9 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var lastDismissedDate = userEntity.ClosedVacanciesWithdrawnByQaAlertDismissedOn
             .GetValueOrDefault(DateTime.MinValue);
 
-        var vacancies = await vacancyRepository.GetAllByUkprn(ukprn, token);
+        var vacancies = await vacancyRepository.GetAllClosedProviderrVacanciesByClosureReason(ukprn, ClosureReason.WithdrawnByQa, lastDismissedDate, token);
 
         var closedVacancyTitles = vacancies
-            .Where(v => v is { Status: VacancyStatus.Closed, ClosureReason: ClosureReason.WithdrawnByQa }
-                        && v.ClosedDate > lastDismissedDate)
             .Select(v => $"{v.Title} (VAC{v.VacancyReference})")
             .OrderBy(title => title)
             .ToList();
