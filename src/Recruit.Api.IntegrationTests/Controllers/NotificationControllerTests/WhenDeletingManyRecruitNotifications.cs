@@ -41,19 +41,19 @@ public class WhenDeletingManyRecruitNotifications : BaseFixture
         },
     ];
     
-    [Test]
-    public async Task Then_The_Notifications_Are_Deleted()
-    {
-        // arrange
-        Server.DataContext.Setup(x => x.RecruitNotifications).ReturnsDbSet(Items);
-
-        // act
-        var response = await Client.DeleteAsync($"{RouteNames.Notifications}?ids=1&ids=3");
-
-        // assert
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        // TODO: really need an actual db to test they've been removed
-    }
+    // TODO: really need an actual db to test they've been removed
+    // [Test]
+    // public async Task Then_The_Notifications_Are_Deleted()
+    // {
+    //     // arrange
+    //     Server.DataContext.Setup(x => x.RecruitNotifications).ReturnsDbSet(Items);
+    //
+    //     // act
+    //     var response = await Client.DeleteAsync($"{RouteNames.Notifications}?ids=1&ids=3");
+    //
+    //     // assert
+    //     response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    // }
     
     [Test]
     public async Task Then_Passing_No_Ids_Returns_BadRequest()

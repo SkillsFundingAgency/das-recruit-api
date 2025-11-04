@@ -7,7 +7,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.Providers.ApplicationReviewsProvide
     [TestFixture]
     internal class WhenGettingAllByVacancyReference
     {
-        [Test, MoqAutoData]
+        [Test, RecursiveMoqAutoData]
         public async Task GettingAllByVacancyReference_ShouldReturnApplicationReviews(
             long vacancyReference,
             CancellationToken token,

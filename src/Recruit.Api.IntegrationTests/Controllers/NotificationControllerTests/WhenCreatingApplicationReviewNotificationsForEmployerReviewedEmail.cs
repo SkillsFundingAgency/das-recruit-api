@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.Json;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -9,7 +10,7 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControlle
 
 public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail: BaseFixture
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task And_No_Users_Are_Found_Then_No_Notifications_Are_Created(
         List<ApplicationReviewEntity> applicationReviews,
         List<VacancyEntity> vacancies)
@@ -38,13 +39,13 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
     public async Task Then_Notifications_Are_Created(
         ApplicationReviewStatus applicationReviewStatus,
         string expectedHashedAccountId,
-        
         List<UserEntity> users,
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy)
     {
         // arrange
         applicationReview.Status = applicationReviewStatus;
+        vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         var expectedUserNames = users.Take(2).Select(x => x.Name).ToList();
         foreach (var user in users)
@@ -52,6 +53,7 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
             user.Ukprn = vacancy.Ukprn;
             user.UserType = UserType.Provider;
         }
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
 
         // Make this the originating user
         vacancy.ReviewRequestedByUserId = users[0].Id;
@@ -90,6 +92,11 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
         Server.DataContext.Setup(x => x.UserEntities).ReturnsDbSet(users);
+        
+        IEnumerable<RecruitNotificationEntity>? capturedNotifications = null;
+        Server.DataContext
+            .Setup(x => x.RecruitNotifications.AddRange(It.IsAny<IEnumerable<RecruitNotificationEntity>>()))
+            .Callback<IEnumerable<RecruitNotificationEntity>>(x => capturedNotifications = x);
 
         // act
         var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReview.Id}/create-notifications", null);
@@ -97,16 +104,21 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        notificationEmails.Should().HaveCount(2);
-        notificationEmails.Should().AllSatisfy(x =>
+        notificationEmails.Should().HaveCount(0);
+
+        var notifications = capturedNotifications?.ToList();
+        notifications.Should().NotBeNull();
+        notifications.Should().HaveCount(2);
+        notifications.Should().AllSatisfy(x =>
         {
-            x.Tokens.Should().HaveCount(6);
-            expectedUserNames.Should().Contain(x.Tokens["firstName"]);
-            x.Tokens["employer"].Should().Be(vacancy.EmployerName!);
-            x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
-            x.Tokens["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString()!);
-            x.Tokens["manageVacancyURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
-            x.Tokens["notificationSettingsURL"].Should().Be(new EmailTemplateHelper("local").ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
+            var staticData = JsonSerializer.Deserialize<Dictionary<string, string>>(x.StaticData);
+            staticData.Should().HaveCount(6);
+            expectedUserNames.Should().Contain(staticData["firstName"]);
+            staticData["employerName"].Should().Be(vacancy.EmployerName!);
+            staticData["advertTitle"].Should().Be(vacancy.Title!);
+            staticData["vacancyReference"].Should().Be(vacancy.VacancyReference.ToString()!);
+            staticData["manageAdvertURL"].Should().EndWith($"/{vacancy.Ukprn}/vacancies/{vacancy.Id}/manage");
+            staticData["notificationSettingsURL"].Should().Be(templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
         });
     }
 }

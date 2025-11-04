@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Data.Providers.ApplicationReviewsProvide
 [TestFixture]
 internal class WhenGettingAllByUkprn
 {
-    [Test, MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task GettingAllByUkprn_ShouldReturnPaginatedList_WhenCalledWithValidParameters(
         int ukprn,
         int pageNumber,

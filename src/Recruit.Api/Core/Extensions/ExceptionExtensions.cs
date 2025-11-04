@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
-using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Core.Extensions;
 
 public static class ExceptionExtensions
 {
-    public static IResult ToResponse(this NotSupportedException ex)
+    public static IResult ToResponse(this EntityStateNotSupportedException ex)
     {
         return TypedResults.Problem(new ProblemDetails {
             Status = StatusCodes.Status501NotImplemented,

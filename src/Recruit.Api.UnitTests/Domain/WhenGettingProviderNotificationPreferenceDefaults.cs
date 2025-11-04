@@ -31,7 +31,7 @@ public class WhenGettingProviderNotificationPreferenceDefaults
         var sharedVacancyPref = prefs.GetForEvent(NotificationTypes.SharedApplicationReviewedByEmployer);
         sharedVacancyPref.Method.Should().Be("Email");
         sharedVacancyPref.Scope.Should().Be(NotificationScope.OrganisationVacancies);
-        sharedVacancyPref.Frequency.Should().Be(NotificationFrequency.NotSet);
+        sharedVacancyPref.Frequency.Should().Be(NotificationFrequency.Daily);
         
         var providerAttachedPref = prefs.GetForEvent(NotificationTypes.ProviderAttachedToVacancy);
         providerAttachedPref.Method.Should().Be("Email");
