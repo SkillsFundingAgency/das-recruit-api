@@ -42,7 +42,7 @@ internal class WhenGettingWithDrawnByQaAlertByUkprn
         };
         userRepositoryMock.Setup(x => x.FindByUserIdAsync(userId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
-        vacancyRepositoryMock.Setup(x => x.GetAllClosedProviderrVacanciesByClosureReason(ukprnId, ClosureReason.WithdrawnByQa, It.IsAny<DateTime>(),It.IsAny<CancellationToken>()))
+        vacancyRepositoryMock.Setup(x => x.GetAllClosedProviderVacanciesByClosureReason(ukprnId, ClosureReason.WithdrawnByQa, It.IsAny<DateTime>(),It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         var result = await sut.GetWithDrawnByQaAlertByUkprnId(ukprnId, userId, token);
@@ -82,7 +82,7 @@ internal class WhenGettingWithDrawnByQaAlertByUkprn
             };
         userRepositoryMock.Setup(x => x.FindByUserIdAsync(userId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);
-        vacancyRepositoryMock.Setup(x => x.GetAllClosedProviderrVacanciesByClosureReason(ukprnId, ClosureReason.WithdrawnByQa, user.ClosedVacanciesWithdrawnByQaAlertDismissedOn!.Value, It.IsAny<CancellationToken>()))
+        vacancyRepositoryMock.Setup(x => x.GetAllClosedProviderVacanciesByClosureReason(ukprnId, ClosureReason.WithdrawnByQa, user.ClosedVacanciesWithdrawnByQaAlertDismissedOn!.Value, It.IsAny<CancellationToken>()))
             .ReturnsAsync(vacancies);
 
         var result = await sut.GetWithDrawnByQaAlertByUkprnId(ukprnId, userId, token);
