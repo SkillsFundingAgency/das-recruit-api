@@ -11,4 +11,5 @@
     [DynamicCriteria]       nvarchar(max)       NOT NULL,                  
     CONSTRAINT [PK_Report] PRIMARY KEY (Id),
     INDEX [IX_PK_Report_UserId] NONCLUSTERED(UserId),
+    INDEX [IX_Id_CreatedDate] NONCLUSTERED(Id, CreatedDate)
 )
