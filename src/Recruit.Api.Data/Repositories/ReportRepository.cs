@@ -44,7 +44,7 @@ public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportR
         if (reportEntity.OwnerType == ReportOwnerType.Provider)
         {
             appQuery = appQuery.Where(app => app.Ukprn == criteria.Ukprn);
-            vacancyQuery = vacancyQuery.Where(v => v.Ukprn == criteria.Ukprn);
+            vacancyQuery = vacancyQuery.Where(v => v.Ukprn == criteria.Ukprn && v.OwnerType == OwnerType.Provider);
         }
 
         return await appQuery
