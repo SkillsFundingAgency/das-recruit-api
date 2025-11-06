@@ -2,6 +2,7 @@
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.VacancyControllerTests;
@@ -48,6 +49,24 @@ internal class WhenGettingOneClosedVacancies
         repository
             .Setup(x => x.GetOneClosedVacancyByVacancyReference(vacancyReference, It.IsAny<CancellationToken>()))
             .ReturnsAsync((VacancyEntity)null!);
+
+        // Act
+        var result = await sut.GetOneClosedVacancyByVacancyReference(repository.Object, vacancyReference, token);
+
+        // Assert
+        result.Should().BeOfType<NotFound>();
+    }
+    
+    [Test, MoqAutoData]
+    public async Task Get_ReturnsNotFound_WhenRefernce_Is_Invalid(long vacancyReference,
+        Mock<IVacancyRepository> repository,
+        [Greedy] VacancyController sut,
+        CancellationToken token)
+    {
+        // Arrange
+        repository
+            .Setup(x => x.GetOneClosedVacancyByVacancyReference(vacancyReference, It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidVacancyReferenceException("-1"));
 
         // Act
         var result = await sut.GetOneClosedVacancyByVacancyReference(repository.Object, vacancyReference, token);
