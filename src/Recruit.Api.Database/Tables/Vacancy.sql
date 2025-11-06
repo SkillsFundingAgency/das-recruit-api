@@ -105,6 +105,6 @@ CREATE TABLE dbo.[Vacancy] (
     INDEX [IX_Vacancy_ProviderReview] NONCLUSTERED(AccountId, CreatedDate DESC)  INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType],  [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]) WHERE OwnerType = 'Provider' AND Status = 'Review',
     
     INDEX [IX_Vacancy_Search_Provider] NONCLUSTERED([OwnerType], [Ukprn], [Status]) INCLUDE ([LegalEntityName], [Title], [VacancyReference]),
-    INDEX [IX_Vacancy_Search_Employer] NONCLUSTERED([OwnerType], [AccountId], [Status]) INCLUDE ([LegalEntityName], [Title], [VacancyReference])
+    INDEX [IX_Vacancy_Search_Employer] NONCLUSTERED([OwnerType], [AccountId], [Status]) INCLUDE ([LegalEntityName], [Title], [VacancyReference]),
     INDEX [IX_Vacancy_Report_Provider] NONCLUSTERED([Ukprn], [Status]) INCLUDE ([Title], [EmployerName], [ApprenticeshipType], [EmployerLocationOption], [ProgrammeId], [TrainingProvider_Name], [ClosingDate], [VacancyReference]) WHERE Status IN ('Live','Closed') AND OwnerType = 'Provider',
     )
