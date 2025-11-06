@@ -101,7 +101,7 @@ public static class VacancyExtensions
             ClosedDate = entity.ClosedDate,
             ClosingDate = entity.ClosingDate,
             ClosureReason = entity.ClosureReason,
-            Contact = entity.ContactEmail is null ? null : new ContactDetail()
+            Contact = entity.ContactEmail is null ? null : new ContactDetail
             {
                 Email = entity.ContactEmail,
                 Name = entity.ContactName!,

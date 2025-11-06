@@ -156,7 +156,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var lastDismissedDate = userEntity.ClosedVacanciesWithdrawnByQaAlertDismissedOn
             .GetValueOrDefault(DateTime.MinValue);
 
-        var vacancies = await vacancyRepository.GetAllClosedProviderrVacanciesByClosureReason(ukprn, ClosureReason.WithdrawnByQa, lastDismissedDate, token);
+        var vacancies = await vacancyRepository.GetAllClosedProviderVacanciesByClosureReason(ukprn, ClosureReason.WithdrawnByQa, lastDismissedDate, token);
 
         var closedVacancyTitles = vacancies
             .Select(v => $"{v.Title} (VAC{v.VacancyReference})")

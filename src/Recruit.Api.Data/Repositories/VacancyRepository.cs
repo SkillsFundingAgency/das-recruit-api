@@ -27,6 +27,8 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
         string searchTerm,
         CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneByVacancyReferenceAsync(long vacancyReference, CancellationToken cancellationToken);
+    Task<VacancyEntity?> GetOneLiveVacancyByVacancyReferenceAsync(VacancyReference vacancyReference, CancellationToken cancellationToken);
+    Task<PaginatedList<VacancyEntity>> GetManyLiveVacancies(int page, int pageSize, DateTime? closingDate, CancellationToken cancellationToken = default);
     Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByAccountId(long accountId, CancellationToken cancellationToken);
     Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByUkprn(int ukprn, CancellationToken cancellationToken);
     Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
@@ -37,7 +39,7 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
     Task<List<(int, bool)>> GetProviderVacanciesClosingSoonWithApplications(int ukprn, CancellationToken cancellationToken);
 
     Task<List<VacancyClosureSummaryEntity>> GetAllClosedEmployerVacanciesByClosureReason(long accountId, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken, VacancyStatus? status = null);
-    Task<List<VacancyClosureSummaryEntity>> GetAllClosedProviderrVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken);
+    Task<List<VacancyClosureSummaryEntity>> GetAllClosedProviderVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
@@ -189,6 +191,49 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             .FirstOrDefaultAsync(x => x.VacancyReference == vacancyReference, cancellationToken);
     }
 
+    public async Task<VacancyEntity?> GetOneLiveVacancyByVacancyReferenceAsync(VacancyReference vacancyReference, CancellationToken cancellationToken)
+    {
+        var dateTimeNow = DateTime.UtcNow.Date;
+        return await dataContext
+            .VacancyEntities
+            .FirstOrDefaultAsync(x => x.VacancyReference == vacancyReference.Value
+                                      && x.Status == VacancyStatus.Live
+                                      && x.ClosingDate > dateTimeNow, cancellationToken);
+    }
+
+    public async Task<PaginatedList<VacancyEntity>> GetManyLiveVacancies(int page, int pageSize, DateTime? closingDate, CancellationToken cancellationToken = default)
+    {
+        page = Math.Max(page, 1);
+        pageSize = Math.Max(pageSize, 1);
+
+        int skip = (page - 1) * pageSize;
+
+        IQueryable<VacancyEntity> query = dataContext
+            .VacancyEntities
+            .Where(v => v.Status == VacancyStatus.Live)
+            .AsNoTracking();
+
+        if (closingDate.HasValue)
+        {
+            var startDate = closingDate.Value.Date;
+            var endDate = startDate.AddDays(1);
+            query = query.Where(v => v.ClosingDate >= startDate && v.ClosingDate < endDate);
+        }
+        else
+        {
+            var dateTimeNow = DateTime.UtcNow.Date;
+            query = query.Where(v => v.ClosingDate >= dateTimeNow);
+        }
+        
+        int count = await query.CountAsync(cancellationToken);
+        var items = await query
+            .OrderByDescending(v => v.ClosingDate)
+            .Skip(skip)
+            .Take(pageSize).ToListAsync(cancellationToken);
+
+        return new PaginatedList<VacancyEntity>(items, count, page, pageSize);
+    }
+
     public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByAccountId(long accountId, CancellationToken cancellationToken)
     {
         var employerQuery = dataContext.VacancyEntities
@@ -240,7 +285,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         return vacancies;
     }
 
-    public async Task<List<VacancyClosureSummaryEntity>> GetAllClosedProviderrVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken)
+    public async Task<List<VacancyClosureSummaryEntity>> GetAllClosedProviderVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken)
     {
         var vacancies = await dataContext.VacancyEntities
             .Select(c=>new VacancyClosureSummaryEntity {
