@@ -75,11 +75,18 @@ public class VacancyController : Controller
         [FromRoute] long vacancyReference,
         CancellationToken cancellationToken)
     {
-        var result = await repository.GetOneClosedVacancyByVacancyReference(vacancyReference, cancellationToken);
+        try
+        {
+            var result = await repository.GetOneClosedVacancyByVacancyReference(vacancyReference, cancellationToken);
 
-        return result is null
-            ? Results.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+            return result is null
+                ? Results.NotFound()
+                : TypedResults.Ok(result.ToGetResponse());
+        }
+        catch (InvalidVacancyReferenceException)
+        {
+            return Results.NotFound();
+        }
     }
 
     [HttpPost, Route("closed")]
