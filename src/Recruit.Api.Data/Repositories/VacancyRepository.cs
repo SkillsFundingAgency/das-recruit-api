@@ -339,7 +339,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         }
 
         //FAI-2857 - temp setting of review requested by user id so it isnt over-written 
-        if (existingEntity.ReviewRequestedByUserId != null && entity.ReviewRequestedByUserId == null)
+        if (existingEntity.ReviewRequestedByUserId != null && entity.ReviewRequestedByUserId == null && entity.TransferInfo == null)
         {
             entity.ReviewRequestedByUserId = existingEntity.ReviewRequestedByUserId;
         }
