@@ -338,6 +338,12 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             return UpsertResult.Create(entity, true);
         }
 
+        //FAI-2857 - temp setting of submitter user id so it isnt over-written 
+        if (existingEntity.SubmittedByUserId != null && entity.SubmittedByUserId == null)
+        {
+            entity.SubmittedByUserId = existingEntity.SubmittedByUserId;
+        }
+
         dataContext.SetValues(existingEntity, entity);
         await dataContext.SaveChangesAsync(cancellationToken);
         return UpsertResult.Create(entity, false);
