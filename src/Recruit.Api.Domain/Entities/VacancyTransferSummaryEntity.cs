@@ -9,6 +9,7 @@ public class VacancyTransferSummaryEntity
     public string? TransferInfo { get; set; }
     public VacancyStatus Status { get; set; }
     public int? Ukprn { get; set; }
+    public DateTime? DeletedDate { get; set; }
 }
 
 public class VacancyClosureSummaryEntity
@@ -22,4 +23,5 @@ public class VacancyClosureSummaryEntity
     public int? Ukprn { get; set; }
     public string? TransferInfo { get; set; }
     public VacancyStatus Status { get; set; }
+    public DateTime? DeletedDate { get; set; }
 }
