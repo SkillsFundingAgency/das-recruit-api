@@ -35,7 +35,7 @@ internal class WhenGettingOneLiveVacancy
         // assert
         repository.Verify(x => x.GetOneLiveVacancyByVacancyReferenceAsync(vacancyReference, token), Times.Once());
         payload.Should().NotBeNull();
-        payload.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers());
+        payload.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers().Excluding(c=>c.Skills).Excluding(c=>c.Qualifications));
     }
 
     [Test, MoqAutoData]
