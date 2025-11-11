@@ -82,29 +82,29 @@ CREATE TABLE dbo.[Vacancy] (
     INDEX [IX_Vacancy_Ukprn_Owner_Status] NONCLUSTERED(Ukprn, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[AccountId])  WHERE OwnerType = 'Provider',
     
     --Dashboard alerts
-    INDEX [IX_Vacancy_Account_Owner_Status_TransferInfo] NONCLUSTERED(AccountId, OwnerType, Status, TransferInfo) INCLUDE(Ukprn) WHERE TransferInfo IS NOT null AND OwnerType = 'Employer',
-    INDEX [IX_Vacancy_Account_Owner_TransferInfo] NONCLUSTERED(AccountId, OwnerType, TransferInfo) INCLUDE(Ukprn, Status) WHERE TransferInfo IS NOT null AND OwnerType = 'Employer',
-    INDEX [IX_Vacancy_Ukprn_Owner_Status_TransferInfo] NONCLUSTERED(Ukprn, OwnerType, TransferInfo) INCLUDE(AccountId, Status) WHERE TransferInfo IS NOT null AND OwnerType = 'Provider',
+    INDEX [IX_Vacancy_Account_Owner_Status_TransferInfo] NONCLUSTERED(AccountId, OwnerType, Status, TransferInfo) INCLUDE(Ukprn) WHERE TransferInfo IS NOT null AND OwnerType = 'Employer' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_Account_Owner_TransferInfo] NONCLUSTERED(AccountId, OwnerType, TransferInfo) INCLUDE(Ukprn, Status) WHERE TransferInfo IS NOT null AND OwnerType = 'Employer' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_Ukprn_Owner_Status_TransferInfo] NONCLUSTERED(Ukprn, OwnerType, TransferInfo) INCLUDE(AccountId, Status) WHERE TransferInfo IS NOT null AND OwnerType = 'Provider' AND DeletedDate IS null,
     
     --Dashboard alerts
-    INDEX [IX_Vacancy_Account_Owner_Status_ClosingDate] NONCLUSTERED(AccountId, OwnerType, Status, ClosingDate) WHERE OwnerType = 'Employer',
-    INDEX [IX_Vacancy_Ukprn_Owner_Status_ClosingDate] NONCLUSTERED(Ukprn, OwnerType, Status, ClosingDate)  WHERE OwnerType = 'Provider',
-    INDEX [IX_Vacancy_AccountId_ClosureReason_OwnerType_ClosedDate] NONCLUSTERED([AccountId], [ClosureReason], [OwnerType], [ClosedDate]) INCLUDE([VacancyReference], [Title], [Ukprn],[TransferInfo], [Status]) WHERE OwnerType = 'Employer',
-    INDEX [IX_Vacancy_AccountId_ClosureReason_OwnerType_ClosedDate_Status] NONCLUSTERED([AccountId], [ClosureReason], [OwnerType], [ClosedDate],[Status]) INCLUDE([VacancyReference], [Title], [Ukprn],[TransferInfo]) WHERE OwnerType = 'Employer',
-    INDEX [IX_Vacancy_Ukprn_ClosureReason_OwnerType_ClosedDate] NONCLUSTERED([Ukprn], [ClosureReason], [OwnerType], [ClosedDate]) INCLUDE([VacancyReference], [Title], [AccountId],[TransferInfo], [Status]) WHERE OwnerType = 'Provider',
-    INDEX [IX_Vacancy_Ukprn_ClosureReason_OwnerType_ClosedDate_Status] NONCLUSTERED([Ukprn], [ClosureReason], [OwnerType], [ClosedDate],[Status]) INCLUDE([VacancyReference], [Title], [AccountId],[TransferInfo]) WHERE OwnerType = 'Provider',
+    INDEX [IX_Vacancy_Account_Owner_Status_ClosingDate] NONCLUSTERED(AccountId, OwnerType, Status, ClosingDate) WHERE OwnerType = 'Employer' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_Ukprn_Owner_Status_ClosingDate] NONCLUSTERED(Ukprn, OwnerType, Status, ClosingDate)  WHERE OwnerType = 'Provider' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_AccountId_ClosureReason_OwnerType_ClosedDate] NONCLUSTERED([AccountId], [ClosureReason], [OwnerType], [ClosedDate]) INCLUDE([VacancyReference], [Title], [Ukprn],[TransferInfo], [Status]) WHERE OwnerType = 'Employer' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_AccountId_ClosureReason_OwnerType_ClosedDate_Status] NONCLUSTERED([AccountId], [ClosureReason], [OwnerType], [ClosedDate],[Status]) INCLUDE([VacancyReference], [Title], [Ukprn],[TransferInfo]) WHERE OwnerType = 'Employer' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_Ukprn_ClosureReason_OwnerType_ClosedDate] NONCLUSTERED([Ukprn], [ClosureReason], [OwnerType], [ClosedDate]) INCLUDE([VacancyReference], [Title], [AccountId],[TransferInfo], [Status]) WHERE OwnerType = 'Provider' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_Ukprn_ClosureReason_OwnerType_ClosedDate_Status] NONCLUSTERED([Ukprn], [ClosureReason], [OwnerType], [ClosedDate],[Status]) INCLUDE([VacancyReference], [Title], [AccountId],[TransferInfo]) WHERE OwnerType = 'Provider' AND DeletedDate IS null,
     
     
-    INDEX [IX_Vacancy_Ukprn_Owner] NONCLUSTERED(Ukprn, OwnerType) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status])  WHERE OwnerType = 'Provider',
-    INDEX [IX_Vacancy_Account_Owner] NONCLUSTERED(AccountId, OwnerType) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [Ukprn])  WHERE OwnerType = 'Employer',
+    INDEX [IX_Vacancy_Ukprn_Owner] NONCLUSTERED(Ukprn, OwnerType) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status])  WHERE OwnerType = 'Provider' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_Account_Owner] NONCLUSTERED(AccountId, OwnerType) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [Ukprn])  WHERE OwnerType = 'Employer' AND DeletedDate IS null,
     
     INDEX [IX_Vacancy_AccountId_OwnerType_Status_CreatedDate] NONCLUSTERED(AccountId, OwnerType, Status, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[Ukprn]),
     INDEX [IX_Vacancy_Ukprn_OwnerType_Status_CreatedDate] NONCLUSTERED(Ukprn, OwnerType, Status, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions]),
     
-    INDEX [IX_Vacancy_Employer] NONCLUSTERED(AccountId, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType],  [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]) WHERE OwnerType = 'Employer',
-    INDEX [IX_Vacancy_ProviderReview] NONCLUSTERED(AccountId, CreatedDate DESC)  INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType],  [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]) WHERE OwnerType = 'Provider' AND Status = 'Review',
+    INDEX [IX_Vacancy_Employer] NONCLUSTERED(AccountId, CreatedDate DESC) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType],  [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]) WHERE OwnerType = 'Employer' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_ProviderReview] NONCLUSTERED(AccountId, CreatedDate DESC)  INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType],  [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions], [Status], [OwnerType],[Ukprn]) WHERE OwnerType = 'Provider' AND Status = 'Review' AND DeletedDate IS null,
     
     INDEX [IX_Vacancy_Search_Provider] NONCLUSTERED([OwnerType], [Ukprn], [Status]) INCLUDE ([LegalEntityName], [Title], [VacancyReference]),
-    INDEX [IX_Vacancy_Search_Employer] NONCLUSTERED([OwnerType], [AccountId], [Status]) INCLUDE ([LegalEntityName], [Title], [VacancyReference])
-
+    INDEX [IX_Vacancy_Search_Employer] NONCLUSTERED([OwnerType], [AccountId], [Status]) INCLUDE ([LegalEntityName], [Title], [VacancyReference]),
+    INDEX [IX_Vacancy_Report_Provider] NONCLUSTERED([Ukprn], [Status]) INCLUDE ([Title], [EmployerName], [ApprenticeshipType], [EmployerLocationOption], [ProgrammeId], [TrainingProvider_Name], [ClosingDate], [VacancyReference]) WHERE Status IN ('Live','Closed') AND OwnerType = 'Provider' AND DeletedDate IS null,
     )

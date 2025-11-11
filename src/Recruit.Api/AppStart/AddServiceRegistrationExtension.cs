@@ -37,7 +37,8 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVacancyReviewRepository, VacancyReviewRepository>();
         services.AddScoped<IVacancyRepository, VacancyRepository>();
-        
+        services.AddScoped<IReportRepository, ReportRepository>();
+
         // email
         string env = configuration["ResourceEnvironmentName"] ?? "local";
         bool isProduction = env.Equals("PRD", StringComparison.CurrentCultureIgnoreCase);

@@ -86,6 +86,8 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             _ => query.Where(x => x.OwnerType == OwnerType.Employer)
         };
 
+        query = query.Where(c=>c.DeletedDate == null);
+        
         // Apply search term
         query = ApplySearchTerm(query, searchTerm);
 
@@ -148,7 +150,8 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
         // Apply search term
         query = ApplySearchTerm(query, searchTerm);
-
+        
+        query = query.Where(c=>c.DeletedDate == null);
         // Apply sorting
         if (orderBy is not null)
         {
@@ -242,10 +245,11 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 OwnerType = c.OwnerType,
                 TransferInfo = c.TransferInfo,
                 Status = c.Status,
-                Ukprn = c.Ukprn
+                Ukprn = c.Ukprn,
+                DeletedDate = c.DeletedDate
             })
             .AsNoTracking()
-            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer && v.TransferInfo != null);
+            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer && v.TransferInfo != null && v.DeletedDate == null);
             
         var providerQuery = dataContext.VacancyEntities
             .Select(c=> new VacancyTransferSummaryEntity {
@@ -253,10 +257,11 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 OwnerType = c.OwnerType,
                 TransferInfo = c.TransferInfo,
                 Status = c.Status,
-                Ukprn = c.Ukprn
+                Ukprn = c.Ukprn,
+                DeletedDate = c.DeletedDate
             })
             .AsNoTracking()
-            .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && v.OwnerType == OwnerType.Provider && v.TransferInfo != null);
+            .Where(v => v.AccountId == accountId && v.Status == VacancyStatus.Review && v.OwnerType == OwnerType.Provider && v.TransferInfo != null && v.DeletedDate == null);
 
         return await employerQuery
             .Union(providerQuery)
@@ -275,10 +280,11 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 ClosureReason = c.ClosureReason,
                 Ukprn = c.Ukprn,
                 TransferInfo = c.TransferInfo,
-                Status = c.Status
+                Status = c.Status,
+                DeletedDate = c.DeletedDate
             })
             .AsNoTracking()
-            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer && v.ClosureReason == closureReason && v.ClosedDate > lastDismissedDate)
+            .Where(v => v.AccountId == accountId && v.OwnerType == OwnerType.Employer && v.ClosureReason == closureReason && v.ClosedDate > lastDismissedDate && v.DeletedDate == null)
             .Where(v=> status == null || v.Status == status)
             .ToListAsync(cancellationToken);
 
@@ -297,10 +303,11 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 ClosureReason = c.ClosureReason,
                 Ukprn = c.Ukprn,
                 TransferInfo = c.TransferInfo,
-                Status = c.Status
+                Status = c.Status,
+                DeletedDate = c.DeletedDate
             })
             .AsNoTracking()
-            .Where(v => v.Ukprn == ukprn && v.OwnerType == OwnerType.Provider && v.ClosureReason == closureReason && v.ClosedDate > lastDismissedDate)
+            .Where(v => v.Ukprn == ukprn && v.OwnerType == OwnerType.Provider && v.ClosureReason == closureReason && v.ClosedDate > lastDismissedDate && v.DeletedDate == null)
             .ToListAsync(cancellationToken);
 
         return vacancies;
@@ -315,9 +322,10 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 OwnerType = c.OwnerType,
                 TransferInfo = c.TransferInfo,
                 Status = c.Status,
-                Ukprn = c.Ukprn
+                Ukprn = c.Ukprn,
+                DeletedDate = c.DeletedDate
             })
-            .Where(vacancy => vacancy.Ukprn == ukprn && vacancy.OwnerType == OwnerType.Provider && vacancy.TransferInfo != null)
+            .Where(vacancy => vacancy.Ukprn == ukprn && vacancy.OwnerType == OwnerType.Provider && vacancy.TransferInfo != null && vacancy.DeletedDate == null)
             .ToListAsync(cancellationToken);
     }
 
@@ -388,7 +396,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     {
         var entity = await dataContext.VacancyEntities
             .AsNoTracking()
-            .Where(c => c.AccountId == accountId && c.OwnerType == OwnerType.Employer)
+            .Where(c => c.AccountId == accountId && c.OwnerType == OwnerType.Employer && c.DeletedDate == null)
             .Select(c=>
                 new {
                     c.Id,
@@ -432,7 +440,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     {
         var entity = await dataContext.VacancyEntities
             .AsNoTracking()
-            .Where(c => c.Ukprn == ukprn && c.OwnerType == OwnerType.Provider)
+            .Where(c => c.Ukprn == ukprn && c.OwnerType == OwnerType.Provider && c.DeletedDate == null)
             .Select(c=>
             new {
                 c.Id,
