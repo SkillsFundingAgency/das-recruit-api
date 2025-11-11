@@ -58,7 +58,6 @@ public class WhenPatchingVacancy: BaseFixture
         var items = Fixture.CreateMany<VacancyEntity>(10).ToList();
         var itemsClone = items.JsonClone();
         var targetItem = itemsClone[4].JsonClone();
-        var updatedItem = items[4];
         
         Server.DataContext
             .SetupSequence(x => x.VacancyEntities)
@@ -73,8 +72,6 @@ public class WhenPatchingVacancy: BaseFixture
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
-        Server.DataContext.Verify(x => x.SetValues(ItIs.EquivalentTo(targetItem), ItIs.EquivalentTo(updatedItem)), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }

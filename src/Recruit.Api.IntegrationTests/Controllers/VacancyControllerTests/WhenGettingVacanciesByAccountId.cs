@@ -19,6 +19,7 @@ public class WhenGettingVacanciesByAccountId: BaseFixture
             {
                 x.AccountId = accountId;
                 x.OwnerType = OwnerType.Employer;
+                x.DeletedDate = null;
                 return x;
             }).ToList();
         var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)
@@ -55,6 +56,7 @@ public class WhenGettingVacanciesByAccountId: BaseFixture
             {
                 x.AccountId = accountId;
                 x.OwnerType = OwnerType.Employer;
+                x.DeletedDate = null;
                 return x;
             }).ToList();
         var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)
