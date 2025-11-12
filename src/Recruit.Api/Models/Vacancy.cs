@@ -48,8 +48,8 @@ public class Vacancy
     public int? NumberOfPositions { get; init; }
     public string? OutcomeDescription { get; init; }
     public string? ProgrammeId { get; init; }
-    public List<string>? Skills { get; init; }
-    public List<Qualification>? Qualifications { get; set; }
+    public List<string> Skills { get; init; } = [];
+    public List<Qualification> Qualifications { get; set; } = [];
     public string? ThingsToConsider { get; init; }
     public string? TrainingDescription { get; init; }
     public string? AdditionalTrainingDescription { get; init; }
