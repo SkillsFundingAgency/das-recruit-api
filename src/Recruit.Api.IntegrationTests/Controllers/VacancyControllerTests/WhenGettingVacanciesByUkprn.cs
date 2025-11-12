@@ -19,6 +19,7 @@ public class WhenGettingVacanciesByUkprn: BaseFixture
             {
                 x.Ukprn = ukprn;
                 x.OwnerType = OwnerType.Provider;
+                x.DeletedDate = null;
                 return x;
             }).ToList();
         var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)
@@ -55,6 +56,7 @@ public class WhenGettingVacanciesByUkprn: BaseFixture
             {
                 x.Ukprn = ukprn;
                 x.OwnerType = OwnerType.Provider;
+                x.DeletedDate = null;
                 return x;
             }).ToList();
         var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)
