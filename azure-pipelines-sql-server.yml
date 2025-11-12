@@ -113,8 +113,9 @@ stages:
 
     # Unit tests
     - script: |
-        dotnet test --configuration Release --filter "TestCategory!=Integration"
+        src/dotnet test --configuration Release --filter "TestCategory!=Integration"
       displayName: 'Run Unit Tests'
+      workingDirectory: src
 
     # Integration tests (point SQL DB)
     - script: |
@@ -122,6 +123,7 @@ stages:
         export IntegrationTestsDbSchemaName="$(sqlDB)"
         dotnet test --configuration Release --filter "TestCategory=Integration"
       displayName: 'Run Integration Tests'
+      workingDirectory: src
 
     # Cleanup (best-effort)
     - task: AzureCLI@2
