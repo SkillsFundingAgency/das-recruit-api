@@ -3,7 +3,7 @@ using SFA.DAS.Recruit.Api.Data;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
-[SetUpFixture]
+[SetUpFixture, Category("Integration")]
 public class MsSqlOneTimeSetup
 {
     [OneTimeSetUp]
