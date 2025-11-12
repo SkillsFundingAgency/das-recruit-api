@@ -37,6 +37,8 @@ internal class TestDataManager(RecruitDataContext dataContext, IFixture fixture,
 
     public async Task WipeDataAsync()
     {
+        await dataContext.Database.EnsureCreatedAsync();
+        
         var tableNames = dataContext.Model
             .GetEntityTypes()
             .Select(t => t.GetTableName())
