@@ -5,6 +5,7 @@ using IServiceScope = Microsoft.Extensions.DependencyInjection.IServiceScope;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
+[Category("Integration")]
 public abstract class MsSqlBaseFixture
 {
     // private
