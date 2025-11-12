@@ -13,7 +13,7 @@ internal static class Measure
         }
     }
     
-    public static async Task<T> ThisAsync<T>(Func<Task<T>> func, int millisecondsTimeout, [CallerMemberName] string callerName = "")
+    public static async Task<T> ThisAsync<T>(Func<Task<T>> func, int millisecondsTimeout = 1000, [CallerMemberName] string callerName = "")
     {
         var sw = Stopwatch.StartNew();
         var result = await func();
@@ -22,7 +22,7 @@ internal static class Measure
         return result;
     }
 
-    public static async Task ThisAsync<T>(Func<Task> func, int millisecondsTimeout, [CallerMemberName] string callerName = "")
+    public static async Task ThisAsync<T>(Func<Task> func, int millisecondsTimeout = 1000, [CallerMemberName] string callerName = "")
     {
         var sw = Stopwatch.StartNew();
         await func();

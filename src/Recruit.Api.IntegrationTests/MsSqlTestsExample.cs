@@ -28,7 +28,7 @@ public class MsSqlTestsExample: MsSqlBaseFixture
         var expected = items[1];
 
         // act
-        var response = await Measure.ThisAsync(async () => await Client.GetAsync($"{RouteNames.Vacancies}/{expected.Id}"), 3000);
+        var response = await Measure.ThisAsync(async () => await Client.GetAsync($"{RouteNames.Vacancies}/{expected.Id}"));
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
