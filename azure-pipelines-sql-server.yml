@@ -119,6 +119,7 @@ stages:
     # Integration tests (point SQL DB)
     - script: |
         export ConnectionStrings__Integration="$(ADO_CONNSTR)"
+        export IntegrationTestsDbSchemaName="$(sqlDB)"
         dotnet test --configuration Release --filter "TestCategory=Integration"
       displayName: 'Run Integration Tests'
 
