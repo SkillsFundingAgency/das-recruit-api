@@ -5,6 +5,8 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
 internal static class Measure
 {
+    private const int Tolerance = 600;
+    
     private static void CheckTime(long elapsedMilliseconds, long millisecondsTimeout, string callerName)
     {
         if (elapsedMilliseconds > millisecondsTimeout)
@@ -13,7 +15,7 @@ internal static class Measure
         }
     }
     
-    public static async Task<T> ThisAsync<T>(Func<Task<T>> func, int millisecondsTimeout = 1000, [CallerMemberName] string callerName = "")
+    public static async Task<T> ThisAsync<T>(Func<Task<T>> func, int millisecondsTimeout = Tolerance, [CallerMemberName] string callerName = "")
     {
         var sw = Stopwatch.StartNew();
         var result = await func();
@@ -22,7 +24,7 @@ internal static class Measure
         return result;
     }
 
-    public static async Task ThisAsync<T>(Func<Task> func, int millisecondsTimeout = 1000, [CallerMemberName] string callerName = "")
+    public static async Task ThisAsync<T>(Func<Task> func, int millisecondsTimeout = Tolerance, [CallerMemberName] string callerName = "")
     {
         var sw = Stopwatch.StartNew();
         await func();
