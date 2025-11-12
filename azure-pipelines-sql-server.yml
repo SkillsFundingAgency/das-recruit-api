@@ -113,7 +113,7 @@ stages:
 
     # Unit tests
     - script: |
-        src/dotnet test --configuration Release --filter "TestCategory!=Integration"
+        dotnet test --configuration Release --filter "TestCategory!=Integration"
       displayName: 'Run Unit Tests'
       workingDirectory: src
 
