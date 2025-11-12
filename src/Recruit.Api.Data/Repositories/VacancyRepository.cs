@@ -346,6 +346,12 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             return UpsertResult.Create(entity, true);
         }
 
+        //FAI-2857 - temp setting of review requested by user id so it isnt over-written 
+        if (existingEntity.ReviewRequestedByUserId != null && entity.ReviewRequestedByUserId == null && entity.TransferInfo == null)
+        {
+            entity.ReviewRequestedByUserId = existingEntity.ReviewRequestedByUserId;
+        }
+
         dataContext.SetValues(existingEntity, entity);
         await dataContext.SaveChangesAsync(cancellationToken);
         return UpsertResult.Create(entity, false);
