@@ -14,8 +14,8 @@ public class MsSqlTestServer : WebApplicationFactory<Program>
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder
-            .ConfigureHostConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.Test.json"))
-            .ConfigureAppConfiguration(configBuilder => configBuilder.SetBasePath(Directory.GetCurrentDirectory()));
+            .ConfigureAppConfiguration(configBuilder => configBuilder.SetBasePath(Directory.GetCurrentDirectory()))
+            .ConfigureHostConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.Test.json"));
 
         return base.CreateHost(builder);
     }
@@ -30,10 +30,5 @@ public class MsSqlTestServer : WebApplicationFactory<Program>
             services.Remove(services.SingleOrDefault(service => typeof(DbConnection) == service.ServiceType)!);
             services.AddDbContext<RecruitDataContext>((_, option) => option.UseSqlServer(connectionString));
         });
-    }
-
-    public IServiceScope GetServiceScope()
-    {
-        return Services.CreateScope();
     }
 }

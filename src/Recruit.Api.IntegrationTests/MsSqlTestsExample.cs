@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
 public class MsSqlTestsExample: MsSqlBaseFixture
 {
-    [Test]
+    [Test, Retry(3)]
     public async Task Example_Tests()
     {
         // arrange

@@ -31,7 +31,7 @@ public abstract class MsSqlBaseFixture
         Fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => Fixture.Behaviors.Remove(b));
         Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-        _serviceScope = _server.GetServiceScope();
+        _serviceScope = _server.Services.CreateScope();
         _dataContext = _serviceScope.ServiceProvider.GetRequiredService<RecruitDataContext>();
         TestData = new TestDataManager(_dataContext, Fixture);
     }
