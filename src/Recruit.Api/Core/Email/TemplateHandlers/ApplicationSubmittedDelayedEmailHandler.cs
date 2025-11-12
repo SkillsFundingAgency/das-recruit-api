@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
@@ -9,8 +10,10 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
 {
     public ApplicationSubmittedDelayedEmailHandler(IEmailTemplateHelper emailTemplateHelper)
     {
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily));
-        SupportedTemplates.Add(emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly));
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerDaily);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerWeekly);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderDaily);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderWeekly);
     }
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)
@@ -42,12 +45,12 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
                 var dynamicData = ApiUtils.DeserializeOrNull<Dictionary<string, string>>(x.DynamicData)!;
                 return new {
                     AdvertTitle = dynamicData["advertTitle"],
-                    VacancyReference = new VacancyReference(dynamicData["vacancyReference"]),
                     EmployerName = dynamicData["employerName"],
                     Location = dynamicData["location"],
-                    ManageVacancyUrl = dynamicData["manageVacancyURL"],
+                    ManageAdvertUrl = dynamicData["manageAdvertURL"],
                     RecruitNotification = x,
-                    TemplateId = x.EmailTemplateId
+                    TemplateId = x.EmailTemplateId,
+                    VacancyReference = new VacancyReference(dynamicData["vacancyReference"])
                 };
             })
             .GroupBy(x => x.VacancyReference)
@@ -58,10 +61,10 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
         foreach (var vacancyGroup in vacancyGroups)
         {
             var vacancyDetails = vacancyGroup.First();
-            sb.AppendLine($"#{vacancyDetails.AdvertTitle} ({vacancyDetails.VacancyReference.ToString()})");
+            sb.AppendLine($"# {vacancyDetails.AdvertTitle} ({vacancyDetails.VacancyReference.ToString()})");
             sb.AppendLine($"{vacancyDetails.EmployerName}");
             sb.AppendLine($"{vacancyDetails.Location}");
-            sb.AppendLine($"[View applications]({vacancyDetails.ManageVacancyUrl}) ({vacancyGroup.Count()} new)");
+            sb.AppendLine($"[View applications]({vacancyDetails.ManageAdvertUrl}) ({vacancyGroup.Count()} new)");
             sb.AppendLine();
         }
 
@@ -74,7 +77,8 @@ public class ApplicationSubmittedDelayedEmailHandler: AbstractEmailHandler
         {
             TemplateId = details.TemplateId,
             RecipientAddress = details.RecruitNotification.User.Email,
-            Tokens = tokens
+            Tokens = tokens,
+            SourceIds = templateGroup.Select(x => x.Id).ToList()
         };
     }
 }

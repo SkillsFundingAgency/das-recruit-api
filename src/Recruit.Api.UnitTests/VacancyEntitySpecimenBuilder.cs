@@ -2,7 +2,9 @@
 using System.Text.Json;
 using AutoFixture.Kernel;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
+using Address = SFA.DAS.Recruit.Api.Models.Address;
 
 namespace SFA.DAS.Recruit.Api.UnitTests;
 
@@ -32,6 +34,11 @@ public class VacancyEntitySpecimenBuilder : ISpecimenBuilder
                 return JsonSerializer.Serialize(context.CreateMany<ReviewFieldIndicator>(), JsonOptions);
             case "TrainingProvider_Address":
                 return JsonSerializer.Serialize(context.Create<Address>(), JsonOptions);
+            case "ContactPhone":
+            case "ProgrammeId":
+                return JsonSerializer.Serialize(context.Create<long>(), JsonOptions);
+            case "VacancyReference":
+                return VacancyReferenceGenerator.GetNextVacancyReference().Value;
             default: return new NoSpecimen();
         }
     }

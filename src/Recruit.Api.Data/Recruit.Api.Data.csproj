@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.21" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +20,7 @@
   <ItemGroup>
     <InternalsVisibleTo Include="SFA.DAS.Recruit.Api" />
     <InternalsVisibleTo Include="SFA.DAS.Recruit.Api.UnitTests" />
+    <InternalsVisibleTo Include="SFA.DAS.Recruit.Api.IntegrationTests" />
   </ItemGroup>
 
 </Project>

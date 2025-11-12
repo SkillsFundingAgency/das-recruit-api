@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
@@ -30,7 +29,46 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         // assert
         func.Should().ThrowAsync<DataIntegrityException>();
     }
-    
+
+    [Test, RecursiveMoqAutoData]
+    public async Task Then_If_The_Vacancy_Is_Not_Of_The_Correct_Owner_Type_No_Results_Are_Returned(
+        UserEntity user,
+        VacancyEntity vacancy,
+        ApplicationReviewEntity applicationReview,
+        Guid templateId,
+        string manageNotificationsUrl,
+        string baseUrl,
+        [Frozen] Mock<IVacancyRepository> vacancyRepository,
+        [Frozen] Mock<IUserRepository> userRepository,
+        [Frozen] Mock<IEmailTemplateHelper> emailTemplateHelper,
+        [Greedy] SharedApplicationReviewedByEmployerNotificationFactory sut)
+    {
+        // arrange
+        vacancy.OwnerType = OwnerType.Employer;
+        user.UserType = UserType.Provider;
+        user.SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        
+        vacancyRepository
+            .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vacancy);
+        userRepository
+            .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync([user]);
+        emailTemplateHelper
+            .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
+            .Returns(manageNotificationsUrl);
+        emailTemplateHelper
+            .Setup(x => x.RecruitProviderBaseUrl)
+            .Returns(baseUrl);
+
+        // act
+        var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
+
+        // assert
+        result.Delayed.Should().BeEmpty();
+        result.Immediate.Should().BeEmpty();
+    }
+
     [Test, RecursiveMoqAutoData]
     public async Task Then_When_No_Users_Are_Found_No_Notifications_Are_Generated(
         VacancyEntity vacancy,
@@ -40,6 +78,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         [Greedy] SharedApplicationReviewedByEmployerNotificationFactory sut)
     {
         // arrange
+        vacancy.OwnerType = OwnerType.Provider;
         long? capturedVacancyId = null;
         vacancyRepository
             .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -67,8 +106,8 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         UserEntity user,
         VacancyEntity vacancy,
         ApplicationReviewEntity applicationReview,
-        Guid templateId,
         string manageNotificationsUrl,
+        string manageVacancyUrl,
         string baseUrl,
         [Frozen] Mock<IVacancyRepository> vacancyRepository,
         [Frozen] Mock<IUserRepository> userRepository,
@@ -78,6 +117,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         // arrange
         user.UserType = UserType.Provider;
         user.SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        vacancy.OwnerType = OwnerType.Provider;
         
         vacancyRepository
             .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -86,11 +126,11 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([user]);
         emailTemplateHelper
-            .Setup(x => x.GetTemplateId(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationFrequency.Immediately))
-            .Returns(templateId);
-        emailTemplateHelper
             .Setup(x => x.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()))
             .Returns(manageNotificationsUrl);
+        emailTemplateHelper
+            .Setup(x => x.ProviderManageVacancyUrl(vacancy.Ukprn!.Value.ToString(), vacancy.Id))
+            .Returns(manageVacancyUrl);
         emailTemplateHelper
             .Setup(x => x.RecruitProviderBaseUrl)
             .Returns(baseUrl);
@@ -99,21 +139,20 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
 
         // assert
-        result.Delayed.Should().BeEmpty();
-        result.Immediate.Should().HaveCount(1);
+        result.Immediate.Should().BeEmpty();
         
-        var notification = result.Immediate[0];
+        var notification = result.Delayed.Single();
         notification.UserId.Should().Be(user.Id);
-        notification.EmailTemplateId.Should().Be(templateId);
+        notification.EmailTemplateId.Should().Be(emailTemplateHelper.Object.TemplateIds.SharedApplicationReviewedByEmployer);
         notification.DynamicData.Should().Be("{}");
         
         var tokens = JsonSerializer.Deserialize<Dictionary<string, string>>(notification.StaticData)!;
         tokens.Should().HaveCount(6);
         tokens["firstName"].Should().Be(user.Name);
-        tokens["employer"].Should().Be(vacancy.EmployerName);
+        tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["advertTitle"].Should().Be(vacancy.Title);
         tokens["vacancyReference"].Should().Be(new VacancyReference(applicationReview.VacancyReference).ToShortString());
-        tokens["manageVacancyURL"].Should().Be($"{baseUrl}/{vacancy.Ukprn!.Value.ToString()}/vacancies/{vacancy.Id}/manage");
+        tokens["manageAdvertURL"].Should().Be(manageVacancyUrl);
         tokens["notificationSettingsURL"].Should().Be(manageNotificationsUrl);
     }
     
@@ -153,8 +192,8 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
 
         // assert
-        result.Immediate.Should().HaveCount(2);
-        result.Immediate.Should().AllSatisfy(x =>
+        result.Delayed.Should().HaveCount(2);
+        result.Delayed.Should().AllSatisfy(x =>
         {
             expectedIds.Should().Contain(x.UserId);
             unexpectedIds.Should().NotContain(x.UserId);

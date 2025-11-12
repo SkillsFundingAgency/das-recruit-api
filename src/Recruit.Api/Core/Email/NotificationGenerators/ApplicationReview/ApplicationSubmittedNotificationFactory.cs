@@ -1,12 +1,11 @@
 ﻿using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain;
+using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
-using NotSupportedException = SFA.DAS.Recruit.Api.Core.Exceptions.NotSupportedException;
 
 namespace SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
 
@@ -17,9 +16,6 @@ public class ApplicationSubmittedNotificationFactory(
     IEncodingService encodingService,
     IEmailTemplateHelper emailTemplateHelper) : IApplicationReviewNotificationFactory
 {
-    private const string ApplicationReviewEmployerUrl = "{0}/accounts/{1}/vacancies/{2}/manage";
-    private const string ApplicationReviewProviderUrl = "{0}/{1}/vacancies/{2}/manage";
-    
     public async Task<RecruitNotificationsResult> CreateAsync(ApplicationReviewEntity applicationReview, CancellationToken cancellationToken)
     {
         var vacancy = await vacancyRepository.GetOneByVacancyReferenceAsync(applicationReview.VacancyReference, cancellationToken);
@@ -33,11 +29,8 @@ public class ApplicationSubmittedNotificationFactory(
         var users = vacancy.OwnerType switch {
             OwnerType.Employer => await userRepository.FindUsersByEmployerAccountIdAsync(applicationReview.AccountId, cancellationToken),
             OwnerType.Provider => await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken),
-            _ => throw new NotSupportedException($"The vacancy owner type '{vacancy.OwnerType}' is not supported")
+            _ => throw new EntityStateNotSupportedException($"The vacancy owner type '{vacancy.OwnerType}' is not supported")
         };
-        
-        // update with the default notification preferences
-        users.ForEach(NotificationPreferenceDefaults.Update);
         
         // filter down to those who actually want to receive the notification
         var usersRequiringEmail = users.GetUsersForNotificationType(
@@ -60,10 +53,10 @@ public class ApplicationSubmittedNotificationFactory(
         
         string? hashedEmployerAccountId = encodingService.Encode(applicationReview.AccountId, EncodingType.AccountId);
         string ukprn = vacancy.Ukprn!.Value.ToString();
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
         
-        var results = new RecruitNotificationsResult();
         // process each frequency
+        var results = new RecruitNotificationsResult();
         foreach (var group in usersGroupedByFrequency)
         {
             switch (group.Key)
@@ -71,18 +64,20 @@ public class ApplicationSubmittedNotificationFactory(
                 case NotificationFrequency.Immediately:
                     {
                         var recruitNotifications = group.Select(x => new RecruitNotificationEntity {
-                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Immediately),
+                            EmailTemplateId = x.UserType == UserType.Employer 
+                                ? emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerImmediate
+                                : emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderImmediate,
                             UserId = x.Id,
                             User = x,
-                            SendWhen = DateTime.Now,
+                            SendWhen = now,
                             StaticData = ApiUtils.SerializeOrNull(new Dictionary<string, string> {
                                 ["firstName"] = x.Name,
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyURL"] = ManageVacancyUrl(x),
+                                ["manageAdvertURL"] = ManageAdvertUrl(x),
                                 ["notificationSettingsURL"] = ManageNotificationsUrl(x),
-                                ["location"] = GetLocationText(vacancy),
+                                ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                             DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!
                         });
@@ -92,7 +87,9 @@ public class ApplicationSubmittedNotificationFactory(
                 case NotificationFrequency.Daily:
                     {
                         var recruitNotifications = group.Select(x => new RecruitNotificationEntity {
-                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Daily),
+                            EmailTemplateId = x.UserType == UserType.Employer 
+                                ? emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerDaily
+                                : emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderDaily,
                             UserId = x.Id,
                             User = x,
                             SendWhen = now.GetNextDailySendDate(),
@@ -104,8 +101,8 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyURL"] = ManageVacancyUrl(x),
-                                ["location"] = GetLocationText(vacancy),
+                                ["manageAdvertURL"] = ManageAdvertUrl(x),
+                                ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                         });
                         results.Delayed.AddRange(recruitNotifications);
@@ -114,7 +111,9 @@ public class ApplicationSubmittedNotificationFactory(
                 case NotificationFrequency.Weekly:
                     {
                         var recruitNotifications = group.Select(x => new RecruitNotificationEntity {
-                            EmailTemplateId = emailTemplateHelper.GetTemplateId(NotificationTypes.ApplicationSubmitted, NotificationFrequency.Weekly),
+                            EmailTemplateId = x.UserType == UserType.Employer 
+                                ? emailTemplateHelper.TemplateIds.ApplicationSubmittedToEmployerWeekly
+                                : emailTemplateHelper.TemplateIds.ApplicationSubmittedToProviderWeekly,
                             UserId = x.Id,
                             User = x,
                             SendWhen = now.GetNextWeeklySendDate(),
@@ -126,8 +125,8 @@ public class ApplicationSubmittedNotificationFactory(
                                 ["advertTitle"] = vacancy.Title!,
                                 ["employerName"] = vacancy.EmployerName!,
                                 ["vacancyReference"] = new VacancyReference(applicationReview.VacancyReference).ToShortString(),
-                                ["manageVacancyURL"] = ManageVacancyUrl(x),
-                                ["location"] = GetLocationText(vacancy),
+                                ["manageAdvertURL"] = ManageAdvertUrl(x),
+                                ["location"] = vacancy.GetLocationText(JsonConfig.Options),
                             })!,
                         });
                         results.Delayed.AddRange(recruitNotifications);
@@ -142,24 +141,13 @@ public class ApplicationSubmittedNotificationFactory(
         string ManageNotificationsUrl(UserEntity user) => user.UserType switch {
             UserType.Employer => emailTemplateHelper.EmployerManageNotificationsUrl(hashedEmployerAccountId),
             UserType.Provider => emailTemplateHelper.ProviderManageNotificationsUrl(ukprn),
+            _ => string.Empty
         };
 
-        string ManageVacancyUrl(UserEntity user) => user.UserType switch {
-            UserType.Employer => string.Format(ApplicationReviewEmployerUrl, emailTemplateHelper.RecruitEmployerBaseUrl, hashedEmployerAccountId, vacancy.Id),
-            UserType.Provider => string.Format(ApplicationReviewProviderUrl, emailTemplateHelper.RecruitProviderBaseUrl, ukprn, vacancy.Id),
+        string ManageAdvertUrl(UserEntity user) => user.UserType switch {
+            UserType.Employer => emailTemplateHelper.EmployerManageVacancyUrl(hashedEmployerAccountId, vacancy.Id),
+            UserType.Provider => emailTemplateHelper.ProviderManageVacancyUrl(ukprn, vacancy.Id),
+            _ => string.Empty
         };
-    }
-
-    private static string GetLocationText(VacancyEntity vacancy)
-    {
-        if (vacancy.EmployerLocationOption == AvailableWhere.AcrossEngland)
-        {
-            return "Recruiting nationally";
-        }
-        
-        var addresses = ApiUtils.DeserializeOrNull<List<Address>>(vacancy.EmployerLocations);
-        return addresses is null
-            ? string.Empty
-            : addresses.GetCityNames();
     }
 }

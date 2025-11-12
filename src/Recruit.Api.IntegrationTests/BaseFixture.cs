@@ -4,19 +4,20 @@ namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
 public abstract class BaseFixture
 {
-    protected TestServer Server;
+    protected MockedTestServer Server;
     protected HttpClient Client;
     protected IFixture Fixture;
     
     [SetUp]
     public virtual void Setup()
     {
-        Server = new TestServer();
+        Server = new MockedTestServer();
         Client = Server.CreateClient();
         Fixture = new Fixture();
         Fixture.Customizations.Add(new VacancyReferenceSpecimenBuilder());
         Fixture.Customizations.Add(new VacancyReviewEntitySpecimenBuilder());
         Fixture.Customizations.Add(new VacancyEntitySpecimenBuilder());
+        Fixture.Customizations.Add(new ReportEntitySpecimenBuilder());
         Fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => Fixture.Behaviors.Remove(b));
         Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
     }

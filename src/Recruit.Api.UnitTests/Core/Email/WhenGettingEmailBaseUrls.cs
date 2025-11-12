@@ -4,39 +4,21 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email;
 
 public class WhenGettingEmailBaseUrls
 {
-    [Test]
-    [MoqInlineAutoData("prd", "https://recruit.manage-apprenticeships.service.gov.uk")]
-    [MoqInlineAutoData("PRD", "https://recruit.manage-apprenticeships.service.gov.uk")]
-    [MoqInlineAutoData("local", "https://recruit.local-eas.apprenticeships.education.gov.uk")]
-    [MoqInlineAutoData("DEV", "https://recruit.dev-eas.apprenticeships.education.gov.uk")]
-    [MoqInlineAutoData("tEsT", "https://recruit.test-eas.apprenticeships.education.gov.uk")]
-    public void Then_The_Correct_RecruitEmployerBaseUrl_Is_Returned(string environment, string expectedValue)
+    [Test, MoqAutoData]
+    public void Then_The_Correct_Employer_Recruit_Base_Url_Is_Returned(
+        [Frozen] IRecruitBaseUrls recruitBaseUrls,
+        EmailTemplateHelper sut)
     {
-        // arrange
-        var sut = new EmailTemplateHelper(environment);
-
-        // act
-        string result = sut.RecruitEmployerBaseUrl;
-
         // assert
-        result.Should().Be(expectedValue);
+        sut.RecruitEmployerBaseUrl.Should().Be(recruitBaseUrls.RecruitEmployerBaseUrl);
     }
     
-    [Test]
-    [MoqInlineAutoData("prd", "https://recruit.providers.apprenticeships.education.gov.uk")]
-    [MoqInlineAutoData("PRD", "https://recruit.providers.apprenticeships.education.gov.uk")]
-    [MoqInlineAutoData("local", "https://recruit.local-pas.apprenticeships.education.gov.uk")]
-    [MoqInlineAutoData("DEV", "https://recruit.dev-pas.apprenticeships.education.gov.uk")]
-    [MoqInlineAutoData("tEsT", "https://recruit.test-pas.apprenticeships.education.gov.uk")]
-    public void Then_The_Correct_RecruitProviderBaseUrl_Is_Returned(string environment, string expectedValue)
+    [Test, MoqAutoData]
+    public void Then_The_Correct_Provider_Recruit_Base_Url_Is_Returned(
+        [Frozen] IRecruitBaseUrls recruitBaseUrls,
+        EmailTemplateHelper sut)
     {
-        // arrange
-        var sut = new EmailTemplateHelper(environment);
-
-        // act
-        string result = sut.RecruitProviderBaseUrl;
-
         // assert
-        result.Should().Be(expectedValue);
+        sut.RecruitProviderBaseUrl.Should().Be(recruitBaseUrls.RecruitProviderBaseUrl);
     }
 }

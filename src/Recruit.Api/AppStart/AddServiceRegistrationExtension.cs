@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
+using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
 using SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Providers;
@@ -23,6 +24,8 @@ public static class AddServiceRegistrationExtension
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();
+        services.AddScoped<IVacancyProvider, VacancyProvider>();
+        services.AddScoped<IAlertsProvider, AlertsProvider>();
 
         // repositories
         services.AddScoped<IApplicationReviewRepository, ApplicationReviewRepository>();
@@ -33,17 +36,33 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVacancyReviewRepository, VacancyReviewRepository>();
         services.AddScoped<IVacancyRepository, VacancyRepository>();
-        
+        services.AddScoped<IReportRepository, ReportRepository>();
+
         // email
-        services.AddSingleton<IEmailTemplateHelper>(new EmailTemplateHelper(configuration["ResourceEnvironmentName"]));
+        string env = configuration["ResourceEnvironmentName"] ?? "local";
+        bool isProduction = env.Equals("PRD", StringComparison.CurrentCultureIgnoreCase);
+        services.AddSingleton<IRecruitBaseUrls>(isProduction
+            ? new ProductionRecruitBaseUrls()
+            : new DevelopmentRecruitBaseUrls(env));
+        services.AddSingleton<IEmailTemplateIds>(isProduction
+            ? new ProductionEmailTemplateIds()
+            : new DevelopmentEmailTemplateIds());
+        
+        services.AddSingleton<IEmailTemplateHelper, EmailTemplateHelper>();
         services.AddScoped<ApplicationSharedWithEmployerNotificationFactory>();
         services.AddScoped<SharedApplicationReviewedByEmployerNotificationFactory>();
         services.AddScoped<ApplicationSubmittedNotificationFactory>();
         services.AddScoped<IApplicationReviewNotificationStrategy, ApplicationReviewNotificationStrategy>();
         
+        services.AddScoped<VacancyRejectedNotificationFactory>();
+        services.AddScoped<VacancySentForReviewNotificationFactory>();
+        services.AddScoped<VacancySubmittedNotificationFactory>();
+        services.AddScoped<IVacancyNotificationStrategy, VacancyNotificationStrategy>();
+        
         // email template handlers
         services.AddScoped<IEmailTemplateHandler, StaticDataEmailHandler>();
         services.AddScoped<IEmailTemplateHandler, ApplicationSubmittedDelayedEmailHandler>();
+        services.AddScoped<IEmailTemplateHandler, SharedApplicationReviewedByEmployerDelayedEmailHandler>();
         services.AddScoped<IEmailFactory, EmailFactory>();
     }
 

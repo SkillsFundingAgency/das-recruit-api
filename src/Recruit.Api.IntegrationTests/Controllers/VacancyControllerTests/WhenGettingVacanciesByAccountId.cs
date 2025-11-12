@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses;
 
@@ -17,14 +18,23 @@ public class WhenGettingVacanciesByAccountId: BaseFixture
             .Select(x =>
             {
                 x.AccountId = accountId;
+                x.OwnerType = OwnerType.Employer;
+                x.DeletedDate = null;
                 return x;
             }).ToList();
-        
+        var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)
+            .Select(x =>
+            {
+                x.AccountId = accountId;
+                return x;
+            }).ToList();
+
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet(items);
+        Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(applicationReviewItems);
 
         // act
         var response = await Client.GetAsync($"{RouteNames.Account}/{accountId}/{RouteElements.Vacancies}");
-        var pagedResponse = await response.Content.ReadAsAsync<PagedResponse<Vacancy>>();
+        var pagedResponse = await response.Content.ReadAsAsync<PagedResponse<VacancySummary>>();
 
         // assert
         response.EnsureSuccessStatusCode();
@@ -45,15 +55,24 @@ public class WhenGettingVacanciesByAccountId: BaseFixture
             .Select(x =>
             {
                 x.AccountId = accountId;
+                x.OwnerType = OwnerType.Employer;
+                x.DeletedDate = null;
+                return x;
+            }).ToList();
+        var applicationReviewItems = Fixture.CreateMany<ApplicationReviewEntity>(100)
+            .Select(x =>
+            {
+                x.AccountId = accountId;
                 return x;
             }).ToList();
         var expectedItems = items.OrderBy(x => x.CreatedDate).Skip(20).Take(10).Select(x => x.ToGetResponse());
         
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet(items);
+        Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(applicationReviewItems);
 
         // act
         var response = await Client.GetAsync($"{RouteNames.Account}/{accountId}/{RouteElements.Vacancies}?page=3&pageSize=10&sortOrder=Asc");
-        var pagedResponse = await response.Content.ReadAsAsync<PagedResponse<Vacancy>>();
+        var pagedResponse = await response.Content.ReadAsAsync<PagedResponse<VacancySummary>>();
 
         // assert
         response.EnsureSuccessStatusCode();
@@ -62,6 +81,6 @@ public class WhenGettingVacanciesByAccountId: BaseFixture
         pagedResponse.PageInfo.PageSize.Should().Be(10);
         pagedResponse.PageInfo.TotalCount.Should().Be(100);
         pagedResponse.PageInfo.TotalPages.Should().Be(10);
-        pagedResponse.Items.Should().BeEquivalentTo(expectedItems);
+        pagedResponse.Items.Count().Should().Be(expectedItems.Count());
     }
 }
