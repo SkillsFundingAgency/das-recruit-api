@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.UnitTests;
 using IServiceScope = Microsoft.Extensions.DependencyInjection.IServiceScope;
@@ -33,7 +34,9 @@ public abstract class MsSqlBaseFixture
 
         _serviceScope = _server.Services.CreateScope();
         _dataContext = _serviceScope.ServiceProvider.GetRequiredService<RecruitDataContext>();
-        TestData = new TestDataManager(_dataContext, Fixture);
+        
+        var configuration = _server.Server.Services.GetService(typeof(IConfiguration)) as IConfiguration;
+        TestData = new TestDataManager(_dataContext, Fixture, configuration.GetDbSchemaName());
     }
 
     [TearDown]

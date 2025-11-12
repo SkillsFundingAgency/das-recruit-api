@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,10 @@ public class MsSqlTestServer : WebApplicationFactory<Program>
     {
         builder
             .ConfigureAppConfiguration(configBuilder => configBuilder.SetBasePath(Directory.GetCurrentDirectory()))
-            .ConfigureHostConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.Test.json"));
+            .ConfigureHostConfiguration(configBuilder => configBuilder
+                .AddJsonFile("appsettings.Test.json")
+                .AddUserSecrets(Assembly.GetExecutingAssembly())
+            );
 
         return base.CreateHost(builder);
     }

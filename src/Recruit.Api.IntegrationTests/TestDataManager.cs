@@ -3,9 +3,9 @@ using SFA.DAS.Recruit.Api.Data;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
-internal class TestDataManager(RecruitDataContext dataContext, IFixture fixture)
+internal class TestDataManager(RecruitDataContext dataContext, IFixture fixture, string schemaName)
 {
-    private const string SchemaPrefix = "[SFA.DAS.Recruit.IntegrationTests].[dbo]";
+    private readonly string _schemaPrefix = $"[{schemaName}].[dbo]";
     
     public async Task<T> Create<T>(Action<T>? configure = null) where T : class
     {
@@ -44,17 +44,17 @@ internal class TestDataManager(RecruitDataContext dataContext, IFixture fixture)
             .Distinct()
             .ToList();
         
-        foreach (var sql in tableNames.Select(tableName => $"ALTER TABLE {SchemaPrefix}.[{tableName}] NOCHECK CONSTRAINT ALL"))
+        foreach (var sql in tableNames.Select(tableName => $"ALTER TABLE {_schemaPrefix}.[{tableName}] NOCHECK CONSTRAINT ALL"))
         {
             await dataContext.Database.ExecuteSqlRawAsync(sql);
         }
             
-        foreach (var sql in tableNames.Select(tableName => $"DELETE FROM {SchemaPrefix}.[{tableName}]"))
+        foreach (var sql in tableNames.Select(tableName => $"DELETE FROM {_schemaPrefix}.[{tableName}]"))
         {
             await dataContext.Database.ExecuteSqlRawAsync(sql);
         }
         
-        foreach (var sql in tableNames.Select(tableName => $"ALTER TABLE {SchemaPrefix}.[{tableName}] CHECK CONSTRAINT ALL"))
+        foreach (var sql in tableNames.Select(tableName => $"ALTER TABLE {_schemaPrefix}.[{tableName}] CHECK CONSTRAINT ALL"))
         {
             await dataContext.Database.ExecuteSqlRawAsync(sql);
         }

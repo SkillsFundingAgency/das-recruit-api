@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -9,7 +9,9 @@
         <IsTestProject>true</IsTestProject>
         <AssemblyName>SFA.DAS.Recruit.Api.IntegrationTests</AssemblyName>
         <RootNamespace>SFA.DAS.Recruit.Api.IntegrationTests</RootNamespace>
-    </PropertyGroup>
+        <UserSecretsId>dff68550-f063-4273-93db-96cf618ed6e2</UserSecretsId>
+
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.4">
