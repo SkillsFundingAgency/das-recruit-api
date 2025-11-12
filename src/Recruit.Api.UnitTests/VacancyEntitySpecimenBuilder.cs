@@ -34,6 +34,11 @@ public class VacancyEntitySpecimenBuilder : ISpecimenBuilder
                 return JsonSerializer.Serialize(context.CreateMany<ReviewFieldIndicator>(), JsonOptions);
             case "TrainingProvider_Address":
                 return JsonSerializer.Serialize(context.Create<Address>(), JsonOptions);
+            case "ContactPhone":
+            case "ProgrammeId":
+                return JsonSerializer.Serialize(context.Create<long>(), JsonOptions);
+            case "VacancyReference":
+                return VacancyReferenceGenerator.GetNextVacancyReference().Value;
             default: return new NoSpecimen();
         }
     }

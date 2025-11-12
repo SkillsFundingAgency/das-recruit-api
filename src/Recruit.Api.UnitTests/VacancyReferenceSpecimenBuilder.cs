@@ -6,8 +6,6 @@ namespace SFA.DAS.Recruit.Api.UnitTests;
 
 public class VacancyReferenceSpecimenBuilder : ISpecimenBuilder
 {
-    private readonly Random _random = new();
-
     public object Create(object request, ISpecimenContext context)
     {
         if (request is not ParameterInfo param)
@@ -19,7 +17,7 @@ public class VacancyReferenceSpecimenBuilder : ISpecimenBuilder
             && param.ParameterType == typeof(string)
             && param.Name == "value")
         {
-            return $"VAC{_random.Next(100, 9999999)}";
+            return VacancyReferenceGenerator.GetNextVacancyReference().ToString();
         }
             
         return new NoSpecimen();
