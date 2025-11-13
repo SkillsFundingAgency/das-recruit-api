@@ -5,6 +5,7 @@ using AutoFixture.Kernel;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Testing.Data.Generators;
 using Address = SFA.DAS.Recruit.Api.Models.Address;
 
 namespace SFA.DAS.Recruit.Api.Testing.Data;
