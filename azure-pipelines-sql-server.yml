@@ -91,7 +91,7 @@ stages:
       resourceGroupName: das-ci-tests-rg  
       sqlServerName: das-ci-tests-sql
     steps:
-    # Azure login + create SQL resources
+    - checkout: das-platform-automation
     - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
       parameters:
         AzureSubscription: $(ARMServiceConnection)
