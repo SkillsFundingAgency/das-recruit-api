@@ -31,6 +31,8 @@ internal class WhenGettingDashboardCountByAccountId
         vacancyRepositoryMock
             .Setup(x => x.GetEmployerVacanciesClosingSoonWithApplications(accountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync([(10, true), (5, false)]);
+        vacancyRepositoryMock.Setup(v => v.GetEmployerReviewVacancies(accountId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(3);
 
         // Act
         var result = await vacancyProvider.GetCountByAccountId(accountId);
@@ -38,7 +40,7 @@ internal class WhenGettingDashboardCountByAccountId
         // Assert
         result.ClosedVacanciesCount.Should().Be(1);
         result.DraftVacanciesCount.Should().Be(1);
-        result.ReviewVacanciesCount.Should().Be(1);
+        result.ReviewVacanciesCount.Should().Be(3); //Ones from provider to employer
         result.ReferredVacanciesCount.Should().Be(2); // Referred + Rejected
         result.LiveVacanciesCount.Should().Be(2);
         result.SubmittedVacanciesCount.Should().Be(1);
@@ -59,6 +61,8 @@ internal class WhenGettingDashboardCountByAccountId
         vacancyRepositoryMock
             .Setup(x => x.GetEmployerVacanciesClosingSoonWithApplications(accountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
+        vacancyRepositoryMock.Setup(v => v.GetEmployerReviewVacancies(accountId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(0);
 
         // Act
         var result = await vacancyProvider.GetCountByAccountId(accountId);
