@@ -34,6 +34,7 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
     Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyDashboardCountModel>> GetEmployerDashboard(long accountId, CancellationToken cancellationToken);
+    Task<int> GetEmployerReviewVacancies(long accountId, CancellationToken cancellationToken);
     Task<List<(int, bool)>> GetEmployerVacanciesClosingSoonWithApplications(long accountId, CancellationToken cancellationToken);
     Task<List<VacancyDashboardCountModel>> GetProviderDashboard(int ukprn, CancellationToken cancellationToken);
     Task<List<(int, bool)>> GetProviderVacanciesClosingSoonWithApplications(int ukprn, CancellationToken cancellationToken);
@@ -415,6 +416,20 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             Status = c.Key,
             Count = c.Count()
         }).ToList();
+    }
+
+    public async Task<int> GetEmployerReviewVacancies(long accountId, CancellationToken cancellationToken)
+    {
+        var result = await dataContext.VacancyEntities.AsNoTracking()
+            .Where(c=>c.AccountId == accountId && c.OwnerType == OwnerType.Provider && c.Status == VacancyStatus.Review)
+            .Select(c => new {
+                c.LegalEntityName,
+                c.Title,
+                c.VacancyReference
+            })
+            .CountAsync(cancellationToken);
+
+        return result;
     }
 
     public async Task<List<(int, bool)>> GetEmployerVacanciesClosingSoonWithApplications(long accountId,
