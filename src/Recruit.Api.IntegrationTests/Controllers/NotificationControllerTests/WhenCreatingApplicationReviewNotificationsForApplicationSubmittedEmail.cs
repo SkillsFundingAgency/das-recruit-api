@@ -7,6 +7,7 @@ using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.UnitTests;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using Address = SFA.DAS.Recruit.Api.Domain.Models.Address;
 using UserType = SFA.DAS.Recruit.Api.Domain.Enums.UserType;
 
@@ -163,6 +164,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         vacancy.EmployerLocationOption = AvailableWhere.MultipleLocations;
         vacancy.EmployerLocations = ApiUtils.SerializeOrNull(addresses);
 
+        providerUser.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
         providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);

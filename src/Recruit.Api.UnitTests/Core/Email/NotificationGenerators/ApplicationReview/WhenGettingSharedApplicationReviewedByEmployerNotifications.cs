@@ -115,6 +115,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         [Greedy] SharedApplicationReviewedByEmployerNotificationFactory sut)
     {
         // arrange
+        user.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         user.UserType = UserType.Provider;
         user.SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         vacancy.OwnerType = OwnerType.Provider;
@@ -167,6 +168,10 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
     {
         // arrange
         // these users should receive notifications
+        foreach (UserEntity userEntity in users)
+        {
+            userEntity.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
+        }
         users[0].SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         users[1].SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.UserSubmittedVacancies, NotificationFrequency.Immediately);
         

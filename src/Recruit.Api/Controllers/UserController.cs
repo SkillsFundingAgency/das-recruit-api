@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
@@ -142,7 +141,25 @@ public class UserController
         
         return TypedResults.Ok(result.ToGetResponse());
     }
-    
+
+    [HttpGet, Route("status/{status}")]
+    [ProducesResponseType(typeof(List<RecruitUser>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetAllByStatus(
+        [FromServices] IUserRepository repository,
+        [FromRoute] UserStatus status = UserStatus.Inactive,
+        CancellationToken cancellationToken = default)
+    {
+        if (status != UserStatus.Inactive)
+        {
+            return TypedResults.BadRequest($"Status '{status}' is not supported. Only 'inactive' is supported.");
+        }
+        var result = await repository.FindAllInActiveUsersAsync(cancellationToken);
+        return TypedResults.Ok(result
+            .Select(x => x.ToGetResponse())
+            .ToList());
+    }
+
     [HttpPut, Route("{id:guid}")]
     [ProducesResponseType(typeof(PutUserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PutUserResponse), StatusCodes.Status201Created)]

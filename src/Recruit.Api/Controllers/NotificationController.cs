@@ -55,7 +55,7 @@ public class NotificationController : ControllerBase
         [FromServices] IApplicationReviewRepository applicationReviewsRepository,
         [FromServices] INotificationsRepository notificationsRepository,
         [FromServices] IApplicationReviewNotificationStrategy strategy,
-        [FromServices] IEmailFactory emailfactory,
+        [FromServices] IEmailFactory emailFactory,
         [FromRoute] Guid id,
         CancellationToken cancellationToken
         )
@@ -74,7 +74,7 @@ public class NotificationController : ControllerBase
             {
                 await notificationsRepository.InsertManyAsync(recruitNotifications.Delayed, cancellationToken);
             }
-            var results = emailfactory.CreateFrom(recruitNotifications.Immediate);
+            var results = emailFactory.CreateFrom(recruitNotifications.Immediate);
             return TypedResults.Ok(results);
         }
         catch (DataIntegrityException ex)
@@ -96,7 +96,7 @@ public class NotificationController : ControllerBase
         [FromServices] IVacancyRepository vacancyRepository,
         [FromServices] INotificationsRepository notificationsRepository,
         [FromServices] IVacancyNotificationStrategy strategy,
-        [FromServices] IEmailFactory emailfactory,
+        [FromServices] IEmailFactory emailFactory,
         [FromRoute] Guid id,
         CancellationToken cancellationToken
     )
@@ -115,7 +115,7 @@ public class NotificationController : ControllerBase
             {
                 await notificationsRepository.InsertManyAsync(recruitNotifications.Delayed, cancellationToken);
             }
-            var results = emailfactory.CreateFrom(recruitNotifications.Immediate);
+            var results = emailFactory.CreateFrom(recruitNotifications.Immediate);
             return TypedResults.Ok(results);
         }
         catch (EntityStateNotSupportedException ex)

@@ -15,8 +15,10 @@ public class NotificationsRepository(IRecruitDataContext dataContext): INotifica
     public async Task<List<RecruitNotificationEntity>> GetBatchByDateAsync(DateTime when, CancellationToken cancellationToken)
     {
         const int numberOfUniqueUsers = 1;
+        DateTime cutOffDateTime = DateTime.UtcNow.AddYears(-1);
+
         var userIds = await dataContext.RecruitNotifications
-            .Where(x => x.SendWhen < when)
+            .Where(x => x.SendWhen < when && x.User.LastSignedInDate != null && x.User.LastSignedInDate > cutOffDateTime)
             .Select(x => x.UserId)
             .Distinct()
             .Take(numberOfUniqueUsers)
