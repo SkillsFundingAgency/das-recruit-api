@@ -17,7 +17,7 @@ public class VacancyReferenceSpecimenBuilder : ISpecimenBuilder
             && param.ParameterType == typeof(string)
             && param.Name == "value")
         {
-            return VacancyReferenceGenerator.GetNextVacancyReference().ToString();
+            return VacancyReferenceGenerator.GetNext().ToString();
         }
             
         return new NoSpecimen();

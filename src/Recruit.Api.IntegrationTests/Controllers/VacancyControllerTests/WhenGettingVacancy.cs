@@ -15,7 +15,7 @@ public class WhenGettingVacancy: MsSqlBaseFixture
     public async Task Then_The_Vacancy_Is_Returned()
     {
         // arrange
-        var items = await TestData.CreateMany<VacancyEntity>(10);
+        var items = await DbData.CreateMany<VacancyEntity>(10);
         var expected = items[new Random().Next(items.Count)];
 
         // act
@@ -25,14 +25,14 @@ public class WhenGettingVacancy: MsSqlBaseFixture
         // assert
         response.EnsureSuccessStatusCode();
         vacancy.Should().NotBeNull();
-        vacancy.Should().BeEquivalentTo(expected.ToGetResponse(), Tolerate.SqlDateTime<Vacancy>());
+        vacancy.Should().BeEquivalentTo(expected.ToGetResponse());
     }
     
     [Test]
     public async Task Then_The_Vacancy_Is_NotFound()
     {
         // arrange
-        await TestData.CreateMany<VacancyEntity>(10);
+        await DbData.CreateMany<VacancyEntity>(10);
 
         // act
         var response = await Measure.ThisAsync(async () => await Client.GetAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}"));

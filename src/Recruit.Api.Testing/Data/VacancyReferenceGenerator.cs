@@ -7,7 +7,7 @@ public static class VacancyReferenceGenerator
     private static readonly object LockObject = new();
     private static long _currentValue = 200000000L;
 
-    public static VacancyReference GetNextVacancyReference()
+    public static VacancyReference GetNext()
     {
         lock (LockObject)
         {

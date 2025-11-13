@@ -39,7 +39,7 @@ public class VacancyEntitySpecimenBuilder : ISpecimenBuilder
             case "ProgrammeId":
                 return JsonSerializer.Serialize(context.Create<long>(), JsonOptions);
             case "VacancyReference":
-                return VacancyReferenceGenerator.GetNextVacancyReference().Value;
+                return VacancyReferenceGenerator.GetNext().Value;
             default: return new NoSpecimen();
         }
     }

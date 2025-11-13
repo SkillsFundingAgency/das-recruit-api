@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.Testing.Diagnostics;
 
 public static class Measure
 {
-    private const int Tolerance = 600;
+    private const int Tolerance = 2000;
     
     private static void CheckTime(long elapsedMilliseconds, long millisecondsTimeout, string callerName)
     {

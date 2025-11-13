@@ -29,7 +29,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
     public async Task Then_An_Open_Vacancy_With_A_Specific_State_Is_Soft_Deleted(VacancyStatus status)
     {
         // arrange
-        var vacancy = await TestData.Create<VacancyEntity>(x =>
+        var vacancy = await DbData.Create<VacancyEntity>(x =>
         {
             x.ClosingDate = DateTime.UtcNow.AddDays(1);
             x.ClosedDate = null;
@@ -42,7 +42,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-        var record = await TestData.Get<VacancyEntity>(vacancy.Id);
+        var record = await DbData.Get<VacancyEntity>(vacancy.Id);
         record!.DeletedDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
     }
     
@@ -50,7 +50,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
     public async Task Then_A_Submitted_Vacancy_That_Has_Not_Closed_Can_Be_Deleted()
     {
         // arrange
-        var vacancy = await TestData.Create<VacancyEntity>(x =>
+        var vacancy = await DbData.Create<VacancyEntity>(x =>
         {
             x.Status = VacancyStatus.Submitted;
             x.ClosingDate = DateTime.UtcNow.AddDays(-1);
@@ -69,7 +69,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
     public async Task Then_A_Submitted_Vacancy_That_Has_Closed_Cannot_Be_Deleted()
     {
         // arrange
-        var vacancy = await TestData.Create<VacancyEntity>(x =>
+        var vacancy = await DbData.Create<VacancyEntity>(x =>
         {
             x.Status = VacancyStatus.Submitted;
             x.ClosingDate = DateTime.UtcNow.AddHours(1);
@@ -93,7 +93,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
     public async Task Then_An_Open_Vacancy_With_The_Specific_State_Cannot_Be_Deleted(VacancyStatus status)
     {
         // arrange
-        var vacancy = await TestData.Create<VacancyEntity>(x =>
+        var vacancy = await DbData.Create<VacancyEntity>(x =>
         {
             x.Status = status;
             x.ClosedDate = null;
@@ -115,7 +115,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
     public async Task Then_An_Closed_Vacancy_Cannot_Be_Deleted()
     {
         // arrange
-        var vacancy = await TestData.Create<VacancyEntity>(x =>
+        var vacancy = await DbData.Create<VacancyEntity>(x =>
         {
             x.Status = VacancyStatus.Closed;
             x.ClosureReason = ClosureReason.Auto;
@@ -139,7 +139,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
     public async Task Then_A_Deleted_Vacancy_Cannot_Be_Deleted()
     {
         // arrange
-        var vacancy = await TestData.Create<VacancyEntity>(x =>
+        var vacancy = await DbData.Create<VacancyEntity>(x =>
         {
             x.DeletedDate = DateTime.UtcNow;
         });
