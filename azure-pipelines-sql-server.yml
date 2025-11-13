@@ -82,6 +82,7 @@ stages:
               IsMultiRepoCheckout: true
               # TemplateSecrets:
               #   sqlServerPassword: $(sqlServerPassword)
+
   - job: Test
     pool:
       vmImage: 'ubuntu-latest'
@@ -92,6 +93,8 @@ stages:
       sqlServerName: das-ci-tests-sql
     steps:
     - checkout: das-platform-automation
+    - download: current
+
     - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
       parameters:
         AzureSubscription: $(ARMServiceConnection)
