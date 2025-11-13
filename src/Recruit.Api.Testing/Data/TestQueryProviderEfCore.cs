@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
+namespace SFA.DAS.Recruit.Api.Testing.Data;
 
 public class TestAsyncEnumerableEfCore<T> : TestQueryProvider<T>, IAsyncEnumerable<T>, IAsyncQueryProvider
 {

@@ -1,13 +1,13 @@
 ﻿using SFA.DAS.Recruit.Api.Domain.Models;
 
-namespace SFA.DAS.Recruit.Api.UnitTests;
+namespace SFA.DAS.Recruit.Api.Testing.Data.Generators;
 
 public static class VacancyReferenceGenerator
 {
     private static readonly object LockObject = new();
     private static long _currentValue = 200000000L;
 
-    public static VacancyReference GetNextVacancyReference()
+    public static VacancyReference GetNext()
     {
         lock (LockObject)
         {

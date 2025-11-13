@@ -32,7 +32,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="NUnit3TestAdapter" Version="5.1.0" />
-        <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="17.1.103" />
+        <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="17.1.146" />
     </ItemGroup>
 
     <ItemGroup>
@@ -50,7 +50,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Recruit.Api.UnitTests\Recruit.Api.UnitTests.csproj" />
+      <ProjectReference Include="..\Recruit.Api.Testing\Recruit.Api.Testing.csproj" />
       <ProjectReference Include="..\Recruit.Api\Recruit.Api.csproj" />
     </ItemGroup>
 

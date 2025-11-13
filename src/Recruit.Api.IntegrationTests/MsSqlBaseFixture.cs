@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Recruit.Api.Data;
-using SFA.DAS.Recruit.Api.UnitTests;
-using IServiceScope = Microsoft.Extensions.DependencyInjection.IServiceScope;
+using SFA.DAS.Recruit.Api.Testing.Data;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
-[Category("Integration")]
 public abstract class MsSqlBaseFixture
 {
     // private
@@ -17,7 +15,7 @@ public abstract class MsSqlBaseFixture
     // protected
     protected IFixture Fixture;
     protected HttpClient Client;
-    internal TestDataManager TestData { get; private set; }
+    internal TestDataManager DbData { get; private set; }
 
     [SetUp]
     public virtual void Setup()
@@ -28,7 +26,7 @@ public abstract class MsSqlBaseFixture
         Fixture.Customizations.Add(new VacancyReferenceSpecimenBuilder());
         Fixture.Customizations.Add(new VacancyReviewEntitySpecimenBuilder());
         Fixture.Customizations.Add(new VacancyEntitySpecimenBuilder());
-        Fixture.Customizations.Add(new UserEntitySpecimenBuilder());
+        Fixture.Customizations.Add(new CustomDateTimeSpecimenBuilder());
         Fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => Fixture.Behaviors.Remove(b));
         Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
@@ -36,13 +34,13 @@ public abstract class MsSqlBaseFixture
         _dataContext = _serviceScope.ServiceProvider.GetRequiredService<RecruitDataContext>();
         
         var configuration = _server.Server.Services.GetService(typeof(IConfiguration)) as IConfiguration;
-        TestData = new TestDataManager(_dataContext, Fixture, configuration.GetDbSchemaName());
+        DbData = new TestDataManager(_dataContext, Fixture, configuration.GetDbSchemaName());
     }
 
     [TearDown]
     public virtual void Teardown()
     {
-        TestData = null!;
+        DbData = null!;
         _dataContext.Dispose();
         _serviceScope.Dispose();
         

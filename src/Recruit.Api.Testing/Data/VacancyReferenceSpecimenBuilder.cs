@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
 using AutoFixture.Kernel;
 using SFA.DAS.Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Api.Testing.Data.Generators;
 
-namespace SFA.DAS.Recruit.Api.UnitTests;
+namespace SFA.DAS.Recruit.Api.Testing.Data;
 
 public class VacancyReferenceSpecimenBuilder : ISpecimenBuilder
 {
@@ -17,7 +18,7 @@ public class VacancyReferenceSpecimenBuilder : ISpecimenBuilder
             && param.ParameterType == typeof(string)
             && param.Name == "value")
         {
-            return VacancyReferenceGenerator.GetNextVacancyReference().ToString();
+            return VacancyReferenceGenerator.GetNext().ToString();
         }
             
         return new NoSpecimen();
