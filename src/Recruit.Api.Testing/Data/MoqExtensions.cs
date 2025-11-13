@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Moq;
 using Moq.Language;
 using Moq.Language.Flow;
 using SFA.DAS.Recruit.Api.Data;
 
-namespace SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
+namespace SFA.DAS.Recruit.Api.Testing.Data;
 
 public static class MoqExtensions
 {

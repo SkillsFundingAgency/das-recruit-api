@@ -1,4 +1,9 @@
-﻿namespace SFA.DAS.Recruit.Api.UnitTests;
+﻿using AutoFixture;
+using AutoFixture.NUnit3;
+using SFA.DAS.Recruit.Api.Testing.Data;
+using SFA.DAS.Testing.AutoFixture;
+
+namespace SFA.DAS.Recruit.Api.Testing;
 
 public static class RecruitFixtureBuilder
 {
@@ -14,4 +19,4 @@ public static class RecruitFixtureBuilder
 }
 
 public class RecruitAutoDataAttribute() : AutoDataAttribute(RecruitFixtureBuilder.FixtureFactory); 
-public class RecruitInlineAutoDataAttribute(params object[] arguments) : InlineAutoDataAttribute(RecruitFixtureBuilder.FixtureFactory, arguments); 
+public class RecruitInlineAutoDataAttribute(params object[] arguments) : InlineAutoDataAttribute(RecruitFixtureBuilder.FixtureFactory, arguments);
