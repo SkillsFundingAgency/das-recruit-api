@@ -2,7 +2,7 @@
 using AutoFixture.Kernel;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
-namespace SFA.DAS.Recruit.Api.UnitTests;
+namespace SFA.DAS.Recruit.Api.Testing.Data;
 
 public class VacancyReferenceSpecimenBuilder : ISpecimenBuilder
 {

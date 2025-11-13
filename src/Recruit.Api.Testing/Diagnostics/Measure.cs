@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using NUnit.Framework;
 
-namespace SFA.DAS.Recruit.Api.IntegrationTests;
+namespace SFA.DAS.Recruit.Api.Testing.Diagnostics;
 
-internal static class Measure
+public static class Measure
 {
     private const int Tolerance = 600;
     

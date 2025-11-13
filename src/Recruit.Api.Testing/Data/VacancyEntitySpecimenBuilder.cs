@@ -1,12 +1,13 @@
 ﻿using System.Reflection;
 using System.Text.Json;
+using AutoFixture;
 using AutoFixture.Kernel;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using Address = SFA.DAS.Recruit.Api.Models.Address;
 
-namespace SFA.DAS.Recruit.Api.UnitTests;
+namespace SFA.DAS.Recruit.Api.Testing.Data;
 
 public class VacancyEntitySpecimenBuilder : ISpecimenBuilder
 {

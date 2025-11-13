@@ -1,7 +1,9 @@
-﻿using FluentAssertions.Equivalency;
+﻿using FluentAssertions;
+using FluentAssertions.Equivalency;
 using FluentAssertions.Execution;
+using Moq;
 
-namespace SFA.DAS.Recruit.Api.UnitTests;
+namespace SFA.DAS.Recruit.Api.Testing;
 
 public static class ItIs
 {

@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Recruit.Api.Data;
-using SFA.DAS.Recruit.Api.UnitTests;
-using IServiceScope = Microsoft.Extensions.DependencyInjection.IServiceScope;
+using SFA.DAS.Recruit.Api.Testing.Data;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 

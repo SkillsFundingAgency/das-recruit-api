@@ -6,12 +6,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Data;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
 public class MsSqlTestServer : WebApplicationFactory<Program>
 {
+    public Mock<IEncodingService> EncodingService { get; } = new ();
+    
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder
@@ -28,11 +31,14 @@ public class MsSqlTestServer : WebApplicationFactory<Program>
     {
         builder.ConfigureServices((context, services) =>
         {
+            // Data context
             var connectionString = context.Configuration.GetConnectionString("Integration");
-            
             services.Remove(services.SingleOrDefault(service => typeof(DbContextOptions<RecruitDataContext>) == service.ServiceType)!);
             services.Remove(services.SingleOrDefault(service => typeof(DbConnection) == service.ServiceType)!);
             services.AddDbContext<RecruitDataContext>((_, option) => option.UseSqlServer(connectionString));
+            
+            // Encoding service mock
+            services.AddTransient<IEncodingService>(x => EncodingService.Object);
         });
     }
 }

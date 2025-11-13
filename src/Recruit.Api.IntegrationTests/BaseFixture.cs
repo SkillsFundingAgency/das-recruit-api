@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Recruit.Api.UnitTests;
+﻿using SFA.DAS.Recruit.Api.Testing.Data;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 

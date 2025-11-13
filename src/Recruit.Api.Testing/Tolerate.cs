@@ -1,6 +1,7 @@
-﻿using FluentAssertions.Equivalency;
+﻿using FluentAssertions;
+using FluentAssertions.Equivalency;
 
-namespace SFA.DAS.Recruit.Api.IntegrationTests;
+namespace SFA.DAS.Recruit.Api.Testing;
 
 public static class Tolerate
 {
