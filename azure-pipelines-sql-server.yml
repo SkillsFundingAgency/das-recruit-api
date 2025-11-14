@@ -58,63 +58,55 @@ stages:
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
   jobs:
-  # - deployment: DeploySQLServer
-  #   displayName: Deploy SQL Server
-  #   environment: DEV
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-  #         - template: azure-pipelines-templates/deploy/step/wait-azure-devops-deployment.yml@das-platform-building-blocks
-  #           parameters:
-  #             ServiceConnection: $(ARMServiceConnection)
-  #             EnvironmentId: $(Environment.Id)
-  #             PipelineName: $(Build.DefinitionName)
-  #             RunId: $(Build.BuildId)
-  #         - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
-  #           parameters:
-  #             ServiceConnection: $(ARMServiceConnection)
-  #             SubscriptionId: $(SubscriptionId)
-  #             Location: $(location)
-  #             Environment: DEV
-  #             TemplatePath: $(Pipeline.Workspace)/drop/azure/template-sql-server.json
-  #             ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
-  #             IsMultiRepoCheckout: true
-  #             # TemplateSecrets:
-  #             #   sqlServerPassword: $(sqlServerPassword)
+  - deployment: DeploySQLServer
+    displayName: Deploy SQL Server
+    environment: DEV
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: azure-pipelines-templates/deploy/step/wait-azure-devops-deployment.yml@das-platform-building-blocks
+            parameters:
+              ServiceConnection: $(ARMServiceConnection)
+              EnvironmentId: $(Environment.Id)
+              PipelineName: $(Build.DefinitionName)
+              RunId: $(Build.BuildId)
+          - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
+            parameters:
+              ServiceConnection: $(ARMServiceConnection)
+              SubscriptionId: $(SubscriptionId)
+              Location: $(location)
+              Environment: DEV
+              TemplatePath: $(Pipeline.Workspace)/drop/azure/template-sql-server.json
+              ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
+              IsMultiRepoCheckout: true
+              TemplateSecrets:
+                sqlServerPassword: $(sqlServerPassword)
 
   - job: Test
-    pool:
-      vmImage: 'ubuntu-latest'
     displayName: Run Integration Tests
-    # dependsOn: DeploySQLServer
+    dependsOn: DeploySQLServer
     variables:
       resourceGroupName: das-ci-tests-rg  
       sqlServerName: das-ci-tests-sql
     steps:
     - checkout: das-platform-automation
-    - checkout: das-platform-building-blocks
     - download: current
       artifact: DacpacArtifact
 
-    - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
-      parameters:
+    - task: SqlAzureDacpacDeployment@1
+      displayName: Execute Azure SQL DacpacTask
+      inputs:
         AzureSubscription: $(ARMServiceConnection)
         ServerName: $(sqlServerName)
-        SqlUsername: $(sqlServerUser)
-        DacpacFile: $(Pipeline.Workspace)/DacpacArtifact/src/${{ variables.SolutionBaseName }}.Database/bin/release/netstandard2.1/${{ variables.SolutionBaseName }}.Database.dacpac
         DatabaseName: $(sqlDB)
-        OverrideBlockOnPossibleDataLoss: false
-        Environment: AT
+        SqlUsername: $(sqlServerUser)
+        SqlPassword: $(sqlServerPassword)
+        DacpacFile:  $(Pipeline.Workspace)/DacpacArtifact/src/${{ variables.SolutionBaseName }}.Database/bin/release/netstandard2.1/${{ variables.SolutionBaseName }}.Database.dacpac
 
-    - task: AzureCLI@2
+    - powershell: |
+        Write-Host "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(sqlServerName).database.windows.net,1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       displayName: Set Connection String Variable
-      inputs:
-        azureSubscription: $(ARMServiceConnection)
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          echo "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(sqlServerName).database.windows.net,1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
     - task: UseDotNet@2
       inputs:
@@ -122,25 +114,25 @@ stages:
         version: '8.x'
 
     # (Optional) run schema/migrations for tests
-    - script: |
+    - powershell: |
         dotnet tool install --global dotnet-ef
-        export PATH="$PATH:$HOME/.dotnet/tools"
+        $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
         # adjust project paths as needed:
         # dotnet ef database update --project src/App/App.csproj --startup-project tests/Tests/Tests.csproj --connection "$(ADO_CONNSTR)"
       displayName: 'Apply DB migrations (optional)'
       condition: succeeded()
 
     # Unit tests
-    - script: |
-        dotnet test --configuration Release --filter "TestCategory!=Integration"
+    - powershell: |
+        dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
       displayName: 'Run Unit Tests'
       workingDirectory: src
 
     # Integration tests (point SQL DB)
-    - script: |
-        export ConnectionStrings__Integration="$(ADO_CONNSTR)"
-        export IntegrationTestsDbSchemaName="$(sqlDB)"
-        dotnet test --configuration Release --filter "TestCategory=Integration"
+    - powershell: |
+        $env:ConnectionStrings__Integration = $(ADO_CONNSTR)
+        $env:IntegrationTestsDbSchemaName = $(sqlDB)
+        dotnet test --configuration "Release" --filter 'TestCategory=Integration'
       displayName: 'Run Integration Tests'
       workingDirectory: src
 
@@ -150,7 +142,7 @@ stages:
       condition: always()
       inputs:
         azureSubscription: $(ARMServiceConnection)
-        scriptType: bash
+        scriptType: ps
         scriptLocation: inlineScript
         inlineScript: |
-          az sql db delete --name "$(sqlDB)" --resource-group "$(resourceGroupName)" --server "$(sqlServerName)" --yes
+          Remove-AzSqlDatabase -DatabaseName "$(sqlDB)" -ResourceGroupName "$(resourceGroupName)" -ServerName "$(sqlServerName)" -Force
