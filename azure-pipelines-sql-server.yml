@@ -115,15 +115,6 @@ stages:
         packageType: 'sdk'
         version: '8.x'
 
-    # (Optional) run schema/migrations for tests
-    - powershell: |
-        dotnet tool install --global dotnet-ef
-        $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
-        # adjust project paths as needed:
-        # dotnet ef database update --project src/App/App.csproj --startup-project tests/Tests/Tests.csproj --connection "$(ADO_CONNSTR)"
-      displayName: 'Apply DB migrations (optional)'
-      condition: succeeded()
-
     # Unit tests
     - powershell: |
         dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
