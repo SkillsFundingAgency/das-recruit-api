@@ -1,4 +1,8 @@
+using System.Text.Json;
+using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Models.Mappers;
@@ -108,5 +112,59 @@ public class VacancyExtensionTests
 
         actual.Qualifications.Should().BeEmpty();
         actual.Skills.Should().BeEmpty();
+    }
+    
+    [Test, RecursiveMoqInlineAutoData]
+    public void Then_If_Null_For_EmployerLocationOption_And_One_Address_Sets_Location_Option_To_OneLocation(VacancyEntity entity, Address address)
+    {
+        entity.Skills = null;
+        entity.Qualifications = null;
+        entity.EmployerLocations = JsonSerializer.Serialize(new List<Address>{address}, JsonConfig.Options);
+        entity.EmployerReviewFieldIndicators = null;
+        entity.ProviderReviewFieldIndicators = null;
+        entity.TransferInfo = null;
+        entity.Ukprn = null;
+        entity.EmployerLocationOption = null;
+        
+        
+        var actual = entity.ToGetResponse();
+
+        actual.EmployerLocationOption.Should().Be(AvailableWhere.OneLocation);
+    }
+    
+    [Test, RecursiveMoqInlineAutoData]
+    public void Then_If_Null_For_EmployerLocationOption_And_More_Than_One_Address_Sets_Location_Option_To_OneLocation(VacancyEntity entity, List<Address> addresses)
+    {
+        entity.Skills = null;
+        entity.Qualifications = null;
+        entity.EmployerLocations = JsonSerializer.Serialize(addresses, JsonConfig.Options);
+        entity.EmployerReviewFieldIndicators = null;
+        entity.ProviderReviewFieldIndicators = null;
+        entity.TransferInfo = null;
+        entity.Ukprn = null;
+        entity.EmployerLocationOption = null;
+        
+        
+        var actual = entity.ToGetResponse();
+
+        actual.EmployerLocationOption.Should().Be(AvailableWhere.MultipleLocations);
+    }
+    
+    [Test, RecursiveMoqInlineAutoData]
+    public void Then_If_Null_For_EmployerLocationOption_And_No_Address_Sets_Location_Option_To_AcrossEngland(VacancyEntity entity)
+    {
+        entity.Skills = null;
+        entity.Qualifications = null;
+        entity.EmployerLocations = null;
+        entity.EmployerReviewFieldIndicators = null;
+        entity.ProviderReviewFieldIndicators = null;
+        entity.TransferInfo = null;
+        entity.Ukprn = null;
+        entity.EmployerLocationOption = null;
+        
+        
+        var actual = entity.ToGetResponse();
+
+        actual.EmployerLocationOption.Should().Be(AvailableWhere.AcrossEngland);
     }
 }
