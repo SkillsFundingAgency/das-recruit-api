@@ -57,7 +57,7 @@ stages:
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
   pool:
-    name: DAS - Continuous Deployment Agents
+    vmImage: ubuntu-latest
   jobs:
   - deployment: DeploySQLServer
     displayName: Deploy SQL Server
