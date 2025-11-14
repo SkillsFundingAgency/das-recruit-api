@@ -58,30 +58,30 @@ stages:
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
   jobs:
-  - deployment: DeploySQLServer
-    displayName: Deploy SQL Server
-    environment: DEV
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - template: azure-pipelines-templates/deploy/step/wait-azure-devops-deployment.yml@das-platform-building-blocks
-            parameters:
-              ServiceConnection: $(ARMServiceConnection)
-              EnvironmentId: $(Environment.Id)
-              PipelineName: $(Build.DefinitionName)
-              RunId: $(Build.BuildId)
-          - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
-            parameters:
-              ServiceConnection: $(ARMServiceConnection)
-              SubscriptionId: $(SubscriptionId)
-              Location: $(location)
-              Environment: DEV
-              TemplatePath: $(Pipeline.Workspace)/drop/azure/template-sql-server.json
-              ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
-              IsMultiRepoCheckout: true
-              # TemplateSecrets:
-              #   sqlServerPassword: $(sqlServerPassword)
+  # - deployment: DeploySQLServer
+  #   displayName: Deploy SQL Server
+  #   environment: DEV
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - template: azure-pipelines-templates/deploy/step/wait-azure-devops-deployment.yml@das-platform-building-blocks
+  #           parameters:
+  #             ServiceConnection: $(ARMServiceConnection)
+  #             EnvironmentId: $(Environment.Id)
+  #             PipelineName: $(Build.DefinitionName)
+  #             RunId: $(Build.BuildId)
+  #         - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
+  #           parameters:
+  #             ServiceConnection: $(ARMServiceConnection)
+  #             SubscriptionId: $(SubscriptionId)
+  #             Location: $(location)
+  #             Environment: DEV
+  #             TemplatePath: $(Pipeline.Workspace)/drop/azure/template-sql-server.json
+  #             ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
+  #             IsMultiRepoCheckout: true
+  #             # TemplateSecrets:
+  #             #   sqlServerPassword: $(sqlServerPassword)
 
   - job: Test
     pool:
