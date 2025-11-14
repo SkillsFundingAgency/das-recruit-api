@@ -48,7 +48,7 @@ stages:
       inputs:
         targetPath: $(build.artifactstagingdirectory)/publish
         artifactName: drop
-  
+
   - template: azure-pipelines-templates/build/job/dacpaccs-template.yml@das-platform-building-blocks
     parameters:
       SolutionBaseName: ${{ variables.SolutionBaseName }}
@@ -62,8 +62,6 @@ stages:
   - deployment: DeploySQLServer
     displayName: Deploy SQL Server
     environment: AT
-    variables:
-      SqlServerPassword: $(sqlServerPassword)
     strategy:
       runOnce:
         deploy:
@@ -84,13 +82,13 @@ stages:
               ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
               IsMultiRepoCheckout: true
               TemplateSecrets:
-                SqlServerPassword: $(SqlServerPassword)
+                SqlServerPassword: $(sqlServerPassword)
 
   - job: Test
     displayName: Run Integration Tests
     # dependsOn: DeploySQLServer
     variables:
-      resourceGroupName: das-ci-tests-rg  
+      resourceGroupName: das-ci-tests-rg
       sqlServerName: das-ci-tests-sql
       serverName: das-ci-tests-sql.database.windows.net
     steps:
