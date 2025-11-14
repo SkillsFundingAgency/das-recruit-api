@@ -15,7 +15,7 @@
         "type": "string"
       },
       "sqlServerPassword": {
-        "type": "string"
+        "type": "secureString"
       },
       "sqlServerUser": {
         "type": "string"
