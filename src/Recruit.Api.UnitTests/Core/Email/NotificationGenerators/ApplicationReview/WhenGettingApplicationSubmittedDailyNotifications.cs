@@ -91,6 +91,7 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         vacancy.OwnerType = OwnerType.Employer;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Employer;
+        user.LastSignedInDate = DateTime.UtcNow;
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
         
         vacancyRepository
@@ -147,6 +148,8 @@ public class WhenGettingApplicationSubmittedDailyNotifications
     {
         // arrange
         user.UserType = UserType.Provider;
+        user.LastSignedInDate = DateTime.UtcNow;
+
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet);
         
         userRepository

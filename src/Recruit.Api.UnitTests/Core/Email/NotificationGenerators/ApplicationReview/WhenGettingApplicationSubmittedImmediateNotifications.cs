@@ -89,6 +89,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         vacancy.OwnerType = OwnerType.Employer;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Employer;
+        user.LastSignedInDate = DateTime.UtcNow;
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         vacancyRepository

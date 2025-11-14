@@ -12,7 +12,6 @@ public interface IUserRepository : IReadRepository<UserEntity, Guid>, IWriteRepo
     Task<List<UserEntity>> FindUsersByUkprnAsync(long ukprn, CancellationToken cancellationToken);
     Task<UserEntity?> FindUserByIdamsAsync(string idams, CancellationToken cancellationToken);
     Task<UserEntity?> FindUserByDfeUserIdAsync(string dfeUserId, CancellationToken cancellationToken);
-    Task<List<UserEntity>> FindAllInActiveUsersAsync(CancellationToken cancellationToken);
 }
 
 public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
@@ -113,13 +112,5 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
         var user = await dataContext.UserEntities.SingleOrDefaultAsync(x => x.DfEUserId == dfeUserId, cancellationToken);
         NotificationPreferenceDefaults.Update(user);
         return user;
-    }
-
-    public async Task<List<UserEntity>> FindAllInActiveUsersAsync(CancellationToken cancellationToken)
-    {
-        DateTime cutOffDateTime = DateTime.UtcNow.AddYears(-1);
-        return await dataContext.UserEntities
-            .Where(u => u.LastSignedInDate != null && u.LastSignedInDate > cutOffDateTime)
-            .ToListAsync(cancellationToken);
     }
 }
