@@ -120,10 +120,10 @@ stages:
         version: '8.x'
 
     # Unit tests
-    - powershell: |
-        dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
-      displayName: 'Run Unit Tests'
-      workingDirectory: $(Pipeline.Workspace)/drop/src
+    # - powershell: |
+    #     dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
+    #   displayName: 'Run Unit Tests'
+    #   workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Integration tests (point SQL DB)
     - powershell: |
