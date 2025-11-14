@@ -6,7 +6,6 @@ using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
@@ -340,8 +339,8 @@ public class VacancyController : Controller
         [FromBody] JsonPatchDocument<Vacancy> patchRequest,
         CancellationToken cancellationToken)
     {
-        var vacancy = await repository.GetOneAsync(vacancyId, cancellationToken);
-        if (vacancy is null)
+        var vacancyEntity = await repository.GetOneAsync(vacancyId, cancellationToken);
+        if (vacancyEntity is null)
         {
             return Results.NotFound();
         }
@@ -351,22 +350,22 @@ public class VacancyController : Controller
             patchRequest.ThrowIfOperationsOn([
                 nameof(Vacancy.Id),
                 nameof(Vacancy.ApprenticeshipType),
-                nameof(Vacancy.OwnerType),
                 nameof(Vacancy.VacancyReference),
                 nameof(Vacancy.CreatedDate),
                 nameof(Vacancy.AccountId),
             ]);
-            
-            var patchDocument = patchRequest.ToDomain<Vacancy, VacancyEntity>();
-            patchDocument.ApplyTo(vacancy);
+
+            var vacancy = VacancyMapper.FromEntity(vacancyEntity);
+            patchRequest.ApplyTo(vacancy);
+            vacancyEntity = VacancyMapper.ToEntity(vacancy);
         }
         catch (JsonPatchException ex)
         {
             return TypedResults.ValidationProblem(ex.ToProblemsDictionary());
         }
     
-        await repository.UpsertOneAsync(vacancy, cancellationToken);
-        return TypedResults.Ok(vacancy.ToPatchResponse());
+        await repository.UpsertOneAsync(vacancyEntity, cancellationToken);
+        return TypedResults.Ok(vacancyEntity.ToPatchResponse());
     }
 
     [HttpDelete]

@@ -54,6 +54,7 @@ public static class VacancyExtensions
             ProviderReviewFieldIndicators = ApiUtils.SerializeOrNull(request.ProviderReviewFieldIndicators),
             Qualifications = ApiUtils.SerializeOrNull(request.Qualifications),
             ReviewCount = request.ReviewCount,
+            //ReviewRequestedByUserId = request.ReviewRequestedByUserId, // Currently does a lookup
             ReviewRequestedDate = request.ReviewRequestedDate,
             ShortDescription = request.ShortDescription,
             Skills = ApiUtils.SerializeOrNull(request.Skills),
@@ -62,7 +63,7 @@ public static class VacancyExtensions
             SourceVacancyReference = request.SourceVacancyReference,
             StartDate = request.StartDate,
             Status = request.Status ?? VacancyStatus.Draft,
-            //SubmittedByUserId = request.SubmittedByUserId,
+            //SubmittedByUserId = request.SubmittedByUserId, // Currently does a lookup
             SubmittedDate = request.SubmittedDate,
             ThingsToConsider = request.ThingsToConsider,
             Title = request.Title,
