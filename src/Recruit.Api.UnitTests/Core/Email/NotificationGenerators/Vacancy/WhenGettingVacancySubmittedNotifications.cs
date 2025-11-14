@@ -100,6 +100,7 @@ public class WhenGettingVacancySubmittedNotifications
         // arrange
         var cts = new CancellationTokenSource();
 
+        user.LastSignedInDate = DateTime.UtcNow;
         vacancy.Status = VacancyStatus.Submitted;
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.OwnerType = OwnerType.Provider;

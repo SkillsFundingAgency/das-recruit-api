@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
@@ -142,7 +141,7 @@ public class UserController
         
         return TypedResults.Ok(result.ToGetResponse());
     }
-    
+
     [HttpPut, Route("{id:guid}")]
     [ProducesResponseType(typeof(PutUserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PutUserResponse), StatusCodes.Status201Created)]

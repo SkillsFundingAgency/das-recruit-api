@@ -100,6 +100,7 @@ public class WhenGettingVacancyRejectedNotifications
         // arrange
         var cts = new CancellationTokenSource();
 
+        user.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         vacancy.Status = VacancyStatus.Rejected;
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.EmployerRejectedReason = "Some reason";

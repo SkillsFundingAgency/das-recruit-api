@@ -7,6 +7,7 @@ using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Responses.Notifications;
 
@@ -28,7 +29,25 @@ public class NotificationController : ControllerBase
         var results = emailFactory.CreateFrom(recruitNotifications);
         return TypedResults.Ok(new GetBatchByDateResponse(results));
     }
-    
+
+    [HttpGet, Route("batch/by/userStatus")]
+    [ProducesResponseType(typeof(GetBatchByDateResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetBatchByUserStatus(
+        [FromQuery] UserStatus status,
+        [FromServices] INotificationsRepository repository,
+        [FromServices] IEmailFactory emailFactory,
+        CancellationToken cancellationToken)
+    {
+        if (status != UserStatus.Inactive)
+        {
+            return TypedResults.BadRequest($"Only '{UserStatus.Inactive}' status is supported.");
+        }
+        var recruitNotifications = await repository.GetBatchByUserInactiveStatusAsync(cancellationToken);
+        var results = emailFactory.CreateFrom(recruitNotifications);
+        return TypedResults.Ok(new GetBatchByUserStatusResponse(results));
+    }
+
     [HttpDelete]
     [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -55,7 +74,7 @@ public class NotificationController : ControllerBase
         [FromServices] IApplicationReviewRepository applicationReviewsRepository,
         [FromServices] INotificationsRepository notificationsRepository,
         [FromServices] IApplicationReviewNotificationStrategy strategy,
-        [FromServices] IEmailFactory emailfactory,
+        [FromServices] IEmailFactory emailFactory,
         [FromRoute] Guid id,
         CancellationToken cancellationToken
         )
@@ -74,7 +93,7 @@ public class NotificationController : ControllerBase
             {
                 await notificationsRepository.InsertManyAsync(recruitNotifications.Delayed, cancellationToken);
             }
-            var results = emailfactory.CreateFrom(recruitNotifications.Immediate);
+            var results = emailFactory.CreateFrom(recruitNotifications.Immediate);
             return TypedResults.Ok(results);
         }
         catch (DataIntegrityException ex)
@@ -96,7 +115,7 @@ public class NotificationController : ControllerBase
         [FromServices] IVacancyRepository vacancyRepository,
         [FromServices] INotificationsRepository notificationsRepository,
         [FromServices] IVacancyNotificationStrategy strategy,
-        [FromServices] IEmailFactory emailfactory,
+        [FromServices] IEmailFactory emailFactory,
         [FromRoute] Guid id,
         CancellationToken cancellationToken
     )
@@ -115,7 +134,7 @@ public class NotificationController : ControllerBase
             {
                 await notificationsRepository.InsertManyAsync(recruitNotifications.Delayed, cancellationToken);
             }
-            var results = emailfactory.CreateFrom(recruitNotifications.Immediate);
+            var results = emailFactory.CreateFrom(recruitNotifications.Immediate);
             return TypedResults.Ok(results);
         }
         catch (EntityStateNotSupportedException ex)

@@ -5,6 +5,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.UnitTests;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControllerTests;
 
@@ -44,7 +45,8 @@ public class WhenCreatingVacancyRejectedByEmployerNotifications: BaseFixture
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         vacancy.EmployerRejectedReason = "Some reason";
-        
+
+        providerUser.LastSignedInDate = DateTime.UtcNow;
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
         providerUser.SetEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);

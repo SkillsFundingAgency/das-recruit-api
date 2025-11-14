@@ -27,6 +27,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         // arrange
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
+        user.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         user.UserType = UserType.Provider;
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
@@ -88,6 +89,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         vacancy.OwnerType = OwnerType.Employer;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Employer;
+        user.LastSignedInDate = DateTime.UtcNow;
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         vacancyRepository
