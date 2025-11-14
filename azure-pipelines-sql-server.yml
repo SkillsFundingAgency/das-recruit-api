@@ -86,7 +86,7 @@ stages:
 
   - job: Test
     displayName: Run Integration Tests
-    # dependsOn: DeploySQLServer
+    dependsOn: DeploySQLServer
     variables:
       resourceGroupName: das-ci-tests-rg
       sqlServerName: das-ci-tests-sql
