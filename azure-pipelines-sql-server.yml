@@ -1,8 +1,5 @@
 trigger: none
 
-pool:
-  name: DAS - Continuous Integration Agents
-
 variables:
 - name: SolutionBaseName
   value: Recruit.Api
@@ -27,6 +24,8 @@ resources:
 
 stages:
 - stage: Build
+  pool:
+    name: DAS - Continuous Integration Agents
   jobs:
   - job: CodeBuild
     workspace:
@@ -57,10 +56,12 @@ stages:
 
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
+  pool:
+    name: DAS - Continuous Deployment Agents
   jobs:
   # - deployment: DeploySQLServer
   #   displayName: Deploy SQL Server
-  #   environment: DEV
+  #   environment: AT
   #   strategy:
   #     runOnce:
   #       deploy:
