@@ -57,7 +57,7 @@ stages:
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
   pool:
-    vmImage: ubuntu-latest
+    name: DAS - Continuous Deployment Agents
   jobs:
   - deployment: DeploySQLServer
     displayName: Deploy SQL Server
@@ -85,6 +85,8 @@ stages:
                 SqlServerPassword: $(sqlServerPassword)
 
   - job: Test
+    pool:
+      vmImage: ubuntu-latest
     displayName: Run Integration Tests
     dependsOn: DeploySQLServer
     variables:
