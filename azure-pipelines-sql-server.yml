@@ -86,7 +86,7 @@ stages:
 
   - job: Test
     pool:
-      vmImage: ubuntu-latest
+      vmImage: windows-latest
     displayName: Run Integration Tests
     dependsOn: DeploySQLServer
     variables:
