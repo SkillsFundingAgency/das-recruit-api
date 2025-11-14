@@ -110,10 +110,10 @@ stages:
         Write-Host "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(serverName),1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       displayName: Set Connection String Variable
 
-    - task: UseDotNet@2
-      inputs:
-        packageType: 'sdk'
-        version: '8.x'
+    # - task: UseDotNet@2
+    #   inputs:
+    #     packageType: 'sdk'
+    #     version: '8.x'
 
     # (Optional) run schema/migrations for tests
     - powershell: |
