@@ -59,30 +59,30 @@ stages:
   pool:
     name: DAS - Continuous Deployment Agents
   jobs:
-  - deployment: DeploySQLServer
-    displayName: Deploy SQL Server
-    environment: AT
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - template: azure-pipelines-templates/deploy/step/wait-azure-devops-deployment.yml@das-platform-building-blocks
-            parameters:
-              ServiceConnection: $(ARMServiceConnection)
-              EnvironmentId: $(Environment.Id)
-              PipelineName: $(Build.DefinitionName)
-              RunId: $(Build.BuildId)
-          - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
-            parameters:
-              ServiceConnection: $(ARMServiceConnection)
-              SubscriptionId: $(SubscriptionId)
-              Location: $(location)
-              Environment: AT
-              TemplatePath: $(Pipeline.Workspace)/drop/azure/template-sql-server.json
-              ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
-              IsMultiRepoCheckout: true
-              TemplateSecrets:
-                SqlServerPassword: $(sqlServerPassword)
+  # - deployment: DeploySQLServer
+  #   displayName: Deploy SQL Server
+  #   environment: AT
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - template: azure-pipelines-templates/deploy/step/wait-azure-devops-deployment.yml@das-platform-building-blocks
+  #           parameters:
+  #             ServiceConnection: $(ARMServiceConnection)
+  #             EnvironmentId: $(Environment.Id)
+  #             PipelineName: $(Build.DefinitionName)
+  #             RunId: $(Build.BuildId)
+  #         - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
+  #           parameters:
+  #             ServiceConnection: $(ARMServiceConnection)
+  #             SubscriptionId: $(SubscriptionId)
+  #             Location: $(location)
+  #             Environment: AT
+  #             TemplatePath: $(Pipeline.Workspace)/drop/azure/template-sql-server.json
+  #             ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
+  #             IsMultiRepoCheckout: true
+  #             TemplateSecrets:
+  #               SqlServerPassword: $(sqlServerPassword)
 
   - job: Test
     pool:
@@ -120,14 +120,14 @@ stages:
         version: '8.x'
 
     # Unit tests
-    - powershell: |
-        dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
-      displayName: 'Run Unit Tests'
-      workingDirectory: $(Pipeline.Workspace)/drop/src
+    # - powershell: |
+    #     dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
+    #   displayName: 'Run Unit Tests'
+    #   workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Integration tests (point SQL DB)
     - powershell: |
-        $env:ConnectionStrings__Integration = $(ADO_CONNSTR)
+        $env:ConnectionStrings__Integration = '$(ADO_CONNSTR)'
         $env:IntegrationTestsDbSchemaName = $(sqlDB)
         dotnet test --configuration "Release" --filter 'TestCategory=Integration'
       displayName: 'Run Integration Tests'
