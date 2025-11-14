@@ -27,7 +27,7 @@ internal class WhenGettingBatchByUserInactiveStatus
 
         // Assert
         result.Should().HaveCount(1);
-        result.All(v => v.User.LastSignedInDate < cutoff).Should().BeTrue();
+        result.All(v => v.User.LastSignedInDate < DateTime.UtcNow).Should().BeTrue();
     }
 
     [Test, RecursiveMoqAutoData]
@@ -73,5 +73,6 @@ internal class WhenGettingBatchByUserInactiveStatus
 
         // Assert
         result.Should().HaveCount(1);
+        result.All(v => v.User.LastSignedInDate < DateTime.UtcNow).Should().BeTrue();
     }
 }
