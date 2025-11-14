@@ -1,8 +1,5 @@
 trigger: none
 
-parameters:
-  SqlServerPassword:
-
 variables:
 - name: SolutionBaseName
   value: Recruit.Api
@@ -65,6 +62,8 @@ stages:
   - deployment: DeploySQLServer
     displayName: Deploy SQL Server
     environment: AT
+    variables:
+      SqlServerPassword: $(sqlServerPassword)
     strategy:
       runOnce:
         deploy:
@@ -85,7 +84,7 @@ stages:
               ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
               IsMultiRepoCheckout: true
               TemplateSecrets:
-                SqlServerPassword: ${{ parameters.SqlServerPassword }}
+                SqlServerPassword: $(SqlServerPassword)
 
   - job: Test
     displayName: Run Integration Tests
