@@ -139,12 +139,11 @@ stages:
       workingDirectory: src
 
     # Cleanup (best-effort)
-    - task: AzureCLI@2
+    - task: AzurePowerShell@5
       displayName: 'Tear down SQL DB'
       condition: always()
       inputs:
         azureSubscription: $(ARMServiceConnection)
-        scriptType: ps
-        scriptLocation: inlineScript
-        inlineScript: |
+        ScriptType: inlineScript
+        Inline: |
           Remove-AzSqlDatabase -DatabaseName "$(sqlDB)" -ResourceGroupName "$(resourceGroupName)" -ServerName "$(sqlServerName)" -Force
