@@ -95,6 +95,8 @@ stages:
     - checkout: das-platform-automation
     - download: current
       artifact: DacpacArtifact
+    - download: current
+      artifact: drop
 
     - task: SqlAzureDacpacDeployment@1
       displayName: Execute Azure SQL DacpacTask
@@ -119,7 +121,7 @@ stages:
     - powershell: |
         dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
       displayName: 'Run Unit Tests'
-      workingDirectory: src
+      workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Integration tests (point SQL DB)
     - powershell: |
@@ -127,7 +129,7 @@ stages:
         $env:IntegrationTestsDbSchemaName = $(sqlDB)
         dotnet test --configuration "Release" --filter 'TestCategory=Integration'
       displayName: 'Run Integration Tests'
-      workingDirectory: src
+      workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Cleanup (best-effort)
     - task: AzurePowerShell@5
