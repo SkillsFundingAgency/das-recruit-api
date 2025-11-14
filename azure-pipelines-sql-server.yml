@@ -93,7 +93,9 @@ stages:
       sqlServerName: das-ci-tests-sql
     steps:
     - checkout: das-platform-automation
+    - checkout: das-platform-building-blocks
     - download: current
+      artifact: DacpacArtifact
 
     - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
       parameters:
