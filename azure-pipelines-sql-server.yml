@@ -84,10 +84,8 @@ stages:
   #             TemplateSecrets:
   #               SqlServerPassword: $(sqlServerPassword)
 
-  - job: Test
-    pool:
-      vmImage: windows-latest
-    displayName: Run Integration Tests
+  - job: DeploySQLDB
+    displayName: Deploy SQL DB using Dacpac
     # dependsOn: DeploySQLServer
     variables:
       resourceGroupName: das-ci-tests-rg
@@ -97,8 +95,6 @@ stages:
     - checkout: das-platform-automation
     - download: current
       artifact: DacpacArtifact
-    - download: current
-      artifact: drop
 
     - task: SqlAzureDacpacDeployment@1
       displayName: Execute Azure SQL DacpacTask
@@ -110,6 +106,19 @@ stages:
         SqlPassword: $(sqlServerPassword)
         DacpacFile:  $(Pipeline.Workspace)/DacpacArtifact/src/${{ variables.SolutionBaseName }}.Database/bin/release/netstandard2.1/${{ variables.SolutionBaseName }}.Database.dacpac
 
+  - job: DeploySQLDB
+    pool:
+      vmImage: ubuntu-latest
+    displayName: Deploy SQL DB using Dacpac
+    dependsOn: DeploySQLDB
+    variables:
+      resourceGroupName: das-ci-tests-rg
+      sqlServerName: das-ci-tests-sql
+      serverName: das-ci-tests-sql.database.windows.net
+    steps:
+    - checkout: das-platform-automation
+    - download: current
+      artifact: drop
     - powershell: |
         Write-Host "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(serverName),1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       displayName: Set Connection String Variable
@@ -120,10 +129,10 @@ stages:
         version: '8.x'
 
     # Unit tests
-    # - powershell: |
-    #     dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
-    #   displayName: 'Run Unit Tests'
-    #   workingDirectory: $(Pipeline.Workspace)/drop/src
+    - powershell: |
+        dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
+      displayName: 'Run Unit Tests'
+      workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Integration tests (point SQL DB)
     - powershell: |
