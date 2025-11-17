@@ -109,8 +109,8 @@ stages:
   - job: RunTests
     pool:
       vmImage: ubuntu-latest
-    displayName: Deploy SQL DB using Dacpac
-    dependsOn: Run Tests
+    displayName: Run Tests
+    dependsOn: DeploySQLDB
     variables:
       resourceGroupName: das-ci-tests-rg
       sqlServerName: das-ci-tests-sql
