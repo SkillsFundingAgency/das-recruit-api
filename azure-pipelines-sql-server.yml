@@ -106,11 +106,11 @@ stages:
         SqlPassword: $(sqlServerPassword)
         DacpacFile:  $(Pipeline.Workspace)/DacpacArtifact/src/${{ variables.SolutionBaseName }}.Database/bin/release/netstandard2.1/${{ variables.SolutionBaseName }}.Database.dacpac
 
-  - job: DeploySQLDB
+  - job: RunTests
     pool:
       vmImage: ubuntu-latest
     displayName: Deploy SQL DB using Dacpac
-    dependsOn: DeploySQLDB
+    dependsOn: Run Tests
     variables:
       resourceGroupName: das-ci-tests-rg
       sqlServerName: das-ci-tests-sql
@@ -131,7 +131,7 @@ stages:
     # Unit tests
     - powershell: |
         dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
-      displayName: 'Run Unit Tests'
+      displayName: Run Unit Tests
       workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Integration tests (point SQL DB)
@@ -139,12 +139,12 @@ stages:
         $env:ConnectionStrings__Integration = '$(ADO_CONNSTR)'
         $env:IntegrationTestsDbSchemaName = $(sqlDB)
         dotnet test --configuration "Release" --filter 'TestCategory=Integration'
-      displayName: 'Run Integration Tests'
+      displayName: Run Integration Tests
       workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Cleanup (best-effort)
     - task: AzurePowerShell@5
-      displayName: 'Tear down SQL DB'
+      displayName: Tear down SQL DB
       condition: always()
       inputs:
         azurePowerShellVersion: LatestVersion
