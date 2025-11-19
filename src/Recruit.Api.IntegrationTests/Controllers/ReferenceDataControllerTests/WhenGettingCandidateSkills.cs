@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using SFA.DAS.Recruit.Api.Controllers;
+﻿using SFA.DAS.Recruit.Api.Controllers;
+using SFA.DAS.Recruit.Api.Core;
 
-namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ReferenceDataControllerTests;
+namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ReferenceDataControllerTests;
 
-public class WhenGettingCandidateSkills
+public class WhenGettingCandidateSkills: BaseFixture
 {
     [Test, MoqAutoData]
-    public void Then_The_Skills_Are_Returned([Greedy] ReferenceDataController sut)
+    public async Task Then_The_Skills_Are_Returned([Greedy] ReferenceDataController sut)
     {
         // arrange
         List<string> expectedValues = [
@@ -30,12 +30,10 @@ public class WhenGettingCandidateSkills
         ]; 
 
         // act
-        var result = sut.GetCandidateSkills() as Ok<List<string>>;
-        var payload = result?.Value;
+        var response = await Client.GetAsync($"{RouteNames.ReferenceData}/candidate-skills");
+        var skills = await response.Content.ReadAsAsync<List<string>>();
 
         // assert
-        payload.Should().NotBeNull();
-        payload.Should().HaveCount(expectedValues.Count);
-        payload.Should().BeEquivalentTo(expectedValues);
+        skills.Should().BeEquivalentTo(expectedValues);
     }
 }
