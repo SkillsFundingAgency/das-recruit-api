@@ -317,13 +317,10 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
     public Task<int> GetLiveVacanciesCountAsync(CancellationToken cancellationToken)
     {
-        var utcNow = DateTime.UtcNow;
-
         return dataContext.VacancyEntities
             .AsNoTracking()
             .Where(v =>
-                v.Status == VacancyStatus.Live &&
-                v.ClosingDate > utcNow)
+                v.Status == VacancyStatus.Live)
             .SumAsync(v => v.NumberOfPositions, cancellationToken)
             .ContinueWith(t => t.Result ?? 0, cancellationToken);
     }
