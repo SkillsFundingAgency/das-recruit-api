@@ -262,6 +262,18 @@ public class VacancyController : Controller
         return TypedResults.Ok(vacancySummaries);
     }
 
+
+    [HttpGet]
+    [Route($"{RouteElements.TotalPositionsAvailable}")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    public async Task<IResult> GetTotalPositionsAvailable(
+        [FromServices] IVacancyRepository repository,
+        CancellationToken cancellationToken = default)
+    {
+        int response = await repository.GetLiveVacanciesCountAsync(cancellationToken);
+        return TypedResults.Ok(response);
+    }
+
     [HttpPost]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]

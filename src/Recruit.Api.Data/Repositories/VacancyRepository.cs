@@ -41,6 +41,7 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
 
     Task<List<VacancyClosureSummaryEntity>> GetAllClosedEmployerVacanciesByClosureReason(long accountId, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken, VacancyStatus? status = null);
     Task<List<VacancyClosureSummaryEntity>> GetAllClosedProviderVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken);
+    Task<int> GetLiveVacanciesCountAsync(CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
@@ -312,6 +313,15 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             .ToListAsync(cancellationToken);
 
         return vacancies;
+    }
+
+    public async Task<int> GetLiveVacanciesCountAsync(CancellationToken cancellationToken)
+    {
+        return await dataContext.VacancyEntities
+            .AsNoTracking()
+            .CountAsync(v => v.Status == VacancyStatus.Live 
+                             && v.ClosingDate > DateTime.UtcNow,
+                cancellationToken);
     }
 
     public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByUkprn(int ukprn, CancellationToken cancellationToken)

@@ -13,6 +13,7 @@ internal struct RouteElements
     public const string Provider = "provider";
     public const string User = "user";
     public const string Vacancies = "vacancies";
+    public const string TotalPositionsAvailable = "total-positions-available";
     public const string VacancyReference = "vacancyreference";
     public const string VacancyReview = "vacancyreviews";
     public const string Reports = "reports";
