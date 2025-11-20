@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.VacancyControllerTests;
 [TestFixture]
@@ -20,8 +21,8 @@ internal class WhenGettingTotalPositionsAvailable
         var result = await sut.GetTotalPositionsAvailable(repository.Object, token);
 
         //Assert
-        var payload = (result as Ok<int>)?.Value;
+        var payload = (result as Ok<TotalPositionsAvailableResponse>)?.Value;
         payload.Should().NotBeNull();
-        payload.Value.Should().Be(totalPositions);
+        payload.TotalPositionsAvailable.Should().Be(totalPositions);
     }
 }

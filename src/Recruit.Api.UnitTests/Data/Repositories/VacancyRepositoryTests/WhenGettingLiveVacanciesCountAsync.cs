@@ -11,15 +11,15 @@ internal class WhenGettingLiveVacanciesCountAsync
 {
     [Test, RecursiveMoqAutoData]
     public async Task Then_The_Live_Vacancies_Count_Is_Returned_Given_ClosingDate(
+        int totalPositions,
         [Frozen] Mock<IRecruitDataContext> context,
-        [Greedy] VacancyRepository sut,
-        CancellationToken token)
+        [Greedy] VacancyRepository sut)
     {
         //Arrange
         VacancyReference vacancyReference = 10000000;
         var data = new List<VacancyEntity>
         {
-            new() { VacancyReference = vacancyReference.Value, Status = VacancyStatus.Live, ClosingDate = DateTime.UtcNow.AddMinutes(1) },
+            new() { VacancyReference = vacancyReference.Value, Status = VacancyStatus.Live, ClosingDate = DateTime.UtcNow.AddMinutes(1), NumberOfPositions = totalPositions },
             new() { VacancyReference = vacancyReference.Value, Status = VacancyStatus.Referred, ClosingDate = DateTime.UtcNow.AddMinutes(1) },
             new() { VacancyReference = vacancyReference.Value, Status = VacancyStatus.Submitted, ClosingDate = DateTime.UtcNow.AddMinutes(1) },
         }.AsQueryable();
@@ -27,9 +27,9 @@ internal class WhenGettingLiveVacanciesCountAsync
             .ReturnsDbSet(data);
         
         //Act
-        int actualCount = await sut.GetLiveVacanciesCountAsync(token);
+        int actualCount = await sut.GetLiveVacanciesCountAsync(CancellationToken.None);
         
         //Assert
-        actualCount.Should().Be(1);
+        actualCount.Should().Be(totalPositions);
     }
 }

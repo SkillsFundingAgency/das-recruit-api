@@ -315,16 +315,17 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         return vacancies;
     }
 
-    public async Task<int> GetLiveVacanciesCountAsync(CancellationToken cancellationToken)
+    public Task<int> GetLiveVacanciesCountAsync(CancellationToken cancellationToken)
     {
         var utcNow = DateTime.UtcNow;
 
-        return await dataContext.VacancyEntities
+        return dataContext.VacancyEntities
             .AsNoTracking()
-            .CountAsync(v => 
-                    v.Status == VacancyStatus.Live && 
-                    v.ClosingDate > utcNow,
-                cancellationToken);
+            .Where(v =>
+                v.Status == VacancyStatus.Live &&
+                v.ClosingDate > utcNow)
+            .SumAsync(v => v.NumberOfPositions, cancellationToken)
+            .ContinueWith(t => t.Result ?? 0, cancellationToken);
     }
 
     public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByUkprn(int ukprn, CancellationToken cancellationToken)
