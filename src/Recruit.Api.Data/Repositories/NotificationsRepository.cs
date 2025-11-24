@@ -15,23 +15,25 @@ public class NotificationsRepository(IRecruitDataContext dataContext): INotifica
 {
     public async Task<List<RecruitNotificationEntity>> GetBatchByDateAsync(DateTime when, CancellationToken cancellationToken)
     {
+        const int numberOfUniqueUsers = 1;
         DateTime cutOffDateTime = DateTime.UtcNow.AddYears(-1);
 
-        var userId = await dataContext.RecruitNotifications
+        var userIds = await dataContext.RecruitNotifications
             .Where(x =>
                 x.SendWhen < when &&
                 x.User.LastSignedInDate != null &&
                 x.User.LastSignedInDate > cutOffDateTime)
             .Select(x => x.UserId)
             .Distinct()
-            .OrderBy(x => x)                
-            .FirstOrDefaultAsync(cancellationToken); 
+            .OrderBy(x => x)
+            .Take(numberOfUniqueUsers)
+            .ToListAsync(cancellationToken);
 
         return await dataContext.RecruitNotifications
             .Include(x => x.User)
             .Where(x =>
                 x.SendWhen < when &&
-                x.UserId == userId)
+                userIds.Contains(x.UserId))
             .ToListAsync(cancellationToken);
     }
 
