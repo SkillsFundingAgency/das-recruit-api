@@ -84,6 +84,7 @@ public class WhenGettingUsersForNotificationTyp
         // arrange
         foreach (var user in users)
         {
+            user.LastSignedInDate = DateTime.UtcNow.AddMinutes(-3);
             user.NotificationPreferences = new NotificationPreferences {
                 EventPreferences = [
                     new NotificationPreference(
