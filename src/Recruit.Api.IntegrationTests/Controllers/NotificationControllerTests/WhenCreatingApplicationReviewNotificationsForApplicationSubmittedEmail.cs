@@ -163,6 +163,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         vacancy.EmployerLocationOption = AvailableWhere.MultipleLocations;
         vacancy.EmployerLocations = ApiUtils.SerializeOrNull(addresses);
 
+        providerUser.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
         providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);

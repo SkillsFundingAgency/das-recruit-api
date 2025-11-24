@@ -1,4 +1,3 @@
-using System.Text.Json;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models.Requests.User;
 using SFA.DAS.Recruit.Api.Models.Responses.User;
