@@ -15,7 +15,7 @@ internal class WhenGettingBatchByUserInactiveStatus
         CancellationToken token)
     {
         // Arrange
-        var cutoff = DateTime.UtcNow.AddYears(-1);
+        var cutoff = DateTime.UtcNow.AddYears(-2);
         foreach (RecruitNotificationEntity recruitNotification in entities)
         {
             recruitNotification.User.LastSignedInDate = cutoff;
@@ -26,7 +26,7 @@ internal class WhenGettingBatchByUserInactiveStatus
         var result = await sut.GetBatchByUserInactiveStatusAsync(CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
+        result.Should().HaveCount(3);
         result.All(v => v.User.LastSignedInDate < DateTime.UtcNow).Should().BeTrue();
     }
 
@@ -72,7 +72,7 @@ internal class WhenGettingBatchByUserInactiveStatus
         var result = await sut.GetBatchByUserInactiveStatusAsync(CancellationToken.None);
 
         // Assert
-        result.Should().HaveCount(1);
+        result.Should().HaveCount(3);
         result.All(v => v.User.LastSignedInDate < DateTime.UtcNow).Should().BeTrue();
     }
 }

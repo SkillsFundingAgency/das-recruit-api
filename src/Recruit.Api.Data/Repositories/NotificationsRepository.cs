@@ -15,19 +15,23 @@ public class NotificationsRepository(IRecruitDataContext dataContext): INotifica
 {
     public async Task<List<RecruitNotificationEntity>> GetBatchByDateAsync(DateTime when, CancellationToken cancellationToken)
     {
-        const int numberOfUniqueUsers = 1;
         DateTime cutOffDateTime = DateTime.UtcNow.AddYears(-1);
 
-        var userIds = await dataContext.RecruitNotifications
-            .Where(x => x.SendWhen < when && x.User.LastSignedInDate != null && x.User.LastSignedInDate > cutOffDateTime)
+        var userId = await dataContext.RecruitNotifications
+            .Where(x =>
+                x.SendWhen < when &&
+                x.User.LastSignedInDate != null &&
+                x.User.LastSignedInDate > cutOffDateTime)
             .Select(x => x.UserId)
             .Distinct()
-            .Take(numberOfUniqueUsers)
-            .ToListAsync(cancellationToken);
-        
+            .OrderBy(x => x)                
+            .FirstOrDefaultAsync(cancellationToken); 
+
         return await dataContext.RecruitNotifications
             .Include(x => x.User)
-            .Where(x => x.SendWhen < when && userIds.Contains(x.UserId))
+            .Where(x =>
+                x.SendWhen < when &&
+                x.UserId == userId)
             .ToListAsync(cancellationToken);
     }
 
@@ -47,19 +51,13 @@ public class NotificationsRepository(IRecruitDataContext dataContext): INotifica
 
     public async Task<List<RecruitNotificationEntity>> GetBatchByUserInactiveStatusAsync(CancellationToken cancellationToken)
     {
-        const int numberOfUniqueUsers = 1;
         DateTime cutOffDateTime = DateTime.UtcNow.AddYears(-1);
-
-        var userIds = await dataContext.RecruitNotifications
-            .Where(x => x.User.LastSignedInDate != null && x.User.LastSignedInDate < cutOffDateTime)
-            .Select(x => x.UserId)
-            .Distinct()
-            .Take(numberOfUniqueUsers)
-            .ToListAsync(cancellationToken);
 
         return await dataContext.RecruitNotifications
             .Include(x => x.User)
-            .Where(x => userIds.Contains(x.UserId))
+            .Where(x =>
+                x.User.LastSignedInDate == null ||
+                x.User.LastSignedInDate < cutOffDateTime)
             .ToListAsync(cancellationToken);
     }
 }

@@ -7,7 +7,6 @@ using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.UnitTests;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 using Address = SFA.DAS.Recruit.Api.Domain.Models.Address;
 using UserType = SFA.DAS.Recruit.Api.Domain.Enums.UserType;
 
