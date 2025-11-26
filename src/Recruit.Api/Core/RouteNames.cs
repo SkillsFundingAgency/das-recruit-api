@@ -17,6 +17,7 @@ internal struct RouteElements
     public const string VacancyReview = "vacancyreviews";
     public const string Reports = "reports";
     public const string Qa = "qa";
+    public const string VacancyAnalytics = "vacancyanalytics";
 }
 
 internal struct RouteNames
@@ -33,4 +34,5 @@ internal struct RouteNames
     public const string VacancyReference = $"{RouteElements.Api}/{RouteElements.VacancyReference}";
     public const string Vacancies = $"{RouteElements.Api}/{RouteElements.Vacancies}";
     public const string Reports = $"{RouteElements.Api}/{RouteElements.Reports}";
+    public const string VacancyAnalytics = $"{RouteElements.Api}/{RouteElements.VacancyAnalytics}";
 }
