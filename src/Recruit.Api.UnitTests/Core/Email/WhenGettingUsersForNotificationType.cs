@@ -42,13 +42,12 @@ public class WhenGettingUsersForNotificationTyp
         result.Should().BeEmpty();
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public void Then_The_Originating_User_Is_Notified(List<UserEntity> users)
     {
         // arrange
         foreach (var user in users)
         {
-            user.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
             user.NotificationPreferences = new NotificationPreferences {
                 EventPreferences = [
                     new NotificationPreference(
@@ -78,13 +77,12 @@ public class WhenGettingUsersForNotificationTyp
         result.Should().Contain(users[1]);
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public void Then_Users_In_The_Organisation_That_Want_To_Know_About_All_Other_Changes_Are_Notified(List<UserEntity> users)
     {
         // arrange
         foreach (var user in users)
         {
-            user.LastSignedInDate = DateTime.UtcNow.AddMinutes(-3);
             user.NotificationPreferences = new NotificationPreferences {
                 EventPreferences = [
                     new NotificationPreference(
@@ -115,7 +113,7 @@ public class WhenGettingUsersForNotificationTyp
         result.Should().Contain(users[2]);
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public void Then_The_Default_Behaviour_When_The_User_Has_A_Preference_Is_That_The_User_Should_Be_Notified(List<UserEntity> users)
     {
         // arrange

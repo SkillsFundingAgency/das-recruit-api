@@ -85,7 +85,7 @@ public class WhenGettingVacancySubmittedNotifications
             Times.Never);
     }
 
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task The_Notifications_Contain_The_Correct_Values(
         VacancyEntity vacancy,
         UserEntity user,
@@ -100,7 +100,6 @@ public class WhenGettingVacancySubmittedNotifications
         // arrange
         var cts = new CancellationTokenSource();
 
-        user.LastSignedInDate = DateTime.UtcNow;
         vacancy.Status = VacancyStatus.Submitted;
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.OwnerType = OwnerType.Provider;

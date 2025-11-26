@@ -101,7 +101,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         result.Immediate.Should().BeEmpty();
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_The_Result_Should_Have_The_Required_Information(
         UserEntity user,
         VacancyEntity vacancy,
@@ -115,7 +115,6 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         [Greedy] SharedApplicationReviewedByEmployerNotificationFactory sut)
     {
         // arrange
-        user.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         user.UserType = UserType.Provider;
         user.SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         vacancy.OwnerType = OwnerType.Provider;
