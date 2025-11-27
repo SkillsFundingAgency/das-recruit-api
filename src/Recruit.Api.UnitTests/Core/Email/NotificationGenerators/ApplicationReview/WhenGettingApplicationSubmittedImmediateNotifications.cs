@@ -11,7 +11,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.NotificationGenerators.Applic
 
 public class WhenGettingApplicationSubmittedImmediateNotifications
 {
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Immediate_Notifications_Should_Have_The_Required_Information_For_Provider_Created_Vacancy(
         UserEntity user,
         VacancyEntity vacancy,
@@ -27,7 +27,6 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         // arrange
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
-        user.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         user.UserType = UserType.Provider;
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
@@ -70,7 +69,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         tokens["location"].Should().Be("Recruiting nationally");
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Immediate_Notifications_Should_Have_The_Required_Information_For_Employer_Created_Vacancy(
         UserEntity user,
         VacancyEntity vacancy,
@@ -89,7 +88,6 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         vacancy.OwnerType = OwnerType.Employer;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Employer;
-        user.LastSignedInDate = DateTime.UtcNow;
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         vacancyRepository

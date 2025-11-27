@@ -85,7 +85,7 @@ public class WhenGettingVacancyRejectedNotifications
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
     }
 
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task The_Notifications_Contain_The_Correct_Values(
         VacancyEntity vacancy,
         UserEntity user,
@@ -100,7 +100,6 @@ public class WhenGettingVacancyRejectedNotifications
         // arrange
         var cts = new CancellationTokenSource();
 
-        user.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         vacancy.Status = VacancyStatus.Rejected;
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.EmployerRejectedReason = "Some reason";

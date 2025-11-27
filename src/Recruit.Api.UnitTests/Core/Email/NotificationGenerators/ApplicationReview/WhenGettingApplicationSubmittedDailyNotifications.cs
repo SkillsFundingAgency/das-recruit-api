@@ -11,7 +11,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.NotificationGenerators.Applic
 
 public class WhenGettingApplicationSubmittedDailyNotifications
 {
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Daily_Notifications_Should_Have_The_Required_Information_For_Provider_Created_Vacancy(
         UserEntity user,
         VacancyEntity vacancy,
@@ -72,7 +72,7 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         tokens["location"].Should().Be("Recruiting nationally");
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Daily_Notifications_Should_Have_The_Required_Information_For_Employer_Created_Vacancy(
         UserEntity user,
         VacancyEntity vacancy,
@@ -91,7 +91,6 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         vacancy.OwnerType = OwnerType.Employer;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Employer;
-        user.LastSignedInDate = DateTime.UtcNow;
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
         
         vacancyRepository
@@ -148,7 +147,6 @@ public class WhenGettingApplicationSubmittedDailyNotifications
     {
         // arrange
         user.UserType = UserType.Provider;
-        user.LastSignedInDate = DateTime.UtcNow;
 
         user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet);
         
