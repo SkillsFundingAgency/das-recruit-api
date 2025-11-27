@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Recruit.Api.Models.Mappers;
+﻿using SFA.DAS.Recruit.Api.Models.Responses.VacancyAnalytics;
+
+namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
 public static class VacancyAnalyticsExtensions
 {
@@ -8,17 +10,17 @@ public static class VacancyAnalyticsExtensions
         {
             VacancyReference = vacancyReference,
             UpdatedDate = DateTime.UtcNow,
-            Analytics = request.Analytics.GetRawText()
+            Analytics = request.ToJson()
         };
     }
 
-    public static Responses.VacancyAnalytics.VacancyAnalytics ToResponse(this Domain.Entities.VacancyAnalyticsEntity entity)
+    public static VacancyAnalyticsResponse ToResponse(this Domain.Entities.VacancyAnalyticsEntity entity)
     {
-        return new Responses.VacancyAnalytics.VacancyAnalytics
+        return new VacancyAnalyticsResponse
         {
             VacancyReference = entity.VacancyReference,
             UpdatedDate = entity.UpdatedDate,
-            Analytics = entity.Analytics
+            Analytics = entity.AnalyticsData.ToList()
         };
     }
 }

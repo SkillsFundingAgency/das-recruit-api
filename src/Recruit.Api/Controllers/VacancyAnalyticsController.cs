@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyAnalytics;
 using SFA.DAS.Recruit.Api.Models.Responses.VacancyAnalytics;
@@ -15,8 +16,8 @@ public class VacancyAnalyticsController(
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(VacancyAnalytics), StatusCodes.Status201Created)]
-    public async Task<IResult> Create(
+    [ProducesResponseType(typeof(VacancyAnalyticsResponse), StatusCodes.Status201Created)]
+    public async Task<IResult> PutOne(
         [FromRoute] long vacancyReference,
         [FromServices] IVacancyAnalyticsRepository repository,
         [FromBody] PutVacancyAnalyticsRequest request,

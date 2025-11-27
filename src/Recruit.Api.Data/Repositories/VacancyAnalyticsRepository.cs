@@ -31,7 +31,7 @@ public class VacancyAnalyticsRepository(IRecruitDataContext dataContext) : IVaca
         return UpsertResult.Create(entity, false);
     }
 
-    public async Task<bool> DeleteOneAsync(long key, CancellationToken cancellationToken)
+    public Task<bool> DeleteOneAsync(long key, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
