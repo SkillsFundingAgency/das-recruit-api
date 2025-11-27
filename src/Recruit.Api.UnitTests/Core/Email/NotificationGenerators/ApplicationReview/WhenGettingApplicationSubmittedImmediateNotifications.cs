@@ -12,7 +12,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.NotificationGenerators.Applic
 
 public class WhenGettingApplicationSubmittedImmediateNotifications
 {
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Immediate_Notifications_Should_Have_The_Required_Information_For_Provider_Created_Vacancy(
         UserEntity user,
         VacancyEntity vacancy,
@@ -70,7 +70,7 @@ public class WhenGettingApplicationSubmittedImmediateNotifications
         tokens["location"].Should().Be("Recruiting nationally");
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Immediate_Notifications_Should_Have_The_Required_Information_For_Employer_Created_Vacancy(
         UserEntity user,
         VacancyEntity vacancy,

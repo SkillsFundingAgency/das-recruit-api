@@ -24,7 +24,7 @@ public class Vacancy
     public DateTime? ClosedDate { get; init; }
     public DateTime? DeletedDate { get; init; }
     public DateTime? LiveDate { get; init; }
-    public DateTime? StartDate { get; init; }
+    public DateTime? StartDate { get; set; }
     public DateTime? ClosingDate { get; init; }
     public int ReviewCount { get; init; }
     public string? ApplicationUrl { get; init; }
@@ -132,4 +132,10 @@ public class Wage
     public decimal? FixedWageYearlyAmount { get; set; }
     public string? WageAdditionalInformation { get; set; }
     public string? CompanyBenefitsInformation { get; set; }
+    public decimal? ApprenticeMinimumWage { get; set; }
+    public decimal? Under18NationalMinimumWage { get; set; }
+    public decimal? Between18AndUnder21NationalMinimumWage { get; set; }
+    public decimal? Between21AndUnder25NationalMinimumWage { get; set; }
+    public decimal? Over25NationalMinimumWage { get; set; }
+    public string? WageText { get; set; }
 }

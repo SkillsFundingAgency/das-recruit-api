@@ -46,6 +46,7 @@ public class WhenCreatingVacancyApprovedByEmployerNotifications: BaseFixture
         var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
+        providerUser.LastSignedInDate = DateTime.UtcNow.AddMinutes(-1);
         providerUser.SetEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);

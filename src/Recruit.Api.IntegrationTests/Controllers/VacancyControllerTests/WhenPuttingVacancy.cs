@@ -45,7 +45,15 @@ public class WhenPuttingVacancy: MsSqlBaseFixture
         // assert
         vacancy.Should().BeEquivalentTo(request, opt => opt
             .Excluding(x => x.SubmittedByUserId)
-            .Excluding(x => x.ReviewRequestedByUserId));
+            .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x=>x.Wage!.ApprenticeMinimumWage)
+            .Excluding(x=>x.Wage!.Under18NationalMinimumWage)
+            .Excluding(x=>x.Wage!.Between18AndUnder21NationalMinimumWage)
+            .Excluding(x=>x.Wage!.Between21AndUnder25NationalMinimumWage)
+            .Excluding(x=>x.Wage!.Over25NationalMinimumWage)
+            .Excluding(x=>x.Wage!.WageText)
+        );
         
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
@@ -75,6 +83,13 @@ public class WhenPuttingVacancy: MsSqlBaseFixture
         vacancy.Should().BeEquivalentTo(request, opt => opt
             .Excluding(x => x.SubmittedByUserId)
             .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x=>x.Wage!.ApprenticeMinimumWage)
+            .Excluding(x=>x.Wage!.Under18NationalMinimumWage)
+            .Excluding(x=>x.Wage!.Between18AndUnder21NationalMinimumWage)
+            .Excluding(x=>x.Wage!.Between21AndUnder25NationalMinimumWage)
+            .Excluding(x=>x.Wage!.Over25NationalMinimumWage)
+            .Excluding(x=>x.Wage!.WageText)
         );
 
         var record = await DbData.Get<VacancyEntity>(targetItem.Id);

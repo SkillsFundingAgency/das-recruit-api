@@ -45,7 +45,8 @@ public class WhenCreatingVacancyRejectedByEmployerNotifications: BaseFixture
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         vacancy.EmployerRejectedReason = "Some reason";
-        
+
+        providerUser.LastSignedInDate = DateTime.UtcNow;
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
         providerUser.SetEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);

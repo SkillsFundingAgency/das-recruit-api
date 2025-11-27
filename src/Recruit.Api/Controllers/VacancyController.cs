@@ -45,9 +45,14 @@ public class VacancyController : Controller
     {
         var result = await repository.GetOneLiveVacancyByVacancyReferenceAsync(vacancyReference, cancellationToken);
 
-        return result is null
-            ? Results.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+        if (result == null)
+        {
+            return Results.NotFound();
+        }
+        
+        var vacancy = result.ToGetResponse();
+        vacancy.AddWageData();
+        return TypedResults.Ok(vacancy);
     }
 
     [HttpGet, Route("live")]
@@ -64,7 +69,12 @@ public class VacancyController : Controller
 
         var vacancies = await repository.GetManyLiveVacancies(page, pageSize, closingDate, cancellationToken);
 
-        return TypedResults.Ok(vacancies.ToPagedResponse(x => x.ToGetResponse()));
+        return TypedResults.Ok(vacancies.ToPagedResponse(x =>
+        {
+            var response = x.ToGetResponse();
+            response.AddWageData();
+            return response;
+        }));
     }
 
     [HttpGet, Route("{vacancyReference:long}/closed")]
@@ -78,10 +88,14 @@ public class VacancyController : Controller
         try
         {
             var result = await repository.GetOneClosedVacancyByVacancyReference(vacancyReference, cancellationToken);
-
-            return result is null
-                ? Results.NotFound()
-                : TypedResults.Ok(result.ToGetResponse());
+            if (result == null)
+            {
+                return Results.NotFound();
+            }
+        
+            var vacancy = result.ToGetResponse();
+            vacancy.AddWageData();
+            return TypedResults.Ok(vacancy);
         }
         catch (InvalidVacancyReferenceException)
         {
@@ -100,7 +114,12 @@ public class VacancyController : Controller
         var result = await repository.GetManyClosedVacanciesByVacancyReferences(request.VacancyReferences, cancellationToken);
 
         return TypedResults.Ok(result
-            .Select(v => v.ToGetResponse())
+            .Select(v =>
+            {
+                var response = v.ToGetResponse();
+                response.AddWageData();
+                return response;
+            })
             .ToList());
     }
 

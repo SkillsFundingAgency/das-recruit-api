@@ -61,7 +61,14 @@ public class WhenPostingVacancy: BaseFixture
         // assert
         vacancy.Should().BeEquivalentTo(request, opt => opt
             .Excluding(x => x.SubmittedByUserId)
-            .Excluding(x => x.ReviewRequestedByUserId));
+            .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x=>x.Wage!.ApprenticeMinimumWage)
+            .Excluding(x=>x.Wage!.Under18NationalMinimumWage)
+            .Excluding(x=>x.Wage!.Between18AndUnder21NationalMinimumWage)
+            .Excluding(x=>x.Wage!.Between21AndUnder25NationalMinimumWage)
+            .Excluding(x=>x.Wage!.Over25NationalMinimumWage)
+            .Excluding(x=>x.Wage!.WageText)
+        );
         vacancy.Id.Should().Be(id);
         vacancy.VacancyReference.Should().Be(vacancyReference.Value);
         

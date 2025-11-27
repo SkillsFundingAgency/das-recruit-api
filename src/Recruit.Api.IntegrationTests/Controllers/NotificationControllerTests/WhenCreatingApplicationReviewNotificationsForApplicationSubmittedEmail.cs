@@ -96,7 +96,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         });
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Immediate_Notifications_Are_Returned_For_Provider_User(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
@@ -164,6 +164,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         vacancy.EmployerLocationOption = AvailableWhere.MultipleLocations;
         vacancy.EmployerLocations = ApiUtils.SerializeOrNull(addresses);
 
+        providerUser.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
         providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
@@ -182,7 +183,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         notificationEmails[0].Tokens["location"].Should().Be(addresses.GetCityNames());
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Daily_Notifications_Are_Stored_For_Later_Delivery(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
