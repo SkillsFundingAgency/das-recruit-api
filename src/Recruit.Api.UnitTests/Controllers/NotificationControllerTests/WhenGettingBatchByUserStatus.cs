@@ -10,7 +10,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.NotificationControllerTests;
 [TestFixture]
 internal class WhenGettingBatchByUserStatus
 {
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Gets_Users_By_InActive_Status(
         Mock<INotificationsRepository> repository,
         Mock<IEmailFactory> emailFactory,
@@ -19,10 +19,6 @@ internal class WhenGettingBatchByUserStatus
         CancellationToken token)
     {
         //Arrange
-        foreach (RecruitNotificationEntity entity in entities)
-        {
-            entity.User.LastSignedInDate = DateTime.UtcNow.AddYears(1);
-        }
         repository
             .Setup(x => x.GetBatchByUserInactiveStatusAsync(token))
             .ReturnsAsync(entities);
