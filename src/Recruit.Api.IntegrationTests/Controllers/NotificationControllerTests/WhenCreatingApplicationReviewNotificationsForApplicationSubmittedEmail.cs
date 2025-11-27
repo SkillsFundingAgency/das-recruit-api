@@ -95,7 +95,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         });
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Immediate_Notifications_Are_Returned_For_Provider_User(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
@@ -182,7 +182,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         notificationEmails[0].Tokens["location"].Should().Be(addresses.GetCityNames());
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Daily_Notifications_Are_Stored_For_Later_Delivery(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
