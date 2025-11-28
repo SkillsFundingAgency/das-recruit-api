@@ -31,7 +31,7 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
         var existingEntity = await GetOneAsync(entity.Id, cancellationToken);
         if (existingEntity is null)
         {
-            dataContext.UserEntities.Add(entity);
+            await dataContext.UserEntities.AddAsync(entity, cancellationToken);
             await dataContext.SaveChangesAsync(cancellationToken);
             return UpsertResult.Create(entity, true);
         }
