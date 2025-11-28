@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using HotChocolate.AspNetCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -118,6 +119,16 @@ internal class Startup
             opt.DefaultApiVersion = new ApiVersion(1, 0);
         });
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+        services
+            .AddGraphQLServer()
+            .AddAuthorization()
+            .AddPagingArguments()
+            .AddFiltering()
+            .AddSorting()
+            .AddProjections()
+            .AddTypes()
+            .DisableIntrospection(!IsEnvironmentLocalOrDev)
+            .RegisterDbContextFactory<GraphQlDataContext>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -135,6 +146,24 @@ internal class Startup
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            var graphQlBuilder = endpoints
+                .MapGraphQL()
+                .WithOptions(new GraphQLServerOptions {
+                    EnableSchemaRequests = IsEnvironmentLocalOrDev,
+                    Tool = {
+                        Enable = IsEnvironmentLocalOrDev,
+                        ServeMode = GraphQLToolServeMode.Embedded
+                    }
+                });
+            
+            if (!IsEnvironmentLocalOrDev)
+            {
+                // TODO: could do with splitting the middleware and applying auth to the endpoint only
+                graphQlBuilder.RequireAuthorization();
+            }
+        });
     }
 }

@@ -48,11 +48,11 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
         return true;
     }
     
-    public Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken)
+    public async Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken)
     {
-        return dataContext.VacancyReviewEntities
+        return await dataContext.VacancyReviewEntities
             .AsNoTracking()
-            .Where(x => x.VacancyReference == vacancyReference)
+            .Where(x => x.VacancyReference == vacancyReference.Value)
             .OrderBy(x => x.CreatedDate)
             .ToListAsync(cancellationToken);
     }
