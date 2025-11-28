@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
+﻿namespace SFA.DAS.Recruit.Api.Testing.Data;
 
 public sealed class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
 {

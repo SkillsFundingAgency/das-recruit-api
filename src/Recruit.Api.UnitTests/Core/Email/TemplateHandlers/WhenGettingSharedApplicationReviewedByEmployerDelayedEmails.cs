@@ -3,6 +3,7 @@ using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Api.Testing;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.TemplateHandlers;
 

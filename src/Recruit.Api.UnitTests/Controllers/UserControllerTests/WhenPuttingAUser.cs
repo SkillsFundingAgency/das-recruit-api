@@ -7,6 +7,7 @@ using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.User;
 using SFA.DAS.Recruit.Api.Models.Responses.User;
+using SFA.DAS.Recruit.Api.Testing;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.UserControllerTests;
 

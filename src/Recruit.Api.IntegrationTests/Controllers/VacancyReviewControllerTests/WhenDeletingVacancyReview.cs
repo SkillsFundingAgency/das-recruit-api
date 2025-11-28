@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Testing.Data;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyReviewControllerTests;
 
