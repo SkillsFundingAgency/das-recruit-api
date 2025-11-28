@@ -11,13 +11,14 @@ internal struct RouteElements
     public const string Notifications = "notifications";
     public const string ProhibitedContent = "prohibitedcontent";
     public const string Provider = "provider";
+    public const string Qa = "qa";
+    public const string ReferenceData = "referencedata";
+    public const string Reports = "reports";
     public const string User = "user";
     public const string Vacancies = "vacancies";
     public const string TotalPositionsAvailable = "total-positions-available";
     public const string VacancyReference = "vacancyreference";
     public const string VacancyReview = "vacancyreviews";
-    public const string Reports = "reports";
-    public const string Qa = "qa";
 }
 
 internal struct RouteNames
@@ -29,9 +30,10 @@ internal struct RouteNames
     public const string Notifications = $"{RouteElements.Api}/{RouteElements.Notifications}";
     public const string ProhibitedContent = $"{RouteElements.Api}/{RouteElements.ProhibitedContent}";
     public const string Provider = $"{RouteElements.Api}/{RouteElements.Provider}";
-    public const string User = $"{RouteElements.Api}/{RouteElements.User}";
-    public const string VacancyReviews = $"{RouteElements.Api}/{RouteElements.VacancyReview}";
-    public const string VacancyReference = $"{RouteElements.Api}/{RouteElements.VacancyReference}";
-    public const string Vacancies = $"{RouteElements.Api}/{RouteElements.Vacancies}";
+    public const string ReferenceData = $"{RouteElements.Api}/{RouteElements.ReferenceData}";
     public const string Reports = $"{RouteElements.Api}/{RouteElements.Reports}";
+    public const string User = $"{RouteElements.Api}/{RouteElements.User}";
+    public const string Vacancies = $"{RouteElements.Api}/{RouteElements.Vacancies}";
+    public const string VacancyReference = $"{RouteElements.Api}/{RouteElements.VacancyReference}";
+    public const string VacancyReviews = $"{RouteElements.Api}/{RouteElements.VacancyReview}";
 }
