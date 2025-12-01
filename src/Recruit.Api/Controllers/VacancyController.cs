@@ -14,6 +14,7 @@ using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Models.Responses;
+using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -260,6 +261,18 @@ public class VacancyController : Controller
         });
 
         return TypedResults.Ok(vacancySummaries);
+    }
+
+
+    [HttpGet]
+    [Route($"{RouteElements.TotalPositionsAvailable}")]
+    [ProducesResponseType(typeof(TotalPositionsAvailableResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> GetTotalPositionsAvailable(
+        [FromServices] IVacancyRepository repository,
+        CancellationToken cancellationToken = default)
+    {
+        int response = await repository.GetLiveVacanciesCountAsync(cancellationToken);
+        return TypedResults.Ok(new TotalPositionsAvailableResponse(response));
     }
 
     [HttpPost]

@@ -77,7 +77,9 @@ CREATE TABLE dbo.[Vacancy] (
 
     CONSTRAINT [PK_Vacancy] PRIMARY KEY (Id),
     INDEX [IX_Vacancy_VacancyReference] NONCLUSTERED(VacancyReference),
-    
+
+    INDEX [IX_Vacancy_Live_ClosingDate] NONCLUSTERED(Status, ClosingDate) INCLUDE (NumberOfPositions) WHERE Status = 'Live',
+       
     INDEX [IX_Vacancy_Account_Owner_Status] NONCLUSTERED(AccountId, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[Ukprn]) WHERE OwnerType = 'Employer',
     INDEX [IX_Vacancy_Ukprn_Owner_Status] NONCLUSTERED(Ukprn, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[AccountId])  WHERE OwnerType = 'Provider',
     
