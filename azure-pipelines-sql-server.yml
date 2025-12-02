@@ -56,11 +56,11 @@ stages:
 
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
-  pool:
-    name: DAS - Continuous Deployment Agents
   jobs:
   # - deployment: DeploySQLServer
   #   displayName: Deploy SQL Server
+  #   pool:
+  #     name: DAS - Continuous Deployment Agents
   #   environment: AT
   #   strategy:
   #     runOnce:
@@ -86,6 +86,8 @@ stages:
 
   - job: DeploySQLDB
     displayName: Deploy SQL DB using Dacpac
+    pool:
+      name: DAS - Continuous Deployment Agents
     # dependsOn: DeploySQLServer
     variables:
       resourceGroupName: das-ci-tests-rg
