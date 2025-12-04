@@ -68,13 +68,19 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
 
     public async Task<UserEntity?> FindByUserIdAsync(string userId, CancellationToken cancellationToken)
     {
+        UserEntity? user;
         if (!Guid.TryParse(userId, out var guidId))
         {
-            // ignore non-guids
-            return null;
+            user = await dataContext.UserEntities
+                .Include(x => x.EmployerAccounts)
+                .Where(x => x.IdamsUserId == userId)
+                .FirstOrDefaultAsync(cancellationToken);
+            
+            NotificationPreferenceDefaults.Update(user);
+            return user;
         }
 
-        var user =
+        user =
             await dataContext.UserEntities
                 .Include(x => x.EmployerAccounts)
                 .Where(x => x.Id == guidId)
@@ -96,40 +102,45 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
     
     public async Task<Guid?> FindIdByUserIdAsync(string userId, CancellationToken cancellationToken)
     {
+        Guid? id;
         if (!Guid.TryParse(userId, out var guidId))
         {
-            // ignore non-guids
-            return null;
+            id = await dataContext.UserEntities
+                .Where(x => x.IdamsUserId == userId)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return id == Guid.Empty ? null : id;
         }
 
-        var result = await dataContext.UserEntities
+        id = await dataContext.UserEntities
             .Where(x => x.Id == guidId)
             .Select(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (result != Guid.Empty)
+        if (id != Guid.Empty)
         {
-            return result;
+            return id;
         }
         
-        var idamsUserId = await dataContext.UserEntities
+        id = await dataContext.UserEntities
             .Where(x => x.IdamsUserId == userId)
             .Select(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken);
             
-        if (idamsUserId != Guid.Empty)
+        if (id != Guid.Empty)
         {
-            return idamsUserId;
+            return id;
         }
         
-        var dfeUserId = await dataContext.UserEntities
+        id = await dataContext.UserEntities
             .Where(x => x.DfEUserId == userId)
             .Select(x => x.Id)
             .FirstOrDefaultAsync(cancellationToken);
         
-        if (dfeUserId != Guid.Empty)
+        if (id != Guid.Empty)
         {
-            return dfeUserId;
+            return id;
         }
 
         return null;
