@@ -9,154 +9,153 @@ using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
-namespace SFA.DAS.Recruit.Api.Controllers
+namespace SFA.DAS.Recruit.Api.Controllers;
+
+[ApiController, Route($"{RouteNames.Provider}/{{ukprn:int}}/")]
+public class ProviderAccountController([FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+    [FromServices] IVacancyProvider vacancyProvider,
+    [FromServices] IAlertsProvider alertsProvider,
+    ILogger<ApplicationReviewController> logger) : ControllerBase
 {
-    [Route($"{RouteNames.Provider}/{{ukprn:int}}/")]
-    public class ProviderAccountController([FromServices] IApplicationReviewsProvider applicationReviewsProvider,
-        [FromServices] IVacancyProvider vacancyProvider,
-        [FromServices] IAlertsProvider alertsProvider,
-        ILogger<ApplicationReviewController> logger) : ControllerBase
+    [HttpGet]
+    [Route("applicationReviews")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApplicationReviewsResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> GetAllByUkprn(
+        [FromRoute][Required] int ukprn,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        [FromQuery] bool isAscending = false,
+        CancellationToken token = default)
     {
-        [HttpGet]
-        [Route("applicationReviews")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApplicationReviewsResponse), StatusCodes.Status200OK)]
-        public async Task<IResult> GetAllByUkprn(
-         [FromRoute][Required] int ukprn,
-         [FromQuery] int pageNumber = 1,
-         [FromQuery] int pageSize = 10,
-         [FromQuery] string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
-         [FromQuery] bool isAscending = false,
-         CancellationToken token = default)
+        try
         {
-            try
-            {
-                logger.LogInformation("Recruit API: Received query to get all application reviews by ukprn : {ukprn}", ukprn);
+            logger.LogInformation("Recruit API: Received query to get all application reviews by ukprn : {ukprn}", ukprn);
 
-                var response = await applicationReviewsProvider.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
+            var response = await applicationReviewsProvider.GetPagedUkprnAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, token);
 
-                var mappedResults = response.Items.Select(app => app.ToGetResponse());
+            var mappedResults = response.Items.Select(app => app.ToGetResponse());
 
-                return TypedResults.Ok(new ApplicationReviewsResponse(response.ToPageInfo(), mappedResults));
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Unable to Get all application reviews by ukprn : An error occurred");
-                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
-            }
+            return TypedResults.Ok(new ApplicationReviewsResponse(response.ToPageInfo(), mappedResults));
         }
-
-        [HttpGet]
-        [Route("applicationReviews/dashboard")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(ProviderDashboardModel), StatusCodes.Status200OK)]
-        public async Task<IResult> GetDashboardCountByUkprn(
-            [FromRoute][Required] int ukprn,
-            CancellationToken token = default)
+        catch (Exception e)
         {
-            try
-            {
-                logger.LogInformation("Recruit API: Received query to get dashboard stats by ukprn : {ukprn}", ukprn);
-
-                var applicationReviewsResponse = await applicationReviewsProvider.GetCountByUkprn(ukprn, token);
-
-                var vacancyResponse = await vacancyProvider.GetCountByUkprn(ukprn, token);
-
-                var dashboardModel = new ProviderDashboardModel(applicationReviewsResponse, vacancyResponse);
-
-                return TypedResults.Ok(dashboardModel);
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Unable to Get dashboard stats by ukprn : An error occurred");
-                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
-            }
+            logger.LogError(e, "Unable to Get all application reviews by ukprn : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
+    }
 
-        [HttpGet]
-        [Route("alerts")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(EmployerAlertsModel), StatusCodes.Status200OK)]
-        public async Task<IResult> GetProviderAlertsByAccountId(
-            [FromRoute][Required] int ukprn,
-            [FromQuery] string? userId = null,
-            CancellationToken token = default)
+    [HttpGet]
+    [Route("applicationReviews/dashboard")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ProviderDashboardModel), StatusCodes.Status200OK)]
+    public async Task<IResult> GetDashboardCountByUkprn(
+        [FromRoute][Required] int ukprn,
+        CancellationToken token = default)
+    {
+        try
         {
-            try
-            {
-                logger.LogInformation("Recruit API: Received query to get provider alerts by ukprn id : {Ukprn}", ukprn);
+            logger.LogInformation("Recruit API: Received query to get dashboard stats by ukprn : {ukprn}", ukprn);
 
-                if (string.IsNullOrEmpty(userId)) return TypedResults.Ok(new EmployerAlertsModel());
+            var applicationReviewsResponse = await applicationReviewsProvider.GetCountByUkprn(ukprn, token);
 
-                var transferredVacanciesAlert = await alertsProvider.GetProviderTransferredVacanciesAlertByUkprn(ukprn, userId, token);
-                var blockedProviderAlert = await alertsProvider.GetWithDrawnByQaAlertByUkprnId(ukprn, userId, token);
-                var alertsModel = new ProviderAlertsModel
-                {
-                    ProviderTransferredVacanciesAlert = transferredVacanciesAlert,
-                    WithdrawnVacanciesAlert = blockedProviderAlert
-                };
+            var vacancyResponse = await vacancyProvider.GetCountByUkprn(ukprn, token);
 
-                return TypedResults.Ok(alertsModel);
+            var dashboardModel = new ProviderDashboardModel(applicationReviewsResponse, vacancyResponse);
 
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Unable to get employer provider by ukprn id : An error occurred");
-                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
-            }
+            return TypedResults.Ok(dashboardModel);
         }
-
-        [HttpGet]
-        [Route("applicationReviews/dashboard/vacancies")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(VacancyDashboardResponse), StatusCodes.Status200OK)]
-        public async Task<IResult> GetDashboardVacanciesCountByAccountId(
-            [FromRoute][Required] int ukprn,
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 25,
-            [FromQuery] string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
-            [FromQuery] bool isAscending = false,
-            [FromQuery] List<ApplicationReviewStatus>? status = null,
-            CancellationToken token = default)
+        catch (Exception e)
         {
-            try
-            {
-                logger.LogInformation("Recruit API: Received query to get dashboard vacancy count by ukprn : {Ukprn}", ukprn);
-
-                var response = await applicationReviewsProvider.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token);
-
-                return TypedResults.Ok(new VacancyDashboardResponse(response.ToPageInfo(), response.Items));
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Unable to get dashboard vacancy count by ukprn : An error occurred");
-                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
-            }
+            logger.LogError(e, "Unable to Get dashboard stats by ukprn : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
+    }
 
-        [HttpPost]
-        [Route("applicationReviews/count")]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(ApplicationReviewsStats), StatusCodes.Status200OK)]
-        public async Task<IResult> GetCountByVacancyReferences(
-            [FromRoute][Required] int ukprn,
-            [FromBody][Required] List<long> vacancyReferences,
-            CancellationToken token = default)
+    [HttpGet]
+    [Route("alerts")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(EmployerAlertsModel), StatusCodes.Status200OK)]
+    public async Task<IResult> GetProviderAlertsByAccountId(
+        [FromRoute][Required] int ukprn,
+        [FromQuery] string? userId = null,
+        CancellationToken token = default)
+    {
+        try
         {
-            try
-            {
-                logger.LogInformation("Recruit API: Received query to get vacancy references count by ukprn : {ukprn}", ukprn);
+            logger.LogInformation("Recruit API: Received query to get provider alerts by ukprn id : {Ukprn}", ukprn);
 
-                var response = await applicationReviewsProvider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, token);
+            if (string.IsNullOrEmpty(userId)) return TypedResults.Ok(new EmployerAlertsModel());
 
-                return TypedResults.Ok(response);
-            }
-            catch (Exception e)
+            var transferredVacanciesAlert = await alertsProvider.GetProviderTransferredVacanciesAlertByUkprn(ukprn, userId, token);
+            var blockedProviderAlert = await alertsProvider.GetWithDrawnByQaAlertByUkprnId(ukprn, userId, token);
+            var alertsModel = new ProviderAlertsModel
             {
-                logger.LogError(e, "Unable to get vacancy references count by ukprn : An error occurred");
-                return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
-            }
+                ProviderTransferredVacanciesAlert = transferredVacanciesAlert,
+                WithdrawnVacanciesAlert = blockedProviderAlert
+            };
+
+            return TypedResults.Ok(alertsModel);
+
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to get employer provider by ukprn id : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
+    [Route("applicationReviews/dashboard/vacancies")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(VacancyDashboardResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> GetDashboardVacanciesCountByAccountId(
+        [FromRoute][Required] int ukprn,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 25,
+        [FromQuery] string sortColumn = nameof(ApplicationReviewEntity.CreatedDate),
+        [FromQuery] bool isAscending = false,
+        [FromQuery] List<ApplicationReviewStatus>? status = null,
+        CancellationToken token = default)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get dashboard vacancy count by ukprn : {Ukprn}", ukprn);
+
+            var response = await applicationReviewsProvider.GetPagedByUkprnAndStatusAsync(ukprn, pageNumber, pageSize, sortColumn, isAscending, status, token);
+
+            return TypedResults.Ok(new VacancyDashboardResponse(response.ToPageInfo(), response.Items));
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to get dashboard vacancy count by ukprn : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpPost]
+    [Route("applicationReviews/count")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApplicationReviewsStats), StatusCodes.Status200OK)]
+    public async Task<IResult> GetCountByVacancyReferences(
+        [FromRoute][Required] int ukprn,
+        [FromBody][Required] List<long> vacancyReferences,
+        CancellationToken token = default)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get vacancy references count by ukprn : {ukprn}", ukprn);
+
+            var response = await applicationReviewsProvider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, token);
+
+            return TypedResults.Ok(response);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to get vacancy references count by ukprn : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
 }
