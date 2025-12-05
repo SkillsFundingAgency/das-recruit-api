@@ -85,7 +85,7 @@ public class WhenGettingVacancySubmittedNotifications
             Times.Never);
     }
 
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task The_Notifications_Contain_The_Correct_Values(
         VacancyEntity vacancy,
         UserEntity user,

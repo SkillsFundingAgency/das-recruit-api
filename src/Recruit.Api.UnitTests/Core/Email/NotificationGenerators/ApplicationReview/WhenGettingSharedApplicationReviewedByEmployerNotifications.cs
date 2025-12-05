@@ -101,7 +101,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         result.Immediate.Should().BeEmpty();
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_The_Result_Should_Have_The_Required_Information(
         UserEntity user,
         VacancyEntity vacancy,
@@ -167,6 +167,10 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
     {
         // arrange
         // these users should receive notifications
+        foreach (UserEntity userEntity in users)
+        {
+            userEntity.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
+        }
         users[0].SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         users[1].SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.UserSubmittedVacancies, NotificationFrequency.Immediately);
         

@@ -87,6 +87,7 @@ public static class VacancyExtensions
     {
         ArgumentNullException.ThrowIfNull(entity);
 
+        var employerLocations = ApiUtils.DeserializeOrNull<List<Address>>(entity.EmployerLocations);
         return new Vacancy {
             AccountId = entity.AccountId,
             AccountLegalEntityId = entity.AccountLegalEntityId,
@@ -114,8 +115,13 @@ public static class VacancyExtensions
             DisabilityConfident = entity.DisabilityConfident,
             EmployerDescription = entity.EmployerDescription,
             EmployerLocationInformation = entity.EmployerLocationInformation,
-            EmployerLocationOption = entity.EmployerLocationOption,
-            EmployerLocations = ApiUtils.DeserializeOrNull<List<Address>>(entity.EmployerLocations),
+            EmployerLocationOption = entity.EmployerLocationOption ?? employerLocations switch
+            {
+                { Count: 1 } => AvailableWhere.OneLocation,
+                { Count: > 1 } => AvailableWhere.MultipleLocations,
+                _ => AvailableWhere.AcrossEngland
+            },
+            EmployerLocations = employerLocations,
             EmployerName = entity.EmployerName,
             EmployerNameOption = entity.EmployerNameOption,
             EmployerRejectedReason = entity.EmployerRejectedReason,
@@ -134,12 +140,12 @@ public static class VacancyExtensions
             OwnerType = entity.OwnerType,
             ProgrammeId = entity.ProgrammeId,
             ProviderReviewFieldIndicators = ApiUtils.DeserializeOrNull<List<ReviewFieldIndicator>>(entity.ProviderReviewFieldIndicators),
-            Qualifications = ApiUtils.DeserializeOrNull<List<Qualification>>(entity.Qualifications),
+            Qualifications = ApiUtils.DeserializeOrNull<List<Qualification>>(entity.Qualifications) ?? [],
             ReviewCount = entity.ReviewCount,
             ReviewRequestedByUserId = entity.ReviewRequestedByUserId,
             ReviewRequestedDate = entity.ReviewRequestedDate,
             ShortDescription = entity.ShortDescription,
-            Skills = ApiUtils.DeserializeOrNull<List<string>>(entity.Skills),
+            Skills = ApiUtils.DeserializeOrNull<List<string>>(entity.Skills) ?? [],
             SourceOrigin = entity.SourceOrigin,
             SourceType = entity.SourceType,
             SourceVacancyReference = entity.SourceVacancyReference,
