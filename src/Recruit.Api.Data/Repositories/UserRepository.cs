@@ -8,6 +8,7 @@ namespace SFA.DAS.Recruit.Api.Data.Repositories;
 public interface IUserRepository : IReadRepository<UserEntity, Guid>, IWriteRepository<UserEntity, Guid>
 {
     Task<UserEntity?> FindByUserIdAsync(string userId, CancellationToken cancellationToken);
+    Task<Guid?> FindIdByUserIdAsync(string userId, CancellationToken cancellationToken);
     Task<List<UserEntity>> FindUsersByEmployerAccountIdAsync(long employerAccountId, CancellationToken cancellationToken);
     Task<List<UserEntity>> FindUsersByUkprnAsync(long ukprn, CancellationToken cancellationToken);
     Task<UserEntity?> FindUserByIdamsAsync(string idams, CancellationToken cancellationToken);
@@ -67,13 +68,82 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
 
     public async Task<UserEntity?> FindByUserIdAsync(string userId, CancellationToken cancellationToken)
     {
-        var user = await dataContext.UserEntities
-            .Include(x => x.EmployerAccounts)
-            .Where(x => x.IdamsUserId == userId || x.DfEUserId == userId || x.Id.ToString() == userId)
-            .FirstOrDefaultAsync(cancellationToken);
+        UserEntity? user;
+        if (!Guid.TryParse(userId, out var guidId))
+        {
+            user = await dataContext.UserEntities
+                .Include(x => x.EmployerAccounts)
+                .Where(x => x.IdamsUserId == userId)
+                .FirstOrDefaultAsync(cancellationToken);
+            
+            NotificationPreferenceDefaults.Update(user);
+            return user;
+        }
 
+        user =
+            await dataContext.UserEntities
+                .Include(x => x.EmployerAccounts)
+                .Where(x => x.Id == guidId)
+                .FirstOrDefaultAsync(cancellationToken)
+            ??
+            await dataContext.UserEntities
+                .Include(x => x.EmployerAccounts)
+                .Where(x => x.IdamsUserId == userId)
+                .FirstOrDefaultAsync(cancellationToken)
+            ??
+            await dataContext.UserEntities
+                .Include(x => x.EmployerAccounts)
+                .Where(x => x.DfEUserId == userId)
+                .FirstOrDefaultAsync(cancellationToken);
+        
         NotificationPreferenceDefaults.Update(user);
         return user;
+    }
+    
+    public async Task<Guid?> FindIdByUserIdAsync(string userId, CancellationToken cancellationToken)
+    {
+        Guid? id;
+        if (!Guid.TryParse(userId, out var guidId))
+        {
+            id = await dataContext.UserEntities
+                .Where(x => x.IdamsUserId == userId)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return id == Guid.Empty ? null : id;
+        }
+
+        id = await dataContext.UserEntities
+            .Where(x => x.Id == guidId)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (id != Guid.Empty)
+        {
+            return id;
+        }
+        
+        id = await dataContext.UserEntities
+            .Where(x => x.IdamsUserId == userId)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+            
+        if (id != Guid.Empty)
+        {
+            return id;
+        }
+        
+        id = await dataContext.UserEntities
+            .Where(x => x.DfEUserId == userId)
+            .Select(x => x.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        if (id != Guid.Empty)
+        {
+            return id;
+        }
+
+        return null;
     }
 
     public async Task<List<UserEntity>> FindUsersByEmployerAccountIdAsync(long employerAccountId, CancellationToken cancellationToken)
