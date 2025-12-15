@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data;
+using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -412,7 +413,7 @@ public class VacancyController : Controller
     {
         try
         {
-            bool deleted = await repository.DeleteOneAsync(vacancyId, cancellationToken);
+            var deleted = await repository.DeleteOneAsync(vacancyId, cancellationToken);
             return deleted
                 ? Results.NoContent()
                 : Results.NotFound();
@@ -421,5 +422,24 @@ public class VacancyController : Controller
         {
             return Results.Problem(ex.ToProblemDetails());
         }
+    }
+
+    [HttpGet]
+    [Route("count/user/{userId:guid}")]
+    [ProducesResponseType(typeof(DataResponse<int>), StatusCodes.Status200OK)]
+    public async Task<IResult> CountByUserId(
+        [FromRoute] Guid userId,
+        [FromServices] IUserRepository userRepository,
+        [FromServices] IVacancyRepository vacancyRepository,
+        CancellationToken cancellationToken)
+    {
+        var user = await userRepository.FindByUserIdAsync($"{userId}", cancellationToken);
+        if (user is null)
+        {
+            return TypedResults.Ok(new DataResponse<int>(0)); 
+        }
+
+        var count = await vacancyRepository.CountVacanciesByUserIdAsync(user.Id, cancellationToken);
+        return TypedResults.Ok(new DataResponse<int>(count));
     }
 }
