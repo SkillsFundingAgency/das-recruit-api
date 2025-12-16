@@ -291,10 +291,10 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.SubmittedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.SubmittedByUserId = user.Id;
+                entity.SubmittedByUserId = userId;
             }
         }
         
@@ -303,10 +303,10 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.ReviewRequestedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.ReviewRequestedByUserId = user.Id;
+                entity.ReviewRequestedByUserId = userId;
             }
         }
         
@@ -317,7 +317,7 @@ public class VacancyController : Controller
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
         return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
-    
+
     [HttpPut, Route("{vacancyId:guid}")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status201Created)]
@@ -336,10 +336,10 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.SubmittedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.SubmittedByUserId = user.Id;
+                entity.SubmittedByUserId = userId;
             }
         }
         
@@ -348,10 +348,10 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.ReviewRequestedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.ReviewRequestedByUserId = user.Id;
+                entity.ReviewRequestedByUserId = userId;
             }
         }
 
