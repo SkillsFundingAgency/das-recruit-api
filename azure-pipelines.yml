@@ -53,8 +53,13 @@ stages:
       SolutionBaseName: $(SolutionBaseName)
       DatabaseProjectPath: src/$(SolutionBaseName).Database/$(SolutionBaseName).Database.csproj
 
+- template: azure-pipelines-templates/test/stage/testing.yml@das-platform-building-blocka
+  parameters:
+    ArtifactName: $(SolutionBaseName)
+    SolutionBaseName: $(SolutionBaseName)
+
 - stage: Deploy_AT
-  dependsOn: Build
+  dependsOn: Test
   displayName: Deploy to AT
   variables:
   - group: DevTest Management Resources
@@ -70,7 +75,7 @@ stages:
       OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_TEST
-  dependsOn: Build
+  dependsOn: Test
   displayName: Deploy to TEST
   variables:
   - group: DevTest Management Resources
@@ -86,7 +91,7 @@ stages:
       OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_TEST2
-  dependsOn: Build
+  dependsOn: Test
   displayName: Deploy to TEST2
   variables:
   - group: DevTest Management Resources
@@ -102,7 +107,7 @@ stages:
       OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_DEMO
-  dependsOn: Build
+  dependsOn: Test
   displayName: Deploy to DEMO
   variables:
   - group: DevTest Management Resources
@@ -118,7 +123,7 @@ stages:
       OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_PP
-  dependsOn: Build
+  dependsOn: Test
   displayName: Deploy to PP
   variables:
   - group: PREPROD Management Resources
@@ -134,7 +139,7 @@ stages:
       OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_MO
-  dependsOn: Build
+  dependsOn: Test
   displayName: Deploy to MO
   variables:
   - group: MO Management Resources
@@ -150,7 +155,7 @@ stages:
       OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss  }}
 
 - stage: Deploy_PROD
-  dependsOn: Build
+  dependsOn: Test
   displayName: Deploy to PROD
   variables:
   - group: PROD Management Resources
