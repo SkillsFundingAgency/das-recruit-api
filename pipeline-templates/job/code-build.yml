@@ -32,6 +32,7 @@ jobs:
     inputs:
       Contents: |
         azure/**
+        src/**
       TargetFolder: $(build.artifactstagingdirectory)/publish
       OverWrite: true
 
