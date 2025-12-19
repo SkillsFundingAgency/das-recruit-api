@@ -55,7 +55,6 @@ stages:
 
 - template: azure-pipelines-templates/test/stage/testing.yml@das-platform-building-blocks
   parameters:
-    ArtifactName: $(SolutionBaseName)
     SolutionBaseName: $(SolutionBaseName)
 
 - stage: Deploy_AT
