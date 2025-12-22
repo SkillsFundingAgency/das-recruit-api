@@ -77,7 +77,9 @@ CREATE TABLE dbo.[Vacancy] (
 
     CONSTRAINT [PK_Vacancy] PRIMARY KEY (Id),
     INDEX [IX_Vacancy_VacancyReference] NONCLUSTERED(VacancyReference),
-    
+
+    INDEX [IX_Vacancy_Live_ClosingDate] NONCLUSTERED(Status, ClosingDate) INCLUDE (NumberOfPositions) WHERE Status = 'Live',
+       
     INDEX [IX_Vacancy_Account_Owner_Status] NONCLUSTERED(AccountId, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[Ukprn]) WHERE OwnerType = 'Employer',
     INDEX [IX_Vacancy_Ukprn_Owner_Status] NONCLUSTERED(Ukprn, OwnerType, Status) INCLUDE([Id], [Title], [VacancyReference], [ClosingDate], [ApplicationMethod], [ApprenticeshipType], [CreatedDate], [LegalEntityName], [TransferInfo], [HasSubmittedAdditionalQuestions],[AccountId])  WHERE OwnerType = 'Provider',
     
@@ -107,4 +109,7 @@ CREATE TABLE dbo.[Vacancy] (
     INDEX [IX_Vacancy_Search_Provider] NONCLUSTERED([OwnerType], [Ukprn], [Status]) INCLUDE ([LegalEntityName], [Title], [VacancyReference]),
     INDEX [IX_Vacancy_Search_Employer] NONCLUSTERED([OwnerType], [AccountId], [Status]) INCLUDE ([LegalEntityName], [Title], [VacancyReference]),
     INDEX [IX_Vacancy_Report_Provider] NONCLUSTERED([Ukprn], [Status]) INCLUDE ([Title], [EmployerName], [ApprenticeshipType], [EmployerLocationOption], [ProgrammeId], [TrainingProvider_Name], [ClosingDate], [VacancyReference]) WHERE Status IN ('Live','Closed') AND OwnerType = 'Provider' AND DeletedDate IS null,
+    
+    INDEX [IX_Vacancy_List_Provider] NONCLUSTERED([DeletedDate], [OwnerType], [Ukprn], [Status]) INCLUDE ([ApplicationMethod], [ApprenticeshipType], [ClosingDate], [CreatedDate], [HasSubmittedAdditionalQuestions], [LegalEntityName], [Title], [TransferInfo], [VacancyReference]) Where OwnerType = 'Provider' AND DeletedDate IS null,
+    INDEX [IX_Vacancy_List_Employer] NONCLUSTERED([DeletedDate], [OwnerType], [AccountId], [Status]) INCLUDE ([ApplicationMethod], [ApprenticeshipType], [ClosingDate], [CreatedDate], [HasSubmittedAdditionalQuestions], [LegalEntityName], [Title], [TransferInfo], [VacancyReference]) Where OwnerType = 'Employer' AND DeletedDate IS null
     )

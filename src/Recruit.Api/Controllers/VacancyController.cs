@@ -14,6 +14,7 @@ using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Models.Responses;
+using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -262,6 +263,18 @@ public class VacancyController : Controller
         return TypedResults.Ok(vacancySummaries);
     }
 
+
+    [HttpGet]
+    [Route($"{RouteElements.TotalPositionsAvailable}")]
+    [ProducesResponseType(typeof(TotalPositionsAvailableResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> GetTotalPositionsAvailable(
+        [FromServices] IVacancyRepository repository,
+        CancellationToken cancellationToken = default)
+    {
+        int response = await repository.GetLiveVacanciesCountAsync(cancellationToken);
+        return TypedResults.Ok(new TotalPositionsAvailableResponse(response));
+    }
+
     [HttpPost]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
@@ -278,10 +291,10 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.SubmittedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.SubmittedByUserId = user.Id;
+                entity.SubmittedByUserId = userId;
             }
         }
         
@@ -290,10 +303,10 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.ReviewRequestedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.ReviewRequestedByUserId = user.Id;
+                entity.ReviewRequestedByUserId = userId;
             }
         }
         
@@ -304,7 +317,7 @@ public class VacancyController : Controller
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
         return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
-    
+
     [HttpPut, Route("{vacancyId:guid}")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status201Created)]
@@ -323,10 +336,10 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.SubmittedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.SubmittedByUserId = user.Id;
+                entity.SubmittedByUserId = userId;
             }
         }
         
@@ -335,10 +348,10 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.ReviewRequestedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.ReviewRequestedByUserId = user.Id;
+                entity.ReviewRequestedByUserId = userId;
             }
         }
 
