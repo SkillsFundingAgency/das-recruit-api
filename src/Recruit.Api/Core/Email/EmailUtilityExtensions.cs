@@ -16,7 +16,8 @@ public static class EmailUtilityExtensions
         }
 
         return users
-            .Where(x => x.LastSignedInDate != null && x.LastSignedInDate > cutOffDateTime)
+            .Where(x => x.UserType == UserType.Employer 
+                        || (x.UserType == UserType.Provider && x.LastSignedInDate != null && x.LastSignedInDate > cutOffDateTime))
             .Where(x =>
         {
             if (!x.NotificationPreferences.TryGetForEvent(notificationType, out var pref))
