@@ -5,9 +5,6 @@
         <SqlServerVersion>SqlAzure</SqlServerVersion>
     </PropertyGroup>
     <ItemGroup>
-      <Content Remove="Tables\VacancyAnalytics.sql" />
-    </ItemGroup>
-    <ItemGroup>
         <None Include="Database.publish.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
