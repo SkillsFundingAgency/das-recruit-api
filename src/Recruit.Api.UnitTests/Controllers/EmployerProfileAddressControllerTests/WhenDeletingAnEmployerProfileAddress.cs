@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Testing;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileAddressControllerTests;
 

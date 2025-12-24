@@ -26,8 +26,8 @@ internal class Startup
     public Startup(IConfiguration configuration)
     {
         _environmentName = configuration["EnvironmentName"]!;
-
-        if (_environmentName == "INTEGRATION")
+        
+        if (configuration.GetValue<bool?>("IsIntegrationTest") is true)
         {
             Configuration = configuration;
             return;
