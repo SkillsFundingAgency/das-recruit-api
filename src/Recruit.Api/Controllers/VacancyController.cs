@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data;
+using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
@@ -372,8 +372,8 @@ public class VacancyController : Controller
         [FromBody] JsonPatchDocument<Vacancy> patchRequest,
         CancellationToken cancellationToken)
     {
-        var vacancy = await repository.GetOneAsync(vacancyId, cancellationToken);
-        if (vacancy is null)
+        var vacancyEntity = await repository.GetOneAsync(vacancyId, cancellationToken);
+        if (vacancyEntity is null)
         {
             return Results.NotFound();
         }
@@ -383,22 +383,22 @@ public class VacancyController : Controller
             patchRequest.ThrowIfOperationsOn([
                 nameof(Vacancy.Id),
                 nameof(Vacancy.ApprenticeshipType),
-                nameof(Vacancy.OwnerType),
                 nameof(Vacancy.VacancyReference),
                 nameof(Vacancy.CreatedDate),
                 nameof(Vacancy.AccountId),
             ]);
-            
-            var patchDocument = patchRequest.ToDomain<Vacancy, VacancyEntity>();
-            patchDocument.ApplyTo(vacancy);
+
+            var vacancy = VacancyMapper.FromEntity(vacancyEntity);
+            patchRequest.ApplyTo(vacancy);
+            vacancyEntity = VacancyMapper.ToEntity(vacancy);
         }
         catch (JsonPatchException ex)
         {
             return TypedResults.ValidationProblem(ex.ToProblemsDictionary());
         }
     
-        await repository.UpsertOneAsync(vacancy, cancellationToken);
-        return TypedResults.Ok(vacancy.ToPatchResponse());
+        await repository.UpsertOneAsync(vacancyEntity, cancellationToken);
+        return TypedResults.Ok(vacancyEntity.ToPatchResponse());
     }
 
     [HttpDelete]
@@ -413,7 +413,7 @@ public class VacancyController : Controller
     {
         try
         {
-            bool deleted = await repository.DeleteOneAsync(vacancyId, cancellationToken);
+            var deleted = await repository.DeleteOneAsync(vacancyId, cancellationToken);
             return deleted
                 ? Results.NoContent()
                 : Results.NotFound();
@@ -422,5 +422,24 @@ public class VacancyController : Controller
         {
             return Results.Problem(ex.ToProblemDetails());
         }
+    }
+
+    [HttpGet]
+    [Route("count/user/{userId:guid}")]
+    [ProducesResponseType(typeof(DataResponse<int>), StatusCodes.Status200OK)]
+    public async Task<IResult> CountByUserId(
+        [FromRoute] Guid userId,
+        [FromServices] IUserRepository userRepository,
+        [FromServices] IVacancyRepository vacancyRepository,
+        CancellationToken cancellationToken)
+    {
+        var user = await userRepository.FindByUserIdAsync($"{userId}", cancellationToken);
+        if (user is null)
+        {
+            return TypedResults.Ok(new DataResponse<int>(0)); 
+        }
+
+        var count = await vacancyRepository.CountVacanciesByUserIdAsync(user.Id, cancellationToken);
+        return TypedResults.Ok(new DataResponse<int>(count));
     }
 }

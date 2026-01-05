@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
+using HotChocolate.Execution.Configuration;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core.Email;
@@ -83,6 +84,7 @@ public static class AddServiceRegistrationExtension
         {
             services.AddDbContext<RecruitDataContext>(options =>
                 options.UseSqlServer(config.SqlConnectionString), ServiceLifetime.Transient);
+            services.AddDbContextFactory<GraphQlDataContext>(options => options.UseSqlServer(config.SqlConnectionString), ServiceLifetime.Scoped);
         }
 
         services.AddScoped<IRecruitDataContext, RecruitDataContext>(provider =>
@@ -105,5 +107,12 @@ public static class AddServiceRegistrationExtension
         configuration.GetSection(nameof(dasEncodingConfig.Encodings)).Bind(dasEncodingConfig.Encodings);
         services.AddSingleton(dasEncodingConfig);
         services.AddSingleton<IEncodingService, EncodingService>();
+    }
+
+    public static IRequestExecutorBuilder AddTypes(this IRequestExecutorBuilder builder)
+    {
+        builder.AddTypeExtension(typeof(Data.Queries.VacancyQuery));
+        builder.ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Query)), HotChocolate.Language.OperationType.Query));
+        return builder;
     }
 }
