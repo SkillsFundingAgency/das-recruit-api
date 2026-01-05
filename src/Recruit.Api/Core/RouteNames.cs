@@ -11,7 +11,6 @@ internal struct RouteElements
     public const string Notifications = "notifications";
     public const string ProhibitedContent = "prohibitedcontent";
     public const string Provider = "provider";
-    public const string Qa = "qa";
     public const string ReferenceData = "referencedata";
     public const string Reports = "reports";
     public const string User = "user";
@@ -19,6 +18,8 @@ internal struct RouteElements
     public const string TotalPositionsAvailable = "total-positions-available";
     public const string VacancyReference = "vacancyreference";
     public const string VacancyReview = "vacancyreviews";
+    public const string Qa = "qa";
+    public const string VacancyAnalytics = "vacancyanalytics";
 }
 
 internal struct RouteNames
@@ -36,4 +37,5 @@ internal struct RouteNames
     public const string Vacancies = $"{RouteElements.Api}/{RouteElements.Vacancies}";
     public const string VacancyReference = $"{RouteElements.Api}/{RouteElements.VacancyReference}";
     public const string VacancyReviews = $"{RouteElements.Api}/{RouteElements.VacancyReview}";
+    public const string VacancyAnalytics = $"{RouteElements.Api}/{RouteElements.VacancyAnalytics}";
 }
