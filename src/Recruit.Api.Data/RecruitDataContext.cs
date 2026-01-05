@@ -50,8 +50,8 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
 
     private readonly ConnectionStrings? _configuration;
     public RecruitDataContext() {}
-    public RecruitDataContext(DbContextOptions options) : base(options) {}
-    public RecruitDataContext(IOptions<ConnectionStrings> config, DbContextOptions options) : base(options)
+    public RecruitDataContext(DbContextOptions<RecruitDataContext> options) : base(options) {}
+    public RecruitDataContext(IOptions<ConnectionStrings> config, DbContextOptions<RecruitDataContext> options) : base(options)
     {
         _configuration = config.Value;
     }
@@ -82,9 +82,10 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
         optionsBuilder.UseLazyLoadingProxies();
         
         // Note: useful to keep here
-        optionsBuilder.LogTo(message => Debug.WriteLine(message));
-        optionsBuilder.EnableDetailedErrors();
+        // optionsBuilder.LogTo(message => Debug.WriteLine(message));
+        // optionsBuilder.EnableDetailedErrors();
     }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ApplicationReviewEntityConfiguration());
