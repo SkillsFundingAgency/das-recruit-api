@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Testing.Http;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ReferenceDataControllerTests;
 
