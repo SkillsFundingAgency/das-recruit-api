@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Testing.Data;
+using SFA.DAS.Recruit.Api.Testing.Http;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyReviewControllerTests;
 

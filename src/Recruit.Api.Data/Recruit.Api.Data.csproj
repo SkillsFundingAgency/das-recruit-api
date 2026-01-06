@@ -20,6 +20,7 @@
   <ItemGroup>
     <InternalsVisibleTo Include="SFA.DAS.Recruit.Api" />
     <InternalsVisibleTo Include="SFA.DAS.Recruit.Api.UnitTests" />
+    <InternalsVisibleTo Include="SFA.DAS.Recruit.Api.IntegrationTests" />
   </ItemGroup>
 
 </Project>

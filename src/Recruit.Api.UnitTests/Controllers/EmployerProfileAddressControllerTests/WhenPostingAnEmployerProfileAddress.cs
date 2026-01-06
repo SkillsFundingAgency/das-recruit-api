@@ -6,6 +6,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfileAddress;
+using SFA.DAS.Recruit.Api.Testing;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerProfileAddressControllerTests;
 

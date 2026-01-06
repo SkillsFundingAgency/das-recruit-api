@@ -2,6 +2,8 @@
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Testing.Data;
+using SFA.DAS.Recruit.Api.Testing.Http;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ReportControllerTests;
