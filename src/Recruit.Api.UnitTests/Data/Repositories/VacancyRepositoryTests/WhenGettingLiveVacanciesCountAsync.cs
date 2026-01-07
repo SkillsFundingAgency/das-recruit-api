@@ -6,6 +6,7 @@ using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Testing.Data;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Data.Repositories.VacancyRepositoryTests;
+
 [TestFixture]
 internal class WhenGettingLiveVacanciesCountAsync
 {

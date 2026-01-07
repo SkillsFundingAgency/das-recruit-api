@@ -53,7 +53,7 @@ public class WhenPuttingUser: BaseFixture
         response.Headers.Location.Should().NotBeNull();
         response.Headers.Location.ToString().Should().Be($"/{RouteNames.User}/{user.Id}");
 
-        Server.DataContext.Verify(x => x.UserEntities.Add(ItIs.EquivalentTo(expectedEntity)), Times.Once());
+        Server.DataContext.Verify(x => x.UserEntities.AddAsync(ItIs.EquivalentTo(expectedEntity), It.IsAny<CancellationToken>()), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
     
