@@ -39,7 +39,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         notificationEmails.Should().HaveCount(0);
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Immediate_Notifications_Are_Returned_For_Employer_User(
         string expectedHashedAccountId,
         ApplicationReviewEntity applicationReview,
@@ -151,7 +151,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         });
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task The_The_Location_Text_Is_Generated_For_Multiple_Cities(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
@@ -236,7 +236,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         dynamicData["location"].Should().Be("Recruiting nationally");
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Weekly_Notifications_Are_Stored_For_Later_Delivery(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,

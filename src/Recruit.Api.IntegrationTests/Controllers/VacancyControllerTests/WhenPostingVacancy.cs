@@ -88,6 +88,7 @@ public class WhenPostingVacancy: BaseFixture
         var request = Fixture.Create<PostVacancyRequest>();
         var users = Fixture.CreateMany<UserEntity>(10).ToList();
         users[3].IdamsUserId = request.SubmittedByUserId;
+        request.SubmittedByUserId = users[3].Id.ToString();
 
         Server.DataContext
             .Setup(x => x.UserEntities)
@@ -122,6 +123,7 @@ public class WhenPostingVacancy: BaseFixture
         var request = Fixture.Create<PostVacancyRequest>();
         var users = Fixture.CreateMany<UserEntity>(10).ToList();
         users[3].DfEUserId = request.SubmittedByUserId;
+        request.SubmittedByUserId = users[3].Id.ToString();
 
         Server.DataContext
             .Setup(x => x.UserEntities)
