@@ -5,8 +5,11 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyAnalytics;
 using SFA.DAS.Recruit.Api.Models.Responses.VacancyAnalytics;
+using SFA.DAS.Recruit.Api.Testing.Data;
+using SFA.DAS.Recruit.Api.Testing.Http;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyAnalyticsControllerTests;
+
 internal class WhenPuttingVacancyAnalytics : BaseFixture
 {
     [Test]
