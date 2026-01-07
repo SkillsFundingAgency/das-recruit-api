@@ -2,8 +2,11 @@
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
+using SFA.DAS.Recruit.Api.Testing.Data;
+using SFA.DAS.Recruit.Api.Testing.Http;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
+
 [TestFixture]
 internal class WhenGettingTotalPositionsAvailable : BaseFixture
 {

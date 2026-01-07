@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Testing;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Domain;
 

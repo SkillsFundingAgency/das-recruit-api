@@ -3,9 +3,10 @@ using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
-using SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
+using SFA.DAS.Recruit.Api.Testing.Data;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Data.Repositories.VacancyRepositoryTests;
+
 [TestFixture]
 internal class WhenGettingLiveVacanciesCountAsync
 {

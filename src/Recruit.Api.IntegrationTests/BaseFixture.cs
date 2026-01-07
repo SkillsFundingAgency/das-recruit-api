@@ -1,17 +1,17 @@
-﻿using SFA.DAS.Recruit.Api.UnitTests;
+﻿using SFA.DAS.Recruit.Api.Testing.Data;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
 public abstract class BaseFixture
 {
-    protected TestServer Server;
+    protected MockedTestServer Server;
     protected HttpClient Client;
     protected IFixture Fixture;
     
     [SetUp]
     public virtual void Setup()
     {
-        Server = new TestServer();
+        Server = new MockedTestServer();
         Client = Server.CreateClient();
         Fixture = new Fixture();
         Fixture.Customizations.Add(new VacancyReferenceSpecimenBuilder());

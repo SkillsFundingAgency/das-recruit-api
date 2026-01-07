@@ -47,7 +47,8 @@ public class PutVacancyRequest
     public long? AccountLegalEntityId { get; init; }
     public int? NumberOfPositions { get; init; }
     public string? OutcomeDescription { get; init; }
-    public string? ProgrammeId { get; init; }
+    [MaxLength(20)]
+    public string? ProgrammeId { get; set; }
     public List<string>? Skills { get; init; }
     public List<Qualification>? Qualifications { get; set; }
     public string? ThingsToConsider { get; init; }
