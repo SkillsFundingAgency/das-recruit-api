@@ -3,6 +3,8 @@ using System.Net.Http.Json;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models.Requests.Report;
+using SFA.DAS.Recruit.Api.Testing.Data;
+using SFA.DAS.Recruit.Api.Testing.Http;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ReportControllerTests;
 internal class WhenPostingReport : BaseFixture
