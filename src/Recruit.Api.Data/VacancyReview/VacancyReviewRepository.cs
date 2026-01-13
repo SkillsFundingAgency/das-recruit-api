@@ -8,12 +8,14 @@ namespace SFA.DAS.Recruit.Api.Data.VacancyReview;
 public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, Guid>, IWriteRepository<VacancyReviewEntity, Guid>
 {
     Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(VacancyReference vacancyReference, IReadOnlyCollection<ReviewStatus> statuses, CancellationToken cancellationToken);
     Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByStatusAndExpiredAssignationDateTime(
         IReadOnlyCollection<ReviewStatus> statuses,
         DateTime? expiredAssignationDateTime,
         CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByAccountLegalEntityId(long accountLegalEntityId, CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string userId, DateTime? assignationExpiry, CancellationToken cancellationToken);
 }
 
 public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyReviewRepository
@@ -58,6 +60,26 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
         return dataContext.VacancyReviewEntities
             .AsNoTracking()
             .Where(x => x.VacancyReference == vacancyReference)
+            .OrderBy(x => x.CreatedDate)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(
+        VacancyReference vacancyReference,
+        IReadOnlyCollection<ReviewStatus> statuses,
+        CancellationToken cancellationToken)
+    {
+        var query = dataContext.VacancyReviewEntities
+            .AsNoTracking()
+            .Where(x => x.VacancyReference == vacancyReference)
+            .AsQueryable();
+
+        if (statuses is { Count: > 0 })
+        {
+            query = query.Where(x => statuses.Contains(x.Status));
+        }
+
+        return query
             .OrderBy(x => x.CreatedDate)
             .ToListAsync(cancellationToken);
     }
@@ -127,6 +149,23 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
         return dataContext.VacancyReviewEntities
             .AsNoTracking()
             .Where(x => x.AccountLegalEntityId == accountLegalEntityId)
+            .OrderBy(x => x.CreatedDate)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string userId, DateTime? assignationExpiry, CancellationToken cancellationToken)
+    {
+        var query = dataContext.VacancyReviewEntities
+            .AsNoTracking()
+            .Where(x => x.ReviewedByUserEmail == userId)
+            .AsQueryable();
+
+        if (assignationExpiry is not null)
+        {
+            query = query.Where(x => x.SlaDeadLine <= assignationExpiry.Value);
+        }
+
+        return query
             .OrderBy(x => x.CreatedDate)
             .ToListAsync(cancellationToken);
     }

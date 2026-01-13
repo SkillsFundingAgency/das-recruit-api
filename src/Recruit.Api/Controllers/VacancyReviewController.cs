@@ -116,17 +116,16 @@ public class VacancyReviewController: ControllerBase
     [HttpGet, Route($"~/{RouteNames.Vacancies}/{{vacancyReference}}/reviews")]
     [ProducesResponseType(typeof(List<VacancyReview>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> GetManyByVacancyReference(
         [FromServices] IVacancyReviewRepository repository,
         [FromRoute] VacancyReference vacancyReference,
+        [FromQuery(Name = "status")] List<ReviewStatus>? status,
         CancellationToken cancellationToken)
     {
-        var result = await repository.GetManyByVacancyReference(vacancyReference, cancellationToken);
+        var statuses = status ?? new List<ReviewStatus>();
+        var result = await repository.GetManyByVacancyReferenceAndStatus(vacancyReference, statuses, cancellationToken);
 
-        return result is null or { Count: 0 }
-            ? Results.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+        return TypedResults.Ok(result.ToGetResponse());
     }
 
     [HttpGet, Route($"~/{RouteNames.Account}/{{accountLegalEntityId}}/vacancyreviews")]
@@ -159,5 +158,19 @@ public class VacancyReviewController: ControllerBase
         {
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
+    }
+
+    [HttpGet, Route("~/api/users/{userId}/vacancyreviews")]
+    [ProducesResponseType(typeof(List<VacancyReview>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetManyByUser(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromRoute] string userId,
+        [FromQuery] DateTime? assignationExpiry,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetManyByReviewedByUserEmailAndAssignationExpiry(userId, assignationExpiry, cancellationToken);
+
+        return TypedResults.Ok(result.ToGetResponse());
     }
 }
