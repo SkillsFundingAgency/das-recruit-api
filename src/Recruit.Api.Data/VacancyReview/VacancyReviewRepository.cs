@@ -9,6 +9,11 @@ public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, 
 {
     Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
     Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByStatusAndExpiredAssignationDateTime(
+        IReadOnlyCollection<ReviewStatus> statuses,
+        DateTime? expiredAssignationDateTime,
+        CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByAccountLegalEntityId(long accountLegalEntityId, CancellationToken cancellationToken);
 }
 
 public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyReviewRepository
@@ -93,5 +98,36 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             .FirstOrDefaultAsync(cancellationToken);
 
         return dashboard ?? new QaDashboard();
+    }
+
+    public Task<List<VacancyReviewEntity>> GetManyByStatusAndExpiredAssignationDateTime(
+        IReadOnlyCollection<ReviewStatus> statuses,
+        DateTime? expiredAssignationDateTime,
+        CancellationToken cancellationToken)
+    {
+        var query = dataContext.VacancyReviewEntities
+            .AsNoTracking()
+            .AsQueryable();
+
+        if (statuses is { Count: > 0 })
+        {
+            query = query.Where(x => statuses.Contains(x.Status));
+        }
+
+        if (expiredAssignationDateTime is not null)
+        {
+            query = query.Where(x => x.SlaDeadLine <= expiredAssignationDateTime.Value);
+        }
+
+        return query.ToListAsync(cancellationToken);
+    }
+
+    public Task<List<VacancyReviewEntity>> GetManyByAccountLegalEntityId(long accountLegalEntityId, CancellationToken cancellationToken)
+    {
+        return dataContext.VacancyReviewEntities
+            .AsNoTracking()
+            .Where(x => x.AccountLegalEntityId == accountLegalEntityId)
+            .OrderBy(x => x.CreatedDate)
+            .ToListAsync(cancellationToken);
     }
 }

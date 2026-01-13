@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +17,20 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 [ApiController, Route($"{RouteNames.VacancyReviews}/{{id:guid}}")]
 public class VacancyReviewController: ControllerBase
 {
+    [HttpGet, Route($"~/{RouteNames.VacancyReviews}")]
+    [ProducesResponseType(typeof(List<VacancyReview>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetMany(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromQuery(Name = "reviewStatus")] List<ReviewStatus> reviewStatus,
+        [FromQuery] DateTime? expiredAssignationDateTime,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetManyByStatusAndExpiredAssignationDateTime(reviewStatus, expiredAssignationDateTime, cancellationToken);
+
+        return TypedResults.Ok(result.ToGetResponse());
+    }
+
     [HttpGet]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
