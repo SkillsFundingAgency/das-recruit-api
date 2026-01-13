@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -127,6 +127,19 @@ public class VacancyReviewController: ControllerBase
         return result is null or { Count: 0 }
             ? Results.NotFound()
             : TypedResults.Ok(result.ToGetResponse());
+    }
+
+    [HttpGet, Route($"~/{RouteNames.Account}/{{accountLegalEntityId}}/vacancyreviews")]
+    [ProducesResponseType(typeof(List<VacancyReview>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetManyByAccountLegalEntityId(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromRoute] long accountLegalEntityId,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetManyByAccountLegalEntityId(accountLegalEntityId, cancellationToken);
+
+        return TypedResults.Ok(result.ToGetResponse());
     }
 
     [HttpGet, Route($"~/{RouteNames.VacancyReviews}/qa/dashboard")]
