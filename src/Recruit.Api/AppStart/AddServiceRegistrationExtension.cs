@@ -38,6 +38,7 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IVacancyReviewRepository, VacancyReviewRepository>();
         services.AddScoped<IVacancyRepository, VacancyRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
+        services.AddScoped<IVacancyAnalyticsRepository, VacancyAnalyticsRepository>();
 
         // email
         string env = configuration["ResourceEnvironmentName"] ?? "local";
