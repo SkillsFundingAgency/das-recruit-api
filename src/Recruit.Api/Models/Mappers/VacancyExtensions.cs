@@ -164,7 +164,7 @@ public static class VacancyExtensions
             },
             TransferInfo = ApiUtils.DeserializeOrNull<TransferInfo>(entity.TransferInfo),
             VacancyReference = entity.VacancyReference,
-            Wage = entity.Wage_WageType is null ? null : new Wage
+            Wage = entity.Wage_WageType is null && entity.Wage_Duration is null ? null : new Wage
             {
                 CompanyBenefitsInformation = entity.Wage_CompanyBenefitsInformation,
                 Duration = entity.Wage_Duration,
