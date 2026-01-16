@@ -15,7 +15,8 @@ public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, 
         DateTime? expiredAssignationDateTime,
         CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByAccountLegalEntityId(long accountLegalEntityId, CancellationToken cancellationToken);
-    Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string userId, DateTime? assignationExpiry, CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string reviewedByUserEmail, DateTime? assignationExpiry, CancellationToken cancellationToken);
+    Task<int> GetCountByReviewedByUserEmail(string reviewedByUserEmail, bool? approvedFirstTime, DateTime? assignationExpiry, CancellationToken cancellationToken);
 }
 
 public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyReviewRepository
@@ -153,11 +154,28 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string userId, DateTime? assignationExpiry, CancellationToken cancellationToken)
+    public Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string reviewedByUserEmail, DateTime? assignationExpiry, CancellationToken cancellationToken)
     {
         var query = dataContext.VacancyReviewEntities
             .AsNoTracking()
-            .Where(x => x.ReviewedByUserEmail == userId)
+            .Where(x => x.ReviewedByUserEmail == reviewedByUserEmail)
+            .AsQueryable();
+
+        if (assignationExpiry is not null)
+        {
+            query = query.Where(x => x.ReviewedDate <= assignationExpiry.Value);
+        }
+
+        return query
+            .OrderBy(x => x.CreatedDate)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<int> GetCountByReviewedByUserEmail(string reviewedByUserEmail, bool? approvedFirstTime, DateTime? assignationExpiry, CancellationToken cancellationToken)
+    {
+        var query = dataContext.VacancyReviewEntities
+            .AsNoTracking()
+            .Where(x => x.ReviewedByUserEmail == reviewedByUserEmail)
             .AsQueryable();
 
         if (assignationExpiry is not null)
@@ -165,8 +183,15 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             query = query.Where(x => x.SlaDeadLine <= assignationExpiry.Value);
         }
 
-        return query
-            .OrderBy(x => x.CreatedDate)
-            .ToListAsync(cancellationToken);
+        if (approvedFirstTime is true)
+        {
+            query = query.Where(x => x.SubmissionCount == 1 && x.Status == ReviewStatus.Closed && x.ManualOutcome == "Approved");
+        }
+        else if (approvedFirstTime is false)
+        {
+            query = query.Where(x => !(x.SubmissionCount == 1 && x.Status == ReviewStatus.Closed && x.ManualOutcome == "Approved"));
+        }
+
+        return query.CountAsync(cancellationToken);
     }
 }

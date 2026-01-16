@@ -173,4 +173,19 @@ public class VacancyReviewController: ControllerBase
 
         return TypedResults.Ok(result.ToGetResponse());
     }
+
+    [HttpGet, Route("~/api/users/{userId}/vacancyreviews/count")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetCountByUser(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromRoute] string userId,
+        [FromQuery] bool? approvedFirstTime,
+        [FromQuery] DateTime? assignationExpiry,
+        CancellationToken cancellationToken)
+    {
+        var count = await repository.GetCountByReviewedByUserEmail(userId, approvedFirstTime, assignationExpiry, cancellationToken);
+
+        return TypedResults.Ok(count);
+    }
 }
