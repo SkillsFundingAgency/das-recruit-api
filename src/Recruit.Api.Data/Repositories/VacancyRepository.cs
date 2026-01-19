@@ -42,6 +42,7 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
     Task<List<VacancyClosureSummaryEntity>> GetAllClosedEmployerVacanciesByClosureReason(long accountId, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken, VacancyStatus? status = null);
     Task<List<VacancyClosureSummaryEntity>> GetAllClosedProviderVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken);
     Task<int> GetLiveVacanciesCountAsync(CancellationToken cancellationToken);
+    Task<int> CountVacanciesByUserIdAsync(Guid id, CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
@@ -168,19 +169,19 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
         int count = await query.CountAsync(cancellationToken);
         var items = await query.Select(c=>new VacancySummaryEntity {
-                Id = c.Id,
-                Title = c.Title,
-                VacancyReference = c.VacancyReference,
-                Status = c.Status,
-                ClosingDate = c.ClosingDate,
                 ApplicationMethod = c.ApplicationMethod,
                 ApprenticeshipType = c.ApprenticeshipType,
+                ClosingDate = c.ClosingDate,
                 CreatedDate = c.CreatedDate,
-                LegalEntityName = c.LegalEntityName,
-                TransferInfo = c.TransferInfo,
-                OwnerType = c.OwnerType,
                 HasSubmittedAdditionalQuestions = c.HasSubmittedAdditionalQuestions ?? false,
-                Ukprn = c.Ukprn
+                Id = c.Id,
+                LegalEntityName = c.LegalEntityName,
+                OwnerType = c.OwnerType,
+                Status = c.Status,
+                Title = c.Title,
+                TransferInfo = c.TransferInfo,
+                Ukprn = c.Ukprn,
+                VacancyReference = c.VacancyReference,
             })
             .Skip(skip)
             .Take(take)
@@ -326,6 +327,14 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 v.ClosingDate > utcNow)
             .SumAsync(v => v.NumberOfPositions, cancellationToken)
             .ContinueWith(t => t.Result ?? 0, cancellationToken);
+    }
+
+    public async Task<int> CountVacanciesByUserIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await dataContext
+            .VacancyEntities
+            .Where(x => x.SubmittedByUserId == id)
+            .CountAsync(cancellationToken);
     }
 
     public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByUkprn(int ukprn, CancellationToken cancellationToken)
