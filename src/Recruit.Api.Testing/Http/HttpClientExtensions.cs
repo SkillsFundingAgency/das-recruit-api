@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 
-namespace SFA.DAS.Recruit.Api.IntegrationTests;
+namespace SFA.DAS.Recruit.Api.Testing.Http;
 
 public static class HttpClientExtensions
 {

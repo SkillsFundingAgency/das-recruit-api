@@ -2,10 +2,11 @@
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Api.Testing;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email;
 
-public class WhenGettingUsersForNotificationTyp
+public class WhenGettingUsersForNotificationType
 {
     [Test]
     public void Then_Null_List_Is_Handled()

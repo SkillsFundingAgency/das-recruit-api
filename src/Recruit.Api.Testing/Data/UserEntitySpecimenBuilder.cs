@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
+using AutoFixture;
 using AutoFixture.Kernel;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 
-namespace SFA.DAS.Recruit.Api.UnitTests;
+namespace SFA.DAS.Recruit.Api.Testing.Data;
+
 public class UserEntitySpecimenBuilder : ISpecimenBuilder
 {
     private const int RangeInMonths = 11;
