@@ -121,11 +121,11 @@ public class VacancyReviewController: ControllerBase
         [FromRoute] VacancyReference vacancyReference,
         [FromQuery] List<ReviewStatus>? status,
         [FromQuery] List<string>? manualOutcome,
-        [FromQuery] bool includeNoStatus,
+        [FromQuery] bool? includeNoStatus,
         CancellationToken cancellationToken)
     {
         var statuses = status ?? new List<ReviewStatus>();
-        var result = await repository.GetManyByVacancyReferenceAndStatus(vacancyReference, statuses, manualOutcome, includeNoStatus, cancellationToken);
+        var result = await repository.GetManyByVacancyReferenceAndStatus(vacancyReference, statuses, manualOutcome, includeNoStatus ?? false, cancellationToken);
 
         return TypedResults.Ok(result.ToGetResponse());
     }

@@ -82,7 +82,7 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             query = query.Where(x => statuses.Contains(x.Status));    
         }
 
-        if (manualOutcome is not null)
+        if (manualOutcome is { Count: > 0 })
         {
             if (includeNoStatus)
             {
