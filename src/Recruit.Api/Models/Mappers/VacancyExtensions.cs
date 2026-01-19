@@ -54,6 +54,7 @@ public static class VacancyExtensions
             ProviderReviewFieldIndicators = ApiUtils.SerializeOrNull(request.ProviderReviewFieldIndicators),
             Qualifications = ApiUtils.SerializeOrNull(request.Qualifications),
             ReviewCount = request.ReviewCount,
+            //ReviewRequestedByUserId = request.ReviewRequestedByUserId, // Currently does a lookup
             ReviewRequestedDate = request.ReviewRequestedDate,
             ShortDescription = request.ShortDescription,
             Skills = ApiUtils.SerializeOrNull(request.Skills),
@@ -62,7 +63,7 @@ public static class VacancyExtensions
             SourceVacancyReference = request.SourceVacancyReference,
             StartDate = request.StartDate,
             Status = request.Status ?? VacancyStatus.Draft,
-            //SubmittedByUserId = request.SubmittedByUserId,
+            //SubmittedByUserId = request.SubmittedByUserId, // Currently does a lookup
             SubmittedDate = request.SubmittedDate,
             ThingsToConsider = request.ThingsToConsider,
             Title = request.Title,
@@ -163,7 +164,7 @@ public static class VacancyExtensions
             },
             TransferInfo = ApiUtils.DeserializeOrNull<TransferInfo>(entity.TransferInfo),
             VacancyReference = entity.VacancyReference,
-            Wage = entity.Wage_WageType is null ? null : new Wage
+            Wage = entity.Wage_WageType is null && entity.Wage_Duration is null ? null : new Wage
             {
                 CompanyBenefitsInformation = entity.Wage_CompanyBenefitsInformation,
                 Duration = entity.Wage_Duration,
