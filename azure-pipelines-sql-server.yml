@@ -56,7 +56,7 @@ stages:
 
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
-  # jobs:
+  jobs:
   # - deployment: DeploySQLServer
   #   displayName: Deploy SQL Server
   #   pool:
