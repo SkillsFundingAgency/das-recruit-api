@@ -11,6 +11,8 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
 {
     [Test, RecruitAutoData]
     public async Task Then_The_List_Of_VacancyReviews_Is_Returned_With_Status_Filter(
+        bool includeNoStatus,
+        List<string> manualOutcome,
         VacancyReference vacancyReference,
         List<SFA.DAS.Recruit.Api.Domain.Entities.VacancyReviewEntity> entities,
         Mock<IVacancyReviewRepository> repository,
@@ -21,14 +23,12 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
 
         repository
             .Setup(x => x.GetManyByVacancyReferenceAndStatus(
-                It.IsAny<VacancyReference>(),
-                It.IsAny<IReadOnlyCollection<ReviewStatus>>(),
+                vacancyReference, statuses, manualOutcome, includeNoStatus,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(entities);
 
-        var result = await sut.GetManyByVacancyReference(repository.Object, vacancyReference, statuses, token);
+        var result = await sut.GetManyByVacancyReference(repository.Object, vacancyReference, statuses, manualOutcome, includeNoStatus, token);
 
-        repository.Verify(x => x.GetManyByVacancyReferenceAndStatus(vacancyReference, statuses, token), Times.Once);
         result.Should().BeOfType<Ok<List<VacancyReview>>>();
     }
 
@@ -46,12 +46,14 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
             .Setup(x => x.GetManyByVacancyReferenceAndStatus(
                 It.IsAny<VacancyReference>(),
                 It.IsAny<IReadOnlyCollection<ReviewStatus>>(),
+                It.IsAny<IReadOnlyCollection<string>>(),
+                It.IsAny<bool>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(empty);
 
-        var result = await sut.GetManyByVacancyReference(repository.Object, vacancyReference, statuses, token);
+        var result = await sut.GetManyByVacancyReference(repository.Object, vacancyReference, statuses,null, false, token);
 
-        repository.Verify(x => x.GetManyByVacancyReferenceAndStatus(vacancyReference, It.Is<IReadOnlyCollection<ReviewStatus>>(s => s.Count == 0), token), Times.Once);
+        repository.Verify(x => x.GetManyByVacancyReferenceAndStatus(vacancyReference, It.Is<IReadOnlyCollection<ReviewStatus>>(s => s.Count == 0), null, false, token), Times.Once);
         var ok = result.Should().BeOfType<Ok<List<VacancyReview>>>().Subject;
         ok.Value.Should().NotBeNull();
         ok.Value!.Count.Should().Be(0);

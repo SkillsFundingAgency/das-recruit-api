@@ -22,7 +22,7 @@ public class VacancyReviewController: ControllerBase
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IResult> GetMany(
         [FromServices] IVacancyReviewRepository repository,
-        [FromQuery(Name = "reviewStatus")] List<ReviewStatus> reviewStatus,
+        [FromQuery] List<ReviewStatus> reviewStatus,
         [FromQuery] DateTime? expiredAssignationDateTime,
         CancellationToken cancellationToken)
     {
@@ -119,11 +119,13 @@ public class VacancyReviewController: ControllerBase
     public async Task<IResult> GetManyByVacancyReference(
         [FromServices] IVacancyReviewRepository repository,
         [FromRoute] VacancyReference vacancyReference,
-        [FromQuery(Name = "status")] List<ReviewStatus>? status,
+        [FromQuery] List<ReviewStatus>? status,
+        [FromQuery] List<string>? manualOutcome,
+        [FromQuery] bool includeNoStatus,
         CancellationToken cancellationToken)
     {
         var statuses = status ?? new List<ReviewStatus>();
-        var result = await repository.GetManyByVacancyReferenceAndStatus(vacancyReference, statuses, cancellationToken);
+        var result = await repository.GetManyByVacancyReferenceAndStatus(vacancyReference, statuses, manualOutcome, includeNoStatus, cancellationToken);
 
         return TypedResults.Ok(result.ToGetResponse());
     }
@@ -167,9 +169,10 @@ public class VacancyReviewController: ControllerBase
         [FromServices] IVacancyReviewRepository repository,
         [FromRoute] string userId,
         [FromQuery] DateTime? assignationExpiry,
+        [FromQuery] ReviewStatus status,
         CancellationToken cancellationToken)
     {
-        var result = await repository.GetManyByReviewedByUserEmailAndAssignationExpiry(userId, assignationExpiry, cancellationToken);
+        var result = await repository.GetManyByReviewedByUserEmailAndAssignationExpiry(userId, assignationExpiry, status, cancellationToken);
 
         return TypedResults.Ok(result.ToGetResponse());
     }

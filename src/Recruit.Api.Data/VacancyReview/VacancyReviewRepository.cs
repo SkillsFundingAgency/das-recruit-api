@@ -8,14 +8,14 @@ namespace SFA.DAS.Recruit.Api.Data.VacancyReview;
 public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, Guid>, IWriteRepository<VacancyReviewEntity, Guid>
 {
     Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
-    Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(VacancyReference vacancyReference, IReadOnlyCollection<ReviewStatus> statuses, CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(VacancyReference vacancyReference, IReadOnlyCollection<ReviewStatus> statuses, IReadOnlyCollection<string>? manualOutcome, bool includeNoStatus, CancellationToken cancellationToken);
     Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByStatusAndExpiredAssignationDateTime(
         IReadOnlyCollection<ReviewStatus> statuses,
         DateTime? expiredAssignationDateTime,
         CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByAccountLegalEntityId(long accountLegalEntityId, CancellationToken cancellationToken);
-    Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string reviewedByUserEmail, DateTime? assignationExpiry, CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string reviewedByUserEmail, DateTime? assignationExpiry, ReviewStatus? reviewStatus, CancellationToken cancellationToken);
     Task<int> GetCountByReviewedByUserEmail(string reviewedByUserEmail, bool? approvedFirstTime, DateTime? assignationExpiry, CancellationToken cancellationToken);
 }
 
@@ -68,6 +68,8 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
     public Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(
         VacancyReference vacancyReference,
         IReadOnlyCollection<ReviewStatus> statuses,
+        IReadOnlyCollection<string>? manualOutcome,
+        bool includeNoStatus,
         CancellationToken cancellationToken)
     {
         var query = dataContext.VacancyReviewEntities
@@ -77,7 +79,20 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
 
         if (statuses is { Count: > 0 })
         {
-            query = query.Where(x => statuses.Contains(x.Status));
+            query = query.Where(x => statuses.Contains(x.Status));    
+        }
+
+        if (manualOutcome is not null)
+        {
+            if (includeNoStatus)
+            {
+                query = query.Where(x => x.ManualOutcome == null || manualOutcome.Contains(x.ManualOutcome));
+            }
+            else
+            {
+                query = query.Where(x => manualOutcome.Contains(x.ManualOutcome));    
+            }
+            
         }
 
         return query
@@ -139,7 +154,7 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
 
         if (expiredAssignationDateTime is not null)
         {
-            query = query.Where(x => x.SlaDeadLine <= expiredAssignationDateTime.Value);
+            query = query.Where(x => x.ReviewedDate > expiredAssignationDateTime.Value);
         }
 
         return query.ToListAsync(cancellationToken);
@@ -154,7 +169,7 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             .ToListAsync(cancellationToken);
     }
 
-    public Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string reviewedByUserEmail, DateTime? assignationExpiry, CancellationToken cancellationToken)
+    public Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string reviewedByUserEmail, DateTime? assignationExpiry, ReviewStatus? reviewStatus, CancellationToken cancellationToken)
     {
         var query = dataContext.VacancyReviewEntities
             .AsNoTracking()
@@ -163,7 +178,12 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
 
         if (assignationExpiry is not null)
         {
-            query = query.Where(x => x.ReviewedDate <= assignationExpiry.Value);
+            query = query.Where(x => x.ReviewedDate > assignationExpiry.Value);
+        }
+
+        if (reviewStatus is not null)
+        {
+            query = query.Where(x => x.Status == reviewStatus);
         }
 
         return query
@@ -180,7 +200,7 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
 
         if (assignationExpiry is not null)
         {
-            query = query.Where(x => x.SlaDeadLine <= assignationExpiry.Value);
+            query = query.Where(x => x.ReviewedDate <= assignationExpiry.Value);
         }
 
         if (approvedFirstTime is true)
