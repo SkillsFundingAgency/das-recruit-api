@@ -7,6 +7,7 @@ using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
@@ -141,6 +142,23 @@ public class VacancyReviewController: ControllerBase
         var result = await repository.GetManyByAccountLegalEntityId(accountLegalEntityId, cancellationToken);
 
         return TypedResults.Ok(result.ToGetResponse());
+    }
+
+    [HttpGet, Route($"~/{RouteNames.Account}/{{accountLegalEntityId}}/vacancyreviews/count")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetCountByAccountLegalEntityId(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromRoute] long accountLegalEntityId,
+        [FromQuery] List<ReviewStatus>? status,
+        [FromQuery] List<string>? manualOutcome,
+        [FromQuery] EmployerNameOption? employerNameOption,
+        CancellationToken cancellationToken)
+    {
+        var statuses = status ?? [];
+        var count = await repository.GetCountByAccountLegalEntityId(accountLegalEntityId, statuses, manualOutcome, employerNameOption, cancellationToken);
+
+        return TypedResults.Ok(count);
     }
 
     [HttpGet, Route($"~/{RouteNames.VacancyReviews}/qa/dashboard")]

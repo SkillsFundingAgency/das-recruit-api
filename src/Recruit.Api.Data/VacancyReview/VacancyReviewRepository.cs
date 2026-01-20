@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Data.VacancyReview;
@@ -17,6 +18,12 @@ public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, 
     Task<List<VacancyReviewEntity>> GetManyByAccountLegalEntityId(long accountLegalEntityId, CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string reviewedByUserEmail, DateTime? assignationExpiry, ReviewStatus? reviewStatus, CancellationToken cancellationToken);
     Task<int> GetCountByReviewedByUserEmail(string reviewedByUserEmail, bool? approvedFirstTime, DateTime? assignationExpiry, CancellationToken cancellationToken);
+    Task<int> GetCountByAccountLegalEntityId(
+        long accountLegalEntityId,
+        IReadOnlyCollection<ReviewStatus>? statuses,
+        IReadOnlyCollection<string>? manualOutcome,
+        EmployerNameOption? employerNameOption,
+        CancellationToken cancellationToken);
 }
 
 public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyReviewRepository
@@ -167,6 +174,41 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             .Where(x => x.AccountLegalEntityId == accountLegalEntityId)
             .OrderBy(x => x.CreatedDate)
             .ToListAsync(cancellationToken);
+    }
+
+
+    public Task<int> GetCountByAccountLegalEntityId(
+        long accountLegalEntityId,
+        IReadOnlyCollection<ReviewStatus>? statuses,
+        IReadOnlyCollection<string>? manualOutcome,
+        EmployerNameOption? employerNameOption,
+        CancellationToken cancellationToken)
+    {
+        var query = dataContext.VacancyReviewEntities
+            .AsNoTracking()
+            .Where(x => x.AccountLegalEntityId == accountLegalEntityId)
+            .AsQueryable();
+
+        if (statuses is { Count: > 0 })
+        {
+            query = query.Where(x => statuses.Contains(x.Status));
+        }
+
+        if (manualOutcome is { Count: > 0 })
+        {
+            query = query.Where(x => manualOutcome.Contains(x.ManualOutcome!));
+        }
+
+        if (employerNameOption is not null)
+        {
+            query = from r in query
+                join v in dataContext.VacancyEntities.AsNoTracking()
+                    on r.VacancyReference equals v.VacancyReference
+                where v.EmployerNameOption == employerNameOption.Value
+                select r;
+        }
+
+        return query.CountAsync(cancellationToken);
     }
 
     public Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string reviewedByUserEmail, DateTime? assignationExpiry, ReviewStatus? reviewStatus, CancellationToken cancellationToken)
