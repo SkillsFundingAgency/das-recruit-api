@@ -17,4 +17,5 @@ public class VacancySummaryEntity
     public bool HasSubmittedAdditionalQuestions { get; set; }
     public OwnerType? OwnerType { get; set; }
     public int? Ukprn { get; set; }
+    public SourceOrigin? SourceOrigin { get; set; }
 }
