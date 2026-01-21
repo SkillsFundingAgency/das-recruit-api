@@ -39,4 +39,5 @@ public record VacancySummary
     public bool IsTaskListCompleted { get; set; }
     public bool? HasChosenProviderContactDetails { get; set; }
     public ApprenticeshipTypes? ApprenticeshipType { get; set; }
+    public SourceOrigin? SourceOrigin { get; set; }
 }
