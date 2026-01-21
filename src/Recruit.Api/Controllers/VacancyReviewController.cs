@@ -187,7 +187,7 @@ public class VacancyReviewController: ControllerBase
         [FromServices] IVacancyReviewRepository repository,
         [FromRoute] string userId,
         [FromQuery] DateTime? assignationExpiry,
-        [FromQuery] ReviewStatus status,
+        [FromQuery] ReviewStatus? status,
         CancellationToken cancellationToken)
     {
         var result = await repository.GetManyByReviewedByUserEmailAndAssignationExpiry(userId, assignationExpiry, status, cancellationToken);
