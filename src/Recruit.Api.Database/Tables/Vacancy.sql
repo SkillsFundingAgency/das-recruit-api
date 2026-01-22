@@ -59,10 +59,10 @@ CREATE TABLE dbo.[Vacancy] (
     [TrainingProvider_Address]                  nvarchar(500)       NULL,
     [Wage_Duration]                             int                 NULL,
     [Wage_DurationUnit]                         nvarchar(10)        NULL,
-    [Wage_WorkingWeekDescription]               nvarchar(1000)       NULL,
-    [Wage_WeeklyHours]                          decimal             NULL,
+    [Wage_WorkingWeekDescription]               nvarchar(1000)      NULL,
+    [Wage_WeeklyHours]                          decimal(18,2)       NULL,
     [Wage_WageType]                             nvarchar(40)        NULL, -- max is currently 33 chars
-    [Wage_FixedWageYearlyAmount]                decimal             NULL,
+    [Wage_FixedWageYearlyAmount]                decimal(18,2)       NULL,
     [Wage_WageAdditionalInformation]            nvarchar(2000)      NULL,
     [Wage_CompanyBenefitsInformation]           nvarchar(2000)      NULL,
     [ClosureReason]                             nvarchar(30)        NULL, -- max is currently 21 chars
