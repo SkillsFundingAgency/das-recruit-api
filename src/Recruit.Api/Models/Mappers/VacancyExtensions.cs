@@ -187,6 +187,7 @@ public static class VacancyExtensions
             VacancyReference = entity.VacancyReference,
             Title = entity.Title,
             ClosingDate = entity.ClosingDate,
+            ClosedDate = entity.ClosedDate,
             Status = entity.Status,
             CreatedDate = entity.CreatedDate,
             ApplicationMethod = entity.ApplicationMethod,
