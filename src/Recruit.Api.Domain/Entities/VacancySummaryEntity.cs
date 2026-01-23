@@ -11,6 +11,7 @@ public class VacancySummaryEntity
     public DateTime? CreatedDate { get; set; }
     public VacancyStatus Status { get; set; }
     public DateTime? ClosingDate { get; set; }
+    public DateTime? ClosedDate { get; set; }
     public ApplicationMethod? ApplicationMethod { get; set; }
     public ApprenticeshipTypes? ApprenticeshipType { get; set; }
     public string? TransferInfo { get; set; }
