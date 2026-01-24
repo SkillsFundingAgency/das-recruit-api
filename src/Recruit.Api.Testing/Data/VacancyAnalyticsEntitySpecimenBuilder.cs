@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
 using System.Text.Json;
+using AutoFixture;
 using AutoFixture.Kernel;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
-namespace SFA.DAS.Recruit.Api.UnitTests;
+namespace SFA.DAS.Recruit.Api.Testing.Data;
+
 public class VacancyAnalyticsEntitySpecimenBuilder : ISpecimenBuilder
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
