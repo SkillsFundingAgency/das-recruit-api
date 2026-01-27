@@ -64,7 +64,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             }
         ];
         employerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
@@ -107,7 +107,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
 
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
@@ -197,7 +197,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
         providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
@@ -254,7 +254,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
         Server.DataContext.Setup(x => x.UserEntities).ReturnsDbSet([providerUser]);
         
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
 
         IEnumerable<RecruitNotificationEntity>? capturedNotifications = null;
         Server.DataContext

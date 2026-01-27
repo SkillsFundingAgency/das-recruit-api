@@ -54,7 +54,7 @@ public class WhenCreatingVacancyRejectedByEmployerNotifications: BaseFixture
         Server.DataContext.Setup(x => x.UserEntities).ReturnsDbSet([providerUser]);
         Server.DataContext.Setup(x => x.UserEmployerAccountEntities).ReturnsDbSet([]);
     
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
         
         // act
         var response = await Client.PostAsync($"{RouteNames.Vacancies}/{vacancy.Id}/create-notifications", null);
