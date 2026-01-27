@@ -104,6 +104,18 @@ public class WhenGettingVacancyRejectedNotifications
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.EmployerRejectedReason = "Some reason";
         vacancy.OwnerType = OwnerType.Provider;
+        user.NotificationPreferences = new NotificationPreferences {
+            EventPreferences = new List<NotificationPreference>() {
+                new(NotificationTypes.ApplicationSubmitted, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+                new(NotificationTypes.VacancyApprovedOrRejected, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+                new(NotificationTypes.VacancySentForReview, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+                new(NotificationTypes.ApplicationSharedWithEmployer, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+            }
+        };
 
         userRepository
             .Setup(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cts.Token))

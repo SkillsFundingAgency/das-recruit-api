@@ -103,12 +103,13 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         int take = Math.Max(pageSize, (ushort)1);
 
         int count = await query.CountAsync(cancellationToken);
-        var items = await query.Select(c=>new VacancySummaryEntity {
+        var items = await query.Select(c => new VacancySummaryEntity {
                 Id = c.Id,
                 Title = c.Title,
                 VacancyReference = c.VacancyReference,
                 Status = c.Status,
                 ClosingDate = c.ClosingDate,
+                ClosedDate = c.ClosedDate,
                 ApplicationMethod = c.ApplicationMethod,
                 ApprenticeshipType = c.ApprenticeshipType,
                 CreatedDate = c.CreatedDate,
@@ -116,7 +117,8 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 TransferInfo = c.TransferInfo,
                 OwnerType = c.OwnerType,
                 HasSubmittedAdditionalQuestions = c.HasSubmittedAdditionalQuestions ?? false,
-                Ukprn = c.Ukprn
+                Ukprn = c.Ukprn,
+                SourceOrigin = c.SourceOrigin
             })
             .Skip(skip)
             .Take(take)
@@ -168,15 +170,17 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         int take = Math.Max(pageSize, (ushort)1);
 
         int count = await query.CountAsync(cancellationToken);
-        var items = await query.Select(c=>new VacancySummaryEntity {
+        var items = await query.Select(c => new VacancySummaryEntity {
                 ApplicationMethod = c.ApplicationMethod,
                 ApprenticeshipType = c.ApprenticeshipType,
                 ClosingDate = c.ClosingDate,
                 CreatedDate = c.CreatedDate,
+                ClosedDate = c.ClosedDate,
                 HasSubmittedAdditionalQuestions = c.HasSubmittedAdditionalQuestions ?? false,
                 Id = c.Id,
                 LegalEntityName = c.LegalEntityName,
                 OwnerType = c.OwnerType,
+                SourceOrigin = c.SourceOrigin,
                 Status = c.Status,
                 Title = c.Title,
                 TransferInfo = c.TransferInfo,

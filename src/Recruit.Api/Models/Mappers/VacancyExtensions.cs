@@ -187,6 +187,7 @@ public static class VacancyExtensions
             VacancyReference = entity.VacancyReference,
             Title = entity.Title,
             ClosingDate = entity.ClosingDate,
+            ClosedDate = entity.ClosedDate,
             Status = entity.Status,
             CreatedDate = entity.CreatedDate,
             ApplicationMethod = entity.ApplicationMethod,
@@ -197,7 +198,8 @@ public static class VacancyExtensions
             TransferInfoTransferredDate = transferInfo?.TransferredDate,
             ApprenticeshipType = entity.ApprenticeshipType,
             IsTraineeship = false,
-            IsTaskListCompleted = entity.OwnerType is OwnerType.Employer or OwnerType.Provider && entity.HasSubmittedAdditionalQuestions
+            IsTaskListCompleted = entity.OwnerType is OwnerType.Employer or OwnerType.Provider && entity.HasSubmittedAdditionalQuestions,
+            SourceOrigin = entity.SourceOrigin,
         };
     }
 

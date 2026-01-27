@@ -21,22 +21,22 @@ public class WhenGettingProviderNotificationPreferenceDefaults
         var applicationSubmittedPref = prefs.GetForEvent(NotificationTypes.ApplicationSubmitted);
         applicationSubmittedPref.Method.Should().Be("Email");
         applicationSubmittedPref.Scope.Should().Be(NotificationScope.OrganisationVacancies);
-        applicationSubmittedPref.Frequency.Should().Be(NotificationFrequency.Daily);
+        applicationSubmittedPref.Frequency.Should().Be(NotificationFrequency.Never);
         
         var vacancyApprovedOrRejectedByDfEPref = prefs.GetForEvent(NotificationTypes.VacancyApprovedOrRejected);
         vacancyApprovedOrRejectedByDfEPref.Method.Should().Be("Email");
         vacancyApprovedOrRejectedByDfEPref.Scope.Should().Be(NotificationScope.OrganisationVacancies);
-        vacancyApprovedOrRejectedByDfEPref.Frequency.Should().Be(NotificationFrequency.NotSet);
+        vacancyApprovedOrRejectedByDfEPref.Frequency.Should().Be(NotificationFrequency.Never);
         
         var sharedVacancyPref = prefs.GetForEvent(NotificationTypes.SharedApplicationReviewedByEmployer);
         sharedVacancyPref.Method.Should().Be("Email");
         sharedVacancyPref.Scope.Should().Be(NotificationScope.OrganisationVacancies);
-        sharedVacancyPref.Frequency.Should().Be(NotificationFrequency.Daily);
+        sharedVacancyPref.Frequency.Should().Be(NotificationFrequency.Never);
         
         var providerAttachedPref = prefs.GetForEvent(NotificationTypes.ProviderAttachedToVacancy);
         providerAttachedPref.Method.Should().Be("Email");
         providerAttachedPref.Scope.Should().Be(NotificationScope.OrganisationVacancies);
-        providerAttachedPref.Frequency.Should().Be(NotificationFrequency.Immediately);
+        providerAttachedPref.Frequency.Should().Be(NotificationFrequency.Never);
     }
     
     [Test, MoqAutoData]
