@@ -145,12 +145,22 @@ stages:
       workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Cleanup (best-effort)
-    - task: AzurePowerShell@5
+    # - task: AzurePowerShell@5
+    #   displayName: Tear down SQL DB
+    #   condition: always()
+    #   inputs:
+    #     azurePowerShellVersion: LatestVersion
+    #     azureSubscription: $(ARMServiceConnection)
+    #     ScriptType: inlineScript
+    #     Inline: |
+    #       Remove-AzSqlDatabase -DatabaseName '$(sqlDB)' -ResourceGroupName '$(resourceGroupName)' -ServerName '$(sqlServerName)' -Force
+              
+    - task: AzureCLI@2
       displayName: Tear down SQL DB
       condition: always()
       inputs:
-        azurePowerShellVersion: LatestVersion
         azureSubscription: $(ARMServiceConnection)
-        ScriptType: inlineScript
-        Inline: |
-          Remove-AzSqlDatabase -DatabaseName '$(sqlDB)' -ResourceGroupName '$(resourceGroupName)' -ServerName '$(sqlServerName)' -Force
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az sql db delete --name "$(sqlDB)" --resource-group "$(resourceGroupName)" --server "$(sqlServerName)" --yes
