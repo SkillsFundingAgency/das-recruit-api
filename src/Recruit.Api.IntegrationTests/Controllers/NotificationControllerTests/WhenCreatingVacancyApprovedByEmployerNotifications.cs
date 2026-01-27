@@ -46,7 +46,7 @@ public class WhenCreatingVacancyApprovedByEmployerNotifications: BaseFixture
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
         providerUser.LastSignedInDate = DateTime.UtcNow.AddMinutes(-1);
-        providerUser.SetEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        providerUser.InitEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
         Server.DataContext.Setup(x => x.UserEntities).ReturnsDbSet([providerUser]);

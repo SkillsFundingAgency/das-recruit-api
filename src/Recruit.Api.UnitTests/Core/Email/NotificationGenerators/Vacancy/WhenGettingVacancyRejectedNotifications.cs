@@ -35,7 +35,7 @@ public class WhenGettingVacancyRejectedNotifications
         vacancy.OwnerType = OwnerType.Provider;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
@@ -59,7 +59,7 @@ public class WhenGettingVacancyRejectedNotifications
         vacancy.OwnerType = OwnerType.Employer;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
@@ -79,7 +79,7 @@ public class WhenGettingVacancyRejectedNotifications
         vacancy.OwnerType = OwnerType.Employer;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
@@ -128,7 +128,7 @@ public class WhenGettingVacancyRejectedNotifications
             .Returns(notificationSettingsUrl);
 
         // act
-        var results = await sut.CreateAsync(vacancy, cts.Token);
+        var results = await sut.CreateAsync(vacancy, [], cts.Token);
 
         // assert
         results.Delayed.Should().BeEmpty();
@@ -146,6 +146,6 @@ public class WhenGettingVacancyRejectedNotifications
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["location"].Should().Be(vacancy.GetLocationText(JsonConfig.Options));
         tokens["notificationSettingsURL"].Should().Be(notificationSettingsUrl);
-        tokens["rejectedEmployerVacancyURL"].Should().Be($"{emailTemplateHelper.Object.RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/check-your-answers");
+        tokens["rejectedEmployerVacancyURL"].Should().Be(emailTemplateHelper.Object.ProviderReviewVacancyUrl(vacancy.Ukprn!.Value, vacancy.Id));
     }
 }
