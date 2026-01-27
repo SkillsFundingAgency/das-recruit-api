@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using System.Net;
+using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Repositories;
@@ -36,5 +37,27 @@ internal class WhenPuttingVacancyAnalytics
         payload.Should().BeEquivalentTo(entity, options => options
             .Excluding(x => x.Analytics)
             .Excluding(x => x.AnalyticsData));
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public async Task Then_The_VacancyAnalytics_Exception_Return_InternalServerException(
+        long vacancyReference,
+        Mock<IVacancyAnalyticsRepository> repository,
+        PutVacancyAnalyticsRequest request,
+        [Greedy] VacancyAnalyticsController sut,
+        CancellationToken token)
+    {
+        // arrange
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyAnalyticsEntity>(), token))
+            .ThrowsAsync(new Exception("Boom"));
+
+        // act
+        var result = await sut.PutOne(vacancyReference, repository.Object, request, token);
+
+        // assert
+        repository.Verify(x => x.UpsertOneAsync(It.IsAny<VacancyAnalyticsEntity>(), token), Times.Once);
+        var problem = result.Should().BeOfType<ProblemHttpResult>().Subject;
+        problem.StatusCode.Should().Be((int)HttpStatusCode.InternalServerError);
     }
 }
