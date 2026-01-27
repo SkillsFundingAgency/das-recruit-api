@@ -41,11 +41,14 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IVacancyAnalyticsRepository, VacancyAnalyticsRepository>();
 
         // email
-        string env = configuration["ResourceEnvironmentName"] ?? "local";
-        bool isProduction = env.Equals("PRD", StringComparison.CurrentCultureIgnoreCase);
+        var env = configuration["ResourceEnvironmentName"] ?? "local";
+        var isProduction = env.Equals("PRD", StringComparison.CurrentCultureIgnoreCase);
         services.AddSingleton<IRecruitBaseUrls>(isProduction
             ? new ProductionRecruitBaseUrls()
             : new DevelopmentRecruitBaseUrls(env));
+        services.AddSingleton<IFaaBaseUrl>(isProduction
+            ? new ProductionFaaBaseUrls()
+            : new DevelopmentFaaBaseUrls(env));
         services.AddSingleton<IEmailTemplateIds>(isProduction
             ? new ProductionEmailTemplateIds()
             : new DevelopmentEmailTemplateIds());
