@@ -13,8 +13,6 @@ public class VacancySentForReviewNotificationFactory(
     IEncodingService encodingService,
     IEmailTemplateHelper emailTemplateHelper): IVacancyNotificationFactory
 {
-    private const string EmployerReviewVacancyUrl = "{0}/accounts/{1}/vacancies/{2}/check-answers";
-    
     public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, CancellationToken cancellationToken)
     {
         if (vacancy is not { Status: VacancyStatus.Review, OwnerType: OwnerType.Provider, ReviewRequestedByUserId: not null })
@@ -23,12 +21,7 @@ public class VacancySentForReviewNotificationFactory(
         }
         
         var usersRequiringEmail = await userRepository.FindUsersByEmployerAccountIdAsync(vacancy.AccountId!.Value, cancellationToken);
-        string? hashedEmployerAccountId = encodingService.Encode(vacancy.AccountId.Value, EncodingType.AccountId);
-        string employerReviewUrl = string.Format(EmployerReviewVacancyUrl,
-            emailTemplateHelper.RecruitEmployerBaseUrl,
-            hashedEmployerAccountId,
-            vacancy.Id);
-
+        var hashedEmployerAccountId = encodingService.Encode(vacancy.AccountId.Value, EncodingType.AccountId);
         var now = DateTime.UtcNow.Date;
         var recruitNotifications = usersRequiringEmail.Select(x => new RecruitNotificationEntity {
             EmailTemplateId = emailTemplateHelper.TemplateIds.ProviderVacancySentForEmployerReview,
@@ -42,7 +35,7 @@ public class VacancySentForReviewNotificationFactory(
                 ["vacancyReference"] = new VacancyReference(vacancy.VacancyReference).ToShortString(),
                 ["employerName"] = vacancy.EmployerName!,
                 ["location"] = vacancy.GetLocationText(JsonConfig.Options),
-                ["reviewAdvertURL"] = employerReviewUrl
+                ["reviewAdvertURL"] = emailTemplateHelper.EmployerReviewVacancyUrl(hashedEmployerAccountId, vacancy.Id),
             })!,
             DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!
         });

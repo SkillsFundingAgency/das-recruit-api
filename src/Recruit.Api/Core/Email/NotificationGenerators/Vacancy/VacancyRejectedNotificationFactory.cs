@@ -12,8 +12,6 @@ public class VacancyRejectedNotificationFactory(
     IUserRepository userRepository,
     IEmailTemplateHelper emailTemplateHelper): IVacancyNotificationFactory
 {
-    private const string ProviderReviewVacancyUrl = "{0}/{1}/vacancies/{2}/check-your-answers";
-    
     public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, CancellationToken cancellationToken)
     {
         if (vacancy is not { Status: VacancyStatus.Rejected })
@@ -53,7 +51,7 @@ public class VacancyRejectedNotificationFactory(
                 ["vacancyReference"] = new VacancyReference(vacancy.VacancyReference).ToShortString(),
                 ["employerName"] = vacancy.EmployerName!,
                 ["location"] = vacancy.GetLocationText(JsonConfig.Options),
-                ["rejectedEmployerVacancyURL"] = string.Format(ProviderReviewVacancyUrl, emailTemplateHelper.RecruitProviderBaseUrl, vacancy.Ukprn, vacancy.Id),
+                ["rejectedEmployerVacancyURL"] = emailTemplateHelper.ProviderReviewVacancyUrl(vacancy.Ukprn!.Value, vacancy.Id),
                 ["notificationSettingsURL"] = emailTemplateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn.Value.ToString()),
             })!,
             DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!
