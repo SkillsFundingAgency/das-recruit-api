@@ -117,6 +117,7 @@ public class NotificationController : ControllerBase
         [FromServices] IVacancyNotificationStrategy strategy,
         [FromServices] IEmailFactory emailFactory,
         [FromRoute] Guid id,
+        [FromBody] Dictionary<string, string>? data,
         CancellationToken cancellationToken
     )
     {
@@ -129,7 +130,7 @@ public class NotificationController : ControllerBase
         try
         {
             var notificationFactory = strategy.Create(vacancy);
-            var recruitNotifications = await notificationFactory.CreateAsync(vacancy, cancellationToken);
+            var recruitNotifications = await notificationFactory.CreateAsync(vacancy, data ?? [], cancellationToken);
             if (recruitNotifications.Delayed is { Count: > 0 })
             {
                 await notificationsRepository.InsertManyAsync(recruitNotifications.Delayed, cancellationToken);

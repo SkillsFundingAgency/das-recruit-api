@@ -13,7 +13,7 @@ public class VacancySentForReviewNotificationFactory(
     IEncodingService encodingService,
     IEmailTemplateHelper emailTemplateHelper): IVacancyNotificationFactory
 {
-    public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, CancellationToken cancellationToken)
+    public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, Dictionary<string, string> data, CancellationToken cancellationToken)
     {
         if (vacancy is not { Status: VacancyStatus.Review, OwnerType: OwnerType.Provider, ReviewRequestedByUserId: not null })
         {

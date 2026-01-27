@@ -11,23 +11,25 @@ using SFA.DAS.Recruit.Api.Domain.Models;
 namespace SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
 
 public class VacancyApprovedNotificationFactory(
+    ILogger<VacancyApprovedNotificationFactory> logger,
     IUserRepository userRepository,
     IEncodingService encodingService,
     IEmailTemplateHelper emailTemplateHelper): IVacancyNotificationFactory
 {
     private readonly DateTime _sendWhen = DateTime.UtcNow.Date;
+    private const string CourseTitleKey = "courseTitle";
     
-    public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, CancellationToken cancellationToken)
+    public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, Dictionary<string, string> data, CancellationToken cancellationToken)
     {
         if (vacancy is not { Status: VacancyStatus.Approved })
         {
             return new RecruitNotificationsResult();
         }
         
-        return await HandleVacancyApprovedByQaAsync(vacancy, cancellationToken); 
+        return await HandleVacancyApprovedByQaAsync(vacancy, data, cancellationToken); 
     }
 
-    private async Task<RecruitNotificationsResult> HandleVacancyApprovedByQaAsync(VacancyEntity vacancy, CancellationToken cancellationToken)
+    private async Task<RecruitNotificationsResult> HandleVacancyApprovedByQaAsync(VacancyEntity vacancy, Dictionary<string, string> data, CancellationToken cancellationToken)
     {
         var result = new RecruitNotificationsResult();
         var pasUsersForUkprn = await userRepository.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cancellationToken);
@@ -50,7 +52,7 @@ public class VacancyApprovedNotificationFactory(
         }
             
         // notify providers (attached)
-        if (HandleProviderAttachedNotifications(vacancy, easUsersForAccount, pasUsersForUkprn, out var attachedNotifications))
+        if (HandleProviderAttachedNotifications(vacancy, easUsersForAccount, pasUsersForUkprn, data, out var attachedNotifications))
         {
             result.Immediate.AddRange(attachedNotifications);
         }
@@ -58,13 +60,19 @@ public class VacancyApprovedNotificationFactory(
         return result;
     }
 
-    private bool HandleProviderAttachedNotifications(VacancyEntity vacancy, List<UserEntity> easUsersForAccount, List<UserEntity> pasUsersForUkprn, [NotNullWhen(true)]out List<RecruitNotificationEntity>? notifications)
+    private bool HandleProviderAttachedNotifications(VacancyEntity vacancy, List<UserEntity> easUsersForAccount, List<UserEntity> pasUsersForUkprn, Dictionary<string, string> data, [NotNullWhen(true)]out List<RecruitNotificationEntity>? notifications)
     {
         var providerUsersRequiringAttachedEmail = pasUsersForUkprn.GetUsersForNotificationType(NotificationTypes.ProviderAttachedToVacancy);
         if (providerUsersRequiringAttachedEmail is { Count: 0 })
         {
             notifications = null;
             return false;
+        }
+
+        if (!data.TryGetValue(CourseTitleKey, out var courseTitle))
+        {
+            courseTitle = string.Empty;
+            logger.LogError("'{Key}' was not provider for vacancy '{VacancyId}'", CourseTitleKey, vacancy.Id);
         }
         
         var apprenticeCount = vacancy.NumberOfPositions > 1 ? $"{vacancy.NumberOfPositions} apprentices" : "1 apprentice";
@@ -86,7 +94,7 @@ public class VacancyApprovedNotificationFactory(
                 ["startDate"] = vacancy.StartDate.ToDayMonthYearString(),
                 ["duration"] = vacancy.GetWageDuration(),
                 ["submitterEmail"] = submittingUser?.Email ?? "Contact details not found",
-                //["courseTitle"] = "",
+                ["courseTitle"] = courseTitle,
             })!,
             DynamicData = ApiUtils.SerializeOrNull(new Dictionary<string, string>())!
         }).ToList();
