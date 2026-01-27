@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Controllers;
-using SFA.DAS.Recruit.Api.Data.VacancyReview;
+using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
@@ -12,16 +13,14 @@ internal class WhenGettingVacancyReviewCountByAccountLegalEntityId
     [Test, RecruitAutoData]
     public async Task Then_The_Count_Is_Returned(
         int resultCount,
-        Mock<IVacancyReviewRepository> repository,
+        long accountLegalEntityId,
+        List<ReviewStatus> statuses,
+        List<string> manualOutcomes,
+        EmployerNameOption? employerNameOption,
+        [Frozen] Mock<IVacancyReviewRepository> repository,
         [Greedy] VacancyReviewController sut,
         CancellationToken token)
     {
-        var accountLegalEntityId = 123456L;
-
-        var statuses = new List<ReviewStatus> { ReviewStatus.Closed };
-        var manualOutcomes = new List<string> { "Approved" };
-        EmployerNameOption? employerNameOption = EmployerNameOption.Anonymous;
-
         repository
             .Setup(x => x.GetCountByAccountLegalEntityId(
                 accountLegalEntityId, 
@@ -31,14 +30,14 @@ internal class WhenGettingVacancyReviewCountByAccountLegalEntityId
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(resultCount);
 
-        var result = await sut.GetCountByAccountLegalEntityId(
+        var response = await sut.GetCountByAccountLegalEntityId(
             repository.Object,
             accountLegalEntityId,
             statuses,
             manualOutcomes,
             employerNameOption,
-            token);
+            token) as Ok<int>;
 
-        result.Should().Be(resultCount);
+        (response?.Value).Should().Be(resultCount);
     }
 }
