@@ -62,6 +62,8 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<VacancyRejectedNotificationFactory>();
         services.AddScoped<VacancySentForReviewNotificationFactory>();
         services.AddScoped<VacancySubmittedNotificationFactory>();
+        services.AddScoped<VacancyApprovedNotificationFactory>();
+        services.AddScoped<VacancyReferredNotificationFactory>();
         services.AddScoped<IVacancyNotificationStrategy, VacancyNotificationStrategy>();
         
         // email template handlers
