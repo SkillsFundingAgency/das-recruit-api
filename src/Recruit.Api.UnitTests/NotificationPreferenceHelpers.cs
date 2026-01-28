@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests;
 
 public static class NotificationPreferenceHelpers
 {
-    public static void SetEmailPref(
+    public static UserEntity InitEmailPref(
         this UserEntity user,
         NotificationTypes notificationType,
         NotificationScope scope,
@@ -22,5 +22,24 @@ public static class NotificationPreferenceHelpers
             user.NotificationPreferences.EventPreferences.Remove(pref);
         }
         user.NotificationPreferences.EventPreferences.Add(new NotificationPreference(notificationType, string.Empty, scope, frequency));
+
+        return user;
+    }
+    
+    public static UserEntity SetEmailPref(
+        this UserEntity user,
+        NotificationTypes notificationType,
+        NotificationScope scope,
+        NotificationFrequency frequency)
+    {
+        ArgumentNullException.ThrowIfNull(user);
+        
+        if (user.NotificationPreferences.TryGetForEvent(notificationType, out var pref))
+        {
+            user.NotificationPreferences!.EventPreferences.Remove(pref);
+        }
+        user.NotificationPreferences!.EventPreferences.Add(new NotificationPreference(notificationType, string.Empty, scope, frequency));
+        
+        return user;
     }
 }
