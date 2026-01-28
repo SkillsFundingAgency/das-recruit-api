@@ -174,7 +174,7 @@ public class WhenCreatingVacancyApprovedByQaNotifications: BaseFixture
             x.Tokens["advertTitle"].Should().Be(vacancy.Title!);
             x.Tokens["employer"].Should().Be(vacancy.EmployerName);
             x.Tokens["VACnumber"].Should().Be(vacancy.VacancyReference.ToString());
-            x.Tokens["applicationUrl"].Should().Be(_templateHelper.FaaVacancyUrl(vacancy.VacancyReference));
+            x.Tokens["applicationURL"].Should().Be(_templateHelper.FaaVacancyUrl(vacancy.VacancyReference));
             x.Tokens["notificationSettingsURL"].Should().Be(_templateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()));
             x.Tokens["location"].Should().Be("Recruiting nationally");
             x.Tokens["positions"].Should().Be("5 apprentices");

@@ -88,7 +88,7 @@ public class VacancyApprovedNotificationFactory(
                 ["VACnumber"] = new VacancyReference(vacancy.VacancyReference).ToShortString(),
                 ["employer"] = vacancy.EmployerName!,
                 ["location"] = vacancy.GetLocationText(JsonConfig.Options),
-                ["applicationUrl"] = emailTemplateHelper.FaaVacancyUrl(vacancy.VacancyReference),
+                ["applicationURL"] = emailTemplateHelper.FaaVacancyUrl(vacancy.VacancyReference),
                 ["notificationSettingsURL"] = emailTemplateHelper.ProviderManageNotificationsUrl(vacancy.Ukprn!.Value.ToString()),
                 ["positions"] = apprenticeCount,
                 ["startDate"] = vacancy.StartDate.ToDayMonthYearString(),
