@@ -180,12 +180,12 @@ public class VacancyReviewController: ControllerBase
         }
     }
 
-    [HttpGet, Route("~/api/users/{userId}/vacancyreviews")]
+    [HttpGet, Route("~/api/users/vacancyreviews")]
     [ProducesResponseType(typeof(List<VacancyReview>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IResult> GetManyByUser(
         [FromServices] IVacancyReviewRepository repository,
-        [FromRoute] string userId,
+        [FromQuery] string userId,
         [FromQuery] DateTime? assignationExpiry,
         [FromQuery] ReviewStatus? status,
         CancellationToken cancellationToken)
@@ -195,12 +195,12 @@ public class VacancyReviewController: ControllerBase
         return TypedResults.Ok(result.ToGetResponse());
     }
 
-    [HttpGet, Route("~/api/users/{userId}/vacancyreviews/count")]
+    [HttpGet, Route("~/api/users/vacancyreviews/count")]
     [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IResult> GetCountByUser(
         [FromServices] IVacancyReviewRepository repository,
-        [FromRoute] string userId,
+        [FromQuery] string userId,
         [FromQuery] bool? approvedFirstTime,
         [FromQuery] DateTime? assignationExpiry,
         CancellationToken cancellationToken)
