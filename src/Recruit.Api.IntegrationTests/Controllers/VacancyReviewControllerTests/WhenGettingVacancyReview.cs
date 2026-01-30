@@ -88,7 +88,9 @@ public class WhenGettingVacancyReview: BaseFixture
         var response = await Client.GetAsync($"{RouteNames.Vacancies}/{vacancyReference}/reviews/");
 
         // assert
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Content.ReadAsStringAsync().Result.Should().Be("[]");
+        
     }
     
     [TestCase("null")]
