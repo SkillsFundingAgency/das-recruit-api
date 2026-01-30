@@ -15,6 +15,10 @@ public class GraphQlDataContext(IOptions<ConnectionStrings> config, DbContextOpt
     {
         var connection = new SqlConnection { ConnectionString = config.Value.SqlConnectionString, };
         optionsBuilder.UseSqlServer(connection, options => options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), null));
+        
+        // Note: useful to keep here
+        // optionsBuilder.LogTo(message => Debug.WriteLine(message));
+        // optionsBuilder.EnableDetailedErrors();
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
