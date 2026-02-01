@@ -96,7 +96,7 @@ public class WhenPuttingVacancyReview: BaseFixture
 
         var request = Fixture.Build<PutVacancyReviewRequest>()
             .Without(r => r.SubmittedByUserEmail)
-            .With(r => r.SubmittedByUserId, userId)
+            .With(r => r.SubmittedByUserId, userId.ToString())
             .Create();
 
         // act

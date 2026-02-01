@@ -31,7 +31,7 @@ internal class WhenPuttingVacancyReview
             .ReturnsAsync(user);
 
         request.SubmittedByUserEmail = null;
-        request.SubmittedByUserId = submittedByUserId;
+        request.SubmittedByUserId = submittedByUserId.ToString();
 
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyReviewEntity>(), token))
