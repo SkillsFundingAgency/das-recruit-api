@@ -29,5 +29,5 @@ public class PutVacancyReviewRequest
     public long AccountId { get; set; }
     public long AccountLegalEntityId { get; set; }
     public OwnerType OwnerType { get; set; }
-    public Guid? SubmittedByUserId { get; set; }
+    public string? SubmittedByUserId { get; set; }
 }

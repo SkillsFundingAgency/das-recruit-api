@@ -47,7 +47,7 @@ public class VacancyReviewController: ControllerBase
         if (string.IsNullOrEmpty(request.SubmittedByUserEmail))
         {
             var submittedUser =
-                await userRepository.FindByUserIdAsync(request.SubmittedByUserId.ToString(), cancellationToken);
+                await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
             request.SubmittedByUserEmail = submittedUser?.Email;
         }
         
