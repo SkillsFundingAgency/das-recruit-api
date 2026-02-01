@@ -53,10 +53,18 @@ public class VacancyReviewController: ControllerBase
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]   
     public async Task<IResult> PutOne(
         [FromServices] IVacancyReviewRepository repository,
+        [FromServices] IUserRepository userRepository,
         [FromRoute] Guid id,
         [FromBody] PutVacancyReviewRequest request,
         CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(request.SubmittedByUserEmail))
+        {
+            var submittedUser =
+                await userRepository.FindByUserIdAsync(request.SubmittedByUserId.ToString(), cancellationToken);
+            request.SubmittedByUserEmail = submittedUser?.Email;
+        }
+        
         var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
 
         return result.Created
