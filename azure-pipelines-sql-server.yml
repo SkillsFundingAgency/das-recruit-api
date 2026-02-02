@@ -122,7 +122,7 @@ stages:
     - download: current
       artifact: drop
     - powershell: |
-        $ADO_CONNSTR = "Server=tcp:$(serverName),1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$env:sqlServerPassword;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+        $ADO_CONNSTR = "Server=tcp:$(serverName),1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
         Write-Host "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]$ADO_CONNSTR"
       displayName: Set Connection String Variable
 
@@ -139,8 +139,8 @@ stages:
 
     # Integration tests (point SQL DB)
     - powershell: |
-        $env:ConnectionStrings__Integration = '$env:ADO_CONNSTR'
-        $env:IntegrationTestsDbSchemaName = '$(sqlDB)'
+        $env:ConnectionStrings__Integration = $env:ADO_CONNSTR
+        $env:IntegrationTestsDbSchemaName = $(sqlDB)
         dotnet test --configuration "Release" --filter 'TestCategory=Integration'
       displayName: Run Integration Tests
       workingDirectory: $(Pipeline.Workspace)/drop/src
