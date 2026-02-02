@@ -121,9 +121,8 @@ stages:
     - checkout: das-platform-automation
     - download: current
       artifact: drop
-    - powershell: |
-        $ADO_CONNSTR = "Server=tcp:$(serverName),1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-        Write-Host "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]$ADO_CONNSTR"
+    - script: |
+        echo "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(sqlServerName).database.windows.net,1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       displayName: Set Connection String Variable
 
     - task: UseDotNet@2
@@ -132,29 +131,18 @@ stages:
         version: '8.x'
 
     # Unit tests
-    # - powershell: |
+    # - script: |
     #     dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
     #   displayName: Run Unit Tests
     #   workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Integration tests (point SQL DB)
-    - powershell: |
-        $env:ConnectionStrings__Integration = "$env:ADO_CONNSTR"
-        $env:IntegrationTestsDbSchemaName = "$(sqlDB)"
-        dotnet test --configuration "Release" --filter "TestCategory=Integration"
+    - script: |
+        export ConnectionStrings__Integration="$(ADO_CONNSTR)"
+        export IntegrationTestsDbSchemaName="$(sqlDB)"
+        dotnet test --configuration Release --filter "TestCategory=Integration"
       displayName: Run Integration Tests
       workingDirectory: $(Pipeline.Workspace)/drop/src
-
-    # Cleanup (best-effort)
-    # - task: AzurePowerShell@5
-    #   displayName: Tear down SQL DB
-    #   condition: always()
-    #   inputs:
-    #     azurePowerShellVersion: LatestVersion
-    #     azureSubscription: $(ARMServiceConnection)
-    #     ScriptType: inlineScript
-    #     Inline: |
-    #       Remove-AzSqlDatabase -DatabaseName "$(sqlDB)" -ResourceGroupName "$(resourceGroupName)" -ServerName "$(sqlServerName)" -Force
               
     - task: AzureCLI@2
       displayName: Tear down SQL DB
