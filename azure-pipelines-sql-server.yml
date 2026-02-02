@@ -110,7 +110,8 @@ stages:
 
   - job: RunTests
     pool:
-      name: DAS - Continuous Integration Agents
+      # name: DAS - Continuous Integration Agents
+      vmImage: ubuntu-latest
     displayName: Run Tests
     dependsOn: DeploySQLDB
     variables:
@@ -121,8 +122,8 @@ stages:
     - checkout: das-platform-automation
     - download: current
       artifact: drop
-    - script: |
-        echo "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(sqlServerName).database.windows.net,1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    - powershell: |
+        Write-Host "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(serverName),1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       displayName: Set Connection String Variable
 
     - task: UseDotNet@2
@@ -131,16 +132,16 @@ stages:
         version: '8.x'
 
     # Unit tests
-    # - script: |
+    # - powershell: |
     #     dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
     #   displayName: Run Unit Tests
     #   workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Integration tests (point SQL DB)
-    - script: |
-        export ConnectionStrings__Integration="$(ADO_CONNSTR)"
-        export IntegrationTestsDbSchemaName="$(sqlDB)"
-        dotnet test --configuration Release --filter "TestCategory=Integration"
+    - powershell: |
+        $env:ConnectionStrings__Integration = '$(ADO_CONNSTR)'
+        $env:IntegrationTestsDbSchemaName = '$(sqlDB)'
+        dotnet test --configuration "Release" --filter 'TestCategory=Integration'
       displayName: Run Integration Tests
       workingDirectory: $(Pipeline.Workspace)/drop/src
               
