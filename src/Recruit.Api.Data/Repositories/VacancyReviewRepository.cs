@@ -17,7 +17,7 @@ public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, 
         CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByAccountLegalEntityId(long accountLegalEntityId, CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByReviewedByUserEmailAndAssignationExpiry(string reviewedByUserEmail, DateTime? assignationExpiry, ReviewStatus? reviewStatus, CancellationToken cancellationToken);
-    Task<int> GetCountByReviewedByUserEmail(string reviewedByUserEmail, bool? approvedFirstTime, DateTime? assignationExpiry, CancellationToken cancellationToken);
+    Task<int> GetCountBySubmittedUserEmail(string submittedByUserEmail, bool? approvedFirstTime, DateTime? assignationExpiry, CancellationToken cancellationToken);
     Task<int> GetCountByAccountLegalEntityId(
         long accountLegalEntityId,
         IReadOnlyCollection<ReviewStatus>? statuses,
@@ -233,11 +233,11 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             .ToListAsync(cancellationToken);
     }
 
-    public Task<int> GetCountByReviewedByUserEmail(string reviewedByUserEmail, bool? approvedFirstTime, DateTime? assignationExpiry, CancellationToken cancellationToken)
+    public Task<int> GetCountBySubmittedUserEmail(string submittedByUserEmail, bool? approvedFirstTime, DateTime? assignationExpiry, CancellationToken cancellationToken)
     {
         var query = dataContext.VacancyReviewEntities
             .AsNoTracking()
-            .Where(x => x.ReviewedByUserEmail == reviewedByUserEmail)
+            .Where(x => x.SubmittedByUserEmail == submittedByUserEmail)
             .AsQueryable();
 
         if (assignationExpiry is not null)

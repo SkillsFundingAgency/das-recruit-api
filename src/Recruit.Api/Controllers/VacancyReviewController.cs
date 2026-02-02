@@ -208,12 +208,12 @@ public class VacancyReviewController: ControllerBase
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IResult> GetCountByUser(
         [FromServices] IVacancyReviewRepository repository,
-        [FromQuery] string userId,
+        [FromQuery] string userEmail,
         [FromQuery] bool? approvedFirstTime,
         [FromQuery] DateTime? assignationExpiry,
         CancellationToken cancellationToken)
     {
-        var count = await repository.GetCountByReviewedByUserEmail(userId, approvedFirstTime, assignationExpiry, cancellationToken);
+        var count = await repository.GetCountBySubmittedUserEmail(userEmail, approvedFirstTime, assignationExpiry, cancellationToken);
 
         return TypedResults.Ok(count);
     }

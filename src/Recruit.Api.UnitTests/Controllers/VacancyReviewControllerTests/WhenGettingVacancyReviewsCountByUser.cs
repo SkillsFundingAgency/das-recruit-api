@@ -9,7 +9,7 @@ internal class WhenGettingVacancyReviewsCountByUser
 {
     [Test, RecruitAutoData]
     public async Task Then_The_Count_Is_Returned(
-        string userId,
+        string userEmail,
         DateTime assignationExpiry,
         int expectedCount,
         Mock<IVacancyReviewRepository> repository,
@@ -19,23 +19,23 @@ internal class WhenGettingVacancyReviewsCountByUser
         var approvedFirstTime = true;
 
         repository
-            .Setup(x => x.GetCountByReviewedByUserEmail(
+            .Setup(x => x.GetCountBySubmittedUserEmail(
                 It.IsAny<string>(),
                 It.IsAny<bool?>(),
                 It.IsAny<DateTime?>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedCount);
 
-        var result = await sut.GetCountByUser(repository.Object, userId, approvedFirstTime, assignationExpiry, token);
+        var result = await sut.GetCountByUser(repository.Object, userEmail, approvedFirstTime, assignationExpiry, token);
         var payload = (result as Ok<int>)?.Value;
 
-        repository.Verify(x => x.GetCountByReviewedByUserEmail(userId, approvedFirstTime, assignationExpiry, token), Times.Once);
+        repository.Verify(x => x.GetCountBySubmittedUserEmail(userEmail, approvedFirstTime, assignationExpiry, token), Times.Once);
         payload.Should().Be(expectedCount);
     }
 
     [Test, RecruitAutoData]
     public async Task Then_Zero_Is_Returned_When_No_Params(
-        string userId,
+        string userEmal,
         int expectedCount,
         Mock<IVacancyReviewRepository> repository,
         [Greedy] VacancyReviewController sut,
@@ -45,17 +45,17 @@ internal class WhenGettingVacancyReviewsCountByUser
         DateTime? assignationExpiry = null;
 
         repository
-            .Setup(x => x.GetCountByReviewedByUserEmail(
+            .Setup(x => x.GetCountBySubmittedUserEmail(
                 It.IsAny<string>(),
                 It.IsAny<bool?>(),
                 It.IsAny<DateTime?>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedCount);
 
-        var result = await sut.GetCountByUser(repository.Object, userId, approvedFirstTime, assignationExpiry, token);
+        var result = await sut.GetCountByUser(repository.Object, userEmal, approvedFirstTime, assignationExpiry, token);
         var payload = (result as Ok<int>)?.Value;
 
-        repository.Verify(x => x.GetCountByReviewedByUserEmail(userId, approvedFirstTime, assignationExpiry, token), Times.Once);
+        repository.Verify(x => x.GetCountBySubmittedUserEmail(userEmal, approvedFirstTime, assignationExpiry, token), Times.Once);
         payload.Should().Be(expectedCount);
     }
 }
