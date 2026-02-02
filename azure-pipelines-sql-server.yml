@@ -139,9 +139,9 @@ stages:
 
     # Integration tests (point SQL DB)
     - powershell: |
-        $env:ConnectionStrings__Integration = $env:ADO_CONNSTR
-        $env:IntegrationTestsDbSchemaName = $(sqlDB)
-        dotnet test --configuration "Release" --filter 'TestCategory=Integration'
+        $env:ConnectionStrings__Integration = "$env:ADO_CONNSTR"
+        $env:IntegrationTestsDbSchemaName = "$(sqlDB)"
+        dotnet test --configuration "Release" --filter "TestCategory=Integration"
       displayName: Run Integration Tests
       workingDirectory: $(Pipeline.Workspace)/drop/src
 
@@ -154,7 +154,7 @@ stages:
     #     azureSubscription: $(ARMServiceConnection)
     #     ScriptType: inlineScript
     #     Inline: |
-    #       Remove-AzSqlDatabase -DatabaseName '$(sqlDB)' -ResourceGroupName '$(resourceGroupName)' -ServerName '$(sqlServerName)' -Force
+    #       Remove-AzSqlDatabase -DatabaseName "$(sqlDB)" -ResourceGroupName "$(resourceGroupName)" -ServerName "$(sqlServerName)" -Force
               
     - task: AzureCLI@2
       displayName: Tear down SQL DB
