@@ -34,7 +34,7 @@ public class WhenGettingVacancySentForReviewNotifications
         vacancy.OwnerType = OwnerType.Provider;
         
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByEmployerAccountIdAsync(vacancy.AccountId!.Value, It.IsAny<CancellationToken>()), Times.Never);
@@ -57,7 +57,7 @@ public class WhenGettingVacancySentForReviewNotifications
         vacancy.OwnerType = ownerType;
         
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByEmployerAccountIdAsync(vacancy.AccountId!.Value, It.IsAny<CancellationToken>()), Times.Never);
@@ -76,7 +76,7 @@ public class WhenGettingVacancySentForReviewNotifications
         vacancy.OwnerType = OwnerType.Provider;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByEmployerAccountIdAsync(vacancy.AccountId!.Value, It.IsAny<CancellationToken>()), Times.Never);
@@ -111,7 +111,7 @@ public class WhenGettingVacancySentForReviewNotifications
             .Returns(baseUrl);
 
         // act
-        var results = await sut.CreateAsync(vacancy, cts.Token);
+        var results = await sut.CreateAsync(vacancy, [], cts.Token);
 
         // assert
         results.Delayed.Should().BeEmpty();
@@ -129,6 +129,6 @@ public class WhenGettingVacancySentForReviewNotifications
         tokens["vacancyReference"].Should().Be(new VacancyReference(vacancy.VacancyReference).ToShortString());
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["location"].Should().Be(vacancy.GetLocationText(JsonConfig.Options));
-        tokens["reviewAdvertURL"].Should().Be($"{baseUrl}/accounts/{hashedEmployerAccountId}/vacancies/{vacancy.Id}/check-answers");
+        tokens["reviewAdvertURL"].Should().Be(emailTemplateHelper.Object.EmployerReviewVacancyUrl(hashedEmployerAccountId, vacancy.Id));
     }
 }

@@ -10,10 +10,8 @@ public class WhenCreatingVacancyNotifications: BaseFixture
 {
     [Test]
     [RecursiveMoqInlineAutoData(VacancyStatus.Draft)]
-    [RecursiveMoqInlineAutoData(VacancyStatus.Referred)]
     [RecursiveMoqInlineAutoData(VacancyStatus.Live)]
     [RecursiveMoqInlineAutoData(VacancyStatus.Closed)]
-    [RecursiveMoqInlineAutoData(VacancyStatus.Approved)]
     public async Task And_No_Handler_Is_Registered_For_The_Status_Then_NotImplemented_Returned(VacancyStatus status, VacancyEntity vacancy)
     {
         // arrange

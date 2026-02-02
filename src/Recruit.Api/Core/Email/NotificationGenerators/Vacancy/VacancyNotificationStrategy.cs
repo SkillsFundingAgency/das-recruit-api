@@ -12,7 +12,9 @@ public interface IVacancyNotificationStrategy
 public class VacancyNotificationStrategy(
     VacancyRejectedNotificationFactory vacancyRejectedNotificationFactory,
     VacancySentForReviewNotificationFactory vacancySentForReviewNotificationFactory,
-    VacancySubmittedNotificationFactory vacancySubmittedNotificationFactory) : IVacancyNotificationStrategy
+    VacancySubmittedNotificationFactory vacancySubmittedNotificationFactory,
+    VacancyApprovedNotificationFactory vacancyApprovedNotificationFactory,
+    VacancyReferredNotificationFactory vacancyReferredNotificationFactory) : IVacancyNotificationStrategy
 {
     public IVacancyNotificationFactory Create(VacancyEntity vacancy)
     {
@@ -22,6 +24,8 @@ public class VacancyNotificationStrategy(
             VacancyStatus.Rejected => vacancyRejectedNotificationFactory,
             VacancyStatus.Review => vacancySentForReviewNotificationFactory,
             VacancyStatus.Submitted => vacancySubmittedNotificationFactory,
+            VacancyStatus.Approved => vacancyApprovedNotificationFactory,
+            VacancyStatus.Referred => vacancyReferredNotificationFactory,
             _ => throw new EntityStateNotSupportedException($"Missing email handler: no registered handler for Vacancy Status {vacancy.Status}")
         };
     }

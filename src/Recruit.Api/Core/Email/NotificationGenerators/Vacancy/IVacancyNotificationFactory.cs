@@ -4,5 +4,5 @@ namespace SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
 
 public interface IVacancyNotificationFactory
 {
-    Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, CancellationToken cancellationToken);
+    Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, Dictionary<string, string> data, CancellationToken cancellationToken);
 }

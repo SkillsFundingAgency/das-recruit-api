@@ -40,7 +40,7 @@ public class WhenCreatingVacancySentForReviewNotifications: BaseFixture
         vacancy.AccountId = accountId;
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
         employerUser.UserType = UserType.Employer;
         employerUser.EmployerAccounts = [
             new UserEmployerAccountEntity {
