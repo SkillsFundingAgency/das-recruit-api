@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
+      "ipWhitelist": {
+        "type": "string"
+      },
       "location": {
         "type": "string"
       },
@@ -125,10 +128,10 @@
           },
           "parameters": {
             "firewallRuleNamePrefix": {
-              "name": "AllowAzure"
+              "name": "AllowAKS"
             },
             "ipAddresses": {
-              "value": ["0.0.0.0"]
+              "value": "[parameters('ipWhitelist')]"
             },
             "serverName": {
               "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
