@@ -71,9 +71,11 @@ public class WhenPuttingVacancyReview: BaseFixture
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        vacancyReview.Should().BeEquivalentTo(request, opts => opts.Excluding(x => x.SubmittedByUserId));
-
-        Server.DataContext.Verify(x => x.SetValues(targetItem, ItIs.EquivalentTo(request.ToDomain(targetItem.Id))), Times.Once());
+        vacancyReview.Should().BeEquivalentTo(request, opts => opts.Excluding(x => x.SubmittedByUserId).Excluding(x=>x.SubmittedByUserEmail));
+        vacancyReview.SubmittedByUserEmail.Should().Be(targetItem.SubmittedByUserEmail);
+        var updatedItem = request.ToDomain(targetItem.Id);
+        updatedItem.SubmittedByUserEmail = targetItem.SubmittedByUserEmail;
+        Server.DataContext.Verify(x => x.SetValues(targetItem, ItIs.EquivalentTo(updatedItem)), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
