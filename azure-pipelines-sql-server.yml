@@ -57,38 +57,38 @@ stages:
 - stage: Deploy
   displayName: Deploy SQL DB and Run Tests
   jobs:
-  # - deployment: DeploySQLServer
-  #   displayName: Deploy SQL Server
-  #   pool:
-  #     name: DAS - Continuous Deployment Agents
-  #   environment: AT
-  #   strategy:
-  #     runOnce:
-  #       deploy:
-  #         steps:
-  #         - template: azure-pipelines-templates/deploy/step/wait-azure-devops-deployment.yml@das-platform-building-blocks
-  #           parameters:
-  #             ServiceConnection: $(ARMServiceConnection)
-  #             EnvironmentId: $(Environment.Id)
-  #             PipelineName: $(Build.DefinitionName)
-  #             RunId: $(Build.BuildId)
-  #         - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
-  #           parameters:
-  #             ServiceConnection: $(ARMServiceConnection)
-  #             SubscriptionId: $(SubscriptionId)
-  #             Location: $(location)
-  #             Environment: AT
-  #             TemplatePath: $(Pipeline.Workspace)/drop/azure/template-sql-server.json
-  #             ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
-  #             IsMultiRepoCheckout: true
-  #             TemplateSecrets:
-  #               SqlServerPassword: $(sqlServerPassword)
+  - deployment: DeploySQLServer
+    displayName: Deploy SQL Server
+    pool:
+      name: DAS - Continuous Deployment Agents
+    environment: AT
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: azure-pipelines-templates/deploy/step/wait-azure-devops-deployment.yml@das-platform-building-blocks
+            parameters:
+              ServiceConnection: $(ARMServiceConnection)
+              EnvironmentId: $(Environment.Id)
+              PipelineName: $(Build.DefinitionName)
+              RunId: $(Build.BuildId)
+          - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
+            parameters:
+              ServiceConnection: $(ARMServiceConnection)
+              SubscriptionId: $(SubscriptionId)
+              Location: $(location)
+              Environment: AT
+              TemplatePath: $(Pipeline.Workspace)/drop/azure/template-sql-server.json
+              ParametersPath: $(Pipeline.Workspace)/drop/azure/template-sql-server.parameters.json
+              IsMultiRepoCheckout: true
+              TemplateSecrets:
+                SqlServerPassword: $(sqlServerPassword)
 
   - job: DeploySQLDB
     displayName: Deploy SQL DB using Dacpac
     pool:
       name: DAS - Continuous Deployment Agents
-    # dependsOn: DeploySQLServer
+    dependsOn: DeploySQLServer
     variables:
       resourceGroupName: das-ci-tests-rg
       sqlServerName: das-ci-tests-sql
@@ -108,6 +108,20 @@ stages:
         SqlPassword: $(sqlServerPassword)
         DacpacFile:  $(Pipeline.Workspace)/DacpacArtifact/src/${{ variables.SolutionBaseName }}.Database/bin/release/netstandard2.1/${{ variables.SolutionBaseName }}.Database.dacpac
 
+    - task: SqlAzureDacpacDeployment@1
+      displayName: Grant db_owner to user1
+      inputs:
+        AzureSubscription: $(ARMServiceConnection)
+        ServerName: $(serverName)
+        DatabaseName: $(sqlDB)
+        SqlUsername: $(sqlServerUser)
+        SqlPassword: $(sqlServerPassword)
+        deployType: 'InlineSqlTask'
+        SqlInline: |
+          IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'user1')
+            CREATE USER [user1] FOR LOGIN [user1];
+          ALTER ROLE db_owner ADD MEMBER [user1];
+
   - job: RunTests
     pool:
       name: DAS - Continuous Integration Agents
@@ -123,7 +137,7 @@ stages:
     - download: current
       artifact: drop
     - powershell: |
-        Write-Host "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(serverName),1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser)@$(sqlServerName);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+        Write-Host "##vso[task.setvariable variable=ADO_CONNSTR;issecret=true]Server=tcp:$(serverName),1433;Initial Catalog=$(sqlDB);Persist Security Info=False;User ID=$(sqlServerUser);Password=$(sqlServerPassword);MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
       displayName: Set Connection String Variable
 
     - task: UseDotNet@2
