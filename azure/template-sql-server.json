@@ -114,33 +114,33 @@
         "dependsOn": [
           "ci-tests-storage-deployment"
         ]
-      },
-      {
-        "apiVersion": "2024-11-01",
-        "name": "ci-tests-sql-server-firewall-rule-deployment",
-        "resourceGroup": "[concat(variables('resourceNamePrefix'), '-rg')]",
-        "type": "Microsoft.Resources/deployments",
-        "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-            "uri": "[uri(variables('deploymentUrlBase'),'sql-server-firewall-rules.json')]",
-            "contentVersion": "1.0.0.0"
-          },
-          "parameters": {
-            "firewallRuleNamePrefix": {
-              "name": "AllowAKS"
-            },
-            "ipAddresses": {
-              "value": "[parameters('ipWhitelist')]"
-            },
-            "serverName": {
-              "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
-            }
-          }
-        },
-        "dependsOn": [
-          "ci-tests-sql-server-deployment"
-        ]
+      // },
+      // {
+      //   "apiVersion": "2024-11-01",
+      //   "name": "ci-tests-sql-server-firewall-rule-deployment",
+      //   "resourceGroup": "[concat(variables('resourceNamePrefix'), '-rg')]",
+      //   "type": "Microsoft.Resources/deployments",
+      //   "properties": {
+      //     "mode": "Incremental",
+      //     "templateLink": {
+      //       "uri": "[uri(variables('deploymentUrlBase'),'sql-server-firewall-rules.json')]",
+      //       "contentVersion": "1.0.0.0"
+      //     },
+      //     "parameters": {
+      //       "firewallRuleNamePrefix": {
+      //         "name": "AllowAKS"
+      //       },
+      //       "ipAddresses": {
+      //         "value": "[parameters('ipWhitelist')]"
+      //       },
+      //       "serverName": {
+      //         "value": "[concat(variables('resourceNamePrefix'), '-sql')]"
+      //       }
+      //     }
+      //   },
+      //   "dependsOn": [
+      //     "ci-tests-sql-server-deployment"
+      //   ]
       }
     ],
     "outputs": {
