@@ -45,6 +45,74 @@ internal class WhenPuttingVacancyReview
     }
 
     [Test, RecruitAutoData]
+    public async Task Then_Email_Is_Set_To_Unknown_When_User_Not_Found_And_Created_Returned(
+        Guid id,
+        string submittedByUserId,
+        PutVacancyReviewRequest request,
+        VacancyReviewEntity entity,
+        Mock<IUserRepository> userRepository,
+        Mock<IVacancyReviewRepository> repository,
+        [Greedy] VacancyReviewController sut,
+        CancellationToken token)
+    {
+        // Arrange
+        request.SubmittedByUserEmail = null;
+        request.SubmittedByUserId = submittedByUserId;
+
+        userRepository
+            .Setup(x => x.FindByUserIdAsync(submittedByUserId, token))
+            .ReturnsAsync((UserEntity?)null);
+
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyReviewEntity>(), token))
+            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
+
+        // Act
+        var result = await sut.PutOne(repository.Object, userRepository.Object, id, request, token);
+
+        // Assert
+        userRepository.Verify(x => x.FindByUserIdAsync(submittedByUserId, token), Times.Once);
+        repository.Verify(
+            x => x.UpsertOneAsync(
+                It.Is<VacancyReviewEntity>(e => e.SubmittedByUserEmail == $"unknown-{submittedByUserId}"),
+                token),
+            Times.Once);
+        result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.VacancyReview>>();
+    }
+    
+    
+    [Test, RecruitAutoData]
+    public async Task Then_Email_Is_Set_To_Unknown_When_No_Id_Or_Email_And_Created_Returned(
+        Guid id,
+        string submittedByUserId,
+        PutVacancyReviewRequest request,
+        VacancyReviewEntity entity,
+        Mock<IUserRepository> userRepository,
+        Mock<IVacancyReviewRepository> repository,
+        [Greedy] VacancyReviewController sut,
+        CancellationToken token)
+    {
+        // Arrange
+        request.SubmittedByUserEmail = null;
+        request.SubmittedByUserId = null;
+
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyReviewEntity>(), token))
+            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
+
+        // Act
+        var result = await sut.PutOne(repository.Object, userRepository.Object, id, request, token);
+
+        // Assert
+        repository.Verify(
+            x => x.UpsertOneAsync(
+                It.Is<VacancyReviewEntity>(e => e.SubmittedByUserEmail == $"unknown-{request.VacancyReference}"),
+                token),
+            Times.Once);
+        result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.VacancyReview>>();
+    }
+
+    [Test, RecruitAutoData]
     public async Task Then_UserRepository_Not_Called_When_Email_Provided_And_Ok_Returned(
         Guid id,
         PutVacancyReviewRequest request,

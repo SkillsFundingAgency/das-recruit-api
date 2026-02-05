@@ -47,15 +47,25 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
     {
         if (string.IsNullOrEmpty(request.SubmittedByUserEmail))
         {
-            var submittedUser =
-                await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
-
-            if (submittedUser is null)
+            if (string.IsNullOrEmpty(request.SubmittedByUserId))
             {
-                logger.LogError("Unable to find user {0} for Vacancy {1}", request.SubmittedByUserId, request.VacancyReference);
+                logger.LogError("No user information supplied for Vacancy {0}", request.VacancyReference);
+                request.SubmittedByUserEmail = $"unknown-{request.VacancyReference}";
             }
-            
-            request.SubmittedByUserEmail = submittedUser?.Email;
+            else
+            {
+                var submittedUser = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+
+                if (submittedUser is null)
+                {
+                    logger.LogError("Unable to find user {0} for Vacancy {1}", request.SubmittedByUserId, request.VacancyReference);
+                    request.SubmittedByUserEmail = $"unknown-{request.SubmittedByUserId}";
+                }
+                else
+                {
+                    request.SubmittedByUserEmail = submittedUser?.Email;    
+                }    
+            }
         }
 
         try
