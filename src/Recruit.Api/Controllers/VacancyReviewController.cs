@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
 namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController, Route($"{RouteNames.VacancyReviews}/{{id:guid}}")]
-public class VacancyReviewController: ControllerBase
+public class VacancyReviewController(ILogger<VacancyReviewController> logger): ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status200OK)]
@@ -48,14 +49,29 @@ public class VacancyReviewController: ControllerBase
         {
             var submittedUser =
                 await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+
+            if (submittedUser is null)
+            {
+                logger.LogInformation("Unable to find user {0} for Vacancy {1}", request.SubmittedByUserId, request.VacancyReference);
+            }
+            
             request.SubmittedByUserEmail = submittedUser?.Email;
         }
-        
-        var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
 
-        return result.Created
-            ? TypedResults.Created($"/{RouteNames.VacancyReviews}/{result.Entity.Id}", result.Entity.ToPutResponse())
-            : TypedResults.Ok(result.Entity.ToPutResponse());
+        try
+        {
+            var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+
+            return result.Created
+                ? TypedResults.Created($"/{RouteNames.VacancyReviews}/{result.Entity.Id}", result.Entity.ToPutResponse())
+                : TypedResults.Ok(result.Entity.ToPutResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "An error occured while updating VacancyReview");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+        
     }
     
     [HttpPatch]
