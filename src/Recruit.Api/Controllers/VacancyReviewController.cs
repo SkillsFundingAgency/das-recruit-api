@@ -52,7 +52,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
 
             if (submittedUser is null)
             {
-                logger.LogInformation("Unable to find user {0} for Vacancy {1}", request.SubmittedByUserId, request.VacancyReference);
+                logger.LogError("Unable to find user {0} for Vacancy {1}", request.SubmittedByUserId, request.VacancyReference);
             }
             
             request.SubmittedByUserEmail = submittedUser?.Email;
