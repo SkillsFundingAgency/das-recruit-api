@@ -111,6 +111,7 @@ public static class AddServiceRegistrationExtension
 
     public static IRequestExecutorBuilder AddTypes(this IRequestExecutorBuilder builder)
     {
+        builder.AddTypeExtension(typeof(Data.Queries.PagedVacancyQuery));
         builder.AddTypeExtension(typeof(Data.Queries.VacancyQuery));
         builder.ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Query)), HotChocolate.Language.OperationType.Query));
         return builder;

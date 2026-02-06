@@ -13,3 +13,13 @@ public static class VacancyQuery
         return dbContext.Vacancies.AsNoTracking().AsQueryable();
     }
 }
+
+[QueryType]
+public static class PagedVacancyQuery
+{
+    [UseOffsetPaging(IncludeTotalCount = true), UseProjection, UseFiltering, UseSorting]
+    public static IQueryable<VacancyEntity> GetPagedVacancies(GraphQlDataContext dbContext)
+    {
+        return dbContext.Vacancies.AsNoTracking().AsQueryable();
+    }
+}

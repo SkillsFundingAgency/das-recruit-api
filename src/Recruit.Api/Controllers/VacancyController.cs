@@ -263,7 +263,6 @@ public class VacancyController : Controller
         return TypedResults.Ok(vacancySummaries);
     }
 
-
     [HttpGet]
     [Route($"{RouteElements.TotalPositionsAvailable}")]
     [ProducesResponseType(typeof(TotalPositionsAvailableResponse), StatusCodes.Status200OK)]
@@ -441,5 +440,29 @@ public class VacancyController : Controller
 
         var count = await vacancyRepository.CountVacanciesByUserIdAsync(user.Id, cancellationToken);
         return TypedResults.Ok(new DataResponse<int>(count));
+    }
+    
+    [HttpGet, Route($"~/{RouteNames.Provider}/{{ukprn:int}}/{RouteElements.Vacancies}/stats")]
+    public async Task<IResult> GetProviderVacancyApplicationStats(
+        [FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+        [FromRoute] int ukprn,
+        [FromQuery] List<long> vacancyReferences,
+        CancellationToken cancellationToken = default)
+    {
+        var applicationReviewStats = await applicationReviewsProvider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, cancellationToken);
+        var applicationReviewStatsDict = applicationReviewStats.ToDictionary(x => x.VacancyReference);
+        return TypedResults.Ok(new DataResponse<Dictionary<long, ApplicationReviewsStats>>(applicationReviewStatsDict));
+    }
+    
+    [HttpGet, Route($"~/{RouteNames.Employer}/{{accountId:long}}/{RouteElements.Vacancies}/stats")]
+    public async Task<IResult> GetEmployerVacancyApplicationStats(
+        [FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+        [FromRoute] long accountId,
+        [FromQuery] List<long> vacancyReferences,
+        CancellationToken cancellationToken = default)
+    {
+        var applicationReviewStats = await applicationReviewsProvider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, null, cancellationToken);
+        var applicationReviewStatsDict = applicationReviewStats.ToDictionary(x => x.VacancyReference);
+        return TypedResults.Ok(new DataResponse<Dictionary<long, ApplicationReviewsStats>>(applicationReviewStatsDict));
     }
 }
