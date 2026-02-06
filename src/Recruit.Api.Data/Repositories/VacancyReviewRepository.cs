@@ -44,6 +44,8 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             await dataContext.SaveChangesAsync(cancellationToken);
             return UpsertResult.Create(entity, true);
         }
+        
+        existingEntity.SubmittedByUserEmail = entity.SubmittedByUserEmail;
 
         dataContext.SetValues(existingEntity, entity);
         await dataContext.SaveChangesAsync(cancellationToken);
