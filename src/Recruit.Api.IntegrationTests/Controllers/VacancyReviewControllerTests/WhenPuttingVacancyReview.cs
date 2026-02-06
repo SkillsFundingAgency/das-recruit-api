@@ -22,12 +22,11 @@ public class WhenPuttingVacancyReview: BaseFixture
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         errors.Should().NotBeNull();
-        errors.Errors.Should().HaveCount(4);
+        errors.Errors.Should().HaveCount(3);
         errors.Errors.Should().ContainKeys(
             nameof(PutVacancyReviewRequest.VacancyReference),
             nameof(PutVacancyReviewRequest.VacancyTitle),
-            nameof(PutVacancyReviewRequest.VacancySnapshot),
-            nameof(PutVacancyReviewRequest.SubmittedByUserEmail)
+            nameof(PutVacancyReviewRequest.VacancySnapshot)
         );
     }
     
@@ -48,7 +47,7 @@ public class WhenPuttingVacancyReview: BaseFixture
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-        vacancyReview.Should().BeEquivalentTo(request);
+        vacancyReview.Should().BeEquivalentTo(request, opts => opts.Excluding(x => x.SubmittedByUserId));
 
         Server.DataContext.Verify(x => x.VacancyReviewEntities.AddAsync(ItIs.EquivalentTo(request.ToDomain(id)), It.IsAny<CancellationToken>()), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
@@ -72,9 +71,43 @@ public class WhenPuttingVacancyReview: BaseFixture
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        vacancyReview.Should().BeEquivalentTo(request);
-
-        Server.DataContext.Verify(x => x.SetValues(targetItem, ItIs.EquivalentTo(request.ToDomain(targetItem.Id))), Times.Once());
+        vacancyReview.Should().BeEquivalentTo(request, opts => opts.Excluding(x => x.SubmittedByUserId).Excluding(x=>x.SubmittedByUserEmail));
+        vacancyReview.SubmittedByUserEmail.Should().Be(targetItem.SubmittedByUserEmail);
+        var updatedItem = request.ToDomain(targetItem.Id);
+        updatedItem.SubmittedByUserEmail = targetItem.SubmittedByUserEmail;
+        Server.DataContext.Verify(x => x.SetValues(targetItem, ItIs.EquivalentTo(updatedItem)), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Test]
+    public async Task Then_SubmittedByUserEmail_Is_Populated_When_Missing()
+    {
+        // arrange
+        var id = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+        var user = Fixture.Build<UserEntity>()
+            .With(u => u.Id, userId)
+            .With(u => u.Email, "test@user.test")
+            .Create();
+        Server.DataContext
+            .Setup(x => x.VacancyReviewEntities)
+            .ReturnsDbSet(new List<VacancyReviewEntity>());
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(new List<UserEntity> { user });
+
+        var request = Fixture.Build<PutVacancyReviewRequest>()
+            .Without(r => r.SubmittedByUserEmail)
+            .With(r => r.SubmittedByUserId, userId.ToString())
+            .Create();
+
+        // act
+        var response = await Client.PutAsJsonAsync($"{RouteNames.VacancyReviews}/{id}", request);
+        var vacancyReview = await response.Content.ReadAsAsync<VacancyReview>();
+
+        // assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        vacancyReview!.SubmittedByUserEmail.Should().Be(user.Email);
+        Server.DataContext.Verify(x => x.VacancyReviewEntities.AddAsync(It.Is<VacancyReviewEntity>(e => e.SubmittedByUserEmail == user.Email), It.IsAny<CancellationToken>()), Times.Once());
     }
 }
