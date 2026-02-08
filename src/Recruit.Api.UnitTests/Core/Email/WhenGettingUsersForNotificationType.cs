@@ -190,10 +190,7 @@ public class WhenGettingUsersForNotificationTyp
         var result = users.GetUsersForNotificationType(NotificationTypes.SharedApplicationReviewedByEmployer);
 
         // assert
-        result.Should().HaveCount(3);
-        result.Should().Contain(users[0]);
-        result.Should().Contain(users[1]);
-        result.Should().Contain(users[2]);
+        result.Should().HaveCount(0);
     }
     
     [Test, RecursiveMoqAutoData]

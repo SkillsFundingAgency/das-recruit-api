@@ -161,6 +161,6 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
 
         // assert
-        result.Delayed.Should().HaveCount(1);
+        result.Delayed.Should().HaveCount(0);
     }
 }

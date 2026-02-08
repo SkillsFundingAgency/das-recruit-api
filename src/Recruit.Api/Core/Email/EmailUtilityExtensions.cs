@@ -25,7 +25,7 @@ public static class EmailUtilityExtensions
                 return false;
             }
             
-            if (pref.Frequency is NotificationFrequency.Never)
+            if (pref.Frequency is NotificationFrequency.Never or NotificationFrequency.NotSet)
             {
                 return false;
             }
