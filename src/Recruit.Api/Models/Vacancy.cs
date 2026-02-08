@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
@@ -83,6 +84,7 @@ public class ContactDetail
 {
     public string? Name { get; set; }
     public string? Email { get; set; }
+    [MaxLength(20)]
     public string? Phone { get; set; }
 }
 

@@ -7,7 +7,7 @@ using SFA.DAS.Recruit.Api.Data;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
-public class TestServer : WebApplicationFactory<Program>
+public class MockedTestServer : WebApplicationFactory<Program>
 {
     public Mock<IRecruitDataContext> DataContext { get; } = new ();
     public Mock<IEncodingService> EncodingService { get; } = new ();
