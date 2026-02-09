@@ -19,7 +19,7 @@ public class VacancyReviewEntity
     [MaxLength(255)]
     public string? ReviewedByUserEmail { get; init; }
     [MaxLength(255)]
-    public required string SubmittedByUserEmail { get; init; }
+    public required string SubmittedByUserEmail { get; set; }
     public DateTime? ClosedDate { get; init; }
     [MaxLength(50)]
     public string? ManualOutcome { get; set; }

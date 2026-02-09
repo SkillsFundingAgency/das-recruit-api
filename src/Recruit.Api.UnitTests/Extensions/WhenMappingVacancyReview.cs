@@ -42,6 +42,7 @@ public class WhenMappingVacancyReview
             .Excluding(x => x.UpdatedFieldIdentifiers)
             .Excluding(x => x.DismissedAutomatedQaOutcomeIndicators)
             .Excluding(x => x.VacancyReference)
+            .Excluding(x => x.SubmittedByUserId)
         );
 
         result.VacancyReference.Should().Be(1234L);

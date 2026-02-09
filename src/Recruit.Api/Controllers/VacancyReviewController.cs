@@ -1,10 +1,12 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
+using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -15,7 +17,7 @@ using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
 namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController, Route($"{RouteNames.VacancyReviews}/{{id:guid}}")]
-public class VacancyReviewController: ControllerBase
+public class VacancyReviewController(ILogger<VacancyReviewController> logger): ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status200OK)]
@@ -38,15 +40,48 @@ public class VacancyReviewController: ControllerBase
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]   
     public async Task<IResult> PutOne(
         [FromServices] IVacancyReviewRepository repository,
+        [FromServices] IUserRepository userRepository,
         [FromRoute] Guid id,
         [FromBody] PutVacancyReviewRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+        if (string.IsNullOrEmpty(request.SubmittedByUserEmail))
+        {
+            if (string.IsNullOrEmpty(request.SubmittedByUserId))
+            {
+                logger.LogError("No user information supplied for Vacancy {0}", request.VacancyReference);
+                request.SubmittedByUserEmail = $"unknown-{request.VacancyReference}";
+            }
+            else
+            {
+                var submittedUser = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
 
-        return result.Created
-            ? TypedResults.Created($"/{RouteNames.VacancyReviews}/{result.Entity.Id}", result.Entity.ToPutResponse())
-            : TypedResults.Ok(result.Entity.ToPutResponse());
+                if (submittedUser is null)
+                {
+                    logger.LogError("Unable to find user {0} for Vacancy {1}", request.SubmittedByUserId, request.VacancyReference);
+                    request.SubmittedByUserEmail = $"unknown-{request.SubmittedByUserId}";
+                }
+                else
+                {
+                    request.SubmittedByUserEmail = submittedUser?.Email;    
+                }    
+            }
+        }
+
+        try
+        {
+            var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+
+            return result.Created
+                ? TypedResults.Created($"/{RouteNames.VacancyReviews}/{result.Entity.Id}", result.Entity.ToPutResponse())
+                : TypedResults.Ok(result.Entity.ToPutResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "An error occured while updating VacancyReview");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+        
     }
     
     [HttpPatch]

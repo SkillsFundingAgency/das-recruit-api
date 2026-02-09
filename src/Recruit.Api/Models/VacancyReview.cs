@@ -14,7 +14,8 @@ public record VacancyReview
     public required ReviewStatus Status { get; init; }
     public byte SubmissionCount { get; init; }
     public string? ReviewedByUserEmail { get; init; }
-    public required string SubmittedByUserEmail { get; init; }
+    public string? SubmittedByUserEmail { get; init; }
+    public Guid SubmittedByUserId { get; init; }
     public DateTime? ClosedDate { get; init; }
     public string? ManualOutcome { get; init; }
     public string? ManualQaComment { get; init; }
