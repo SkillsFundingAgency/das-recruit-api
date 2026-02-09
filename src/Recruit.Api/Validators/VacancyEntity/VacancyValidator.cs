@@ -1,26 +1,28 @@
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Models;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
-public class VacancyEntityValidator : AbstractValidator<Domain.Entities.VacancyEntity>
+public class VacancyValidator : AbstractValidator<Vacancy>
 {
-    public VacancyEntityValidator(IProhibitedContentRepository profanityListProvider)
+    public VacancyValidator(IProhibitedContentRepository profanityListProvider)
     {
         ValidateApprenticeshipTitle(profanityListProvider);
     }
     
     private void ValidateApprenticeshipTitle(IProhibitedContentRepository profanityListProvider)
     {
-        
-        RuleFor(x => x.Title)
-            .VacancyTitleCheck(profanityListProvider);
+        RuleFor(x => x.Title).VacancyTitleCheck(profanityListProvider);
+        When(x => x.Wage != null, () =>
+        {
+            RuleFor(x => x.Wage).VacancyDurationCheck();
+        });
     }
-    
 }
 
 [Flags]
-public enum VacancyEntityRuleSet : long
+public enum VacancyRuleSet : long
 {
     None = 0L,
     EmployerName = 1L,

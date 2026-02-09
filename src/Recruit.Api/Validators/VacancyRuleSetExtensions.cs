@@ -1,18 +1,19 @@
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.Validators;
 
 public static class VacancyRuleSetExtensions
 {
-    internal static void RunCondition<T>(this IRuleBuilderOptions<Domain.Entities.VacancyEntity, T> context, VacancyEntityRuleSet condition)
+    internal static void RunCondition<T>(this IRuleBuilderOptions<Vacancy, T> context, VacancyRuleSet condition)
     {
         context.Configure(c=>c.ApplyCondition(x => x.CanRunValidator(condition)));
     }
-    private static bool CanRunValidator<T>(this ValidationContext<T> context, VacancyEntityRuleSet validationToCheck)
+    private static bool CanRunValidator<T>(this ValidationContext<T> context, VacancyRuleSet validationToCheck)
     {
-        var validationsToRun = (VacancyEntityRuleSet)context.RootContextData[ValidationConstants.ValidationsRulesKey];
+        var validationsToRun = (VacancyRuleSet)context.RootContextData[ValidationConstants.ValidationsRulesKey];
 
         return (validationsToRun & validationToCheck) > 0;
     }

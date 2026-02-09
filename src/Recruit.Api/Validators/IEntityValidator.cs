@@ -1,6 +1,5 @@
 using FluentValidation;
 using FluentValidation.Results;
-using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.Validators;
 

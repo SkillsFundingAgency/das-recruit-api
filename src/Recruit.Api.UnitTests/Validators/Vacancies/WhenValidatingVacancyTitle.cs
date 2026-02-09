@@ -18,13 +18,13 @@ public class WhenValidatingVacancyTitle: VacancyValidationTestsBase
     [TestCaseSource(nameof(ValidTitles))]
     public void NoErrorsWhenTitleFieldIsValidForApprenticeship(string validTitle)
     {
-        var vacancy = new VacancyEntity 
+        var vacancy = new Vacancy
         {
             Status = VacancyStatus.Draft,
             Title = validTitle
         };
 
-        var result = Validator.Validate(vacancy, VacancyEntityRuleSet.Title);
+        var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
 
         result.HasErrors.Should().BeFalse();
         result.Errors.Should().HaveCount(0);
@@ -35,19 +35,19 @@ public class WhenValidatingVacancyTitle: VacancyValidationTestsBase
     [TestCase("")]
     public void TitleMustHaveAValue(string? titleValue)
     {
-        var vacancy = new VacancyEntity 
+        var vacancy = new Vacancy
         {
             Status = VacancyStatus.Draft,
             Title = titleValue
         };
 
-        var result = Validator.Validate(vacancy, VacancyEntityRuleSet.Title);
+        var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
 
         result.HasErrors.Should().BeTrue();
         result.Errors.Should().HaveCount(1);
         result.Errors[0].PropertyName.Should().Be(nameof(vacancy.Title));
         result.Errors[0].ErrorCode.Should().Be("1");
-        result.Errors[0].RuleId.Should().Be((long)VacancyEntityRuleSet.Title);
+        result.Errors[0].RuleId.Should().Be((long)VacancyRuleSet.Title);
     }
 
     [TestCase("Apprentice mage")]
@@ -58,13 +58,13 @@ public class WhenValidatingVacancyTitle: VacancyValidationTestsBase
     [TestCase("junior apprenticeship in sorcery")]
     public void NoErrorsWhenTitleContainsTheWordApprenticeOrApprenticeship(string testValue)
     {
-        var vacancy = new VacancyEntity
+        var vacancy = new Vacancy
         {
             Status = VacancyStatus.Draft,
             Title = testValue
         };
 
-        var result = Validator.Validate(vacancy, VacancyEntityRuleSet.Title);
+        var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
 
         result.HasErrors.Should().BeFalse();
     }
@@ -77,56 +77,56 @@ public class WhenValidatingVacancyTitle: VacancyValidationTestsBase
     [TestCase("junior apprenteeship in sorcery")]
     public void TitleMustContainTheWordApprenticeOrApprenticeship(string testValue)
     {
-        var vacancy = new VacancyEntity
+        var vacancy = new Vacancy
         {
             Status = VacancyStatus.Draft,
             Title = testValue
         };
 
-        var result = Validator.Validate(vacancy, VacancyEntityRuleSet.Title);
+        var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
 
         result.HasErrors.Should().BeTrue();
         result.Errors.Should().HaveCount(1);
         result.Errors[0].PropertyName.Should().Be(nameof(vacancy.Title));
         result.Errors[0].ErrorCode.Should().Be("200");
-        result.Errors[0].RuleId.Should().Be((long)VacancyEntityRuleSet.Title);
+        result.Errors[0].RuleId.Should().Be((long)VacancyRuleSet.Title);
     }
     
     [Test]
     public void TitleBeLongerThan100Characters()
     {
-        var vacancy = new VacancyEntity 
+        var vacancy = new Vacancy
         {
             Status = VacancyStatus.Draft,
             Title = $"apprentice {new string('a', 101)}"
         };
 
-        var result = Validator.Validate(vacancy, VacancyEntityRuleSet.Title);
+        var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
 
         result.HasErrors.Should().BeTrue();
         result.Errors.Should().HaveCount(1);
         result.Errors[0].PropertyName.Should().Be(nameof(vacancy.Title));
         result.Errors[0].ErrorCode.Should().Be("2");
-        result.Errors[0].RuleId.Should().Be((long)VacancyEntityRuleSet.Title);
+        result.Errors[0].RuleId.Should().Be((long)VacancyRuleSet.Title);
     }
 
     [TestCase("apprentice<")]
     [TestCase("apprentice>" )]
     public void TitleMustContainValidCharacters(string testValue)
     {
-        var vacancy = new VacancyEntity 
+        var vacancy = new Vacancy
         {
             Status = VacancyStatus.Draft,
             Title = testValue
         };
 
-        var result = Validator.Validate(vacancy, VacancyEntityRuleSet.Title);
+        var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
 
         result.HasErrors.Should().BeTrue();
         result.Errors.Should().HaveCount(1);
         result.Errors[0].PropertyName.Should().Be(nameof(vacancy.Title));
         result.Errors[0].ErrorCode.Should().Be("3");
-        result.Errors[0].RuleId.Should().Be((long)VacancyEntityRuleSet.Title);
+        result.Errors[0].RuleId.Should().Be((long)VacancyRuleSet.Title);
     }
 
     [TestCase("some text bother apprentice")]
@@ -135,13 +135,13 @@ public class WhenValidatingVacancyTitle: VacancyValidationTestsBase
     [TestCase("some text balderdash apprentice")]
     public void Title_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new VacancyEntity
+        var vacancy = new Vacancy
         {
             Status = VacancyStatus.Draft,
             Title = freeText
         };
 
-        var result = Validator.Validate(vacancy, VacancyEntityRuleSet.Title);
+        var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
         result.HasErrors.Should().BeTrue();
         result.Errors[0].PropertyName.Should().Be(nameof(vacancy.Title));
         result.Errors.Count.Should().Be(1);
@@ -154,13 +154,13 @@ public class WhenValidatingVacancyTitle: VacancyValidationTestsBase
     [TestCase("some textbalderdash apprentice")]
     public void Title_Should_Not_Fail_IfWordContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new VacancyEntity
+        var vacancy = new Vacancy
         {
             Status = VacancyStatus.Draft,
             Title = freeText
         };
 
-        var result = Validator.Validate(vacancy, VacancyEntityRuleSet.Title);
+        var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
         result.HasErrors.Should().BeFalse();
     }
     
