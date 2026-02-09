@@ -1,12 +1,10 @@
-using HotChocolate.Execution;
-using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
 
-public class WhenValidatingVacancyTitle: VacancyValidationTestsBase
+public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
 {
     public static IEnumerable<object[]> ValidTitles =>
         new List<object[]>

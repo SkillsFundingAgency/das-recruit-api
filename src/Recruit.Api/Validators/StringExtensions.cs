@@ -1,4 +1,6 @@
 using System.Text.RegularExpressions;
+using FluentValidation;
+using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.Validators;
 
@@ -43,5 +45,13 @@ public static class StringExtensions
         }
 
         return count;
+    }
+}
+
+public static class FluentExtensions
+{
+    public static IRuleBuilderOptions<T, string> ValidPostCode<T>(this IRuleBuilder<T, string> ruleBuilder)
+    {
+        return ruleBuilder.SetValidator(new PostCodeValidator<T, string>());
     }
 }

@@ -25,7 +25,6 @@ public static class VacancyDurationExtension
                         {
                             return false;
                         }
-                    
                         return true;
                     })
                     .WithErrorCode("36")
