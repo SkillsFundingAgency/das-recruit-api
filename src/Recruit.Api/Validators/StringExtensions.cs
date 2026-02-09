@@ -54,4 +54,9 @@ public static class FluentExtensions
     {
         return ruleBuilder.SetValidator(new PostCodeValidator<T, string>());
     }
+    
+    public static IRuleBuilderOptions<T, string> ValidHtmlCharacters<T>(this IRuleBuilder<T, string> ruleBuilder, IHtmlSanitizerService sanitizer)
+    {
+        return ruleBuilder.SetValidator(new HtmlValidator<T, string>(sanitizer));
+    }
 }

@@ -6,12 +6,13 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public class VacancyValidator : AbstractValidator<Vacancy>
 {
-    public VacancyValidator(IProhibitedContentRepository profanityListProvider)
+    public VacancyValidator(IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider)
     {
-        ValidateApprenticeshipTitle(profanityListProvider);
+        ValidateVacancy(profanityListProvider, htmlSanitizerService, timeProvider);
     }
     
-    private void ValidateApprenticeshipTitle(IProhibitedContentRepository profanityListProvider)
+    private void ValidateVacancy(IProhibitedContentRepository profanityListProvider,
+        IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider)
     {
         RuleFor(x => x.Title).VacancyTitleCheck(profanityListProvider);
         When(x => x.Wage != null, () =>
@@ -20,6 +21,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         });
         RuleFor(x => x).ValidateOrganisationCheck(profanityListProvider);
         RuleFor(x => x.NumberOfPositions).VacancyNumberOfPositionsCheck();
+        RuleFor(x => x.ShortDescription).VacancyShortDescriptionCheck(profanityListProvider, htmlSanitizerService);
 }
 
 [Flags]

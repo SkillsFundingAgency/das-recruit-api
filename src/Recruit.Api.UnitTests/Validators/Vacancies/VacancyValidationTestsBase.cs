@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Time.Testing;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
@@ -10,6 +11,8 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
 public abstract class VacancyValidationTestsBase
 {
     private readonly Mock<IProhibitedContentRepository> _prohibitedContentRepository = new();
+    private readonly IHtmlSanitizerService _htmlSanitizerService = new HtmlSanitizerService();
+    protected TimeProvider TimeProvider = new FakeTimeProvider(new DateTimeOffset(DateTime.UtcNow)); 
 
     protected VacancyValidationTestsBase()
     {
@@ -20,18 +23,15 @@ public abstract class VacancyValidationTestsBase
                     Content = "bother",
                     ContentType = ProhibitedContentType.Profanity
                 },
-
-                new ProhibitedContentEntity() {
+                new ProhibitedContentEntity {
                     Content = "balderdash",
                     ContentType = ProhibitedContentType.Profanity
                 },
-
-                new ProhibitedContentEntity() {
+                new ProhibitedContentEntity {
                     Content = "dang",
                     ContentType = ProhibitedContentType.Profanity
                 },
-
-                new ProhibitedContentEntity() {
+                new ProhibitedContentEntity {
                     Content = "drat",
                     ContentType = ProhibitedContentType.Profanity
                 }
@@ -42,7 +42,7 @@ public abstract class VacancyValidationTestsBase
     {
         get
         {
-            var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object);
+            var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object, _htmlSanitizerService, TimeProvider);
             return new EntityValidator<Vacancy, VacancyRuleSet>(fluentValidator);
         }
     }
