@@ -1,11 +1,13 @@
 using System.IO.Hashing;
 using FluentValidation;
+using SFA.DAS.InputValidation.Fluent.Extensions;
+using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
-public static class VacancyDurationExtension
+public static class VacancyWageExtension
 {
     public static void VacancyDurationCheck(this IRuleBuilderInitial<Vacancy, Wage?> rule)
     {
@@ -79,5 +81,28 @@ public static class VacancyDurationExtension
             .WithErrorCode("36")
             .WithState(_ => VacancyRuleSet.Duration)
             .RunCondition(VacancyRuleSet.Duration);
+    }
+
+    public static void VacancyWorkingWeekCheck(this IRuleBuilderInitial<Vacancy, string?> rule, IProhibitedContentRepository profanityListProvider)
+    {
+        rule
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .WithMessage("Enter details about the working week")
+            .WithErrorCode("37")
+            .WithState(_ => VacancyRuleSet.WorkingWeekDescription)
+            .ValidFreeTextCharacters()
+            .WithMessage("Working week details contains some invalid characters")
+            .WithErrorCode("38")
+            .WithState(_ => VacancyRuleSet.WorkingWeekDescription)
+            .MaximumLength(250)
+            .WithMessage("Details about the working week must not exceed {MaxLength} characters")
+            .WithErrorCode("39")
+            .WithState(_ => VacancyRuleSet.WorkingWeekDescription)
+            .ProfanityCheck(profanityListProvider)
+            .WithMessage("Working week details must not contain a banned word or phrase.")
+            .WithErrorCode("606")
+            .WithState(_ => VacancyRuleSet.WorkingWeekDescription)
+            .RunCondition(VacancyRuleSet.WorkingWeekDescription);
     }
 }
