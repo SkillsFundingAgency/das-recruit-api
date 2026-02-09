@@ -19,7 +19,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
             RuleFor(x => x.Wage).VacancyDurationCheck();
         });
         RuleFor(x => x).ValidateOrganisationCheck(profanityListProvider);
-    }
+        RuleFor(x => x.NumberOfPositions).VacancyNumberOfPositionsCheck();
 }
 
 [Flags]
