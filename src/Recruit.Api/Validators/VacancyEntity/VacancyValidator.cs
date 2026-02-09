@@ -24,6 +24,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         RuleFor(x => x.ShortDescription).VacancyShortDescriptionCheck(profanityListProvider, htmlSanitizerService);
         RuleFor(x => x.ClosingDate).VacancyClosingDateCheck(timeProvider);
         RuleFor(x => x.StartDate).VacancyStartDateCheck();
+        RuleFor(x => x.ProgrammeId).VacancyProgrammeIdCheck();
     }
 }
 
