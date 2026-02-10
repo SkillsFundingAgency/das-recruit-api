@@ -23,7 +23,7 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
 
         repository
             .Setup(x => x.GetManyByVacancyReferenceAndStatus(
-                vacancyReference, statuses, manualOutcome, includeNoStatus,
+                vacancyReference.Value, statuses, manualOutcome, includeNoStatus,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(entities);
 
@@ -44,7 +44,7 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
 
         repository
             .Setup(x => x.GetManyByVacancyReferenceAndStatus(
-                It.IsAny<VacancyReference>(),
+                It.IsAny<long>(),
                 It.IsAny<IReadOnlyCollection<ReviewStatus>>(),
                 It.IsAny<IReadOnlyCollection<string>>(),
                 It.IsAny<bool>(),
@@ -53,7 +53,7 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
 
         var result = await sut.GetManyByVacancyReference(repository.Object, vacancyReference, statuses,null, false, token);
 
-        repository.Verify(x => x.GetManyByVacancyReferenceAndStatus(vacancyReference, It.Is<IReadOnlyCollection<ReviewStatus>>(s => s.Count == 0), null, false, token), Times.Once);
+        repository.Verify(x => x.GetManyByVacancyReferenceAndStatus(vacancyReference.Value, It.Is<IReadOnlyCollection<ReviewStatus>>(s => s.Count == 0), null, false, token), Times.Once);
         var ok = result.Should().BeOfType<Ok<List<VacancyReview>>>().Subject;
         ok.Value.Should().NotBeNull();
         ok.Value!.Count.Should().Be(0);

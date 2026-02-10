@@ -8,8 +8,8 @@ namespace SFA.DAS.Recruit.Api.Data.Repositories;
 
 public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, Guid>, IWriteRepository<VacancyReviewEntity, Guid>
 {
-    Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
-    Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(VacancyReference vacancyReference, IReadOnlyCollection<ReviewStatus> statuses, IReadOnlyCollection<string>? manualOutcome, bool includeNoStatus, CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByVacancyReference(long vacancyReference, CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(long vacancyReference, IReadOnlyCollection<ReviewStatus> statuses, IReadOnlyCollection<string>? manualOutcome, bool includeNoStatus, CancellationToken cancellationToken);
     Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByStatusAndExpiredAssignationDateTime(
         IReadOnlyCollection<ReviewStatus> statuses,
@@ -65,17 +65,17 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
         return true;
     }
     
-    public async Task<List<VacancyReviewEntity>> GetManyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken)
+    public async Task<List<VacancyReviewEntity>> GetManyByVacancyReference(long vacancyReference, CancellationToken cancellationToken)
     {
         return await dataContext.VacancyReviewEntities
             .AsNoTracking()
-            .Where(x => x.VacancyReference == vacancyReference.Value)
+            .Where(x => x.VacancyReference == vacancyReference)
             .OrderBy(x => x.CreatedDate)
             .ToListAsync(cancellationToken);
     }
 
     public Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(
-        VacancyReference vacancyReference,
+        long vacancyReference,
         IReadOnlyCollection<ReviewStatus> statuses,
         IReadOnlyCollection<string>? manualOutcome,
         bool includeNoStatus,
