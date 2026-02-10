@@ -15,11 +15,13 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider)
     {
         RuleFor(x => x.Title).VacancyTitleCheck(profanityListProvider);
+        RuleFor(x => x.Wage).VacancyWageCheck();
         When(x => x.Wage != null, () =>
         {
             RuleFor(x => x.Wage).VacancyDurationCheck();
             RuleFor(x => x.Wage!.WorkingWeekDescription).VacancyWorkingWeekCheck(profanityListProvider);
             RuleFor(x => x.Wage!.WeeklyHours).VacancyWorkingHoursCheck();
+            RuleFor(x=>x.Wage).VacancyWageFieldsCheck(htmlSanitizerService, profanityListProvider);
         });
         RuleFor(x => x).ValidateOrganisationCheck(profanityListProvider);
         RuleFor(x => x.NumberOfPositions).VacancyNumberOfPositionsCheck();

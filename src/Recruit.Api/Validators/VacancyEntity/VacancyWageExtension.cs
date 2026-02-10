@@ -9,6 +9,69 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyWageExtension
 {
+    public static void VacancyWageCheck(this IRuleBuilderInitial<Vacancy, Wage?> rule)
+    {
+        rule
+            .NotNull()
+            .WithMessage("Select how much you'd like to pay the apprentice")
+            .WithErrorCode("46")
+            .WithState(_ => VacancyRuleSet.Wage)
+            .RunCondition(VacancyRuleSet.Wage);
+    }
+
+    public static void VacancyWageFieldsCheck(this IRuleBuilderInitial<Vacancy, Wage?> rule, IHtmlSanitizerService htmlSanitizerService, IProhibitedContentRepository profanityListProvider)
+    {
+        rule
+            .ChildRules(x =>
+            {
+                x.RuleFor(w => w!.WageType)
+                    .NotEmpty()
+                    .WithMessage("Select how much the apprentice will be paid")
+                    .WithErrorCode("46")
+                    .WithState(_ => VacancyRuleSet.Wage)
+                    .IsInEnum()
+                    .WithMessage("Select how much the apprentice will be paid")
+                    .WithErrorCode("46")
+                    .WithState(_ => VacancyRuleSet.Wage);
+            }).RunCondition(VacancyRuleSet.Wage);
+        rule
+            .ChildRules(x =>
+            {
+                x.RuleFor(y => y.WageAdditionalInformation)
+                    .MaximumLength(250)
+                    .WithMessage("Information about pay must be {MaxLength} characters or less")
+                    .WithErrorCode("44")
+                    .WithState(_ => VacancyRuleSet.Wage)
+                    .ValidHtmlCharacters(htmlSanitizerService)
+                    .WithMessage("Information about pay contains some invalid characters")
+                    .WithErrorCode("45")
+                    .WithState(_ => VacancyRuleSet.Wage)
+                    .ProfanityCheck(profanityListProvider)
+                    .WithMessage("Information about pay must not contain a banned word or phrase")
+                    .WithErrorCode("607")
+                    .WithState(_ => VacancyRuleSet.Wage);
+            })
+                .RunCondition(VacancyRuleSet.Wage);
+        rule
+            .ChildRules(x =>
+            {
+                x.RuleFor(w => w!.CompanyBenefitsInformation)
+                    .MaximumLength(250)
+                    .WithMessage("Company benefits must be {MaxLength} characters or less")
+                    .WithErrorCode("44")
+                    .WithState(_ => VacancyRuleSet.Wage)
+                    .ValidHtmlCharacters(htmlSanitizerService)
+                    .WithMessage("Company benefits contains some invalid characters")
+                    .WithErrorCode("45")
+                    .WithState(_ => VacancyRuleSet.Wage)
+                    .ProfanityCheck(profanityListProvider)
+                    .WithMessage("Company benefits must not contain a banned word or phrase")
+                    .WithErrorCode("607")
+                    .WithState(_ => VacancyRuleSet.Wage);
+            })
+                .RunCondition(VacancyRuleSet.Wage);
+    }
+    
     public static void VacancyDurationCheck(this IRuleBuilderInitial<Vacancy, Wage?> rule)
     {
         const int minimumVacancyDurationInMonths = 8;
