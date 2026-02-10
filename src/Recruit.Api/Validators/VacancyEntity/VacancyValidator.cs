@@ -29,6 +29,10 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         RuleFor(x => x.ClosingDate).VacancyClosingDateCheck(timeProvider);
         RuleFor(x => x.StartDate).VacancyStartDateCheck();
         RuleFor(x => x.ProgrammeId).VacancyProgrammeIdCheck();
+        When(x=> x.ApprenticeshipType != ApprenticeshipTypes.Foundation,()=>
+        {
+            RuleFor(x => x.Skills).VacancySkillsCheck(profanityListProvider);
+        });
     }
 }
 
