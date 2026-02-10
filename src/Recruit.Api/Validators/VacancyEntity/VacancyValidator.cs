@@ -19,6 +19,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         {
             RuleFor(x => x.Wage).VacancyDurationCheck();
             RuleFor(x => x.Wage!.WorkingWeekDescription).VacancyWorkingWeekCheck(profanityListProvider);
+            RuleFor(x => x.Wage!.WeeklyHours).VacancyWorkingHoursCheck();
         });
         RuleFor(x => x).ValidateOrganisationCheck(profanityListProvider);
         RuleFor(x => x.NumberOfPositions).VacancyNumberOfPositionsCheck();

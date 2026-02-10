@@ -105,4 +105,22 @@ public static class VacancyWageExtension
             .WithState(_ => VacancyRuleSet.WorkingWeekDescription)
             .RunCondition(VacancyRuleSet.WorkingWeekDescription);
     }
+
+    public static void VacancyWorkingHoursCheck(this IRuleBuilderInitial<Vacancy, decimal?> rule)
+    {
+        rule
+            .NotEmpty()
+            .WithMessage($"Enter how many hours the apprenticeship will work each week, including training")
+            .WithErrorCode("40")
+            .WithState(_ => VacancyRuleSet.WeeklyHours)
+            .GreaterThanOrEqualTo(16)
+            .WithMessage("The total hours a week must be at least {ComparisonValue}")
+            .WithErrorCode("42")
+            .WithState(_ => VacancyRuleSet.WeeklyHours)
+            .LessThanOrEqualTo(48)
+            .WithMessage("The total hours a week must not be more than {ComparisonValue}")
+            .WithErrorCode("43")
+            .WithState(_ => VacancyRuleSet.WeeklyHours)
+            .RunCondition(VacancyRuleSet.WeeklyHours);
+    }
 }
