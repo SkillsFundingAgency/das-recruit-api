@@ -35,7 +35,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.21" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.21" />
     
-    <PackageReference Include="SFA.DAS.Api.Common" Version="17.1.135" />
+    <PackageReference Include="SFA.DAS.Api.Common" Version="17.1.164" />
     
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
     <PackageReference Include="SFA.DAS.InputValidation" Version="17.1.100" />

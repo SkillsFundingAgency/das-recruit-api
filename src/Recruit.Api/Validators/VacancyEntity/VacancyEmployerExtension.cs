@@ -108,7 +108,7 @@ public static class VacancyEmployerExtension
                     .RunCondition(VacancyRuleSet.EmployerAddress);
                 
                 c.RuleForEach(x => x.EmployerLocations)
-                    .SetValidator(new AddressValidator((long)VacancyRuleSet.EmployerAddress))
+                    .SetValidator(new AddressValidator())
                     .WithState(_ => VacancyRuleSet.EmployerNameOption)
                     .RunCondition(VacancyRuleSet.EmployerAddress);
             });
@@ -122,7 +122,7 @@ public static class VacancyEmployerExtension
                     .RunCondition(VacancyRuleSet.EmployerAddress);
                 
                 c.RuleForEach(x => x.EmployerLocations)
-                    .SetValidator(new AddressValidator((long)VacancyRuleSet.EmployerAddress))
+                    .SetValidator(new AddressValidator())
                     .WithState(_ => VacancyRuleSet.EmployerAddress)
                     .RunCondition(VacancyRuleSet.EmployerAddress);
             });
@@ -137,7 +137,7 @@ public static class VacancyEmployerExtension
                     .RunCondition(VacancyRuleSet.EmployerAddress);
                 
                 c.RuleForEach(x => x.EmployerLocations)
-                    .SetValidator(new AddressValidator((long)VacancyRuleSet.EmployerAddress))
+                    .SetValidator(new AddressValidator())
                     .RunCondition(VacancyRuleSet.EmployerAddress);
             });
 
