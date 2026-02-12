@@ -38,6 +38,14 @@ public class VacancyValidator : AbstractValidator<Vacancy>
             RuleFor(x => x.Qualifications).VacancyQualificationCheck(profanityListProvider);
         });
         RuleFor(x => x.Description).VacancyDescriptionCheck(profanityListProvider, htmlSanitizerService);
+        When(x => !string.IsNullOrEmpty(x.AdditionalQuestion1) && x.ApplicationMethod != ApplicationMethod.ThroughExternalApplicationSite, () =>
+        {
+            RuleFor(x=>x.AdditionalQuestion1)!.ValidateAdditionalQuestionCheck(profanityListProvider, VacancyRuleSet.AdditionalQuestion1);
+        });
+        When(x => !string.IsNullOrEmpty(x.AdditionalQuestion2) && x.ApplicationMethod != ApplicationMethod.ThroughExternalApplicationSite, () =>
+        {
+            RuleFor(x=>x.AdditionalQuestion2)!.ValidateAdditionalQuestionCheck(profanityListProvider, VacancyRuleSet.AdditionalQuestion2);
+        });
     }
 }
 
