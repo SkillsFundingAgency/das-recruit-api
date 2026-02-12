@@ -37,6 +37,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         {
             RuleFor(x => x.Qualifications).VacancyQualificationCheck(profanityListProvider);
         });
+        RuleFor(x => x.Description).VacancyDescriptionCheck(profanityListProvider, htmlSanitizerService);
     }
 }
 

@@ -8,6 +8,28 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyShortDescriptionExtension
 {
+    public static void VacancyDescriptionCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
+        IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
+    {
+        rule.NotEmpty()
+            .WithMessage($"Enter what the apprenticeship will do at work")
+            .WithErrorCode("53")
+            .WithState(_ => VacancyRuleSet.Description)
+            .MaximumLength(4000)
+            .WithMessage($"What the apprenticeship will do at work must not exceed {{MaxLength}} characters")
+            .WithErrorCode("7")
+            .WithState(_ => VacancyRuleSet.Description)
+            .ValidHtmlCharacters(htmlSanitizer)
+            .WithMessage($"What the apprenticeship will do at work contains some invalid characters")
+            .WithErrorCode("6")
+            .WithState(_ => VacancyRuleSet.Description)
+            .ProfanityCheck(profanityListProvider)
+            .WithMessage($"What the apprenticeship will do at work must not contain a banned word or phrase")
+            .WithErrorCode("609")
+            .WithState(_ => VacancyRuleSet.Description)
+            .RunCondition(VacancyRuleSet.Description);
+    }
+    
     public static void VacancyShortDescriptionCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {
