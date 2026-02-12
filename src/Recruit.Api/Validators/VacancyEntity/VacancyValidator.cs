@@ -33,6 +33,10 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         {
             RuleFor(x => x.Skills).VacancySkillsCheck(profanityListProvider);
         });
+        When(x => x.ApprenticeshipType is ApprenticeshipTypes.Standard or null && x.HasOptedToAddQualifications is true, () =>
+        {
+            RuleFor(x => x.Qualifications).VacancyQualificationCheck(profanityListProvider);
+        });
     }
 }
 
