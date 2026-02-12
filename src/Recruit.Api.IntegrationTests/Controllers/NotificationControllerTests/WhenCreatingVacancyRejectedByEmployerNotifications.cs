@@ -48,13 +48,13 @@ public class WhenCreatingVacancyRejectedByEmployerNotifications: BaseFixture
         providerUser.LastSignedInDate = DateTime.UtcNow;
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
-        providerUser.SetEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        providerUser.InitEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
         Server.DataContext.Setup(x => x.UserEntities).ReturnsDbSet([providerUser]);
         Server.DataContext.Setup(x => x.UserEmployerAccountEntities).ReturnsDbSet([]);
     
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
         
         // act
         var response = await Client.PostAsync($"{RouteNames.Vacancies}/{vacancy.Id}/create-notifications", null);
