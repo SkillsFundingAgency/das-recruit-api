@@ -46,7 +46,7 @@ public class WhenGettingApplicationSharedWithEmployerNotifications
         // arrange
         vacancy.OwnerType = OwnerType.Employer;
         user.UserType = UserType.Provider;
-        user.SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        user.InitEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         vacancyRepository
             .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))

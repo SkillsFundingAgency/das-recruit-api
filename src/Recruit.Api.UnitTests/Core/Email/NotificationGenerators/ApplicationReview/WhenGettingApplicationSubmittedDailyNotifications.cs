@@ -28,7 +28,7 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Provider;
-        user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
+        user.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
         
         vacancyRepository
             .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -91,7 +91,7 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         vacancy.OwnerType = OwnerType.Employer;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Employer;
-        user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
+        user.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
         
         vacancyRepository
             .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -148,7 +148,7 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         // arrange
         user.UserType = UserType.Provider;
 
-        user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet);
+        user.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet);
         
         userRepository
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
