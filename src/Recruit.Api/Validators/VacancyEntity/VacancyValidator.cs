@@ -46,6 +46,14 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         {
             RuleFor(x=>x.AdditionalQuestion2)!.ValidateAdditionalQuestionCheck(profanityListProvider, VacancyRuleSet.AdditionalQuestion2);
         });
+        When(x => !string.IsNullOrEmpty(x.TrainingDescription), () =>
+        {
+            RuleFor(x=>x.TrainingDescription).VacancyTrainingDescriptionCheck(profanityListProvider, htmlSanitizerService);
+        });
+        When(x => !string.IsNullOrEmpty(x.AdditionalTrainingDescription), () =>
+        {
+            RuleFor(x=>x.AdditionalTrainingDescription).VacancyAdditionalTrainingInformationCheck(profanityListProvider, htmlSanitizerService);
+        });
     }
 }
 

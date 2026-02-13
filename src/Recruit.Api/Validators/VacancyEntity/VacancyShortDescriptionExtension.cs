@@ -20,14 +20,52 @@ public static class VacancyShortDescriptionExtension
             .WithErrorCode("7")
             .WithState(_ => VacancyRuleSet.Description)
             .ValidHtmlCharacters(htmlSanitizer)
-            .WithMessage($"What the apprenticeship will do at work contains some invalid characters")
+            .WithMessage("What the apprenticeship will do at work contains some invalid characters")
             .WithErrorCode("6")
             .WithState(_ => VacancyRuleSet.Description)
             .ProfanityCheck(profanityListProvider)
-            .WithMessage($"What the apprenticeship will do at work must not contain a banned word or phrase")
+            .WithMessage("What the apprenticeship will do at work must not contain a banned word or phrase")
             .WithErrorCode("609")
             .WithState(_ => VacancyRuleSet.Description)
             .RunCondition(VacancyRuleSet.Description);
+    }
+
+    public static void VacancyTrainingDescriptionCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
+        IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
+    {
+        rule
+            .MaximumLength(4000)
+            .WithMessage("The apprentice’s training plan must not exceed 4000 characters")
+            .WithErrorCode("321")
+            .WithState(_ => VacancyRuleSet.TrainingDescription)
+            .ProfanityCheck(profanityListProvider)
+            .WithMessage("The apprentice’s training plan must not contain a restricted word")
+            .WithErrorCode("322")
+            .WithState(_ => VacancyRuleSet.TrainingDescription)
+            .ValidHtmlCharacters(htmlSanitizer)
+            .WithMessage("The apprentice’s training plan contains some invalid characters")
+            .WithErrorCode("346")
+            .WithState(_ => VacancyRuleSet.TrainingDescription)
+            .RunCondition(VacancyRuleSet.TrainingDescription);
+    }
+
+    public static void VacancyAdditionalTrainingInformationCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
+        IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
+    {
+        rule
+            .MaximumLength(4000)
+            .WithMessage("Any additional training information must not exceed 4000 characters")
+            .WithErrorCode("341")
+            .WithState(_ => VacancyRuleSet.AdditionalTrainingDescription)
+            .ProfanityCheck(profanityListProvider)
+            .WithMessage("Any additional training information must not contain a restricted word")
+            .WithErrorCode("342")
+            .WithState(_ => VacancyRuleSet.AdditionalTrainingDescription)
+            .ValidHtmlCharacters(htmlSanitizer)
+            .WithMessage("Any additional training information contains some invalid characters")
+            .WithErrorCode("344")
+            .WithState(_ => VacancyRuleSet.AdditionalTrainingDescription)
+            .RunCondition(VacancyRuleSet.AdditionalTrainingDescription);
     }
     
     public static void VacancyShortDescriptionCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
