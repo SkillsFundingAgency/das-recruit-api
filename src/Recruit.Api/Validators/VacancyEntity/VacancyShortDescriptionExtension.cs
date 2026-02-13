@@ -68,6 +68,29 @@ public static class VacancyShortDescriptionExtension
             .RunCondition(VacancyRuleSet.AdditionalTrainingDescription);
     }
     
+    public static void VacancyOutcomeDescriptionCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
+        IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
+    {
+        rule
+            .NotEmpty()
+            .WithMessage($"Enter the expected career progression after this apprenticeship")
+            .WithErrorCode("55")
+            .WithState(_ => VacancyRuleSet.OutcomeDescription)
+            .MaximumLength(4000)
+            .WithMessage("Expected career progression must not exceed {MaxLength} characters")
+            .WithErrorCode("7")
+            .WithState(_ => VacancyRuleSet.OutcomeDescription)
+            .ValidHtmlCharacters(htmlSanitizer)
+            .WithMessage("What is the expected career progression after this apprenticeship description contains some invalid characters")
+            .WithErrorCode("6")
+            .WithState(_ => VacancyRuleSet.OutcomeDescription)
+            .ProfanityCheck(profanityListProvider)
+            .WithMessage("What is the expected career progression after this apprenticeship description must not contain a banned word or phrase.")
+            .WithErrorCode("611")
+            .WithState(_ => VacancyRuleSet.OutcomeDescription)
+            .RunCondition(VacancyRuleSet.OutcomeDescription);
+    }
+    
     public static void VacancyShortDescriptionCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {

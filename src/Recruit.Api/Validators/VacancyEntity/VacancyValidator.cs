@@ -54,6 +54,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         {
             RuleFor(x=>x.AdditionalTrainingDescription).VacancyAdditionalTrainingInformationCheck(profanityListProvider, htmlSanitizerService);
         });
+        RuleFor(x=>x.OutcomeDescription).VacancyOutcomeDescriptionCheck(profanityListProvider, htmlSanitizerService);
     }
 }
 
