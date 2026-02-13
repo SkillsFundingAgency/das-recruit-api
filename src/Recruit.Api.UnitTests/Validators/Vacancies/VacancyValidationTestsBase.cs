@@ -1,4 +1,7 @@
+using System.Net;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Time.Testing;
+using Moq.Protected;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
@@ -11,11 +14,17 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
 public abstract class VacancyValidationTestsBase
 {
     private readonly Mock<IProhibitedContentRepository> _prohibitedContentRepository = new();
+    private readonly IExternalWebsiteHealthCheckService _externalWebsiteHealthCheckService;
     private readonly IHtmlSanitizerService _htmlSanitizerService = new HtmlSanitizerService();
     protected TimeProvider TimeProvider = new FakeTimeProvider(new DateTimeOffset(DateTime.UtcNow)); 
 
     protected VacancyValidationTestsBase()
     {
+        var externalWebsiteMessageHandler = new Mock<HttpMessageHandler>();
+        externalWebsiteMessageHandler.Protected()
+            .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync((HttpRequestMessage _, CancellationToken _) => new HttpResponseMessage(HttpStatusCode.OK));
+        _externalWebsiteHealthCheckService = new ExternalWebsiteHealthCheckService(Mock.Of<ILogger<ExternalWebsiteHealthCheckService>>(), new HttpClient(externalWebsiteMessageHandler.Object));
         _prohibitedContentRepository
             .Setup(x => x.GetByContentTypeAsync(ProhibitedContentType.Profanity,
                 It.IsAny<CancellationToken>())).ReturnsAsync([
@@ -42,7 +51,7 @@ public abstract class VacancyValidationTestsBase
     {
         get
         {
-            var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object, _htmlSanitizerService, TimeProvider);
+            var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object, _htmlSanitizerService, TimeProvider, _externalWebsiteHealthCheckService);
             return new EntityValidator<Vacancy, VacancyRuleSet>(fluentValidator);
         }
     }

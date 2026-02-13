@@ -6,13 +6,13 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public class VacancyValidator : AbstractValidator<Vacancy>
 {
-    public VacancyValidator(IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider)
+    public VacancyValidator(IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
         ValidateVacancy(profanityListProvider, htmlSanitizerService, timeProvider);
     }
     
     private void ValidateVacancy(IProhibitedContentRepository profanityListProvider,
-        IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider)
+        IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
         RuleFor(x => x.Title).VacancyTitleCheck(profanityListProvider);
         RuleFor(x => x.Wage).VacancyWageCheck();
@@ -55,6 +55,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
             RuleFor(x=>x.AdditionalTrainingDescription).VacancyAdditionalTrainingInformationCheck(profanityListProvider, htmlSanitizerService);
         });
         RuleFor(x=>x.OutcomeDescription).VacancyOutcomeDescriptionCheck(profanityListProvider, htmlSanitizerService);
+        RuleFor(x => x).ValidationApplicationMethod(profanityListProvider, externalWebsiteHealthCheckService);
     }
 }
 
