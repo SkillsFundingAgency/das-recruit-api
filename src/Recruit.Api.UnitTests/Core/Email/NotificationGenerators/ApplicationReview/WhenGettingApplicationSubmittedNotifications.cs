@@ -103,7 +103,7 @@ public class WhenGettingApplicationSubmittedNotifications
     {
         // arrange
         vacancy.OwnerType = OwnerType.Employer;
-        users.ForEach(x => x.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Never));
+        users.ForEach(x => x.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Never));
         users[0].SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.UserSubmittedVacancies, NotificationFrequency.Never);
         vacancy.ReviewRequestedByUserId = users[0].Id;
         

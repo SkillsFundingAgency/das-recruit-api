@@ -54,7 +54,7 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
             user.UserType = UserType.Provider;
             user.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         }
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
 
         // Make this the originating user
         vacancy.ReviewRequestedByUserId = users[0].Id;
