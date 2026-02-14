@@ -8,7 +8,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
 {
     public VacancyValidator(IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
-        ValidateVacancy(profanityListProvider, htmlSanitizerService, timeProvider);
+        ValidateVacancy(profanityListProvider, htmlSanitizerService, timeProvider, externalWebsiteHealthCheckService);
     }
     
     private void ValidateVacancy(IProhibitedContentRepository profanityListProvider,
@@ -56,6 +56,11 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         });
         RuleFor(x=>x.OutcomeDescription).VacancyOutcomeDescriptionCheck(profanityListProvider, htmlSanitizerService);
         RuleFor(x => x).ValidationApplicationMethod(profanityListProvider, externalWebsiteHealthCheckService);
+        When(x => x.Contact != null, () =>
+        {
+            RuleFor(x => x.Contact).CheckContactDetail(profanityListProvider);    
+        });
+        
     }
 }
 
