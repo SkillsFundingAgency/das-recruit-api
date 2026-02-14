@@ -60,7 +60,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         {
             RuleFor(x => x.Contact).CheckContactDetail(profanityListProvider);    
         });
-        
+        RuleFor(x=>x.ThingsToConsider).VacancyThingsToConsiderCheck(profanityListProvider, htmlSanitizerService);
     }
 }
 

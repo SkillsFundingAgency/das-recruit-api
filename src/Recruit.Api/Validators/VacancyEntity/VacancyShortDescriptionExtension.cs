@@ -49,6 +49,25 @@ public static class VacancyShortDescriptionExtension
             .RunCondition(VacancyRuleSet.TrainingDescription);
     }
 
+    public static void VacancyThingsToConsiderCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
+        IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
+    {
+        rule
+            .MaximumLength(4000)
+            .WithMessage("Other requirements must not exceed {MaxLength} characters")
+            .WithErrorCode("75")
+            .WithState(_ => VacancyRuleSet.ThingsToConsider)
+            .ValidHtmlCharacters(htmlSanitizer)
+            .WithMessage("Other requirements contains some invalid characters")
+            .WithErrorCode("76")
+            .WithState(_ => VacancyRuleSet.ThingsToConsider)
+            .ProfanityCheck(profanityListProvider)
+            .WithMessage("Other requirements must not contain a banned word or phrase.")
+            .WithErrorCode("613")
+            .WithState(_ => VacancyRuleSet.ThingsToConsider)
+            .RunCondition(VacancyRuleSet.ThingsToConsider);
+    }
+
     public static void VacancyAdditionalTrainingInformationCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {
