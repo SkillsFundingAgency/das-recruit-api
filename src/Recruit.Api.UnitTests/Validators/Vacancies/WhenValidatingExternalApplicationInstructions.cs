@@ -4,7 +4,7 @@ using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
 
-public class WhenValidationgExternalApplicationInstructions : VacancyValidationTestsBase
+public class WhenValidatingExternalApplicationInstructions : VacancyValidationTestsBase
 {
     [TestCase(null)]
     [TestCase("")]
