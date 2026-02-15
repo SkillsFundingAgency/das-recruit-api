@@ -68,6 +68,27 @@ public static class VacancyShortDescriptionExtension
             .RunCondition(VacancyRuleSet.ThingsToConsider);
     }
 
+    public static void VacancyEmployerInformationCheck(this IRuleBuilderInitial<Vacancy, string?> rule, IHtmlSanitizerService htmlSanitizer, IProhibitedContentRepository profanityListProvider)
+    {
+        rule.NotEmpty()
+            .WithMessage("Enter details about the employer")
+            .WithErrorCode("80")
+            .WithState(_ => VacancyRuleSet.EmployerDescription)
+            .MaximumLength(4000)
+            .WithMessage("Information about the employer must not exceed {MaxLength} characters")
+            .WithErrorCode("77")
+            .WithState(_ => VacancyRuleSet.EmployerDescription)
+            .ValidHtmlCharacters(htmlSanitizer)
+            .WithMessage("Information about the employer contains some invalid characters")
+            .WithErrorCode("78")
+            .WithState(_ => VacancyRuleSet.EmployerDescription)
+            .ProfanityCheck(profanityListProvider)
+            .WithMessage("Information about the employer must not contain a banned word or phrase.")
+            .WithErrorCode("614")
+            .WithState(_ => VacancyRuleSet.EmployerDescription)
+            .RunCondition(VacancyRuleSet.EmployerDescription);
+    }
+
     public static void VacancyAdditionalTrainingInformationCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {
