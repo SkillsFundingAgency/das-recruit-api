@@ -163,7 +163,7 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
 
         if (expiredAssignationDateTime is not null)
         {
-            query = query.Where(x => x.ReviewedDate > expiredAssignationDateTime.Value);
+            query = query.Where(x => expiredAssignationDateTime.Value > x.ReviewedDate);
         }
 
         return query.ToListAsync(cancellationToken);
