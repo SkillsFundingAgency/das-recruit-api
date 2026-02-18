@@ -11,7 +11,7 @@ public static class VacancyTrainingProviderExtension
             .NotNull()
             .WithMessage("You must enter a training provider")
             .WithErrorCode("101")
-            .WithState(_ => VacancyRuleSet.TrainingProvider).WithState(_ => VacancyRuleSet.TrainingProvider)
+            .WithState(_ => VacancyRuleSet.TrainingProvider)
             .ChildRules(x=>{
             x.RuleFor(tp => tp.Ukprn.ToString())
                 .NotEmpty()
@@ -29,7 +29,7 @@ public static class VacancyTrainingProviderExtension
             //     x.RuleFor(tp => tp)
             //         .TrainingProviderMustNotBeBlocked(blockedOrganisationRepo);
             // });
-        });
+        }).WithState(_ => VacancyRuleSet.TrainingProvider).RunCondition(VacancyRuleSet.TrainingProvider);
         
     }
 }

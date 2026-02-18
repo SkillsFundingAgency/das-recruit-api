@@ -1,14 +1,22 @@
+using System.Data;
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public class VacancyValidator : AbstractValidator<Vacancy>
 {
-    public VacancyValidator(IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    public VacancyValidator(
+        IProhibitedContentRepository profanityListProvider, 
+        IHtmlSanitizerService htmlSanitizerService, 
+        TimeProvider timeProvider, 
+        IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService, 
+        IMinimumWageProvider minimumWageProvider)
     {
         ValidateVacancy(profanityListProvider, htmlSanitizerService, timeProvider, externalWebsiteHealthCheckService);
+        ValidateVacancyCrossFieldRules(minimumWageProvider);
     }
     
     private void ValidateVacancy(IProhibitedContentRepository profanityListProvider,
@@ -64,7 +72,34 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         RuleFor(x => x.EmployerDescription)
             .VacancyEmployerInformationCheck(htmlSanitizerService, profanityListProvider);
         RuleFor(x => x.EmployerWebsiteUrl).ValidateEmployerWebsiteCheck(externalWebsiteHealthCheckService);
-        RuleFor(x => x.TrainingProvider).VacancyTrainingProviderCheck();
+        RuleFor(x => x.TrainingProvider)!.VacancyTrainingProviderCheck();
+    }
+    
+    
+    private void ValidateVacancyCrossFieldRules(IMinimumWageProvider minimumWageProvider)
+    {
+        ValidateStartDateClosingDate();
+        MinimumWageValidation(minimumWageProvider);
+        //TrainingExpiryDateValidation(); //THIS NEEDS TO BE DONE IN THE OUTER API
+    }
+    
+    private void MinimumWageValidation(IMinimumWageProvider minimumWageProvider)
+    {
+        When(x => x.Wage != null && x.Wage.WageType == WageType.FixedWage, () =>
+        {
+            RuleFor(x => x)
+                .FixedWageMustBeGreaterThanApprenticeshipMinimumWage(minimumWageProvider)
+                .RunCondition(VacancyRuleSet.MinimumWage);
+        });
+    }
+    private void ValidateStartDateClosingDate()
+    {
+        When(x => x.StartDate.HasValue && x.ClosingDate.HasValue, () =>
+        {
+            RuleFor(x => x)
+                .ClosingDateMustBeLessThanStartDate()
+                .RunCondition(VacancyRuleSet.StartDateEndDate);
+        });
     }
 }
 

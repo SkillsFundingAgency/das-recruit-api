@@ -16,7 +16,8 @@ public abstract class VacancyValidationTestsBase
     private readonly Mock<IProhibitedContentRepository> _prohibitedContentRepository = new();
     private readonly IExternalWebsiteHealthCheckService _externalWebsiteHealthCheckService;
     private readonly IHtmlSanitizerService _htmlSanitizerService = new HtmlSanitizerService();
-    protected TimeProvider TimeProvider = new FakeTimeProvider(new DateTimeOffset(DateTime.UtcNow)); 
+    protected TimeProvider TimeProvider = new FakeTimeProvider(new DateTimeOffset(DateTime.UtcNow));
+    protected readonly Mock<IMinimumWageProvider> MinimumWageProvider;
 
     protected VacancyValidationTestsBase()
     {
@@ -45,13 +46,14 @@ public abstract class VacancyValidationTestsBase
                     ContentType = ProhibitedContentType.Profanity
                 }
             ]);
+        MinimumWageProvider = new Mock<IMinimumWageProvider>();
     }
 
     protected IEntityValidator<Vacancy, VacancyRuleSet> Validator
     {
         get
         {
-            var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object, _htmlSanitizerService, TimeProvider, _externalWebsiteHealthCheckService);
+            var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object, _htmlSanitizerService, TimeProvider, _externalWebsiteHealthCheckService, MinimumWageProvider.Object);
             return new EntityValidator<Vacancy, VacancyRuleSet>(fluentValidator);
         }
     }

@@ -45,7 +45,7 @@ public static class LiveWageExtensions
 
         return wageText;
     }
-    private static string AsWholeMoneyAmount(this string value)
+    public static string AsWholeMoneyAmount(this string value)
     {
         return value.Replace(".00", "");
     }

@@ -1,9 +1,13 @@
 using System.IO.Hashing;
 using FluentValidation;
+using FluentValidation.Results;
 using SFA.DAS.InputValidation.Fluent.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Mappers;
+using SFA.DAS.VacancyServices.Wage;
+using WageType = SFA.DAS.Recruit.Api.Domain.Enums.WageType;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
@@ -185,5 +189,33 @@ public static class VacancyWageExtension
             .WithErrorCode("43")
             .WithState(_ => VacancyRuleSet.WeeklyHours)
             .RunCondition(VacancyRuleSet.WeeklyHours);
+    }
+    public static IRuleBuilderInitial<Vacancy, Vacancy> FixedWageMustBeGreaterThanApprenticeshipMinimumWage(this IRuleBuilder<Vacancy, Vacancy> ruleBuilder, IMinimumWageProvider minimumWageService)
+    {
+        return (IRuleBuilderInitial<Vacancy, Vacancy>)ruleBuilder.Custom((vacancy, context) =>
+        {
+            var wagePeriod = minimumWageService.GetWagePeriod(vacancy.StartDate.Value);
+
+            if (vacancy.Wage.FixedWageYearlyAmount == null || vacancy.Wage.FixedWageYearlyAmount / 52 / vacancy.Wage.WeeklyHours < wagePeriod.ApprenticeshipMinimumWage)
+            {
+                var minimumYearlyWageForApprentices = WagePresenter.GetDisplayText(VacancyServices.Wage.WageType.ApprenticeshipMinimum, WageUnit.Annually, new WageDetails
+                {
+                    HoursPerWeek = vacancy.Wage.WeeklyHours,
+                    StartDate = vacancy.StartDate.Value
+                }).AsWholeMoneyAmount();
+
+                var errorMessage = (vacancy.Status == VacancyStatus.Live) ?
+                    $"National Minimum Wage is changing from {wagePeriod.ValidFrom:d MMM yyyy}. So the fixed wage you entered before will no longer be valid. Change the date to before {wagePeriod.ValidFrom:d MMM yyyy} or to change the wage, create a new vacancy" :
+                    $"Yearly wage must be at least {minimumYearlyWageForApprentices}";
+
+                var failure = new ValidationFailure(string.Empty, errorMessage)
+                {
+                    ErrorCode = "49",
+                    CustomState = VacancyRuleSet.MinimumWage,
+                    PropertyName = $"{nameof(Wage)}.{nameof(Wage.FixedWageYearlyAmount)}"  
+                };
+                context.AddFailure(failure);
+            }
+        });
     }
 }

@@ -21,4 +21,9 @@ public static class VacancyRuleSetExtensions
     {
         return rule.SetValidator(new ProfanityCheckValidator<T, string>(profanityListProvider));
     }
+    
+    internal static IRuleBuilderInitial<Vacancy, T> RunCondition<T>(this IRuleBuilderInitial<Vacancy, T> context, VacancyRuleSet condition)
+    {
+        return context.Configure(c=>c.ApplyCondition(x => x.CanRunValidator(condition)));
+    }
 }

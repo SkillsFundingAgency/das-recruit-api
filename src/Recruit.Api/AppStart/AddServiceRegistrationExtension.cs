@@ -24,6 +24,7 @@ public static class AddServiceRegistrationExtension
         // validators
         services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
         services.AddTransient<IHtmlSanitizerService, HtmlSanitizerService>();
+        services.AddTransient<IMinimumWageProvider, MinimumWageProvider>();
         services.AddHttpClient<IExternalWebsiteHealthCheckService, ExternalWebsiteHealthCheckService>();
         services.AddSingleton(TimeProvider.System);
 
