@@ -43,7 +43,7 @@ public class ApplicationSubmittedNotificationFactory(
             if (x.NotificationPreferences.TryGetForEvent(NotificationTypes.ApplicationSubmitted, out NotificationPreference? pref))
             {
                 return pref.Frequency switch {
-                    NotificationFrequency.NotSet => NotificationFrequency.Daily, // default this value to daily
+                    NotificationFrequency.NotSet => NotificationFrequency.NotSet, // default this value to notSet
                     _ => pref.Frequency
                 };
             }

@@ -34,7 +34,7 @@ public class WhenGettingVacancySubmittedNotifications
         vacancy.OwnerType = OwnerType.Provider;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()),
@@ -58,7 +58,7 @@ public class WhenGettingVacancySubmittedNotifications
         vacancy.OwnerType = ownerType;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()),
@@ -78,7 +78,7 @@ public class WhenGettingVacancySubmittedNotifications
         vacancy.OwnerType = OwnerType.Provider;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()),
@@ -127,7 +127,7 @@ public class WhenGettingVacancySubmittedNotifications
             .Returns(notificationSettingsUrl);
 
         // act
-        var results = await sut.CreateAsync(vacancy, cts.Token);
+        var results = await sut.CreateAsync(vacancy, [], cts.Token);
 
         // assert
         results.Delayed.Should().BeEmpty();
