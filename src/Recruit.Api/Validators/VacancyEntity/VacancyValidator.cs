@@ -64,6 +64,7 @@ public class VacancyValidator : AbstractValidator<Vacancy>
         RuleFor(x => x.EmployerDescription)
             .VacancyEmployerInformationCheck(htmlSanitizerService, profanityListProvider);
         RuleFor(x => x.EmployerWebsiteUrl).ValidateEmployerWebsiteCheck(externalWebsiteHealthCheckService);
+        RuleFor(x => x.TrainingProvider).VacancyTrainingProviderCheck();
     }
 }
 
