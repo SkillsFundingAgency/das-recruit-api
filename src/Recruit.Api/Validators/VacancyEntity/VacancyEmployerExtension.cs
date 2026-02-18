@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyEmployerExtension
 {
-    public static void ValidateOrganisationCheck(this IRuleBuilderInitial<Vacancy, Vacancy> rule, IProhibitedContentRepository profanityListProvider)
+    public static void VacancyOrganisationValidation(this IRuleBuilderInitial<Vacancy, Vacancy> rule, IProhibitedContentRepository profanityListProvider)
     {
         rule.ChildRules(c =>
         {
@@ -158,7 +158,7 @@ public static class VacancyEmployerExtension
         });
     }
 
-    public static void ValidateEmployerWebsiteCheck(this IRuleBuilderInitial<Vacancy, string?> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    public static void VacancyEmployerWebsiteValidation(this IRuleBuilderInitial<Vacancy, string?> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
         rule
         .Cascade(CascadeMode.Stop)                

@@ -6,9 +6,9 @@ using SFA.DAS.Recruit.Api.Models;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
-public class VacancyQualificationValidator : AbstractValidator<Qualification>
+public class VacancyQualificationValidation : AbstractValidator<Qualification>
 {
-    public VacancyQualificationValidator(IProhibitedContentRepository profanityListProvider)
+    public VacancyQualificationValidation(IProhibitedContentRepository profanityListProvider)
     {
 
         RuleFor(x => x.QualificationType)
@@ -17,7 +17,7 @@ public class VacancyQualificationValidator : AbstractValidator<Qualification>
             .WithMessage("Select a qualification")
             .WithErrorCode("53")
             .WithState(_ => VacancyRuleSet.Qualifications)
-            .Must(Reference.CandidateQualifications.Contains)
+            .Must(Reference.CandidateQualifications.Contains!)
             .WithMessage("Invalid qualification type")
             .WithErrorCode("57")
             .WithState(_ => VacancyRuleSet.Qualifications)

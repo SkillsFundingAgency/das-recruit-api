@@ -1,4 +1,3 @@
-using System.Data;
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -22,59 +21,58 @@ public class VacancyValidator : AbstractValidator<Vacancy>
     private void ValidateVacancy(IProhibitedContentRepository profanityListProvider,
         IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
-        RuleFor(x => x.Title).VacancyTitleCheck(profanityListProvider);
-        RuleFor(x => x.Wage).VacancyWageCheck();
+        RuleFor(x => x.Title).VacancyTitleValidation(profanityListProvider);
+        RuleFor(x => x.Wage).VacancyWageValidation();
         When(x => x.Wage != null, () =>
         {
-            RuleFor(x => x.Wage).VacancyDurationCheck();
-            RuleFor(x => x.Wage!.WorkingWeekDescription).VacancyWorkingWeekCheck(profanityListProvider);
-            RuleFor(x => x.Wage!.WeeklyHours).VacancyWorkingHoursCheck();
-            RuleFor(x=>x.Wage).VacancyWageFieldsCheck(htmlSanitizerService, profanityListProvider);
+            RuleFor(x => x.Wage).VacancyDurationValidation();
+            RuleFor(x => x.Wage!.WorkingWeekDescription).VacancyWorkingWeekValidation(profanityListProvider);
+            RuleFor(x => x.Wage!.WeeklyHours).VacancyWorkingHoursValidation();
+            RuleFor(x=>x.Wage).VacancyWageFieldsValidation(htmlSanitizerService, profanityListProvider);
         });
-        RuleFor(x => x).ValidateOrganisationCheck(profanityListProvider);
-        RuleFor(x => x.NumberOfPositions).VacancyNumberOfPositionsCheck();
-        RuleFor(x => x.ShortDescription).VacancyShortDescriptionCheck(profanityListProvider, htmlSanitizerService);
+        RuleFor(x => x).VacancyOrganisationValidation(profanityListProvider);
+        RuleFor(x => x.NumberOfPositions).VacancyNumberOfPositionsValidation();
+        RuleFor(x => x.ShortDescription).VacancyShortDescriptionValidation(profanityListProvider, htmlSanitizerService);
         RuleFor(x => x.ClosingDate).VacancyClosingDateCheck(timeProvider);
-        RuleFor(x => x.StartDate).VacancyStartDateCheck();
-        RuleFor(x => x.ProgrammeId).VacancyProgrammeIdCheck();
+        RuleFor(x => x.StartDate).VacancyStartDateValidation();
+        RuleFor(x => x.ProgrammeId).VacancyProgrammeIdValidation();
         When(x=> x.ApprenticeshipType != ApprenticeshipTypes.Foundation,()=>
         {
-            RuleFor(x => x.Skills).VacancySkillsCheck(profanityListProvider);
+            RuleFor(x => x.Skills).VacancySkillsValidation(profanityListProvider);
         });
         When(x => x.ApprenticeshipType is ApprenticeshipTypes.Standard or null && x.HasOptedToAddQualifications is true, () =>
         {
-            RuleFor(x => x.Qualifications).VacancyQualificationCheck(profanityListProvider);
+            RuleFor(x => x.Qualifications).VacancyQualificationValidation(profanityListProvider);
         });
-        RuleFor(x => x.Description).VacancyDescriptionCheck(profanityListProvider, htmlSanitizerService);
+        RuleFor(x => x.Description).VacancyDescriptionValidation(profanityListProvider, htmlSanitizerService);
         When(x => !string.IsNullOrEmpty(x.AdditionalQuestion1) && x.ApplicationMethod != ApplicationMethod.ThroughExternalApplicationSite, () =>
         {
-            RuleFor(x=>x.AdditionalQuestion1)!.ValidateAdditionalQuestionCheck(profanityListProvider, VacancyRuleSet.AdditionalQuestion1);
+            RuleFor(x=>x.AdditionalQuestion1)!.ValidateAdditionalQuestionValidator(profanityListProvider, VacancyRuleSet.AdditionalQuestion1);
         });
         When(x => !string.IsNullOrEmpty(x.AdditionalQuestion2) && x.ApplicationMethod != ApplicationMethod.ThroughExternalApplicationSite, () =>
         {
-            RuleFor(x=>x.AdditionalQuestion2)!.ValidateAdditionalQuestionCheck(profanityListProvider, VacancyRuleSet.AdditionalQuestion2);
+            RuleFor(x=>x.AdditionalQuestion2)!.ValidateAdditionalQuestionValidator(profanityListProvider, VacancyRuleSet.AdditionalQuestion2);
         });
         When(x => !string.IsNullOrEmpty(x.TrainingDescription), () =>
         {
-            RuleFor(x=>x.TrainingDescription).VacancyTrainingDescriptionCheck(profanityListProvider, htmlSanitizerService);
+            RuleFor(x=>x.TrainingDescription).VacancyTrainingDescriptionValidation(profanityListProvider, htmlSanitizerService);
         });
         When(x => !string.IsNullOrEmpty(x.AdditionalTrainingDescription), () =>
         {
-            RuleFor(x=>x.AdditionalTrainingDescription).VacancyAdditionalTrainingInformationCheck(profanityListProvider, htmlSanitizerService);
+            RuleFor(x=>x.AdditionalTrainingDescription).VacancyAdditionalTrainingInformationValidation(profanityListProvider, htmlSanitizerService);
         });
-        RuleFor(x=>x.OutcomeDescription).VacancyOutcomeDescriptionCheck(profanityListProvider, htmlSanitizerService);
-        RuleFor(x => x).ValidationApplicationMethod(profanityListProvider, externalWebsiteHealthCheckService);
+        RuleFor(x=>x.OutcomeDescription).VacancyOutcomeDescriptionValidation(profanityListProvider, htmlSanitizerService);
+        RuleFor(x => x).VacancyApplicationMethodValidation(profanityListProvider, externalWebsiteHealthCheckService);
         When(x => x.Contact != null, () =>
         {
-            RuleFor(x => x.Contact).CheckContactDetail(profanityListProvider);    
+            RuleFor(x => x.Contact).VacancyContactDetailValidation(profanityListProvider);    
         });
-        RuleFor(x=>x.ThingsToConsider).VacancyThingsToConsiderCheck(profanityListProvider, htmlSanitizerService);
+        RuleFor(x=>x.ThingsToConsider).VacancyThingsToConsiderValidation(profanityListProvider, htmlSanitizerService);
         RuleFor(x => x.EmployerDescription)
-            .VacancyEmployerInformationCheck(htmlSanitizerService, profanityListProvider);
-        RuleFor(x => x.EmployerWebsiteUrl).ValidateEmployerWebsiteCheck(externalWebsiteHealthCheckService);
-        RuleFor(x => x.TrainingProvider)!.VacancyTrainingProviderCheck();
+            .VacancyEmployerInformationValidation(htmlSanitizerService, profanityListProvider);
+        RuleFor(x => x.EmployerWebsiteUrl).VacancyEmployerWebsiteValidation(externalWebsiteHealthCheckService);
+        RuleFor(x => x.TrainingProvider)!.VacancyTrainingProviderValidation();
     }
-    
     
     private void ValidateVacancyCrossFieldRules(IMinimumWageProvider minimumWageProvider)
     {
@@ -137,8 +135,6 @@ public enum VacancyRuleSet : long
     EmployerNameOption = 1L << 27,
     LegalEntityName = 1L << 28,
     TradingName = 1L << 29,
-    WorkExperience = 1L << 30,
-    RouteId = 1L << 31,
     AdditionalQuestion1 = 1L << 32,
     AdditionalQuestion2 = 1L << 33,
     CompetitiveWage = 1L << 34,

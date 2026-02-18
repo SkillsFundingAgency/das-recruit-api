@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyStartDateExtension
 {
-    public static void VacancyStartDateCheck(this IRuleBuilderInitial<Vacancy, DateTime?> rule)
+    public static void VacancyStartDateValidation(this IRuleBuilderInitial<Vacancy, DateTime?> rule)
     {
         rule
             .NotNull()

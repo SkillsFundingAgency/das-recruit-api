@@ -7,7 +7,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyTitleExtension
 {
-    public static void VacancyTitleCheck(this IRuleBuilderInitial<Vacancy, string?> rule,
+    public static void VacancyTitleValidation(this IRuleBuilderInitial<Vacancy, string?> rule,
         IProhibitedContentRepository profanityListProvider)
     {
         rule.Cascade(CascadeMode.Stop)

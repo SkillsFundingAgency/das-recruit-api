@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyQualificationExtension
 {
-    public static void VacancyQualificationCheck(this IRuleBuilderInitial<Vacancy, List<Qualification>?> rule, IProhibitedContentRepository profanityListProvider)
+    public static void VacancyQualificationValidation(this IRuleBuilderInitial<Vacancy, List<Qualification>?> rule, IProhibitedContentRepository profanityListProvider)
     {
         rule
             .Must(q => q is { Count: > 0 })
@@ -19,7 +19,7 @@ public static class VacancyQualificationExtension
         {
             x.RuleForEach(q => q)
                 .NotEmpty()
-                .SetValidator(new VacancyQualificationValidator(profanityListProvider))
+                .SetValidator(new VacancyQualificationValidation(profanityListProvider))
                 .WithState(_ => VacancyRuleSet.Qualifications);
         }).RunCondition(VacancyRuleSet.Qualifications);
         

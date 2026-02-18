@@ -7,7 +7,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyContactExtension
 {
-    public static void CheckContactDetail(this IRuleBuilderInitial<Vacancy, ContactDetail?> rule,
+    public static void VacancyContactDetailValidation(this IRuleBuilderInitial<Vacancy, ContactDetail?> rule,
         IProhibitedContentRepository profanityListProvider)
     {
         rule.ChildRules(r =>

@@ -7,13 +7,12 @@ using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.VacancyServices.Wage;
-using WageType = SFA.DAS.Recruit.Api.Domain.Enums.WageType;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyWageExtension
 {
-    public static void VacancyWageCheck(this IRuleBuilderInitial<Vacancy, Wage?> rule)
+    public static void VacancyWageValidation(this IRuleBuilderInitial<Vacancy, Wage?> rule)
     {
         rule
             .NotNull()
@@ -23,7 +22,7 @@ public static class VacancyWageExtension
             .RunCondition(VacancyRuleSet.Wage);
     }
 
-    public static void VacancyWageFieldsCheck(this IRuleBuilderInitial<Vacancy, Wage?> rule, IHtmlSanitizerService htmlSanitizerService, IProhibitedContentRepository profanityListProvider)
+    public static void VacancyWageFieldsValidation(this IRuleBuilderInitial<Vacancy, Wage?> rule, IHtmlSanitizerService htmlSanitizerService, IProhibitedContentRepository profanityListProvider)
     {
         rule
             .ChildRules(x =>
@@ -76,7 +75,7 @@ public static class VacancyWageExtension
                 .RunCondition(VacancyRuleSet.Wage);
     }
     
-    public static void VacancyDurationCheck(this IRuleBuilderInitial<Vacancy, Wage?> rule)
+    public static void VacancyDurationValidation(this IRuleBuilderInitial<Vacancy, Wage?> rule)
     {
         const int minimumVacancyDurationInMonths = 8;
         
@@ -150,7 +149,7 @@ public static class VacancyWageExtension
             .RunCondition(VacancyRuleSet.Duration);
     }
 
-    public static void VacancyWorkingWeekCheck(this IRuleBuilderInitial<Vacancy, string?> rule, IProhibitedContentRepository profanityListProvider)
+    public static void VacancyWorkingWeekValidation(this IRuleBuilderInitial<Vacancy, string?> rule, IProhibitedContentRepository profanityListProvider)
     {
         rule
             .Cascade(CascadeMode.Stop)
@@ -173,7 +172,7 @@ public static class VacancyWageExtension
             .RunCondition(VacancyRuleSet.WorkingWeekDescription);
     }
 
-    public static void VacancyWorkingHoursCheck(this IRuleBuilderInitial<Vacancy, decimal?> rule)
+    public static void VacancyWorkingHoursValidation(this IRuleBuilderInitial<Vacancy, decimal?> rule)
     {
         rule
             .NotEmpty()

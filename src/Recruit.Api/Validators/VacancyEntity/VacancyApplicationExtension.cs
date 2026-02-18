@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyApplicationExtension
 {
-    public static void ValidationApplicationMethod(this IRuleBuilderInitial<Vacancy, Vacancy> rule, IProhibitedContentRepository profanityListProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    public static void VacancyApplicationMethodValidation(this IRuleBuilderInitial<Vacancy, Vacancy> rule, IProhibitedContentRepository profanityListProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
         rule.ChildRules(c =>
         {
@@ -42,13 +42,13 @@ public static class VacancyApplicationExtension
 
             c.When(x => x.ApplicationMethod == ApplicationMethod.ThroughExternalApplicationSite, () =>
             {
-                c.RuleFor(x=>x.ApplicationUrl!).ValidateApplicationUrl(externalWebsiteHealthCheckService);
-                c.RuleFor(x=>x.ApplicationInstructions!).ValidateApplicationInstructions(profanityListProvider);
+                c.RuleFor(x=>x.ApplicationUrl!).VacancyApplicationUrlValidation(externalWebsiteHealthCheckService);
+                c.RuleFor(x=>x.ApplicationInstructions!).VacancyApplicationInstructionsValidation(profanityListProvider);
             });
         });
         
     }
-    private static void ValidateApplicationUrl(this IRuleBuilderInitial<Vacancy, string> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    private static void VacancyApplicationUrlValidation(this IRuleBuilderInitial<Vacancy, string> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
         rule
             .Cascade(CascadeMode.Stop)
@@ -71,7 +71,7 @@ public static class VacancyApplicationExtension
             .RunCondition(VacancyRuleSet.ApplicationMethod);
     }
 
-    private static void ValidateApplicationInstructions(this IRuleBuilderInitial<Vacancy, string> rule, IProhibitedContentRepository profanityListProvider)
+    private static void VacancyApplicationInstructionsValidation(this IRuleBuilderInitial<Vacancy, string> rule, IProhibitedContentRepository profanityListProvider)
     {
         rule
             .MaximumLength(500)

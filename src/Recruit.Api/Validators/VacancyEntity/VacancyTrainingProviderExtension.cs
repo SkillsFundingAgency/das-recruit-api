@@ -5,7 +5,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyTrainingProviderExtension
 {
-    public static void VacancyTrainingProviderCheck(this IRuleBuilderInitial<Vacancy, TrainingProvider> rule)
+    public static void VacancyTrainingProviderValidation(this IRuleBuilderInitial<Vacancy, TrainingProvider> rule)
     {
         rule.Cascade(CascadeMode.Stop)
             .NotNull()
