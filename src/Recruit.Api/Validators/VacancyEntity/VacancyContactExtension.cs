@@ -2,12 +2,13 @@ using FluentValidation;
 using SFA.DAS.InputValidation.Fluent.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyContactExtension
 {
-    public static void VacancyContactDetailValidation(this IRuleBuilderInitial<Vacancy, ContactDetail?> rule,
+    public static void VacancyContactDetailValidation(this IRuleBuilderInitial<PutVacancyRequest, ContactDetail?> rule,
         IProhibitedContentRepository profanityListProvider)
     {
         rule.ChildRules(r =>

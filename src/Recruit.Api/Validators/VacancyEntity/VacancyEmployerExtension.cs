@@ -3,12 +3,13 @@ using SFA.DAS.InputValidation.Fluent.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyEmployerExtension
 {
-    public static void VacancyOrganisationValidation(this IRuleBuilderInitial<Vacancy, Vacancy> rule, IProhibitedContentRepository profanityListProvider)
+    public static void VacancyOrganisationValidation(this IRuleBuilderInitial<PutVacancyRequest, PutVacancyRequest> rule, IProhibitedContentRepository profanityListProvider)
     {
         rule.ChildRules(c =>
         {
@@ -158,7 +159,7 @@ public static class VacancyEmployerExtension
         });
     }
 
-    public static void VacancyEmployerWebsiteValidation(this IRuleBuilderInitial<Vacancy, string?> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    public static void VacancyEmployerWebsiteValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
         rule
         .Cascade(CascadeMode.Stop)                

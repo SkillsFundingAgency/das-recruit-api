@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,10 +10,11 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenShortDescriptionFieldsAreValid()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            ShortDescription = new string('a', 60)
+            ShortDescription = new string('a', 60),
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ShortDescription);
@@ -25,10 +27,11 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [TestCase("")]
     public void ShortDescriptionMustHaveAValue(string? shortDescriptionValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            ShortDescription = shortDescriptionValue
+            ShortDescription = shortDescriptionValue,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ShortDescription);
@@ -43,10 +46,11 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenShortDescriptionAreValid()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            ShortDescription = new string('a', 350)
+            ShortDescription = new string('a', 350),
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ShortDescription);
@@ -58,10 +62,11 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [Test]
     public void ShortDescriptionMustNotBeMoreThan350Characters()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            ShortDescription = new string('a', 351)
+            ShortDescription = new string('a', 351),
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ShortDescription);
@@ -76,10 +81,11 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [Test]
     public void ShortDescriptionMustNotBeLessThan50Characters()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            ShortDescription = new string('a', 49)
+            ShortDescription = new string('a', 49),
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ShortDescription);
@@ -97,10 +103,11 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void ShortDescriptionMustContainValidCharacters(string invalidCharacter, bool expectedResult)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            ShortDescription = new String('a', 30) + invalidCharacter + new String('b', 30)
+            ShortDescription = new string('a', 30) + invalidCharacter + new String('b', 30),
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ShortDescription);
@@ -125,10 +132,11 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [TestCase("some text balderdash random text random text random text random text")]
     public void ShortDescription_Should_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy()
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            ShortDescription = freeText
+            ShortDescription = freeText,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ShortDescription);
@@ -144,10 +152,11 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [TestCase("some textbalderdash random text random text random text random text")]
     public void ShortDescription_Should_Not_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            ShortDescription = freeText
+            ShortDescription = freeText,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ShortDescription);

@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,10 +10,11 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [Test]
     public void NoErrorsWhenDescriptionFieldIsValid()
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             AdditionalTrainingDescription = "a valid description",
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingDescription | VacancyRuleSet.AdditionalTrainingDescription);
@@ -24,10 +26,11 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [Test]
     public void DescriptionMustNotBeLongerThanMaxLength()
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             AdditionalTrainingDescription = new String('a', 4001),
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingDescription | VacancyRuleSet.AdditionalTrainingDescription);
@@ -44,10 +47,11 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [TestCase("<p>`</p>", false)]
     public void DescriptionMustContainValidHtml(string actual, bool expectedResult)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             AdditionalTrainingDescription = actual,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingDescription | VacancyRuleSet.AdditionalTrainingDescription);
@@ -72,10 +76,11 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [TestCase("some text balderdash")]
     public void Description_Should_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy()
+        var vacancy = new PutVacancyRequest
         {
             AdditionalTrainingDescription = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingDescription | VacancyRuleSet.AdditionalTrainingDescription);
@@ -92,10 +97,11 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [TestCase("some textbalderdash")]
     public void Description_Should_Not_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy()
+        var vacancy = new PutVacancyRequest
         {
             AdditionalTrainingDescription = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalTrainingDescription);

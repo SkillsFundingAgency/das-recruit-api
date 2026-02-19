@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -12,10 +13,11 @@ public class WhenValidatingEmployerWebsite: VacancyValidationTestsBase
     [TestCase("https://www.company.com")]
     public void NoErrorsWhenEmployerWebsiteUrlIsValid(string? url)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerWebsiteUrl = url,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerWebsiteUrl);
@@ -27,10 +29,11 @@ public class WhenValidatingEmployerWebsite: VacancyValidationTestsBase
     [Test]
     public void EmployerWebsiteUrlMustBe100CharactersOrLess()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerWebsiteUrl = "http://www.company.com".PadRight(101, 'w'),
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerWebsiteUrl);
@@ -54,10 +57,11 @@ public class WhenValidatingEmployerWebsite: VacancyValidationTestsBase
     [TestCase("/apply.aspx")]
     public void EmployerWebsiteUrlMustBeAValidWebAddress(string invalidUrl)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerWebsiteUrl = invalidUrl,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerWebsiteUrl);

@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
@@ -13,7 +14,7 @@ public class WhenValidatingFixedWage : VacancyValidationTestsBase
         var startDate = DateTime.UtcNow.Date;
         var minimumWageAmount = Convert.ToDecimal(minimumWageTestValue);
 
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             StartDate = startDate,
             Wage = new Wage
@@ -22,7 +23,8 @@ public class WhenValidatingFixedWage : VacancyValidationTestsBase
                 FixedWageYearlyAmount = Convert.ToDecimal(yearlyWageAmcountValue),
                 WeeklyHours = hoursPerWeekValue
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         MinimumWageProvider.Setup(x => 
@@ -41,7 +43,7 @@ public class WhenValidatingFixedWage : VacancyValidationTestsBase
         var startDate = DateTime.UtcNow.Date;
         var minimumWageAmount = Convert.ToDecimal(minimumWageTestValue);
 
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             StartDate = startDate,
             Wage = new Wage
@@ -50,7 +52,8 @@ public class WhenValidatingFixedWage : VacancyValidationTestsBase
                 FixedWageYearlyAmount = yearlyWageAmcountValue != null ? Convert.ToDecimal(yearlyWageAmcountValue) : default(decimal?),
                 WeeklyHours = hoursPerWeekValue
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         MinimumWageProvider.Setup(x =>

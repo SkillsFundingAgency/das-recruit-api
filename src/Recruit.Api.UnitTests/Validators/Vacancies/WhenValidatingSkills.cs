@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,12 +10,14 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenSkillsAreValid()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             Skills = 
             [
                 new string('a', 30)
             ],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Skills);
@@ -26,9 +29,11 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [TestCaseSource(nameof(NullOrZeroSkillCollection))]
     public void SkillsCollectionMustNotBeNullOrHaveZeroCount(List<string> skills)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             Skills = skills,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Skills);
@@ -40,18 +45,20 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
         result.Errors[0].RuleId.Should().Be((long)VacancyRuleSet.Skills);
     }
 
-    public static IEnumerable<object[]> NullOrZeroSkill =>
+    private static IEnumerable<object[]> NullOrZeroSkill =>
         new List<object[]> {
-            new object[] { new List<string> { null } },
+            new object[] { new List<string?> { null } },
             new object[] { new List<string> { string.Empty } },
         };
 
     [TestCaseSource(nameof(NullOrZeroSkill))]
-    public void SkillMustNotBeEmpty(List<string> skills)
+    public void SkillMustNotBeEmpty(List<string?> skills)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             Skills = skills,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Skills);
@@ -66,11 +73,14 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [Test]
     public void SkillsMustNotContainInvalidCharacters()
     {
-        var vacancy = new Vacancy {
-            Skills = new List<string> {
+        var vacancy = new PutVacancyRequest 
+        {
+            Skills = new List<string> 
+            {
                 "<"
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Skills);
@@ -85,11 +95,14 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [Test]
     public void SkillsMustNotBeGreaterThanMaxLength()
     {
-        var vacancy = new Vacancy {
-            Skills = new List<string> {
+        var vacancy = new PutVacancyRequest 
+        {
+            Skills = new List<string> 
+            {
                 new string('a', 31)
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Provider
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Skills);
@@ -107,11 +120,14 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void OutcomeDescription_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy() {
-            Skills = new List<string> {
+        var vacancy = new PutVacancyRequest 
+        {
+            Skills = new List<string> 
+            {
                 freeText
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Provider
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Skills);
@@ -127,11 +143,14 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void OutcomeDescription_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy() {
-            Skills = new List<string> {
+        var vacancy = new PutVacancyRequest 
+        {
+            Skills = new List<string> 
+            {
                 freeText
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Provider
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Skills);
@@ -141,10 +160,12 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [Test]
     public void Skills_Are_Not_Required_For_Foundation_Apprenticeships()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             ApprenticeshipType = ApprenticeshipTypes.Foundation,
             Skills = null,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Provider
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Skills);

@@ -1,11 +1,12 @@
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyTrainingProviderExtension
 {
-    public static void VacancyTrainingProviderValidation(this IRuleBuilderInitial<Vacancy, TrainingProvider> rule)
+    public static void VacancyTrainingProviderValidation(this IRuleBuilderInitial<PutVacancyRequest, TrainingProvider> rule)
     {
         rule.Cascade(CascadeMode.Stop)
             .NotNull()

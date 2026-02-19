@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,10 +10,11 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenEmployerDescriptionFieldIsValid()
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             EmployerDescription = "a valid description",
-            Status = VacancyStatus.Draft 
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerDescription);
@@ -25,10 +27,11 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [TestCase("")]
     public void DescriptionMustNotBeEmpty(string? description)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             EmployerDescription = description,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerDescription);
@@ -43,10 +46,11 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [Test]
     public void EmployerDescriptionMustNotBeLongerThanMaxLength()
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
-            EmployerDescription = new String('a', 4001),
-            Status = VacancyStatus.Draft
+            EmployerDescription = new string('a', 4001),
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerDescription);
@@ -63,10 +67,11 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void EmployerDescriptionMustContainValidCharacters(string invalidChar, bool expectedResult)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             EmployerDescription = invalidChar,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerDescription);
@@ -91,10 +96,11 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void EmployerDescription_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             Description = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Description);
@@ -110,10 +116,11 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void EmployerDescription_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             Description = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Description);

@@ -3,12 +3,13 @@ using SFA.DAS.InputValidation.Fluent.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyApplicationExtension
 {
-    public static void VacancyApplicationMethodValidation(this IRuleBuilderInitial<Vacancy, Vacancy> rule, IProhibitedContentRepository profanityListProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    public static void VacancyApplicationMethodValidation(this IRuleBuilderInitial<PutVacancyRequest, PutVacancyRequest> rule, IProhibitedContentRepository profanityListProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
         rule.ChildRules(c =>
         {
@@ -48,7 +49,7 @@ public static class VacancyApplicationExtension
         });
         
     }
-    private static void VacancyApplicationUrlValidation(this IRuleBuilderInitial<Vacancy, string> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    private static void VacancyApplicationUrlValidation(this IRuleBuilderInitial<PutVacancyRequest, string> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
     {
         rule
             .Cascade(CascadeMode.Stop)
@@ -71,7 +72,7 @@ public static class VacancyApplicationExtension
             .RunCondition(VacancyRuleSet.ApplicationMethod);
     }
 
-    private static void VacancyApplicationInstructionsValidation(this IRuleBuilderInitial<Vacancy, string> rule, IProhibitedContentRepository profanityListProvider)
+    private static void VacancyApplicationInstructionsValidation(this IRuleBuilderInitial<PutVacancyRequest, string> rule, IProhibitedContentRepository profanityListProvider)
     {
         rule
             .MaximumLength(500)

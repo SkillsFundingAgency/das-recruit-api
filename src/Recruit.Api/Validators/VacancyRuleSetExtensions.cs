@@ -1,13 +1,14 @@
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.Validators;
 
 public static class VacancyRuleSetExtensions
 {
-    internal static void RunCondition<T>(this IRuleBuilderOptions<Vacancy, T> context, VacancyRuleSet condition)
+    internal static void RunCondition<T>(this IRuleBuilderOptions<PutVacancyRequest, T> context, VacancyRuleSet condition)
     {
         context.Configure(c=>c.ApplyCondition(x => x.CanRunValidator(condition)));
     }
@@ -22,7 +23,7 @@ public static class VacancyRuleSetExtensions
         return rule.SetValidator(new ProfanityCheckValidator<T, string>(profanityListProvider));
     }
     
-    internal static IRuleBuilderInitial<Vacancy, T> RunCondition<T>(this IRuleBuilderInitial<Vacancy, T> context, VacancyRuleSet condition)
+    internal static IRuleBuilderInitial<PutVacancyRequest, T> RunCondition<T>(this IRuleBuilderInitial<PutVacancyRequest, T> context, VacancyRuleSet condition)
     {
         return context.Configure(c=>c.ApplyCondition(x => x.CanRunValidator(condition)));
     }

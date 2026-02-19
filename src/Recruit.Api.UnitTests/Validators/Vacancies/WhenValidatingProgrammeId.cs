@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,10 +10,11 @@ public class WhenValidatingProgrammeId : VacancyValidationTestsBase
     [Test]
     public void ErrorWhenProgrammeIsNull()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             ProgrammeId = null,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingProgramme);
@@ -27,14 +29,15 @@ public class WhenValidatingProgrammeId : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenProgrammeIdIsValid()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             ProgrammeId = "123",
             TrainingProvider = new TrainingProvider
             {
                 Ukprn = 10000000
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingProgramme);
@@ -49,10 +52,11 @@ public class WhenValidatingProgrammeId : VacancyValidationTestsBase
     [TestCase(null)]
     public void IdMustHaveAValue(string? idValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             ProgrammeId = idValue,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingProgramme);

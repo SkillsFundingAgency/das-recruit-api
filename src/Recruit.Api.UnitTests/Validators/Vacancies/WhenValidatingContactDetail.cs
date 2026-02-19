@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -14,9 +15,10 @@ public class WhenValidatingContactDetail : VacancyValidationTestsBase
     [TestCase("joebloggs@company.com",VacancyRuleSet.ProviderContactDetails)]
     public void NoErrorsWhenEmployerContactEmailIsValid(string? emailAddress, VacancyRuleSet ruleSet)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Contact = new ContactDetail { Email = emailAddress },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, ruleSet);
@@ -28,9 +30,10 @@ public class WhenValidatingContactDetail : VacancyValidationTestsBase
     [Test]
     public void EmployerContactEmailMustBe100CharactersOrLess()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Contact = new ContactDetail { Email = "name@".PadRight(101, 'w') },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerContactDetails);
@@ -46,9 +49,10 @@ public class WhenValidatingContactDetail : VacancyValidationTestsBase
     [TestCase("<p>`</p>")]
     public void EmployerContactEmailMustNotContainInvalidCharacters(string invalidChar)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Contact = new ContactDetail { Email = invalidChar },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerContactDetails);
@@ -63,9 +67,10 @@ public class WhenValidatingContactDetail : VacancyValidationTestsBase
     [Test]
     public void EmployerContactEmailMustBeValidEmailFormat()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Contact = new ContactDetail { Email = "joe" },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerContactDetails);

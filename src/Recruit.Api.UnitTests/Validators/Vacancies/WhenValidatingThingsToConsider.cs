@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -11,10 +12,11 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [TestCase("considerations")]
     public void NoErrorsWhenThingsToConsiderIsValid(string? text)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             ThingsToConsider = text,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ThingsToConsider);
@@ -26,10 +28,11 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [Test]
     public void ThingsToConsiderMustBe4000CharactersOrLess()
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             ThingsToConsider = "name".PadRight(4001, 'w'),
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ThingsToConsider);
@@ -45,10 +48,11 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void ThingsToConsiderMustNotContainInvalidCharacters(string invalidChar, bool expectedResult)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             ThingsToConsider = invalidChar,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ThingsToConsider);
@@ -71,10 +75,11 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void ThingsToConsider_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             ThingsToConsider = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ThingsToConsider);
@@ -90,10 +95,11 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void ThingsToConsider_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             ThingsToConsider = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ThingsToConsider);

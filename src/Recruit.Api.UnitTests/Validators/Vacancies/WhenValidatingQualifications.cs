@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
@@ -20,10 +21,12 @@ public class WhenValidatingQualifications : VacancyValidationTestsBase
     [Test]
     public void HasNoErrorWhenOptedNotToAddQualifications()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             Qualifications = null,
             HasOptedToAddQualifications = false,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Qualifications);
@@ -42,10 +45,12 @@ public class WhenValidatingQualifications : VacancyValidationTestsBase
     [TestCaseSource(nameof(NullOrZeroQualificationCollection))]
     public void QualificationsMustNotBeNullOrZeroCount(List<Qualification> qualifications)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             Qualifications = qualifications,
             HasOptedToAddQualifications = true,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Qualifications);
@@ -153,10 +158,11 @@ public class WhenValidatingQualifications : VacancyValidationTestsBase
         result.Errors[0].RuleId.Should().Be((long)VacancyRuleSet.Qualifications);
     }
 
-    private Vacancy GetVacancy(string qualificationType = "Other", string subject = "subject",
+    private PutVacancyRequest GetVacancy(string qualificationType = "Other", string subject = "subject",
         string grade = "grade", QualificationWeighting? weighting = QualificationWeighting.Desired)
     {
-        var qualification = new Qualification {
+        var qualification = new Qualification 
+        {
             QualificationType = qualificationType,
             Subject = subject,
             Grade = grade,
@@ -164,10 +170,12 @@ public class WhenValidatingQualifications : VacancyValidationTestsBase
             OtherQualificationName = "Other qualification name"
         };
 
-        return new Vacancy {
+        return new PutVacancyRequest 
+        {
             Qualifications = [qualification],
             HasOptedToAddQualifications = true,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
     }
 }

@@ -6,13 +6,14 @@ using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.VacancyServices.Wage;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyWageExtension
 {
-    public static void VacancyWageValidation(this IRuleBuilderInitial<Vacancy, Wage?> rule)
+    public static void VacancyWageValidation(this IRuleBuilderInitial<PutVacancyRequest, Wage?> rule)
     {
         rule
             .NotNull()
@@ -22,7 +23,7 @@ public static class VacancyWageExtension
             .RunCondition(VacancyRuleSet.Wage);
     }
 
-    public static void VacancyWageFieldsValidation(this IRuleBuilderInitial<Vacancy, Wage?> rule, IHtmlSanitizerService htmlSanitizerService, IProhibitedContentRepository profanityListProvider)
+    public static void VacancyWageFieldsValidation(this IRuleBuilderInitial<PutVacancyRequest, Wage?> rule, IHtmlSanitizerService htmlSanitizerService, IProhibitedContentRepository profanityListProvider)
     {
         rule
             .ChildRules(x =>
@@ -75,7 +76,7 @@ public static class VacancyWageExtension
                 .RunCondition(VacancyRuleSet.Wage);
     }
     
-    public static void VacancyDurationValidation(this IRuleBuilderInitial<Vacancy, Wage?> rule)
+    public static void VacancyDurationValidation(this IRuleBuilderInitial<PutVacancyRequest, Wage?> rule)
     {
         const int minimumVacancyDurationInMonths = 8;
         
@@ -149,7 +150,7 @@ public static class VacancyWageExtension
             .RunCondition(VacancyRuleSet.Duration);
     }
 
-    public static void VacancyWorkingWeekValidation(this IRuleBuilderInitial<Vacancy, string?> rule, IProhibitedContentRepository profanityListProvider)
+    public static void VacancyWorkingWeekValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule, IProhibitedContentRepository profanityListProvider)
     {
         rule
             .Cascade(CascadeMode.Stop)
@@ -172,7 +173,7 @@ public static class VacancyWageExtension
             .RunCondition(VacancyRuleSet.WorkingWeekDescription);
     }
 
-    public static void VacancyWorkingHoursValidation(this IRuleBuilderInitial<Vacancy, decimal?> rule)
+    public static void VacancyWorkingHoursValidation(this IRuleBuilderInitial<PutVacancyRequest, decimal?> rule)
     {
         rule
             .NotEmpty()
@@ -189,9 +190,9 @@ public static class VacancyWageExtension
             .WithState(_ => VacancyRuleSet.WeeklyHours)
             .RunCondition(VacancyRuleSet.WeeklyHours);
     }
-    public static IRuleBuilderInitial<Vacancy, Vacancy> FixedWageMustBeGreaterThanApprenticeshipMinimumWage(this IRuleBuilder<Vacancy, Vacancy> ruleBuilder, IMinimumWageProvider minimumWageService)
+    public static IRuleBuilderInitial<PutVacancyRequest, PutVacancyRequest> FixedWageMustBeGreaterThanApprenticeshipMinimumWage(this IRuleBuilder<PutVacancyRequest, PutVacancyRequest> ruleBuilder, IMinimumWageProvider minimumWageService)
     {
-        return (IRuleBuilderInitial<Vacancy, Vacancy>)ruleBuilder.Custom((vacancy, context) =>
+        return (IRuleBuilderInitial<PutVacancyRequest, PutVacancyRequest>)ruleBuilder.Custom((vacancy, context) =>
         {
             var wagePeriod = minimumWageService.GetWagePeriod(vacancy.StartDate.Value);
 

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
@@ -66,4 +67,6 @@ public class PutVacancyRequest
     public List<ReviewFieldIndicator>? ProviderReviewFieldIndicators { get; init; }
     public string? SubmittedByUserId { get; init; }
     public string? ReviewRequestedByUserId { get; init; }
+    [JsonIgnore]
+    public bool CanExtendStartAndClosingDates => Status == VacancyStatus.Live && DeletedDate == null;
 }

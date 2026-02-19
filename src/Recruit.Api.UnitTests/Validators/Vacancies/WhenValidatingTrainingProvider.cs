@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,10 +10,11 @@ public class WhenValidatingTrainingProvider: VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenTrainingProviderUkprnIsValid()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             TrainingProvider = new TrainingProvider { Ukprn = 12345678 },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         //TODO FAI-2972
@@ -51,10 +53,11 @@ public class WhenValidatingTrainingProvider: VacancyValidationTestsBase
     [Test]
     public void ErrorIfTrainingProviderIsNull()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             TrainingProvider = null,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingProvider);
@@ -69,10 +72,11 @@ public class WhenValidatingTrainingProvider: VacancyValidationTestsBase
     [Test]
     public void EmptyUkprnNotAllowed()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             TrainingProvider = new TrainingProvider { Ukprn = null },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingProvider);
@@ -88,10 +92,11 @@ public class WhenValidatingTrainingProvider: VacancyValidationTestsBase
     [TestCase(123456789L)]
     public void TrainingProviderUkprnMustBe8Digits(long? ukprn)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             TrainingProvider = new TrainingProvider { Ukprn = ukprn },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.TrainingProvider);
@@ -102,5 +107,4 @@ public class WhenValidatingTrainingProvider: VacancyValidationTestsBase
         result.Errors[0].ErrorCode.Should().Be("99");
         result.Errors[0].RuleId.Should().Be((long)VacancyRuleSet.TrainingProvider);
     }
-    
 }

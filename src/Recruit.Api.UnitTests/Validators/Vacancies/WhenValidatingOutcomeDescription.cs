@@ -1,5 +1,5 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
-using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,9 +9,11 @@ public class WhenValidatingOutcomeDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenOutcomeDescriptionFieldIsValid()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             OutcomeDescription = "a valid description",
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.OutcomeDescription);
@@ -24,9 +26,11 @@ public class WhenValidatingOutcomeDescription : VacancyValidationTestsBase
     [TestCase("")]
     public void OutcomeDescriptionMustNotBeEmpty(string? outcomeDescription)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             OutcomeDescription = outcomeDescription,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.OutcomeDescription);
@@ -41,9 +45,11 @@ public class WhenValidatingOutcomeDescription : VacancyValidationTestsBase
     [Test]
     public void OutcomeDescriptionMustNotBeLongerThanMaxLength()
     {
-        var vacancy = new Vacancy {
-            OutcomeDescription = new String('a', 4001),
-            Status = VacancyStatus.Draft
+        var vacancy = new PutVacancyRequest 
+        {
+            OutcomeDescription = new string('a', 4001),
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.OutcomeDescription);
@@ -60,9 +66,11 @@ public class WhenValidatingOutcomeDescription : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void OutcomeDescriptionMustContainValidHtml(string actual, bool expectedResult)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             OutcomeDescription = actual,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.OutcomeDescription);
@@ -87,9 +95,11 @@ public class WhenValidatingOutcomeDescription : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void OutcomeDescription_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             OutcomeDescription = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.OutcomeDescription);
@@ -105,9 +115,11 @@ public class WhenValidatingOutcomeDescription : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void OutcomeDescription_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             OutcomeDescription = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.OutcomeDescription);

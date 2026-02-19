@@ -1,11 +1,12 @@
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyNumberOfPositionsExtension
 {
-    public static void VacancyNumberOfPositionsValidation(this IRuleBuilderInitial<Vacancy, int?> rule)
+    public static void VacancyNumberOfPositionsValidation(this IRuleBuilderInitial<PutVacancyRequest, int?> rule)
     {
         rule
             .Must(x => x is > 0)

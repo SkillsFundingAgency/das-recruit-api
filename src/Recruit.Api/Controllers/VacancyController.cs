@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
@@ -325,10 +326,17 @@ public class VacancyController : Controller
     public async Task<IResult> PutOne(
         [FromServices] IVacancyRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IValidator<PutVacancyRequest> validator,
         [FromRoute] Guid vacancyId,
         [FromBody] PutVacancyRequest request,
         CancellationToken cancellationToken)
     {
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return TypedResults.ValidationProblem(validationResult.ToDictionary());
+        }
+        
         var entity = request.ToDomain(vacancyId);
         
         // This lookup should eventually be removed once we've migrated away from Mongo

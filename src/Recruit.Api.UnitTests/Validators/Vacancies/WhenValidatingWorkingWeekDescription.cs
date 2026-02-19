@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,11 +10,12 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenWorkingWeekDescriptionValueIsValid()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = "This is a valid value"
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.WorkingWeekDescription);
@@ -26,11 +28,12 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [TestCase("")]
     public void WorkingWeekDescriptionMustHaveAValue(string? descriptionValue)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = descriptionValue
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.WorkingWeekDescription);
@@ -47,11 +50,12 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [TestCase(">")]
     public void WorkingWeekDescriptionMustContainValidCharacters(string invalidCharacter)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = new String('a', 50) + invalidCharacter + new String('a', 50)
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.WorkingWeekDescription);
@@ -67,11 +71,12 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [Test]
     public void WorkingWeekDescriptionMustBeLessThan250Characters()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = new string('a', 251)
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.WorkingWeekDescription);
@@ -90,11 +95,12 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void WorkingWeekDescription_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = freeText
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
         var result = Validator.Validate(vacancy, VacancyRuleSet.WorkingWeekDescription);
         result.HasErrors.Should().BeTrue();
@@ -110,11 +116,12 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void WorkingWeekDescription_ShouldFail_Not_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = freeText
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
         var result = Validator.Validate(vacancy, VacancyRuleSet.WorkingWeekDescription);
         result.HasErrors.Should().BeFalse();

@@ -2,12 +2,13 @@ using FluentValidation;
 using SFA.DAS.InputValidation.Fluent.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancySkillsExtension
 {
-    public static void VacancySkillsValidation(this IRuleBuilderInitial<Vacancy, List<string>?> rule, 
+    public static void VacancySkillsValidation(this IRuleBuilderInitial<PutVacancyRequest, List<string>?> rule, 
         IProhibitedContentRepository profanityListProvider)
     {
         rule

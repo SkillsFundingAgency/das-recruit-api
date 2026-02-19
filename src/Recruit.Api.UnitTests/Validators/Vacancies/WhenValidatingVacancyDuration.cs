@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -14,7 +15,7 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     public void NoErrorsWhenDurationFieldsAreValid(DurationUnit unitValue, int durationValue, string? weeklyHoursText = null)
     {
         decimal? weeklyHours = decimal.TryParse(weeklyHoursText, out decimal parsed) ? parsed : null;
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Wage = new Wage
             {
@@ -22,7 +23,8 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
                 Duration = 13,
                 WeeklyHours = weeklyHours
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Duration);
@@ -34,14 +36,15 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     [Test]
     public void DurationUnitMustHaveAValue()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Wage = new Wage
             {
                 DurationUnit = null,
                 Duration = 13
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Duration);
@@ -56,14 +59,15 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     [Test]
     public void DurationUnitMustHaveAValidValue()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Wage = new Wage
             {
                 DurationUnit = (DurationUnit)1000,
                 Duration = 13
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Duration);
@@ -78,14 +82,15 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     [Test]
     public void DurationMustHaveAValue()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Wage = new Wage
             {
                 DurationUnit = DurationUnit.Month,
                 Duration = null
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
         
         var result = Validator.Validate(vacancy, VacancyRuleSet.Duration);
@@ -100,14 +105,15 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     [TestCase(DurationUnit.Month, 7)]
     public void ApprenticeshipDurationMustBeAtLeast8Months(DurationUnit unitValue, int durationValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Wage = new Wage 
             {
                 DurationUnit = unitValue,
                 Duration = durationValue
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Duration);
@@ -132,7 +138,7 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     public void AnyApprenticeshipDurationMonthsMustHave30WeeklyHours(DurationUnit unitValue, int durationValue, string weeklyHoursText, bool hasErrors)
     {
         decimal? weeklyHours = decimal.TryParse(weeklyHoursText, out decimal parsed) ? parsed : null;
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             StartDate = new DateTime(2025,08,01),
             Wage = new Wage
@@ -141,7 +147,8 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
                 Duration = durationValue,
                 WeeklyHours = weeklyHours
             },
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
         int expectedNumberOfMonths = (int) Math.Ceiling(30 / vacancy.Wage.WeeklyHours.GetValueOrDefault() * 8);
 

@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -11,11 +12,13 @@ public class WhenValidatingExternalApplicationInstructions : VacancyValidationTe
     [TestCase("You can apply online or through post.")]
     public void NoErrorsWhenExternalApplicationInstructionsIsValid(string? instructions)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = "http://www.apply.com",
             ApplicationInstructions = instructions,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ApplicationMethod);
@@ -27,11 +30,13 @@ public class WhenValidatingExternalApplicationInstructions : VacancyValidationTe
     [Test]
     public void ExternalApplicationInstructionsMustBe500CharactersOrLess()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = "http://www.apply.com",
             ApplicationInstructions = "instructions".PadRight(501, 'w'),
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ApplicationMethod);
@@ -46,11 +51,13 @@ public class WhenValidatingExternalApplicationInstructions : VacancyValidationTe
     [TestCase("<p>`</p>")]
     public void ExternalApplicationInstructionsMustNotContainInvalidCharacters(string invalidChar)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = "http://www.apply.com",
             ApplicationInstructions = invalidChar,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ApplicationMethod);

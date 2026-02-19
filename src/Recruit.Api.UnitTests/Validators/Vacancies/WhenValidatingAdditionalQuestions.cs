@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -11,10 +12,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("")]
     public void NoErrorsWhenAdditionalQuestion1FieldIsValid(string text)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             AdditionalQuestion1 = text,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion2);
@@ -25,10 +27,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion1MustNotBeLongerThanMaxLength()
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             AdditionalQuestion1 = new string('?', 251 ),
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion1);
@@ -46,10 +49,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("some text balderdash?")]
     public void AdditionalQuestion1_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy()
+        var vacancy = new PutVacancyRequest
         {
             AdditionalQuestion1 = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion1);
@@ -65,10 +69,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("some textbalderdash?")]
     public void AdditionalQuestion1_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy()
+        var vacancy = new PutVacancyRequest
         {
             AdditionalQuestion1 = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion1);
@@ -78,10 +83,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion1_MustContainQuestionMark()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             AdditionalQuestion1 = "some text?",
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion1);
@@ -91,10 +97,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion1_ShouldHaveErrorsIfDoesNotHaveQuestionMark()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             AdditionalQuestion1 = "some text",
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion1);
@@ -109,10 +116,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("")]
     public void NoErrorsWhenAdditionalQuestion2FieldIsValid(string text)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             AdditionalQuestion2 = text,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion2);
@@ -124,10 +132,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion2MustNotBeLongerThanMaxLength()
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             AdditionalQuestion2 = new string('?', 251),
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion2);
@@ -145,10 +154,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("some text? balderdash")]
     public void AdditionalQuestion2ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy()
+        var vacancy = new PutVacancyRequest
         {
             AdditionalQuestion2 = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion2);
@@ -164,10 +174,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("some textbalderdash?")]
     public void AdditionalQuestion2_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             AdditionalQuestion2 = freeText,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion2);
@@ -177,10 +188,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion2_MustContainQuestionMark()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             AdditionalQuestion2 = "some text?",
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion2);
@@ -190,10 +202,11 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion2_ShouldHaveErrorsIfDoesNotHaveQuestionMark()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             AdditionalQuestion2 = "some text",
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.AdditionalQuestion2);

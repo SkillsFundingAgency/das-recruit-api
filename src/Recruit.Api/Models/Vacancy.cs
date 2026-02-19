@@ -66,7 +66,6 @@ public class Vacancy
     public List<ReviewFieldIndicator>? ProviderReviewFieldIndicators { get; init; }
     public Guid? SubmittedByUserId { get; init; }
     public Guid? ReviewRequestedByUserId { get; init; }
-    public bool CanExtendStartAndClosingDates => Status == VacancyStatus.Live && DeletedDate == null;
 }
 
 public class Address

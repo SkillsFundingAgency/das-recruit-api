@@ -5,6 +5,7 @@ using Moq.Protected;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 using ProhibitedContentType = SFA.DAS.Recruit.Api.Domain.Models.ProhibitedContentType;
@@ -49,12 +50,12 @@ public abstract class VacancyValidationTestsBase
         MinimumWageProvider = new Mock<IMinimumWageProvider>();
     }
 
-    protected IEntityValidator<Vacancy, VacancyRuleSet> Validator
+    protected IEntityValidator<PutVacancyRequest, VacancyRuleSet> Validator
     {
         get
         {
             var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object, _htmlSanitizerService, TimeProvider, _externalWebsiteHealthCheckService, MinimumWageProvider.Object);
-            return new EntityValidator<Vacancy, VacancyRuleSet>(fluentValidator);
+            return new EntityValidator<PutVacancyRequest, VacancyRuleSet>(fluentValidator);
         }
     }
 }

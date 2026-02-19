@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,11 +10,12 @@ public class WhenValidatingStartDate : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenStartDateIsValid()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             ClosingDate = DateTime.Today.AddDays(14), 
             StartDate = DateTime.UtcNow.AddDays(15),
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Provider
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.StartDate);
@@ -25,10 +27,11 @@ public class WhenValidatingStartDate : VacancyValidationTestsBase
     [Test]
     public void StartDateMustHaveAValue()
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             StartDate = null,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Provider
         };
         
         var result = Validator.Validate(vacancy, VacancyRuleSet.StartDate);
@@ -45,11 +48,12 @@ public class WhenValidatingStartDate : VacancyValidationTestsBase
     public void StartDateMustBeGreaterThanToday(int startDate)
     {
         var closingDate = DateTime.Today.AddDays(50);
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             ClosingDate = closingDate,
             StartDate = closingDate.AddDays(startDate),
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Provider
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.StartDate);

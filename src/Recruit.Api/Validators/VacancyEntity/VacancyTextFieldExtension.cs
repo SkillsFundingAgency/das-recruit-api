@@ -1,13 +1,14 @@
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 //TODO look at combining these as they are validating the same thing
 public static class VacancyTextFieldExtension
 {
-    public static void VacancyDescriptionValidation(this IRuleBuilderInitial<Vacancy, string?> rule,
+    public static void VacancyDescriptionValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {
         rule.NotEmpty()
@@ -29,7 +30,7 @@ public static class VacancyTextFieldExtension
             .RunCondition(VacancyRuleSet.Description);
     }
 
-    public static void VacancyTrainingDescriptionValidation(this IRuleBuilderInitial<Vacancy, string?> rule,
+    public static void VacancyTrainingDescriptionValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {
         rule
@@ -48,7 +49,7 @@ public static class VacancyTextFieldExtension
             .RunCondition(VacancyRuleSet.TrainingDescription);
     }
 
-    public static void VacancyThingsToConsiderValidation(this IRuleBuilderInitial<Vacancy, string?> rule,
+    public static void VacancyThingsToConsiderValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {
         rule
@@ -67,7 +68,7 @@ public static class VacancyTextFieldExtension
             .RunCondition(VacancyRuleSet.ThingsToConsider);
     }
 
-    public static void VacancyEmployerInformationValidation(this IRuleBuilderInitial<Vacancy, string?> rule, IHtmlSanitizerService htmlSanitizer, IProhibitedContentRepository profanityListProvider)
+    public static void VacancyEmployerInformationValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule, IHtmlSanitizerService htmlSanitizer, IProhibitedContentRepository profanityListProvider)
     {
         rule.NotEmpty()
             .WithMessage("Enter details about the employer")
@@ -88,7 +89,7 @@ public static class VacancyTextFieldExtension
             .RunCondition(VacancyRuleSet.EmployerDescription);
     }
 
-    public static void VacancyAdditionalTrainingInformationValidation(this IRuleBuilderInitial<Vacancy, string?> rule,
+    public static void VacancyAdditionalTrainingInformationValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {
         rule
@@ -107,7 +108,7 @@ public static class VacancyTextFieldExtension
             .RunCondition(VacancyRuleSet.AdditionalTrainingDescription);
     }
     
-    public static void VacancyOutcomeDescriptionValidation(this IRuleBuilderInitial<Vacancy, string?> rule,
+    public static void VacancyOutcomeDescriptionValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {
         rule
@@ -130,7 +131,7 @@ public static class VacancyTextFieldExtension
             .RunCondition(VacancyRuleSet.OutcomeDescription);
     }
     
-    public static void VacancyShortDescriptionValidation(this IRuleBuilderInitial<Vacancy, string?> rule,
+    public static void VacancyShortDescriptionValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule,
         IProhibitedContentRepository profanityListProvider, IHtmlSanitizerService htmlSanitizer)
     {
         rule

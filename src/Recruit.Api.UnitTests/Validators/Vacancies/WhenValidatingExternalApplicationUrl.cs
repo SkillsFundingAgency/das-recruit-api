@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -13,11 +14,12 @@ public class WhenValidatingExternalApplicationUrl: VacancyValidationTestsBase
     [TestCase("https://www.applyhere.com/apply.aspx?source=foo")]
     public void NoErrorsWhenExternalApplicationUrlIsValid(string url)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = url,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ApplicationMethod);
@@ -30,11 +32,12 @@ public class WhenValidatingExternalApplicationUrl: VacancyValidationTestsBase
     [TestCase("")]
     public void ExternalApplicationUrlMustHaveAValue(string? url)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = url,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ApplicationMethod);
@@ -48,11 +51,12 @@ public class WhenValidatingExternalApplicationUrl: VacancyValidationTestsBase
     [Test]
     public void ExternalApplicationUrlMustBe2000CharactersOrLess()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = "http://www.applyhere.com".PadRight(2001, 'w'),
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ApplicationMethod);
@@ -75,11 +79,12 @@ public class WhenValidatingExternalApplicationUrl: VacancyValidationTestsBase
     [TestCase("applyhere.com?term=query")]
     public void ExternalApplicationUrlMustBeAValidWebAddress(string invalidUrl)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = invalidUrl,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.ApplicationMethod);

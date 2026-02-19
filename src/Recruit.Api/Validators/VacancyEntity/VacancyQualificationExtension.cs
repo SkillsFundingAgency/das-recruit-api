@@ -1,12 +1,13 @@
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyQualificationExtension
 {
-    public static void VacancyQualificationValidation(this IRuleBuilderInitial<Vacancy, List<Qualification>?> rule, IProhibitedContentRepository profanityListProvider)
+    public static void VacancyQualificationValidation(this IRuleBuilderInitial<PutVacancyRequest, List<Qualification>?> rule, IProhibitedContentRepository profanityListProvider)
     {
         rule
             .Must(q => q is { Count: > 0 })

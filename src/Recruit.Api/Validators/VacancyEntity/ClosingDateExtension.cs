@@ -1,11 +1,12 @@
 using FluentValidation;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class ClosingDateExtension
 {
-    public static void VacancyClosingDateCheck(this IRuleBuilderInitial<Vacancy, DateTime?> rule, TimeProvider timeProvider)
+    public static void VacancyClosingDateCheck(this IRuleBuilderInitial<PutVacancyRequest, DateTime?> rule, TimeProvider timeProvider)
     {
         rule
             .Cascade(CascadeMode.Stop)

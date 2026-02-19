@@ -2,10 +2,11 @@ using FluentValidation;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
-public class VacancyValidator : AbstractValidator<Vacancy>
+public class VacancyValidator : AbstractValidator<PutVacancyRequest>
 {
     public VacancyValidator(
         IProhibitedContentRepository profanityListProvider, 

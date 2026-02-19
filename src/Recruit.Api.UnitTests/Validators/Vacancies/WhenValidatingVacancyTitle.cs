@@ -1,12 +1,13 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
 
 public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
 {
-    public static IEnumerable<object[]> ValidTitles =>
+    private static IEnumerable<object[]> ValidTitles =>
         new List<object[]>
         {
             new object[] { $"apprentice {new string('a', 89)}" },
@@ -16,10 +17,11 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCaseSource(nameof(ValidTitles))]
     public void NoErrorsWhenTitleFieldIsValidForApprenticeship(string validTitle)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            Title = validTitle
+            Title = validTitle,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
@@ -33,10 +35,11 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("")]
     public void TitleMustHaveAValue(string? titleValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            Title = titleValue
+            Title = titleValue,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
@@ -56,10 +59,11 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("junior apprenticeship in sorcery")]
     public void NoErrorsWhenTitleContainsTheWordApprenticeOrApprenticeship(string testValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            Title = testValue
+            Title = testValue,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
@@ -75,10 +79,11 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("junior apprenteeship in sorcery")]
     public void TitleMustContainTheWordApprenticeOrApprenticeship(string testValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            Title = testValue
+            Title = testValue,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
@@ -93,10 +98,11 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [Test]
     public void TitleBeLongerThan100Characters()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            Title = $"apprentice {new string('a', 101)}"
+            Title = $"apprentice {new string('a', 101)}",
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
@@ -112,10 +118,11 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("apprentice>" )]
     public void TitleMustContainValidCharacters(string testValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            Title = testValue
+            Title = testValue,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
@@ -133,10 +140,11 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("some text balderdash apprentice")]
     public void Title_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            Title = freeText
+            Title = freeText,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Title);
@@ -152,10 +160,11 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("some textbalderdash apprentice")]
     public void Title_Should_Not_Fail_IfWordContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             Status = VacancyStatus.Draft,
-            Title = freeText
+            Title = freeText,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.Title);

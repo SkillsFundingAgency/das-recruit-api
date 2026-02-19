@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,9 +10,11 @@ public class WhenValidatingNumberOfPositions : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenPositionFieldsAreValid()
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             NumberOfPositions = 2,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.NumberOfPositions);
@@ -24,9 +27,11 @@ public class WhenValidatingNumberOfPositions : VacancyValidationTestsBase
     [TestCase(0)]
     public void NumberOfPositionMustHaveAValue(int? numOfPositionsValue)
     {
-        var vacancy = new Vacancy {
+        var vacancy = new PutVacancyRequest 
+        {
             Status = VacancyStatus.Draft,
-            NumberOfPositions = numOfPositionsValue
+            NumberOfPositions = numOfPositionsValue,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.NumberOfPositions);

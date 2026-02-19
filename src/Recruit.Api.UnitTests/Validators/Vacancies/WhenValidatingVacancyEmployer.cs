@@ -1,5 +1,6 @@
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
@@ -9,7 +10,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenEmployerFieldsAreValid()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerName = "Test Org",
             EmployerLocations = [
@@ -19,7 +20,9 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
                     Postcode = "AB1 3SD"
                 }
             ],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
+            
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerName | VacancyRuleSet.EmployerAddress);
@@ -33,11 +36,12 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase("")]
     public void EmployerMustBeSet(string? organisationValue)
     {
-        var vacancy = new Vacancy 
+        var vacancy = new PutVacancyRequest 
         {
             EmployerName = organisationValue,
             SourceOrigin = SourceOrigin.ProviderWeb,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerName);
@@ -52,10 +56,11 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void ShouldErrorIfEmployerLocationIsNull()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = null,
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -71,14 +76,15 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase("")]
     public void EmployerAddressLine1MustBeSet(string? addressValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
                 AddressLine1 = addressValue,
                 Postcode = "AB12 3DZ"   
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -94,14 +100,15 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase(">")]
     public void EmployerAddressLine1MustContainValidCharacters(string testValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
                 AddressLine1 = testValue,
                 Postcode = "AB12 3DZ"
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -116,14 +123,15 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void EmployerAddressLine1CannotBeLongerThan100Characters()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
                 AddressLine1 = new string('a', 101),
                 Postcode = "AB12 3DZ"
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -139,7 +147,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase(">")]
     public void EmployerAddressLine2MustContainValidCharacters(string testValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -147,7 +155,8 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
                 AddressLine2 = testValue,
                 Postcode = "AB12 3DZ"
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -162,7 +171,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void EmployerAddressLine2CannotBeLongerThan100Characters()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -170,7 +179,8 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
                 AddressLine2 = new String('a', 101),
                 Postcode = "AB12 3DZ"
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -186,7 +196,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase(">")]
     public void EmployerAddressLine3MustContainValidCharacters(string testValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -194,7 +204,8 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
                 AddressLine3 = testValue,
                 Postcode = "AB12 3DZ"
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -209,7 +220,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase]
     public void EmployerAddressLine3CannotBeLongerThan100Characters()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -217,7 +228,8 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
                 AddressLine3 = new string('a', 101),
                 Postcode = "AB12 3DZ"
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -233,7 +245,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase(">")]
     public void EmployerAddressLine4MustContainValidCharacters(string testValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -241,7 +253,8 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
                 AddressLine4 = testValue,
                 Postcode = "AB12 3DZ"
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -256,7 +269,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void EmployerAddressLine4CannotBeLongerThan100Characters()
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -264,7 +277,8 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
                 AddressLine4 = new string('a', 101),
                 Postcode = "AB12 3DZ"
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -280,14 +294,15 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase("")]
     public void EmployerPostCodeMustBeSet(string? postCodeValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
             EmployerLocations = [new Address
             {
                 AddressLine1 = "2 New Street",
                 Postcode = postCodeValue
             }],
-            Status = VacancyStatus.Draft
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
@@ -304,14 +319,18 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase("AS123 1JJ")]
     public void EmployerPostCodeMustBeValidFormat(string postCodeValue)
     {
-        var vacancy = new Vacancy
+        var vacancy = new PutVacancyRequest
         {
-            EmployerLocations = [new Address
-            {
-                AddressLine1 = "2 New Street",
-                Postcode = postCodeValue
-            }],
-            Status = VacancyStatus.Draft
+            EmployerLocations = 
+            [
+                new Address
+                {
+                    AddressLine1 = "2 New Street",
+                    Postcode = postCodeValue
+                }
+            ],
+            Status = VacancyStatus.Draft,
+            OwnerType = OwnerType.Employer
         };
 
         var result = Validator.Validate(vacancy, VacancyRuleSet.EmployerAddress);
