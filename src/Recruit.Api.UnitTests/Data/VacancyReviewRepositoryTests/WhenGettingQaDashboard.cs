@@ -1,5 +1,5 @@
 ﻿using SFA.DAS.Recruit.Api.Data;
-using SFA.DAS.Recruit.Api.Data.VacancyReview;
+using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
