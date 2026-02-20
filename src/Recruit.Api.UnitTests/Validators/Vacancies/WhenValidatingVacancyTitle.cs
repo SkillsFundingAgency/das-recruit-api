@@ -17,7 +17,7 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCaseSource(nameof(ValidTitles))]
     public void NoErrorsWhenTitleFieldIsValidForApprenticeship(string validTitle)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             Title = validTitle,
@@ -35,7 +35,7 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("")]
     public void TitleMustHaveAValue(string? titleValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             Title = titleValue,
@@ -59,7 +59,7 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("junior apprenticeship in sorcery")]
     public void NoErrorsWhenTitleContainsTheWordApprenticeOrApprenticeship(string testValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             Title = testValue,
@@ -79,7 +79,7 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("junior apprenteeship in sorcery")]
     public void TitleMustContainTheWordApprenticeOrApprenticeship(string testValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             Title = testValue,
@@ -98,7 +98,7 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [Test]
     public void TitleBeLongerThan100Characters()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             Title = $"apprentice {new string('a', 101)}",
@@ -118,7 +118,7 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("apprentice>" )]
     public void TitleMustContainValidCharacters(string testValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             Title = testValue,
@@ -140,7 +140,7 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("some text balderdash apprentice")]
     public void Title_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             Title = freeText,
@@ -160,7 +160,7 @@ public class WhenValidatingVacancyTitle : VacancyValidationTestsBase
     [TestCase("some textbalderdash apprentice")]
     public void Title_Should_Not_Fail_IfWordContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             Title = freeText,

@@ -10,7 +10,7 @@ public class WhenValidatingWageWeeklyHours : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenWeeklyHoursIsValid()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {
@@ -29,7 +29,7 @@ public class WhenValidatingWageWeeklyHours : VacancyValidationTestsBase
     [Test]
     public void WeeklyHoursMustHaveAValue()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {
@@ -51,7 +51,7 @@ public class WhenValidatingWageWeeklyHours : VacancyValidationTestsBase
     [Test]
     public void WeeklyHoursMustBeMoreThan16()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {
@@ -73,7 +73,7 @@ public class WhenValidatingWageWeeklyHours : VacancyValidationTestsBase
     [Test]
     public void WeeklyHoursMustBeLeeThan48()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {

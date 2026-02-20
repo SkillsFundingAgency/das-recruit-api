@@ -12,7 +12,7 @@ public class WhenValidatingExternalApplicationInstructions : VacancyValidationTe
     [TestCase("You can apply online or through post.")]
     public void NoErrorsWhenExternalApplicationInstructionsIsValid(string? instructions)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = "http://www.apply.com",
@@ -30,7 +30,7 @@ public class WhenValidatingExternalApplicationInstructions : VacancyValidationTe
     [Test]
     public void ExternalApplicationInstructionsMustBe500CharactersOrLess()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = "http://www.apply.com",
@@ -51,7 +51,7 @@ public class WhenValidatingExternalApplicationInstructions : VacancyValidationTe
     [TestCase("<p>`</p>")]
     public void ExternalApplicationInstructionsMustNotContainInvalidCharacters(string invalidChar)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = "http://www.apply.com",

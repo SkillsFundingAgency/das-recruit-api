@@ -10,7 +10,7 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenEmployerDescriptionFieldIsValid()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             EmployerDescription = "a valid description",
             Status = VacancyStatus.Draft,
@@ -27,7 +27,7 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [TestCase("")]
     public void DescriptionMustNotBeEmpty(string? description)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             EmployerDescription = description,
             Status = VacancyStatus.Draft,
@@ -46,7 +46,7 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [Test]
     public void EmployerDescriptionMustNotBeLongerThanMaxLength()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             EmployerDescription = new string('a', 4001),
             Status = VacancyStatus.Draft,
@@ -67,7 +67,7 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void EmployerDescriptionMustContainValidCharacters(string invalidChar, bool expectedResult)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             EmployerDescription = invalidChar,
             Status = VacancyStatus.Draft,
@@ -96,7 +96,7 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void EmployerDescription_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Description = freeText,
             Status = VacancyStatus.Draft,
@@ -116,7 +116,7 @@ public class WhenValidatingEmployerDescription : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void EmployerDescription_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Description = freeText,
             Status = VacancyStatus.Draft,

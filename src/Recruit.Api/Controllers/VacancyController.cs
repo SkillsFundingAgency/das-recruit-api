@@ -8,6 +8,7 @@ using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
@@ -16,6 +17,8 @@ using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Models.Responses;
 using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
+using SFA.DAS.Recruit.Api.Validators;
+using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -282,10 +285,34 @@ public class VacancyController : Controller
     public async Task<IResult> PostOne(
         [FromServices] IVacancyRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IValidator<VacancyRequest> validator,
         [FromBody] PostVacancyRequest request,
-        CancellationToken cancellationToken)
+        [FromQuery] VacancyRuleSet? ruleSet,
+        CancellationToken cancellationToken,
+        [FromQuery] bool validateOnly = false)
     {
+        if (ruleSet != null)
+        {
+            var context = new ValidationContext<VacancyRequest>(request);
+            context.RootContextData.Add(ValidationConstants.ValidationsRulesKey, ruleSet);
+            var validationResult = await validator.ValidateAsync(context, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            }    
+        }
+        
         var entity = request.ToDomain();
+        
+        if (validateOnly)
+        {
+            entity.VacancyReference = 1000000001;
+            entity.CreatedDate = DateTime.UtcNow;
+            entity.Status = VacancyStatus.Submitted;
+            entity.Id = Guid.NewGuid();
+            return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPutResponse());
+        }
+        
 
         // This lookup should eventually be removed once we've migrated away from Mongo
         // We do this because currently the submitted user id is not the SQL user id, but could match
@@ -326,15 +353,30 @@ public class VacancyController : Controller
     public async Task<IResult> PutOne(
         [FromServices] IVacancyRepository repository,
         [FromServices] IUserRepository userRepository,
-        [FromServices] IValidator<PutVacancyRequest> validator,
+        [FromServices] IValidator<VacancyRequest> validator,
         [FromRoute] Guid vacancyId,
         [FromBody] PutVacancyRequest request,
-        CancellationToken cancellationToken)
+        [FromQuery] VacancyRuleSet? ruleSet,
+        CancellationToken cancellationToken,
+        [FromQuery] bool validateOnly = false)
     {
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid)
+        if (ruleSet != null)
         {
-            return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            var context = new ValidationContext<VacancyRequest>(request);
+            context.RootContextData.Add(ValidationConstants.ValidationsRulesKey, ruleSet);
+            var validationResult = await validator.ValidateAsync(context, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            }    
+        }
+        
+        if (validateOnly)
+        {
+            var id = Guid.NewGuid();
+            return TypedResults.Created($"/{RouteNames.Vacancies}/{id}",
+                new VacancyEntity { Id = id, Status = VacancyStatus.Submitted, VacancyReference = 1000000001 }
+                    .ToPutResponse());
         }
         
         var entity = request.ToDomain(vacancyId);

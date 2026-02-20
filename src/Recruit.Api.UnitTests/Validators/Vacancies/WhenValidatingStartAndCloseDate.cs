@@ -10,7 +10,7 @@ public class WhenValidatingStartAndCloseDate: VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenFieldsAreValid()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             StartDate = DateTime.UtcNow.AddDays(5),
             ClosingDate = DateTime.UtcNow.AddDays(4),
@@ -27,7 +27,7 @@ public class WhenValidatingStartAndCloseDate: VacancyValidationTestsBase
     [Test]
     public void StartDateCantBeTheSameAsClosingDate()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             StartDate = DateTime.UtcNow,
             ClosingDate = DateTime.UtcNow,
@@ -47,7 +47,7 @@ public class WhenValidatingStartAndCloseDate: VacancyValidationTestsBase
     [Test]
     public void StartDateCantBeBeforeClosingDate()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             StartDate = DateTime.UtcNow,
             ClosingDate = DateTime.UtcNow.AddDays(1),

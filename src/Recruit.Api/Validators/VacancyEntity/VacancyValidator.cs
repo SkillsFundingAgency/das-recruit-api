@@ -6,7 +6,7 @@ using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 
 namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
-public class VacancyValidator : AbstractValidator<PutVacancyRequest>
+public class VacancyValidator : AbstractValidator<VacancyRequest>
 {
     public VacancyValidator(
         IProhibitedContentRepository profanityListProvider, 

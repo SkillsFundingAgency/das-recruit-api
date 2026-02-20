@@ -10,7 +10,7 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [Test]
     public void NoErrorsWhenDescriptionFieldIsValid()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             AdditionalTrainingDescription = "a valid description",
             Status = VacancyStatus.Draft,
@@ -26,7 +26,7 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [Test]
     public void DescriptionMustNotBeLongerThanMaxLength()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             AdditionalTrainingDescription = new String('a', 4001),
             Status = VacancyStatus.Draft,
@@ -47,7 +47,7 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [TestCase("<p>`</p>", false)]
     public void DescriptionMustContainValidHtml(string actual, bool expectedResult)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             AdditionalTrainingDescription = actual,
             Status = VacancyStatus.Draft,
@@ -76,7 +76,7 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [TestCase("some text balderdash")]
     public void Description_Should_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalTrainingDescription = freeText,
             Status = VacancyStatus.Draft,
@@ -97,7 +97,7 @@ public class WhenValidatingAdditionalTrainingDescription: VacancyValidationTests
     [TestCase("some textbalderdash")]
     public void Description_Should_Not_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalTrainingDescription = freeText,
             Status = VacancyStatus.Draft,

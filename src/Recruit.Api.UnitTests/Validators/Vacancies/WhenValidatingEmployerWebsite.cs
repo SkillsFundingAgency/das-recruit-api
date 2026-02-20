@@ -13,7 +13,7 @@ public class WhenValidatingEmployerWebsite: VacancyValidationTestsBase
     [TestCase("https://www.company.com")]
     public void NoErrorsWhenEmployerWebsiteUrlIsValid(string? url)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerWebsiteUrl = url,
             Status = VacancyStatus.Draft,
@@ -29,7 +29,7 @@ public class WhenValidatingEmployerWebsite: VacancyValidationTestsBase
     [Test]
     public void EmployerWebsiteUrlMustBe100CharactersOrLess()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerWebsiteUrl = "http://www.company.com".PadRight(101, 'w'),
             Status = VacancyStatus.Draft,
@@ -57,7 +57,7 @@ public class WhenValidatingEmployerWebsite: VacancyValidationTestsBase
     [TestCase("/apply.aspx")]
     public void EmployerWebsiteUrlMustBeAValidWebAddress(string invalidUrl)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerWebsiteUrl = invalidUrl,
             Status = VacancyStatus.Draft,

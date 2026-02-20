@@ -15,7 +15,7 @@ public class WhenValidatingContactDetail : VacancyValidationTestsBase
     [TestCase("joebloggs@company.com",VacancyRuleSet.ProviderContactDetails)]
     public void NoErrorsWhenEmployerContactEmailIsValid(string? emailAddress, VacancyRuleSet ruleSet)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Contact = new ContactDetail { Email = emailAddress },
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
@@ -30,7 +30,7 @@ public class WhenValidatingContactDetail : VacancyValidationTestsBase
     [Test]
     public void EmployerContactEmailMustBe100CharactersOrLess()
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Contact = new ContactDetail { Email = "name@".PadRight(101, 'w') },
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
@@ -49,7 +49,7 @@ public class WhenValidatingContactDetail : VacancyValidationTestsBase
     [TestCase("<p>`</p>")]
     public void EmployerContactEmailMustNotContainInvalidCharacters(string invalidChar)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Contact = new ContactDetail { Email = invalidChar },
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
@@ -67,7 +67,7 @@ public class WhenValidatingContactDetail : VacancyValidationTestsBase
     [Test]
     public void EmployerContactEmailMustBeValidEmailFormat()
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Contact = new ContactDetail { Email = "joe" },
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer

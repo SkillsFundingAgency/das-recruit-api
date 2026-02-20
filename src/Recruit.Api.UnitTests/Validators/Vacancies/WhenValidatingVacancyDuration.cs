@@ -15,7 +15,7 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     public void NoErrorsWhenDurationFieldsAreValid(DurationUnit unitValue, int durationValue, string? weeklyHoursText = null)
     {
         decimal? weeklyHours = decimal.TryParse(weeklyHoursText, out decimal parsed) ? parsed : null;
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Wage = new Wage
             {
@@ -36,7 +36,7 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     [Test]
     public void DurationUnitMustHaveAValue()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Wage = new Wage
             {
@@ -59,7 +59,7 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     [Test]
     public void DurationUnitMustHaveAValidValue()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Wage = new Wage
             {
@@ -82,7 +82,7 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     [Test]
     public void DurationMustHaveAValue()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Wage = new Wage
             {
@@ -105,7 +105,7 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     [TestCase(DurationUnit.Month, 7)]
     public void ApprenticeshipDurationMustBeAtLeast8Months(DurationUnit unitValue, int durationValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Wage = new Wage 
             {
@@ -138,7 +138,7 @@ public class WhenValidatingVacancyDuration : VacancyValidationTestsBase
     public void AnyApprenticeshipDurationMonthsMustHave30WeeklyHours(DurationUnit unitValue, int durationValue, string weeklyHoursText, bool hasErrors)
     {
         decimal? weeklyHours = decimal.TryParse(weeklyHoursText, out decimal parsed) ? parsed : null;
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             StartDate = new DateTime(2025,08,01),
             Wage = new Wage

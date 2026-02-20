@@ -14,7 +14,7 @@ public class WhenValidatingExternalApplicationUrl: VacancyValidationTestsBase
     [TestCase("https://www.applyhere.com/apply.aspx?source=foo")]
     public void NoErrorsWhenExternalApplicationUrlIsValid(string url)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = url,
@@ -32,7 +32,7 @@ public class WhenValidatingExternalApplicationUrl: VacancyValidationTestsBase
     [TestCase("")]
     public void ExternalApplicationUrlMustHaveAValue(string? url)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = url,
@@ -51,7 +51,7 @@ public class WhenValidatingExternalApplicationUrl: VacancyValidationTestsBase
     [Test]
     public void ExternalApplicationUrlMustBe2000CharactersOrLess()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = "http://www.applyhere.com".PadRight(2001, 'w'),
@@ -79,7 +79,7 @@ public class WhenValidatingExternalApplicationUrl: VacancyValidationTestsBase
     [TestCase("applyhere.com?term=query")]
     public void ExternalApplicationUrlMustBeAValidWebAddress(string invalidUrl)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ApplicationMethod = ApplicationMethod.ThroughExternalApplicationSite,
             ApplicationUrl = invalidUrl,

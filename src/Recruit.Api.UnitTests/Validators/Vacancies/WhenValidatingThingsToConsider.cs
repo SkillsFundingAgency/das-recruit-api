@@ -12,7 +12,7 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [TestCase("considerations")]
     public void NoErrorsWhenThingsToConsiderIsValid(string? text)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             ThingsToConsider = text,
             Status = VacancyStatus.Draft,
@@ -28,7 +28,7 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [Test]
     public void ThingsToConsiderMustBe4000CharactersOrLess()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             ThingsToConsider = "name".PadRight(4001, 'w'),
             Status = VacancyStatus.Draft,
@@ -48,7 +48,7 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void ThingsToConsiderMustNotContainInvalidCharacters(string invalidChar, bool expectedResult)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             ThingsToConsider = invalidChar,
             Status = VacancyStatus.Draft,
@@ -75,7 +75,7 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void ThingsToConsider_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             ThingsToConsider = freeText,
             Status = VacancyStatus.Draft,
@@ -95,7 +95,7 @@ public class WhenValidatingThingsToConsider : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void ThingsToConsider_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             ThingsToConsider = freeText,
             Status = VacancyStatus.Draft,

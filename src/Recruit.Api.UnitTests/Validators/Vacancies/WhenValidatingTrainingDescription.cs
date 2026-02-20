@@ -10,7 +10,7 @@ public class WhenValidatingTrainingDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenTrainingDescriptionFieldIsValid()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             TrainingDescription = "a valid description",
             Status = VacancyStatus.Draft,
@@ -26,7 +26,7 @@ public class WhenValidatingTrainingDescription : VacancyValidationTestsBase
     [Test]
     public void TrainingDescriptionMustNotBeLongerThanMaxLength()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             TrainingDescription = new string('a', 4001),
             Status = VacancyStatus.Draft,
@@ -47,7 +47,7 @@ public class WhenValidatingTrainingDescription : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void TrainingDescriptionMustContainValidHtml(string actual, bool expectedResult)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             TrainingDescription = actual,
             Status = VacancyStatus.Draft,
@@ -76,7 +76,7 @@ public class WhenValidatingTrainingDescription : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void TrainingDescription_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             TrainingDescription = freeText,
             Status = VacancyStatus.Draft,
@@ -96,7 +96,7 @@ public class WhenValidatingTrainingDescription : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void TrainingDescription_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             TrainingDescription = freeText,
             Status = VacancyStatus.Draft,

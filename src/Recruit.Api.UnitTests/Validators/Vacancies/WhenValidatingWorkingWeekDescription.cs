@@ -10,7 +10,7 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenWorkingWeekDescriptionValueIsValid()
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = "This is a valid value"
             },
@@ -28,7 +28,7 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [TestCase("")]
     public void WorkingWeekDescriptionMustHaveAValue(string? descriptionValue)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = descriptionValue
             },
@@ -50,7 +50,7 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [TestCase(">")]
     public void WorkingWeekDescriptionMustContainValidCharacters(string invalidCharacter)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = new String('a', 50) + invalidCharacter + new String('a', 50)
             },
@@ -71,7 +71,7 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [Test]
     public void WorkingWeekDescriptionMustBeLessThan250Characters()
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = new string('a', 251)
             },
@@ -95,7 +95,7 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void WorkingWeekDescription_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = freeText
             },
@@ -116,7 +116,7 @@ public class WhenValidatingWorkingWeekDescription : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void WorkingWeekDescription_ShouldFail_Not_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WorkingWeekDescription = freeText
             },

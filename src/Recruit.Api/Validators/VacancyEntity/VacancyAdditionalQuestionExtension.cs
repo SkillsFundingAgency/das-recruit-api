@@ -8,7 +8,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyAdditionalQuestionExtension
 {
-    public static void ValidateAdditionalQuestionValidator(this IRuleBuilderInitial<PutVacancyRequest, string> rule,
+    public static void ValidateAdditionalQuestionValidator(this IRuleBuilderInitial<VacancyRequest, string> rule,
         IProhibitedContentRepository profanityListProvider, VacancyRuleSet vacancyRuleSet)
     {   
         rule

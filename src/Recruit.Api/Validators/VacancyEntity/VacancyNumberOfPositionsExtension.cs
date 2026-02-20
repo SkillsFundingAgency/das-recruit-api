@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyNumberOfPositionsExtension
 {
-    public static void VacancyNumberOfPositionsValidation(this IRuleBuilderInitial<PutVacancyRequest, int?> rule)
+    public static void VacancyNumberOfPositionsValidation(this IRuleBuilderInitial<VacancyRequest, int?> rule)
     {
         rule
             .Must(x => x is > 0)

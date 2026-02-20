@@ -10,7 +10,7 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenShortDescriptionFieldsAreValid()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ShortDescription = new string('a', 60),
@@ -27,7 +27,7 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [TestCase("")]
     public void ShortDescriptionMustHaveAValue(string? shortDescriptionValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ShortDescription = shortDescriptionValue,
@@ -46,7 +46,7 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenShortDescriptionAreValid()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ShortDescription = new string('a', 350),
@@ -62,7 +62,7 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [Test]
     public void ShortDescriptionMustNotBeMoreThan350Characters()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ShortDescription = new string('a', 351),
@@ -81,7 +81,7 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [Test]
     public void ShortDescriptionMustNotBeLessThan50Characters()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ShortDescription = new string('a', 49),
@@ -103,7 +103,7 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void ShortDescriptionMustContainValidCharacters(string invalidCharacter, bool expectedResult)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ShortDescription = new string('a', 30) + invalidCharacter + new String('b', 30),
@@ -132,7 +132,7 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [TestCase("some text balderdash random text random text random text random text")]
     public void ShortDescription_Should_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ShortDescription = freeText,
@@ -152,7 +152,7 @@ public class WhenValidatingShortDescription : VacancyValidationTestsBase
     [TestCase("some textbalderdash random text random text random text random text")]
     public void ShortDescription_Should_Not_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ShortDescription = freeText,

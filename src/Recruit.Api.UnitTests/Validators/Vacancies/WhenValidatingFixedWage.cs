@@ -14,7 +14,7 @@ public class WhenValidatingFixedWage : VacancyValidationTestsBase
         var startDate = DateTime.UtcNow.Date;
         var minimumWageAmount = Convert.ToDecimal(minimumWageTestValue);
 
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             StartDate = startDate,
             Wage = new Wage
@@ -43,7 +43,7 @@ public class WhenValidatingFixedWage : VacancyValidationTestsBase
         var startDate = DateTime.UtcNow.Date;
         var minimumWageAmount = Convert.ToDecimal(minimumWageTestValue);
 
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             StartDate = startDate,
             Wage = new Wage

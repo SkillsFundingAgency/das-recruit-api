@@ -10,7 +10,7 @@ public class WhenValidatingNumberOfPositions : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenPositionFieldsAreValid()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             NumberOfPositions = 2,
             Status = VacancyStatus.Draft,
@@ -27,7 +27,7 @@ public class WhenValidatingNumberOfPositions : VacancyValidationTestsBase
     [TestCase(0)]
     public void NumberOfPositionMustHaveAValue(int? numOfPositionsValue)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Status = VacancyStatus.Draft,
             NumberOfPositions = numOfPositionsValue,

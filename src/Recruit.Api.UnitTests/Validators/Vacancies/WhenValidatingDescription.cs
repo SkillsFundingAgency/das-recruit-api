@@ -10,7 +10,7 @@ public class WhenValidatingDescription : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenDescriptionFieldIsValid()
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Description = "a valid description",
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
@@ -26,7 +26,7 @@ public class WhenValidatingDescription : VacancyValidationTestsBase
     [TestCase("", "will do at work")]
     public void DescriptionMustNotBeEmpty(string? description, string errorMessage)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Description = description,
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
@@ -45,7 +45,7 @@ public class WhenValidatingDescription : VacancyValidationTestsBase
     [Test]
     public void DescriptionMustNotBeLongerThanMaxLength()
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Description = new string('a', 4001),
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
@@ -65,7 +65,7 @@ public class WhenValidatingDescription : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void DescriptionMustContainValidHtml(string actual, bool expectedResult)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Description = actual,
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
@@ -93,7 +93,7 @@ public class WhenValidatingDescription : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void Description_Should_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Description = freeText,
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
@@ -112,7 +112,7 @@ public class WhenValidatingDescription : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void Description_Should_Not_Fail_IfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Description = freeText,
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer

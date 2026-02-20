@@ -10,7 +10,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenEmployerFieldsAreValid()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerName = "Test Org",
             EmployerLocations = [
@@ -36,7 +36,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase("")]
     public void EmployerMustBeSet(string? organisationValue)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             EmployerName = organisationValue,
             SourceOrigin = SourceOrigin.ProviderWeb,
@@ -56,7 +56,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void ShouldErrorIfEmployerLocationIsNull()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = null,
             Status = VacancyStatus.Draft,
@@ -76,7 +76,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase("")]
     public void EmployerAddressLine1MustBeSet(string? addressValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -100,7 +100,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase(">")]
     public void EmployerAddressLine1MustContainValidCharacters(string testValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -123,7 +123,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void EmployerAddressLine1CannotBeLongerThan100Characters()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -147,7 +147,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase(">")]
     public void EmployerAddressLine2MustContainValidCharacters(string testValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -171,7 +171,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void EmployerAddressLine2CannotBeLongerThan100Characters()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -196,7 +196,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase(">")]
     public void EmployerAddressLine3MustContainValidCharacters(string testValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -220,7 +220,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase]
     public void EmployerAddressLine3CannotBeLongerThan100Characters()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -245,7 +245,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase(">")]
     public void EmployerAddressLine4MustContainValidCharacters(string testValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -269,7 +269,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [Test]
     public void EmployerAddressLine4CannotBeLongerThan100Characters()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -294,7 +294,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase("")]
     public void EmployerPostCodeMustBeSet(string? postCodeValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = [new Address
             {
@@ -319,7 +319,7 @@ public class WhenValidatingVacancyEmployer : VacancyValidationTestsBase
     [TestCase("AS123 1JJ")]
     public void EmployerPostCodeMustBeValidFormat(string postCodeValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             EmployerLocations = 
             [

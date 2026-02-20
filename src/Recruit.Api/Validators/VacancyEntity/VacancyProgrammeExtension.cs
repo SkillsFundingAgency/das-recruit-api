@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyProgrammeExtension
 {
-    public static void VacancyProgrammeIdValidation(this IRuleBuilderInitial<PutVacancyRequest, string?> rule)
+    public static void VacancyProgrammeIdValidation(this IRuleBuilderInitial<VacancyRequest, string?> rule)
     {
         rule
             .NotEmpty()

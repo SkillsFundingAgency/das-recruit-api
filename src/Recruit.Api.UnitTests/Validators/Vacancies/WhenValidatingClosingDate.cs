@@ -11,7 +11,7 @@ public class WhenValidatingClosingDate : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenClosingDateIsValid()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ClosingDate = DateTime.UtcNow.AddDays(15),
             Status = VacancyStatus.Draft,
@@ -27,7 +27,7 @@ public class WhenValidatingClosingDate : VacancyValidationTestsBase
     [Test]
     public void ClosingDateMustHaveAValue()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ClosingDate = null,
             Status = VacancyStatus.Draft,
@@ -47,7 +47,7 @@ public class WhenValidatingClosingDate : VacancyValidationTestsBase
     [TestCaseSource(nameof(InvalidClosingDates))]
     public void ClosingDateMustBeGreaterThanToday(DateTime closingDateValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ClosingDate = closingDateValue,
             Status = VacancyStatus.Draft,
@@ -73,7 +73,7 @@ public class WhenValidatingClosingDate : VacancyValidationTestsBase
         var stubTime = new FakeTimeProvider(new DateTimeOffset(new DateTime(2025, 01, 01) ));
         TimeProvider = stubTime;
 
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ClosingDate = stubTime.GetUtcNow().Date.AddDays(6),
@@ -97,7 +97,7 @@ public class WhenValidatingClosingDate : VacancyValidationTestsBase
         var stubTime = new FakeTimeProvider(new DateTimeOffset(new DateTime(2025, 01, 01) ));
         TimeProvider = stubTime;
 
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Draft,
             ClosingDate = stubTime.GetUtcNow().Date.AddDays(7),
@@ -116,7 +116,7 @@ public class WhenValidatingClosingDate : VacancyValidationTestsBase
         var stubTime = new FakeTimeProvider(new DateTimeOffset(new DateTime(2025, 01, 01), TimeSpan.Zero ));
         TimeProvider = stubTime;
 
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Live,
             ClosingDate = stubTime.GetUtcNow().Date.AddDays(-1), // yesterday
@@ -127,7 +127,7 @@ public class WhenValidatingClosingDate : VacancyValidationTestsBase
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Errors, Is.Not.Empty);
 
-        vacancy = new PutVacancyRequest
+        vacancy = new VacancyRequest
         {
             Status = VacancyStatus.Live,
             ClosingDate = stubTime.GetUtcNow().Date, // today

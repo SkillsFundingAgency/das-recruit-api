@@ -7,7 +7,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyStartDateExtension
 {
-    public static void VacancyStartDateValidation(this IRuleBuilderInitial<PutVacancyRequest, DateTime?> rule)
+    public static void VacancyStartDateValidation(this IRuleBuilderInitial<VacancyRequest, DateTime?> rule)
     {
         rule
             .NotNull()
@@ -21,9 +21,9 @@ public static class VacancyStartDateExtension
             .RunCondition(VacancyRuleSet.StartDate);
     }
     
-    public static IRuleBuilderInitial<PutVacancyRequest, PutVacancyRequest> ClosingDateMustBeLessThanStartDate(this IRuleBuilder<PutVacancyRequest, PutVacancyRequest> ruleBuilder)
+    public static IRuleBuilderInitial<VacancyRequest, VacancyRequest> ClosingDateMustBeLessThanStartDate(this IRuleBuilder<VacancyRequest, VacancyRequest> ruleBuilder)
     {
-        return (IRuleBuilderInitial<PutVacancyRequest, PutVacancyRequest>)ruleBuilder.Custom((vacancy, context) =>
+        return (IRuleBuilderInitial<VacancyRequest, VacancyRequest>)ruleBuilder.Custom((vacancy, context) =>
         {
             if (vacancy.StartDate.Value.Date <= vacancy.ClosingDate.Value.Date)
             {

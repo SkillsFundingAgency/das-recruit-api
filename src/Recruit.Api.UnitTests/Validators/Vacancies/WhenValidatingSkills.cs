@@ -10,7 +10,7 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenSkillsAreValid()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Skills = 
             [
@@ -29,7 +29,7 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [TestCaseSource(nameof(NullOrZeroSkillCollection))]
     public void SkillsCollectionMustNotBeNullOrHaveZeroCount(List<string> skills)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Skills = skills,
             Status = VacancyStatus.Draft,
@@ -54,7 +54,7 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [TestCaseSource(nameof(NullOrZeroSkill))]
     public void SkillMustNotBeEmpty(List<string?> skills)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Skills = skills,
             Status = VacancyStatus.Draft,
@@ -73,7 +73,7 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [Test]
     public void SkillsMustNotContainInvalidCharacters()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Skills = new List<string> 
             {
@@ -95,7 +95,7 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [Test]
     public void SkillsMustNotBeGreaterThanMaxLength()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Skills = new List<string> 
             {
@@ -120,7 +120,7 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [TestCase("some text balderdash")]
     public void OutcomeDescription_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Skills = new List<string> 
             {
@@ -143,7 +143,7 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [TestCase("some textbalderdash")]
     public void OutcomeDescription_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Skills = new List<string> 
             {
@@ -160,7 +160,7 @@ public class WhenValidatingSkills : VacancyValidationTestsBase
     [Test]
     public void Skills_Are_Not_Required_For_Foundation_Apprenticeships()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             ApprenticeshipType = ApprenticeshipTypes.Foundation,
             Skills = null,

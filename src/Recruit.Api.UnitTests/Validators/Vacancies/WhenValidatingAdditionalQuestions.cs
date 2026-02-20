@@ -12,7 +12,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("")]
     public void NoErrorsWhenAdditionalQuestion1FieldIsValid(string text)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             AdditionalQuestion1 = text,
             Status = VacancyStatus.Draft,
@@ -27,7 +27,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion1MustNotBeLongerThanMaxLength()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             AdditionalQuestion1 = new string('?', 251 ),
             Status = VacancyStatus.Draft,
@@ -49,7 +49,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("some text balderdash?")]
     public void AdditionalQuestion1_ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalQuestion1 = freeText,
             Status = VacancyStatus.Draft,
@@ -69,7 +69,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("some textbalderdash?")]
     public void AdditionalQuestion1_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalQuestion1 = freeText,
             Status = VacancyStatus.Draft,
@@ -83,7 +83,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion1_MustContainQuestionMark()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalQuestion1 = "some text?",
             Status = VacancyStatus.Draft,
@@ -97,7 +97,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion1_ShouldHaveErrorsIfDoesNotHaveQuestionMark()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalQuestion1 = "some text",
             Status = VacancyStatus.Draft,
@@ -116,7 +116,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("")]
     public void NoErrorsWhenAdditionalQuestion2FieldIsValid(string text)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             AdditionalQuestion2 = text,
             Status = VacancyStatus.Draft,
@@ -132,7 +132,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion2MustNotBeLongerThanMaxLength()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             AdditionalQuestion2 = new string('?', 251),
             Status = VacancyStatus.Draft,
@@ -154,7 +154,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("some text? balderdash")]
     public void AdditionalQuestion2ShouldFailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalQuestion2 = freeText,
             Status = VacancyStatus.Draft,
@@ -174,7 +174,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [TestCase("some textbalderdash?")]
     public void AdditionalQuestion2_Should_Not_FailIfContainsWordsFromTheProfanityList(string freeText)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalQuestion2 = freeText,
             Status = VacancyStatus.Draft,
@@ -188,7 +188,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion2_MustContainQuestionMark()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalQuestion2 = "some text?",
             Status = VacancyStatus.Draft,
@@ -202,7 +202,7 @@ public class WhenValidatingAdditionalQuestions: VacancyValidationTestsBase
     [Test]
     public void AdditionalQuestion2_ShouldHaveErrorsIfDoesNotHaveQuestionMark()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             AdditionalQuestion2 = "some text",
             Status = VacancyStatus.Draft,

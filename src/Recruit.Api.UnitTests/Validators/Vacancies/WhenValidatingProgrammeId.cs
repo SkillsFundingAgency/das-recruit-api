@@ -10,7 +10,7 @@ public class WhenValidatingProgrammeId : VacancyValidationTestsBase
     [Test]
     public void ErrorWhenProgrammeIsNull()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ProgrammeId = null,
             Status = VacancyStatus.Draft,
@@ -29,7 +29,7 @@ public class WhenValidatingProgrammeId : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenProgrammeIdIsValid()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ProgrammeId = "123",
             TrainingProvider = new TrainingProvider
@@ -52,7 +52,7 @@ public class WhenValidatingProgrammeId : VacancyValidationTestsBase
     [TestCase(null)]
     public void IdMustHaveAValue(string? idValue)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ProgrammeId = idValue,
             Status = VacancyStatus.Draft,

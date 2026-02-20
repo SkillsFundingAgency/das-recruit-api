@@ -10,7 +10,7 @@ public class WhenValidatingTrainingProvider: VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenTrainingProviderUkprnIsValid()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             TrainingProvider = new TrainingProvider { Ukprn = 12345678 },
             Status = VacancyStatus.Draft,
@@ -53,7 +53,7 @@ public class WhenValidatingTrainingProvider: VacancyValidationTestsBase
     [Test]
     public void ErrorIfTrainingProviderIsNull()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             TrainingProvider = null,
             Status = VacancyStatus.Draft,
@@ -72,7 +72,7 @@ public class WhenValidatingTrainingProvider: VacancyValidationTestsBase
     [Test]
     public void EmptyUkprnNotAllowed()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             TrainingProvider = new TrainingProvider { Ukprn = null },
             Status = VacancyStatus.Draft,
@@ -92,7 +92,7 @@ public class WhenValidatingTrainingProvider: VacancyValidationTestsBase
     [TestCase(123456789L)]
     public void TrainingProviderUkprnMustBe8Digits(long? ukprn)
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             TrainingProvider = new TrainingProvider { Ukprn = ukprn },
             Status = VacancyStatus.Draft,

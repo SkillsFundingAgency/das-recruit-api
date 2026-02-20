@@ -13,7 +13,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     public void NoErrorsWhenWageFieldsAreValid(WageType wageTypeValue, int? yearlyFixedWageAmountValue,
         string? wageAdditionalInfoValue)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {
@@ -34,7 +34,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     [Test]
     public void WageMustNotBeNull()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = null,
             Status = VacancyStatus.Draft,
@@ -53,7 +53,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     [Test]
     public void WageTypeMustHaveAValue()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {
@@ -75,7 +75,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     [Test]
     public void WageTypeMustHaveAValidValue()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {
@@ -98,7 +98,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     [TestCase("")]
     public void WageAdditionalInfoIsOptional(string? descriptionValue)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WageType = WageType.NationalMinimumWage,
                 WageAdditionalInformation = descriptionValue
@@ -118,7 +118,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void WageAdditionalInfoMustContainValidCharacters(string invalidCharacter, bool expectedResult)
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WageType = WageType.NationalMinimumWage,
                 WageAdditionalInformation = new String('a', 50) + invalidCharacter + new String('a', 50)
@@ -146,7 +146,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     [Test]
     public void WageAdditionalInfoMustBeLessThan251Characters()
     {
-        var vacancy = new PutVacancyRequest {
+        var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WageType = WageType.NationalMinimumWage,
                 WageAdditionalInformation = new string('a', 252)
@@ -169,7 +169,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     [TestCase("")]
     public void WageCompanyBenefitsInfoIsOptional(string? descriptionValue)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {
@@ -191,7 +191,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     [TestCase("<p>`</p>", false)]
     public void WageCompanyBenefitsInfoMustContainValidCharacters(string invalidCharacter, bool expectedResult)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {
@@ -222,7 +222,7 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     [Test]
     public void WageCompanyBenefitsInfoMustBeLessThan251Characters()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {

@@ -21,7 +21,7 @@ public class WhenValidatingQualifications : VacancyValidationTestsBase
     [Test]
     public void HasNoErrorWhenOptedNotToAddQualifications()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Qualifications = null,
             HasOptedToAddQualifications = false,
@@ -45,7 +45,7 @@ public class WhenValidatingQualifications : VacancyValidationTestsBase
     [TestCaseSource(nameof(NullOrZeroQualificationCollection))]
     public void QualificationsMustNotBeNullOrZeroCount(List<Qualification> qualifications)
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             Qualifications = qualifications,
             HasOptedToAddQualifications = true,
@@ -158,7 +158,7 @@ public class WhenValidatingQualifications : VacancyValidationTestsBase
         result.Errors[0].RuleId.Should().Be((long)VacancyRuleSet.Qualifications);
     }
 
-    private PutVacancyRequest GetVacancy(string qualificationType = "Other", string subject = "subject",
+    private VacancyRequest GetVacancy(string qualificationType = "Other", string subject = "subject",
         string grade = "grade", QualificationWeighting? weighting = QualificationWeighting.Desired)
     {
         var qualification = new Qualification 
@@ -170,7 +170,7 @@ public class WhenValidatingQualifications : VacancyValidationTestsBase
             OtherQualificationName = "Other qualification name"
         };
 
-        return new PutVacancyRequest 
+        return new VacancyRequest 
         {
             Qualifications = [qualification],
             HasOptedToAddQualifications = true,

@@ -50,12 +50,12 @@ public abstract class VacancyValidationTestsBase
         MinimumWageProvider = new Mock<IMinimumWageProvider>();
     }
 
-    protected IEntityValidator<PutVacancyRequest, VacancyRuleSet> Validator
+    protected IEntityValidator<VacancyRequest, VacancyRuleSet> Validator
     {
         get
         {
             var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object, _htmlSanitizerService, TimeProvider, _externalWebsiteHealthCheckService, MinimumWageProvider.Object);
-            return new EntityValidator<PutVacancyRequest, VacancyRuleSet>(fluentValidator);
+            return new EntityValidator<VacancyRequest, VacancyRuleSet>(fluentValidator);
         }
     }
 }

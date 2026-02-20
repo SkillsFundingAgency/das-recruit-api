@@ -10,7 +10,7 @@ public class WhenValidatingStartDate : VacancyValidationTestsBase
     [Test]
     public void NoErrorsWhenStartDateIsValid()
     {
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ClosingDate = DateTime.Today.AddDays(14), 
             StartDate = DateTime.UtcNow.AddDays(15),
@@ -27,7 +27,7 @@ public class WhenValidatingStartDate : VacancyValidationTestsBase
     [Test]
     public void StartDateMustHaveAValue()
     {
-        var vacancy = new PutVacancyRequest 
+        var vacancy = new VacancyRequest 
         {
             StartDate = null,
             Status = VacancyStatus.Draft,
@@ -48,7 +48,7 @@ public class WhenValidatingStartDate : VacancyValidationTestsBase
     public void StartDateMustBeGreaterThanToday(int startDate)
     {
         var closingDate = DateTime.Today.AddDays(50);
-        var vacancy = new PutVacancyRequest
+        var vacancy = new VacancyRequest
         {
             ClosingDate = closingDate,
             StartDate = closingDate.AddDays(startDate),
