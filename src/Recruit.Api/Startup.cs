@@ -120,6 +120,10 @@ internal class Startup
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
         services
             .AddGraphQLServer()
+            .ModifyCostOptions(options =>
+            {
+                options.MaxFieldCost = 10_000;
+            })
             .AddAuthorization()
             .AddPagingArguments()
             .AddFiltering()
