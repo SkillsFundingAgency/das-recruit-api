@@ -44,6 +44,8 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IReportRepository, ReportRepository>();
         services.AddScoped<IVacancyAnalyticsRepository, VacancyAnalyticsRepository>();
 
+        services.AddDistributedMemoryCache();
+
         // email
         var env = configuration["ResourceEnvironmentName"] ?? "local";
         var isProduction = env.Equals("PRD", StringComparison.CurrentCultureIgnoreCase);
