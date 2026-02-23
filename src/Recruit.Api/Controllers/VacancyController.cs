@@ -288,8 +288,8 @@ public class VacancyController : Controller
         [FromServices] IValidator<VacancyRequest> validator,
         [FromBody] PostVacancyRequest request,
         [FromQuery] VacancyRuleSet? ruleSet,
-        CancellationToken cancellationToken,
-        [FromQuery] bool validateOnly = false)
+        [FromQuery] bool validateOnly,
+        CancellationToken cancellationToken)
     {
         if (ruleSet != null)
         {
@@ -310,7 +310,7 @@ public class VacancyController : Controller
             entity.CreatedDate = DateTime.UtcNow;
             entity.Status = VacancyStatus.Submitted;
             entity.Id = Guid.NewGuid();
-            return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPutResponse());
+            return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPostResponse());
         }
         
 
@@ -357,8 +357,8 @@ public class VacancyController : Controller
         [FromRoute] Guid vacancyId,
         [FromBody] PutVacancyRequest request,
         [FromQuery] VacancyRuleSet? ruleSet,
-        CancellationToken cancellationToken,
-        [FromQuery] bool validateOnly = false)
+        [FromQuery] bool validateOnly,
+        CancellationToken cancellationToken)
     {
         if (ruleSet != null)
         {

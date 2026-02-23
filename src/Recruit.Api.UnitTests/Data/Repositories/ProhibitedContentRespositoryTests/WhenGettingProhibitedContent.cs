@@ -54,7 +54,8 @@ internal class WhenGettingProhibitedContent
         [Greedy] ProhibitedContentRepository repository)
     {
         // arrange
-        cache.Setup(x => x.TryGetValue($"{nameof(ProhibitedContentRepository)}:{prohibitedContentType}", out items))
+        object? outValue = items;
+        cache.Setup(x => x.TryGetValue($"{nameof(ProhibitedContentRepository)}:{prohibitedContentType}", out outValue))
             .Returns(true);
         
         // act
