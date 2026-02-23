@@ -391,7 +391,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         switch (entity)
         {
             case null: return false;
-            case { Status: VacancyStatus.Draft or VacancyStatus.Referred or VacancyStatus.Rejected, ClosedDate: null }:
+            case { Status: VacancyStatus.Draft or VacancyStatus.Referred or VacancyStatus.Rejected or VacancyStatus.Review, ClosedDate: null }:
             case { Status: VacancyStatus.Submitted, ClosedDate: null } when entity.ClosingDate < DateTime.UtcNow:
                 entity.DeletedDate = DateTime.UtcNow;
                 await dataContext.SaveChangesAsync(cancellationToken);
