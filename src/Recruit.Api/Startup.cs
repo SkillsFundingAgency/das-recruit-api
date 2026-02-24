@@ -76,7 +76,7 @@ internal class Startup
 
         services.Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<ConnectionStrings>>()!.Value);
-        var candidateAccountConfiguration = Configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
+        var connectionStrings = Configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
 
         services
             .AddMvc(o =>
@@ -101,7 +101,7 @@ internal class Startup
 
         services.RegisterDasEncodingService(Configuration);
         services.AddApplicationDependencies(Configuration);
-        services.AddDatabaseRegistration(candidateAccountConfiguration!, Configuration["EnvironmentName"]);
+        services.AddDatabaseRegistration(connectionStrings!, Configuration["EnvironmentName"]);
         services.AddOpenTelemetryRegistration(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!);
         services.ConfigureHealthChecks();
         services.AddEndpointsApiExplorer();
