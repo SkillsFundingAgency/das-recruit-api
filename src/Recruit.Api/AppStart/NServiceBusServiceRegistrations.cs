@@ -25,7 +25,7 @@ public static class NServiceBusServiceRegistrations
             .UseServicesBuilder(services)
             .UseNewtonsoftJsonSerializer()
             .UseLicense(configuration["NServiceBusLicense"])
-            .UseConnectionString(configuration["ServiceBusConnectionString"]); // TODO: move config into a class
+            .UseConnectionString(configuration["ServiceBusConnectionString"]);
         
         var endpoint = Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
         services
