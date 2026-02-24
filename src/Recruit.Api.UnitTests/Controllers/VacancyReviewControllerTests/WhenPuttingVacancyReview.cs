@@ -4,6 +4,7 @@ using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
+using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.VacancyReviewControllerTests;
 
@@ -36,7 +37,7 @@ internal class WhenPuttingVacancyReview
             .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyReviewEntity>(), token))
             .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
 
-        var result = await sut.PutOne(repository.Object, userRepository.Object, id, request, token);
+        var result = await sut.PutOne(repository.Object, userRepository.Object, Mock.Of<IEventsService>(), id, request, token);
 
         userRepository.Verify(x => x.FindByUserIdAsync(submittedByUserId.ToString(), token), Times.Once);
         repository.Verify(x => x.UpsertOneAsync(It.Is<VacancyReviewEntity>(e => e.SubmittedByUserEmail == userEmail), token), Times.Once);
@@ -67,7 +68,7 @@ internal class WhenPuttingVacancyReview
             .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
 
         // Act
-        var result = await sut.PutOne(repository.Object, userRepository.Object, id, request, token);
+        var result = await sut.PutOne(repository.Object, userRepository.Object, Mock.Of<IEventsService>(), id, request, token);
 
         // Assert
         userRepository.Verify(x => x.FindByUserIdAsync(submittedByUserId, token), Times.Once);
@@ -100,7 +101,7 @@ internal class WhenPuttingVacancyReview
             .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
 
         // Act
-        var result = await sut.PutOne(repository.Object, userRepository.Object, id, request, token);
+        var result = await sut.PutOne(repository.Object, userRepository.Object, Mock.Of<IEventsService>(), id, request, token);
 
         // Assert
         repository.Verify(
@@ -124,9 +125,57 @@ internal class WhenPuttingVacancyReview
             .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyReviewEntity>(), token))
             .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(request.ToDomain(id), false));
 
-        var result = await sut.PutOne(repository.Object, userRepository.Object, id, request, token);
+        var result = await sut.PutOne(repository.Object, userRepository.Object, Mock.Of<IEventsService>(), id, request, token);
 
         userRepository.Verify(x => x.FindByUserIdAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
         result.Should().BeOfType<Ok<SFA.DAS.Recruit.Api.Models.VacancyReview>>();
+    }
+    
+    [Test, RecruitAutoData]
+    public async Task Then_The_Vacancy_Review_Created_Event_Is_Raised_When_A_New_Record_Is_Created(
+        Guid id,
+        PutVacancyReviewRequest request,
+        Mock<IUserRepository> userRepository,
+        Mock<IVacancyReviewRepository> repository,
+        Mock<IEventsService> eventsService,
+        [Greedy] VacancyReviewController sut,
+        CancellationToken token)
+    {
+        // arrange
+        var entity = request.ToDomain(id);
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyReviewEntity>(), token))
+            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
+
+        // act
+        var result = await sut.PutOne(repository.Object, userRepository.Object, eventsService.Object, id, request, token);
+
+        // assert
+        result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.VacancyReview>>();
+        eventsService.Verify(x => x.PublishVacancyReviewCreatedEventAsync(entity), Times.Once);
+    }
+    
+    [Test, RecruitAutoData]
+    public async Task Then_The_Vacancy_Review_Created_Event_Is_Not_Raised_When_A_Record_Is_Updated(
+        Guid id,
+        PutVacancyReviewRequest request,
+        Mock<IUserRepository> userRepository,
+        Mock<IVacancyReviewRepository> repository,
+        Mock<IEventsService> eventsService,
+        [Greedy] VacancyReviewController sut,
+        CancellationToken token)
+    {
+        // arrange
+        var entity = request.ToDomain(id);
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyReviewEntity>(), token))
+            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, false));
+
+        // act
+        var result = await sut.PutOne(repository.Object, userRepository.Object, eventsService.Object, id, request, token);
+
+        // assert
+        result.Should().BeOfType<Ok<SFA.DAS.Recruit.Api.Models.VacancyReview>>();
+        eventsService.Verify(x => x.PublishVacancyReviewCreatedEventAsync(entity), Times.Never);
     }
 }
