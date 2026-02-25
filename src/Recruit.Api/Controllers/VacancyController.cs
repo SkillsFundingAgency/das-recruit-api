@@ -15,6 +15,7 @@ using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Models.Responses;
 using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
+using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -325,6 +326,7 @@ public class VacancyController : Controller
     public async Task<IResult> PutOne(
         [FromServices] IVacancyRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IEventsService eventsService,
         [FromRoute] Guid vacancyId,
         [FromBody] PutVacancyRequest request,
         CancellationToken cancellationToken)
@@ -356,6 +358,11 @@ public class VacancyController : Controller
         }
 
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
+
+        if (result.Entity.Status == VacancyStatus.Closed)
+        {
+            await eventsService.PublishVacancyClosedEvent(result.Entity);
+        }
         
         return result.Created
             ? TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPutResponse())

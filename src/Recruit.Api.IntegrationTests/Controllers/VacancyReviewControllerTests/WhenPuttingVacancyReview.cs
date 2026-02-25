@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -38,8 +39,9 @@ public class WhenPuttingVacancyReview: BaseFixture
         Server.DataContext
             .Setup(x => x.VacancyReviewEntities)
             .ReturnsDbSet(Fixture.CreateMany<VacancyReviewEntity>(10).ToList());
-
-        var request = Fixture.Create<PutVacancyReviewRequest>();
+        var vacancy = Fixture.Create<Vacancy>();
+        var request = Fixture.Build<PutVacancyReviewRequest>()
+            .With(r => r.VacancySnapshot, JsonSerializer.Serialize(vacancy)).Create();
         
         // act
         var response = await Client.PutAsJsonAsync($"{RouteNames.VacancyReviews}/{id}", request);
@@ -85,6 +87,7 @@ public class WhenPuttingVacancyReview: BaseFixture
         // arrange
         var id = Guid.NewGuid();
         var userId = Guid.NewGuid();
+        var vacancy = Fixture.Create<Vacancy>();
         var user = Fixture.Build<UserEntity>()
             .With(u => u.Id, userId)
             .With(u => u.Email, "test@user.test")
@@ -99,6 +102,7 @@ public class WhenPuttingVacancyReview: BaseFixture
         var request = Fixture.Build<PutVacancyReviewRequest>()
             .Without(r => r.SubmittedByUserEmail)
             .With(r => r.SubmittedByUserId, userId.ToString())
+            .With(r=>r.VacancySnapshot, JsonSerializer.Serialize(vacancy))
             .Create();
 
         // act
