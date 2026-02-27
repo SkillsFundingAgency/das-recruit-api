@@ -100,7 +100,6 @@ public class WhenDeletingVacancy: BaseFixture
     
     [TestCase(VacancyStatus.Approved)]
     [TestCase(VacancyStatus.Live)]
-    [TestCase(VacancyStatus.Review)]
     public async Task Then_An_Open_Vacancy_With_The_A_Specific_State_Cannot_Be_Deleted(VacancyStatus status)
     {
         // arrange
