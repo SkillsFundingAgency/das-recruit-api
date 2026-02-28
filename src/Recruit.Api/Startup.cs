@@ -24,11 +24,11 @@ internal class Startup
     private readonly string _environmentName;
     private IConfiguration Configuration { get; }
 
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IHostEnvironment environment)
     {
         _environmentName = configuration["EnvironmentName"]!;
 
-        if (_environmentName == "INTEGRATION")
+        if (environment.EnvironmentName.Equals("IntegrationTest", StringComparison.OrdinalIgnoreCase))
         {
             Configuration = configuration;
             return;
