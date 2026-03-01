@@ -6,7 +6,8 @@ namespace SFA.DAS.Recruit.Api.Data.Repositories;
 
 public interface IBlockedOrganisationRepository : IReadRepository<BlockedOrganisationEntity, Guid>, IWriteRepository<BlockedOrganisationEntity, Guid>
 {
-    Task<List<BlockedOrganisationEntity>> GetByOrganisationIdAsync(string organisationId, CancellationToken cancellationToken);
+    Task<List<BlockedOrganisationEntity>> GetByOrganisationTypeAsync(string organisationType, CancellationToken cancellationToken);
+    Task<BlockedOrganisationEntity?> GetLatestByOrganisationIdAsync(string organisationId, CancellationToken cancellationToken);
 }
 
 internal class BlockedOrganisationRepository(IRecruitDataContext dataContext) : IBlockedOrganisationRepository
@@ -45,11 +46,19 @@ internal class BlockedOrganisationRepository(IRecruitDataContext dataContext) : 
         return true;
     }
 
-    public Task<List<BlockedOrganisationEntity>> GetByOrganisationIdAsync(string organisationId, CancellationToken cancellationToken)
+    public Task<List<BlockedOrganisationEntity>> GetByOrganisationTypeAsync(string organisationType, CancellationToken cancellationToken)
+    {
+        return dataContext.BlockedOrganisationEntities
+            .Where(x => x.OrganisationType == organisationType)
+            .OrderByDescending(x => x.UpdatedDate)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<BlockedOrganisationEntity?> GetLatestByOrganisationIdAsync(string organisationId, CancellationToken cancellationToken)
     {
         return dataContext.BlockedOrganisationEntities
             .Where(x => x.OrganisationId == organisationId)
             .OrderByDescending(x => x.UpdatedDate)
-            .ToListAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

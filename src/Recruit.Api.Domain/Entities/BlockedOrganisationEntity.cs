@@ -9,7 +9,7 @@ public class BlockedOrganisationEntity
     [MaxLength(20)]
     public required string OrganisationId { get; set; }
     [MaxLength(20)]
-    public required string OrganisationType { get; init; }
+    public required string OrganisationType { get; set; }
     [MaxLength(20)]
     public required string BlockedStatus { get; init; }
     public required string Reason { get; init; }

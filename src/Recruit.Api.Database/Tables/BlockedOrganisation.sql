@@ -8,5 +8,6 @@ CREATE TABLE dbo.BlockedOrganisation (
    [UpdatedByUserEmail]       nvarchar(255) NOT NULL,
    [UpdatedDate]              DATETIME NOT NULL,
    CONSTRAINT [PK_BlockedOrganisation] PRIMARY KEY (Id),
-   INDEX [IX_BlockedOrganisation_OrganisationId] NONCLUSTERED(OrganisationId) INCLUDE(Id, UpdatedByUserId, UpdatedDate, BlockedStatus, OrganisationType, Reason)
+   INDEX [IX_BlockedOrganisation_OrganisationId] NONCLUSTERED(OrganisationId) INCLUDE(Id, UpdatedByUserId, UpdatedDate, BlockedStatus, OrganisationType, Reason),
+   INDEX [IX_BlockedOrganisation_OrganisationType] NONCLUSTERED(OrganisationType) INCLUDE(Id, UpdatedByUserId, UpdatedDate, BlockedStatus, OrganisationId, Reason)
 )

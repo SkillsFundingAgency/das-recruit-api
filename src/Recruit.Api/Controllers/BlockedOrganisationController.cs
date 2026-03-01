@@ -19,12 +19,27 @@ public class BlockedOrganisationController : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<BlockedOrganisation>), StatusCodes.Status200OK)]
     public async Task<IResult> GetMany(
         [FromServices] IBlockedOrganisationRepository repository,
-        [FromQuery] string organisationId,
+        [FromQuery] string organisationType,
         CancellationToken cancellationToken)
     {
-        var result = await repository.GetByOrganisationIdAsync(organisationId, cancellationToken);
+        var result = await repository.GetByOrganisationTypeAsync(organisationType, cancellationToken);
 
         return TypedResults.Ok(result.ToGetResponse());
+    }
+
+    [HttpGet, Route("organisation/{organisationId}")]
+    [ProducesResponseType(typeof(BlockedOrganisation), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetByOrganisationId(
+        [FromServices] IBlockedOrganisationRepository repository,
+        [FromRoute] string organisationId,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetLatestByOrganisationIdAsync(organisationId, cancellationToken);
+
+        return result is null
+            ? Results.NotFound()
+            : TypedResults.Ok(result.ToGetResponse());
     }
 
     [HttpGet]

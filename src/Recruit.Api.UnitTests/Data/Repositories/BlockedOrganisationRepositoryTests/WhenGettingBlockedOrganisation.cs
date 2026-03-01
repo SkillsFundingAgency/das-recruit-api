@@ -45,7 +45,34 @@ internal class WhenGettingBlockedOrganisation
     }
 
     [Test, MoqAutoData]
-    public async Task GetByOrganisationIdAsync_Returns_Items_In_Descending_Order(
+    public async Task GetByOrganisationTypeAsync_Returns_Items_In_Descending_Order(
+        string organisationType,
+        BlockedOrganisationEntity expectedItem1,
+        BlockedOrganisationEntity expectedItem2,
+        List<BlockedOrganisationEntity> items,
+        [Frozen] Mock<IRecruitDataContext> context,
+        [Greedy] BlockedOrganisationRepository sut)
+    {
+        // arrange
+        var now = DateTime.UtcNow;
+        expectedItem1.OrganisationType = organisationType;
+        expectedItem1.UpdatedDate = now;
+        expectedItem2.OrganisationType = organisationType;
+        expectedItem2.UpdatedDate = now.AddDays(-2);
+        items.AddRange([expectedItem1, expectedItem2]);
+        context.Setup(x => x.BlockedOrganisationEntities).ReturnsDbSet(items);
+
+        // act
+        var result = await sut.GetByOrganisationTypeAsync(organisationType, CancellationToken.None);
+
+        // assert
+        result.Should().HaveCount(2);
+        result.Should().BeInDescendingOrder(x => x.UpdatedDate);
+        result.Should().BeEquivalentTo([expectedItem1, expectedItem2]).And.BeInDescendingOrder(c=>c.UpdatedDate);
+    }
+
+    [Test, MoqAutoData]
+    public async Task GetLatestByOrganisationIdAsync_Returns_The_Latest_Item(
         string organisationId,
         List<BlockedOrganisationEntity> items,
         BlockedOrganisationEntity expectedItem1,
@@ -59,17 +86,16 @@ internal class WhenGettingBlockedOrganisation
         expectedItem1.UpdatedDate = now;
         expectedItem2.OrganisationId = organisationId;
         expectedItem2.UpdatedDate = now.AddDays(-2);
-        
+
         items.AddRange([expectedItem1, expectedItem2]);
-        
+
         context.Setup(x => x.BlockedOrganisationEntities).ReturnsDbSet(items);
 
         // act
-        var result = await sut.GetByOrganisationIdAsync(organisationId, CancellationToken.None);
+        var result = await sut.GetLatestByOrganisationIdAsync(organisationId, CancellationToken.None);
 
         // assert
-        result.Should().HaveCount(2);
-        result.Should().BeInDescendingOrder(x => x.UpdatedDate);
-        result.Should().BeEquivalentTo([expectedItem1, expectedItem2]).And.BeInDescendingOrder(c=>c.UpdatedDate);
+        result.Should().NotBeNull();
+        result.Should().BeEquivalentTo(expectedItem1);
     }
 }
