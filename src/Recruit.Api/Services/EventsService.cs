@@ -1,4 +1,5 @@
-﻿using Esfa.Recruit.Vacancies.Client.Domain.Events;
+﻿using System.Text.Json;
+using Esfa.Recruit.Vacancies.Client.Domain.Events;
 using NServiceBus;
 using SFA.DAS.Recruit.Api.Core.Events;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
@@ -15,6 +16,8 @@ public interface IEventsService
 
 public class EventsService(ILogger<EventsService> logger, IMessageSession messageSession): IEventsService
 {
+    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+    
     private class VacancySnapshotProps
     {
         public Guid Id { get; init; } // only field we want
@@ -23,7 +26,7 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
     public async Task PublishVacancyReviewCreatedEventAsync(VacancyReviewEntity entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
-        var snapshot = JsonSerializer.Deserialize<VacancySnapshotProps>(entity.VacancySnapshot, JsonConfig.Options);
+        var snapshot = JsonSerializer.Deserialize<VacancySnapshotProps>(entity.VacancySnapshot, JsonOptions);
         
         if (entity.VacancySnapshot is not { Length: > 0 })
         {
