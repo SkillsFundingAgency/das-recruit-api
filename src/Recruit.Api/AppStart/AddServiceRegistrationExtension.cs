@@ -11,6 +11,7 @@ using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
+using SFA.DAS.Recruit.Api.Validators;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
@@ -21,6 +22,10 @@ public static class AddServiceRegistrationExtension
     {
         // validators
         services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
+        services.AddTransient<IHtmlSanitizerService, HtmlSanitizerService>();
+        services.AddTransient<IMinimumWageProvider, MinimumWageProvider>();
+        services.AddHttpClient<IExternalWebsiteHealthCheckService, ExternalWebsiteHealthCheckService>();
+        services.AddSingleton(TimeProvider.System);
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();
@@ -38,6 +43,8 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IVacancyRepository, VacancyRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
         services.AddScoped<IVacancyAnalyticsRepository, VacancyAnalyticsRepository>();
+
+        services.AddDistributedMemoryCache();
 
         // email
         var env = configuration["ResourceEnvironmentName"] ?? "local";

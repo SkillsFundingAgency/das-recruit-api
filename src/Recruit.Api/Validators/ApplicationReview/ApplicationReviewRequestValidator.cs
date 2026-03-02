@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 
-namespace SFA.DAS.Recruit.Api.Validators;
+namespace SFA.DAS.Recruit.Api.Validators.ApplicationReview;
 
 internal class PutApplicationReviewRequestValidator : AbstractValidator<PutApplicationReviewRequest>
 {
