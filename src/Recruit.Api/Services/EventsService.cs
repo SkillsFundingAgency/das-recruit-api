@@ -13,7 +13,7 @@ public interface IEventsService
     Task PublishVacancyClosedEvent(VacancyEntity entity);
 }
 
-public class EventsService(IMessageSession messageSession): IEventsService
+public class EventsService(ILogger<EventsService> logger, IMessageSession messageSession): IEventsService
 {
     private class VacancySnapshotProps
     {
@@ -24,7 +24,14 @@ public class EventsService(IMessageSession messageSession): IEventsService
     {
         ArgumentNullException.ThrowIfNull(entity);
         var snapshot = JsonSerializer.Deserialize<VacancySnapshotProps>(entity.VacancySnapshot, JsonConfig.Options);
-        await messageSession.Publish(new VacancyReviewCreatedEvent(snapshot!.Id, entity.Id));
+        
+        if (entity.VacancySnapshot is not { Length: > 0 })
+        {
+            logger.LogError("VacancyReviewCreatedEvent publishing for '{VacancyReviewId}' will fail, the snapshot is empty and no VacancyId will be available", entity.Id);
+        }
+        
+        logger.LogInformation("Publishing VacancyReviewCreatedEvent, vacancyReviewId='{VacancyReviewId}, vacancyId='{VacancyId}' ", entity.Id, snapshot!.Id);
+        await messageSession.Publish(new VacancyReviewCreatedEvent(snapshot.Id, entity.Id));
     }
     
     public async Task PublishVacancyClosedEvent(VacancyEntity entity)
