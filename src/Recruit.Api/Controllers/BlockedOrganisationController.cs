@@ -27,7 +27,7 @@ public class BlockedOrganisationController : ControllerBase
         return TypedResults.Ok(result.ToGetResponse());
     }
 
-    [HttpGet, Route("organisation/{organisationId}")]
+    [HttpGet, Route($"~/{RouteNames.BlockedOrganisation}/ByOrganisationId/{{organisationId}}")]
     [ProducesResponseType(typeof(BlockedOrganisation), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> GetByOrganisationId(
