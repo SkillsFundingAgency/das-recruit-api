@@ -8,7 +8,7 @@ public class PutVacancyRequest
 {
     public long? VacancyReference { get; init; }
     public long? AccountId { get; init; }
-    [Required] public required VacancyStatus? Status { get; init; }
+    [Required] public required VacancyStatus? Status { get; set; }
     public ApprenticeshipTypes? ApprenticeshipType { get; init; }
     public string? Title { get; init; }
     [Required] public required OwnerType? OwnerType { get; init; }
