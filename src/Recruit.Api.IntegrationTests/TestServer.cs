@@ -15,13 +15,13 @@ public class TestServer : WebApplicationFactory<Program>
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder
-            .ConfigureHostConfiguration(configBuilder => configBuilder.AddJsonFile("appsettings.Test.json"))
             .ConfigureAppConfiguration(configBuilder => configBuilder.SetBasePath(Directory.GetCurrentDirectory()))
             .ConfigureServices(services =>
             {
                 services.AddTransient<IRecruitDataContext>(x => DataContext.Object);
                 services.AddTransient<IEncodingService>(x => EncodingService.Object);
-            });
+            })
+            .UseEnvironment("IntegrationTest");
         
         return base.CreateHost(builder);
     }

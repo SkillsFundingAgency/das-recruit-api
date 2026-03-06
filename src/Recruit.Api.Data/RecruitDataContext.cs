@@ -24,6 +24,7 @@ public interface IRecruitDataContext
     DbSet<UserEmployerAccountEntity> UserEmployerAccountEntities { get; }
     DbSet<RecruitNotificationEntity> RecruitNotifications { get; }
     DbSet<ReportEntity> ReportEntities { get; }
+    DbSet<BlockedOrganisationEntity> BlockedOrganisationEntities { get; }
 
     DbSet<VacancyAnalyticsEntity> VacancyAnalyticsEntities { get; }
     DatabaseFacade Database { get; }
@@ -46,6 +47,7 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
     public DbSet<UserEmployerAccountEntity> UserEmployerAccountEntities { get; set; }
     public DbSet<RecruitNotificationEntity> RecruitNotifications { get; set; }
     public DbSet<ReportEntity> ReportEntities { get; set; }
+    public DbSet<BlockedOrganisationEntity> BlockedOrganisationEntities { get; set; }
     public DbSet<VacancyAnalyticsEntity> VacancyAnalyticsEntities { get; set; }
 
     private readonly ConnectionStrings? _configuration;
@@ -98,6 +100,7 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
         modelBuilder.ApplyConfiguration(new VacancyReviewEntityConfiguration());
         modelBuilder.ApplyConfiguration(new VacancyEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ReportEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new BlockedOrganisationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new VacancyAnalyticsEntityConfiguration());
 
         base.OnModelCreating(modelBuilder);
