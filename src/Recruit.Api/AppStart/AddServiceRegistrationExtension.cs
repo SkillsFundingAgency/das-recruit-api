@@ -11,6 +11,7 @@ using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
+using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
@@ -71,6 +72,9 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IEmailTemplateHandler, ApplicationSubmittedDelayedEmailHandler>();
         services.AddScoped<IEmailTemplateHandler, SharedApplicationReviewedByEmployerDelayedEmailHandler>();
         services.AddScoped<IEmailFactory, EmailFactory>();
+        
+        // services
+        services.AddScoped<IEventsService, EventsService>();
     }
 
     public static void AddDatabaseRegistration(
