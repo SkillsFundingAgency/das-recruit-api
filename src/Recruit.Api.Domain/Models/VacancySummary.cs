@@ -23,6 +23,7 @@ public record VacancySummary
     public string? ProgrammeId { get; set; }
     public DateTime? StartDate { get; set; }
     public string? TrainingTitle { get; set; }
+    public string? TransferInfo { get; set; }
     public long? TransferInfoUkprn { get; set; }
     public string? TransferInfoProviderName { get; set; }
     public TransferReason? TransferInfoReason { get; set; }
@@ -38,6 +39,8 @@ public record VacancySummary
     public bool IsTraineeship { get; set; }
     public bool IsTaskListCompleted { get; set; }
     public bool? HasChosenProviderContactDetails { get; set; }
+    public bool? HasSubmittedAdditionalQuestions { get; set; }
     public ApprenticeshipTypes? ApprenticeshipType { get; set; }
     public SourceOrigin? SourceOrigin { get; set; }
+    public OwnerType? OwnerType { get; set; }
 }
