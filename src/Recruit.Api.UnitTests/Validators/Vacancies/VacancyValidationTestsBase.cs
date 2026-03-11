@@ -4,7 +4,6 @@ using Microsoft.Extensions.Time.Testing;
 using Moq.Protected;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Validators;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;

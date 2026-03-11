@@ -55,6 +55,7 @@ jobs:
               AccountsApiClientSecret: $(AccountsApiClientSecret)
               RecruitCosmosConnectionString: $(RecruitCosmosConnectionString)
               RecruitStorageConnectionString: $(RecruitStorageConnectionString)
+              NServiceBusLicense: $(NServiceBusLicense)
         - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
           parameters:
             AzureSubscription: ${{ parameters.ServiceConnection }}

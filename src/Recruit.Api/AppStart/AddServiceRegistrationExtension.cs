@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using HotChocolate.Execution.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +12,7 @@ using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Validators;
+using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
@@ -77,6 +78,9 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IEmailTemplateHandler, ApplicationSubmittedDelayedEmailHandler>();
         services.AddScoped<IEmailTemplateHandler, SharedApplicationReviewedByEmployerDelayedEmailHandler>();
         services.AddScoped<IEmailFactory, EmailFactory>();
+        
+        // services
+        services.AddScoped<IEventsService, EventsService>();
     }
 
     public static void AddDatabaseRegistration(
@@ -122,6 +126,7 @@ public static class AddServiceRegistrationExtension
 
     public static IRequestExecutorBuilder AddTypes(this IRequestExecutorBuilder builder)
     {
+        builder.AddTypeExtension(typeof(Data.Queries.PagedVacancyQuery));
         builder.AddTypeExtension(typeof(Data.Queries.VacancyQuery));
         builder.ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Query)), HotChocolate.Language.OperationType.Query));
         return builder;

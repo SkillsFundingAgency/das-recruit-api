@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
@@ -76,7 +77,7 @@ internal class Startup
 
         services.Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<ConnectionStrings>>()!.Value);
-        var candidateAccountConfiguration = Configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
+        var connectionStrings = Configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
 
         services
             .AddMvc(o =>
@@ -101,7 +102,7 @@ internal class Startup
 
         services.RegisterDasEncodingService(Configuration);
         services.AddApplicationDependencies(Configuration);
-        services.AddDatabaseRegistration(candidateAccountConfiguration!, Configuration["EnvironmentName"]);
+        services.AddDatabaseRegistration(connectionStrings!, Configuration["EnvironmentName"]);
         services.AddOpenTelemetryRegistration(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!);
         services.ConfigureHealthChecks();
         services.AddEndpointsApiExplorer();
@@ -121,6 +122,10 @@ internal class Startup
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
         services
             .AddGraphQLServer()
+            .ModifyCostOptions(options =>
+            {
+                options.MaxFieldCost = 10_000;
+            })
             .AddAuthorization()
             .AddPagingArguments()
             .AddFiltering()
@@ -171,5 +176,10 @@ internal class Startup
                 graphQlBuilder.RequireAuthorization();
             }
         });
+    }
+    
+    public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
+    {
+        serviceProvider.StartNServiceBus(Configuration);
     }
 }

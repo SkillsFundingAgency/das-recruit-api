@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Exceptions;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +17,7 @@ using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Models.Responses;
 using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
+using SFA.DAS.Recruit.Api.Services;
 using SFA.DAS.Recruit.Api.Validators;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
@@ -267,7 +268,6 @@ public class VacancyController : Controller
         return TypedResults.Ok(vacancySummaries);
     }
 
-
     [HttpGet]
     [Route($"{RouteElements.TotalPositionsAvailable}")]
     [ProducesResponseType(typeof(TotalPositionsAvailableResponse), StatusCodes.Status200OK)]
@@ -353,6 +353,7 @@ public class VacancyController : Controller
     public async Task<IResult> PutOne(
         [FromServices] IVacancyRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IEventsService eventsService,
         [FromServices] IValidator<VacancyRequest> validator,
         [FromRoute] Guid vacancyId,
         [FromBody] PutVacancyRequest request,
@@ -406,6 +407,11 @@ public class VacancyController : Controller
         }
 
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
+
+        if (result.Entity.Status == VacancyStatus.Closed)
+        {
+            await eventsService.PublishVacancyClosedEvent(result.Entity);
+        }
         
         return result.Created
             ? TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPutResponse())
@@ -491,5 +497,29 @@ public class VacancyController : Controller
 
         var count = await vacancyRepository.CountVacanciesByUserIdAsync(user.Id, cancellationToken);
         return TypedResults.Ok(new DataResponse<int>(count));
+    }
+    
+    [HttpGet, Route($"~/{RouteNames.Provider}/{{ukprn:int}}/{RouteElements.Vacancies}/stats")]
+    public async Task<IResult> GetProviderVacancyApplicationStats(
+        [FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+        [FromRoute] int ukprn,
+        [FromQuery] List<long> vacancyReferences,
+        CancellationToken cancellationToken = default)
+    {
+        var applicationReviewStats = await applicationReviewsProvider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, cancellationToken);
+        var applicationReviewStatsDict = applicationReviewStats.ToDictionary(x => x.VacancyReference);
+        return TypedResults.Ok(new DataResponse<Dictionary<long, ApplicationReviewsStats>>(applicationReviewStatsDict));
+    }
+    
+    [HttpGet, Route($"~/{RouteNames.Employer}/{{accountId:long}}/{RouteElements.Vacancies}/stats")]
+    public async Task<IResult> GetEmployerVacancyApplicationStats(
+        [FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+        [FromRoute] long accountId,
+        [FromQuery] List<long> vacancyReferences,
+        CancellationToken cancellationToken = default)
+    {
+        var applicationReviewStats = await applicationReviewsProvider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, null, cancellationToken);
+        var applicationReviewStatsDict = applicationReviewStats.ToDictionary(x => x.VacancyReference);
+        return TypedResults.Ok(new DataResponse<Dictionary<long, ApplicationReviewsStats>>(applicationReviewStatsDict));
     }
 }
