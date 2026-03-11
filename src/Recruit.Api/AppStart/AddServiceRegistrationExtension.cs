@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 using HotChocolate.Execution.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +11,7 @@ using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
+using SFA.DAS.Recruit.Api.Validators;
 using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
@@ -22,6 +23,10 @@ public static class AddServiceRegistrationExtension
     {
         // validators
         services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
+        services.AddTransient<IHtmlSanitizerService, HtmlSanitizerService>();
+        services.AddTransient<IMinimumWageProvider, MinimumWageProvider>();
+        services.AddHttpClient<IExternalWebsiteHealthCheckService, ExternalWebsiteHealthCheckService>();
+        services.AddSingleton(TimeProvider.System);
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();
@@ -39,6 +44,8 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IVacancyRepository, VacancyRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
         services.AddScoped<IVacancyAnalyticsRepository, VacancyAnalyticsRepository>();
+
+        services.AddDistributedMemoryCache();
 
         // email
         var env = configuration["ResourceEnvironmentName"] ?? "local";
