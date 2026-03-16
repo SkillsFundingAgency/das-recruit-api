@@ -23,14 +23,6 @@ public static class VacancyTrainingProviderExtension
                 .WithMessage("The UKPRN is 8 digits")
                 .WithErrorCode("99")
                 .WithState(_ => VacancyRuleSet.TrainingProvider);
-
-            //TODO Needs FAI-2972 to be implemented
-            // x.When(tp => tp.Ukprn.ToString().Length == 8, () =>
-            // {
-            //     x.RuleFor(tp => tp)
-            //         .TrainingProviderMustNotBeBlocked(blockedOrganisationRepo);
-            // });
         }).WithState(_ => VacancyRuleSet.TrainingProvider).RunCondition(VacancyRuleSet.TrainingProvider);
-        
     }
 }
