@@ -10,6 +10,7 @@ using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
+using SFA.DAS.Api.Common.Middleware;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Recruit.Api.AppStart;
 using SFA.DAS.Recruit.Api.Data;
@@ -137,7 +138,13 @@ internal class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        
+        app.UseMiddleware<SecurityHeadersMiddleware>();
+        
         app.UseAuthentication();
             
         app.UseSwagger();
