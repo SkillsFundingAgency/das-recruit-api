@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
@@ -18,6 +19,7 @@ public class WhenPuttingVacancy
         Mock<IVacancyRepository> repository,
         Mock<IEventsService> eventsService,
         Mock<IUserRepository> userRepository,
+        Mock<IValidator<VacancyRequest>> validator,
         [Greedy] VacancyController sut,
         CancellationToken token)
     {
@@ -29,7 +31,7 @@ public class WhenPuttingVacancy
             .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
 
         // act
-        var result = await sut.PutOne(repository.Object, userRepository.Object, eventsService.Object, id, request, token);
+        var result = await sut.PutOne(repository.Object, userRepository.Object, eventsService.Object,validator.Object, id, request,null, false, token);
 
         // assert
         result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
@@ -42,6 +44,7 @@ public class WhenPuttingVacancy
         Mock<IVacancyRepository> repository,
         Mock<IEventsService> eventsService,
         Mock<IUserRepository> userRepository,
+        Mock<IValidator<VacancyRequest>> validator,
         [Greedy] VacancyController sut,
         CancellationToken token)
     {
@@ -53,7 +56,7 @@ public class WhenPuttingVacancy
             .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
 
         // act
-        var result = await sut.PutOne(repository.Object, userRepository.Object, eventsService.Object, id, request, token);
+        var result = await sut.PutOne(repository.Object, userRepository.Object, eventsService.Object,validator.Object, id, request,null, false, token);
 
         // assert
         result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
