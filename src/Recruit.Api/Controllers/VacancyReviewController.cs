@@ -11,6 +11,7 @@ using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
+using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -53,6 +54,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
     public async Task<IResult> PutOne(
         [FromServices] IVacancyReviewRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IEventsService eventsService,
         [FromRoute] Guid id,
         [FromBody] PutVacancyReviewRequest request,
         CancellationToken cancellationToken)
@@ -83,6 +85,10 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
         try
         {
             var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+            if (result.Created)
+            {
+                await eventsService.PublishVacancyReviewCreatedEventAsync(result.Entity);
+            }
 
             return result.Created
                 ? TypedResults.Created($"/{RouteNames.VacancyReviews}/{result.Entity.Id}", result.Entity.ToPutResponse())
