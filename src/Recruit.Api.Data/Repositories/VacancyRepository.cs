@@ -89,8 +89,8 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             _ => query.Where(x => x.OwnerType == OwnerType.Employer)
         };
 
-        query = query.Where(c=>c.DeletedDate == null);
-        
+        query = query.Where(c => c.DeletedDate == null);
+
         // Apply search term
         query = ApplySearchTerm(query, searchTerm);
 
@@ -448,7 +448,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
     public async Task<int> GetEmployerReviewVacancies(long accountId, CancellationToken cancellationToken)
     {
         var result = await dataContext.VacancyEntities.AsNoTracking()
-            .Where(c=>c.AccountId == accountId && c.OwnerType == OwnerType.Provider && c.Status == VacancyStatus.Review)
+            .Where(c=>c.AccountId == accountId && c.OwnerType == OwnerType.Provider && c.Status == VacancyStatus.Review && c.DeletedDate == null)
             .Select(c => new {
                 c.LegalEntityName,
                 c.Title,
