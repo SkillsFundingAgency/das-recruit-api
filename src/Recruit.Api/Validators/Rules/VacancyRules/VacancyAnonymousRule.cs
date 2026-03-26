@@ -3,7 +3,7 @@ using SFA.DAS.Recruit.Api.Models;
 
 namespace SFA.DAS.Recruit.Api.Validators.Rules.VacancyRules;
 
-public sealed class VacancyAnonymousCheckRule : IRule<VacancySnapshot>
+public sealed class VacancyAnonymousRule : IRule<VacancySnapshot>
 {
     public Task<RuleOutcome> EvaluateAsync(VacancySnapshot subject, CancellationToken cancellationToken = default)
     {

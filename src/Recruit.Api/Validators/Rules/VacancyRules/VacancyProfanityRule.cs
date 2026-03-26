@@ -14,7 +14,7 @@ public class ProfanityData
     public int Occurrences { get; set; }
 }
     
-public sealed class VacancyProfanityChecksRule(IProhibitedContentRepository prohibitedContentRepository, decimal weighting = 100.0m) : IRule<VacancySnapshot>
+public sealed class VacancyProfanityRule(IProhibitedContentRepository prohibitedContentRepository, decimal weighting = 100.0m) : IRule<VacancySnapshot>
 {
     private RuleOutcome CreateOutcome(int score, string narrative, string? data, string target = RuleOutcome.NoSpecificTarget)
     {

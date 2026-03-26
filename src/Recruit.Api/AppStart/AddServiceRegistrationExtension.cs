@@ -31,14 +31,14 @@ public static class AddServiceRegistrationExtension
         services.AddHttpClient<IExternalWebsiteHealthCheckService, ExternalWebsiteHealthCheckService>();
         services.AddSingleton(TimeProvider.System);
 
-        services.AddScoped<VacancyAnonymousCheckRule>();
-        services.AddScoped<VacancyBannedPhraseChecksRule>();
-        services.AddScoped<VacancyProfanityChecksRule>();
+        services.AddScoped<VacancyAnonymousRule>();
+        services.AddScoped<VacancyBannedPhraseRule>();
+        services.AddScoped<VacancyProfanityRule>();
         services.AddTransient<IEnumerable<IRule<VacancySnapshot>>>(sp =>
         [
-            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyAnonymousCheckRule))!,
-            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyBannedPhraseChecksRule))!,
-            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyProfanityChecksRule))!,
+            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyAnonymousRule))!,
+            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyBannedPhraseRule))!,
+            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyProfanityRule))!,
         ]);
 
         // providers

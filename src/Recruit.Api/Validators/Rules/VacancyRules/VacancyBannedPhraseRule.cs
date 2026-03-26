@@ -14,7 +14,7 @@ public class BannedPhrasesData
     public int Occurrences { get; set; }
 }
 
-public sealed class VacancyBannedPhraseChecksRule(IProhibitedContentRepository prohibitedContentRepository, decimal weighting = 100.0m): IRule<VacancySnapshot>
+public sealed class VacancyBannedPhraseRule(IProhibitedContentRepository prohibitedContentRepository, decimal weighting = 100.0m): IRule<VacancySnapshot>
 {
     private IEnumerable<string> BannedPhrases { get; set; } = new List<string>();
 
