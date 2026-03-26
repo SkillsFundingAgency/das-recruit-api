@@ -11,8 +11,11 @@ using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
+using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Validators;
 using SFA.DAS.Recruit.Api.Services;
+using SFA.DAS.Recruit.Api.Validators.Rules;
+using SFA.DAS.Recruit.Api.Validators.Rules.VacancyRules;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
@@ -27,6 +30,16 @@ public static class AddServiceRegistrationExtension
         services.AddTransient<IMinimumWageProvider, MinimumWageProvider>();
         services.AddHttpClient<IExternalWebsiteHealthCheckService, ExternalWebsiteHealthCheckService>();
         services.AddSingleton(TimeProvider.System);
+
+        services.AddScoped<VacancyAnonymousCheckRule>();
+        services.AddScoped<VacancyBannedPhraseChecksRule>();
+        services.AddScoped<VacancyProfanityChecksRule>();
+        services.AddTransient<IEnumerable<IRule<VacancySnapshot>>>(sp =>
+        [
+            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyAnonymousCheckRule))!,
+            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyBannedPhraseChecksRule))!,
+            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyProfanityChecksRule))!,
+        ]);
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();
@@ -81,6 +94,7 @@ public static class AddServiceRegistrationExtension
         
         // services
         services.AddScoped<IEventsService, EventsService>();
+        services.AddScoped<IAutomatedReviewService, AutomatedReviewService>();
     }
 
     public static void AddDatabaseRegistration(
