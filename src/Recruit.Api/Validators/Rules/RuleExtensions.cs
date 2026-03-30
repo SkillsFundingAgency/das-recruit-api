@@ -79,7 +79,7 @@ public static class RuleExtensions
     {
         if (string.IsNullOrWhiteSpace(value)) return string.Empty;
 
-        var rgx = new Regex("[^a-zA-Z0-9]");
+        var rgx = new Regex("[^a-zA-Z0-9]", RegexOptions.Compiled, TimeSpan.FromSeconds(3000));
         var sanitized = rgx.Replace(value, " ");
 
         sanitized = RemoveContiguousWhitespace(sanitized);
@@ -89,7 +89,7 @@ public static class RuleExtensions
         
     private static string RemoveContiguousWhitespace(string value)
     {
-        return Regex.Replace(value, @"\s+", " ");
+        return Regex.Replace(value, @"\s+", " ", RegexOptions.Compiled, TimeSpan.FromSeconds(3000));
     }
 
     public static int CountOccurrences(this string body, string term)
