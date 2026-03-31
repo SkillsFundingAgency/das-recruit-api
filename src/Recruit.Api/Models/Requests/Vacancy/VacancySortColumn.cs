@@ -8,6 +8,7 @@ public enum VacancySortColumn
     CreatedDate, // first item is default sort column
     Id,
     VacancyReference,
+    ClosingDate,
 }
 
 public static class VacancySortColumnExtensions
@@ -17,6 +18,7 @@ public static class VacancySortColumnExtensions
         return enumValue switch {
             VacancySortColumn.CreatedDate => x => x.CreatedDate,
             VacancySortColumn.Id => x => x.Id,
+            VacancySortColumn.ClosingDate => x => x.ClosingDate,
             VacancySortColumn.VacancyReference => x => x.VacancyReference,
             _ => throw new ArgumentOutOfRangeException(nameof(enumValue), enumValue, null)
         };
