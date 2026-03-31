@@ -115,6 +115,7 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
 
         var dashboard = await dataContext.VacancyReviewEntities
             .Where(rv => rv.Status == ReviewStatus.PendingReview || rv.Status == ReviewStatus.UnderReview)
+            .Where(rv => dataContext.VacancyEntities.Any(v => v.VacancyReference == rv.VacancyReference))
             .AsNoTracking()
             .GroupBy(_ => 1)
             .Select(g => new QaDashboard {

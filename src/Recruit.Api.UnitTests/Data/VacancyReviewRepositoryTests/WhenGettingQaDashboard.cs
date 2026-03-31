@@ -39,21 +39,26 @@ internal class WhenGettingQaDashboard
     [MoqInlineAutoData(ReviewStatus.PendingReview)]
     public async Task GetQaDashboard_Should_Count_TotalVacanciesForReview(ReviewStatus status,
         List<VacancyReviewEntity> entities,
+        List<VacancyEntity> vacancyEntities,
         [Frozen] Mock<IRecruitDataContext> context,
         [Greedy] VacancyReviewRepository repository,
         CancellationToken token)
     {
         // Arrange: 2 vacancies under review
-        foreach (var vacancyReviewEntity in entities)
+        foreach (var (review, vacancy) in entities.Zip(vacancyEntities))
         {
-            vacancyReviewEntity.Status = status;
-            vacancyReviewEntity.CreatedDate = DateTime.UtcNow.AddHours(-5);
-            vacancyReviewEntity.SlaDeadLine = DateTime.UtcNow.AddHours(-1);
-            vacancyReviewEntity.SubmissionCount = 1;
+            review.Status = status;
+            review.CreatedDate = DateTime.UtcNow.AddHours(-5);
+            review.SlaDeadLine = DateTime.UtcNow.AddHours(-1);
+            review.SubmissionCount = 1;
+            vacancy.VacancyReference = review.VacancyReference;
         }
 
         context.Setup(x => x.VacancyReviewEntities)
             .ReturnsDbSet(entities);
+
+        context.Setup(x => x.VacancyEntities)
+            .ReturnsDbSet(vacancyEntities);
 
         // Act
         var result = await repository.GetQaDashboard(CancellationToken.None);
@@ -67,23 +72,27 @@ internal class WhenGettingQaDashboard
     [MoqInlineAutoData(ReviewStatus.PendingReview)]
     public async Task GetQaDashboard_Should_Count_ResubmittedVacancies(ReviewStatus status,
         List<VacancyReviewEntity> entities,
+        List<VacancyEntity> vacancyEntities,
         [Frozen] Mock<IRecruitDataContext> context,
         [Greedy] VacancyReviewRepository repository,
         CancellationToken token)
     {
-
         // Arrange
-        foreach (var vacancyReviewEntity in entities)
+        foreach (var (review, vacancy) in entities.Zip(vacancyEntities))
         {
-            vacancyReviewEntity.Status = status;
-            vacancyReviewEntity.CreatedDate = DateTime.UtcNow.AddHours(-10);
-            vacancyReviewEntity.SlaDeadLine = DateTime.UtcNow.AddHours(-1);
-            vacancyReviewEntity.SubmissionCount = 2;
+            review.Status = status;
+            review.CreatedDate = DateTime.UtcNow.AddHours(-10);
+            review.SlaDeadLine = DateTime.UtcNow.AddHours(-1);
+            review.SubmissionCount = 2;
+            vacancy.VacancyReference = review.VacancyReference;
         }
 
         context.Setup(x => x.VacancyReviewEntities)
             .ReturnsDbSet(entities);
-        
+
+        context.Setup(x => x.VacancyEntities)
+            .ReturnsDbSet(vacancyEntities);
+
         // Act
         var result = await repository.GetQaDashboard(CancellationToken.None);
 
