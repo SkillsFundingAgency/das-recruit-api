@@ -1,7 +1,6 @@
 using System.Text.Json;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Validators.Rules;
 
@@ -24,7 +23,5 @@ public class AutomatedReviewService(IEnumerable<IRule<VacancySnapshot>> vacancyR
             .SelectMany(x => x.Details!)
             .Any(x => x.Score > 0)
             .ToString();
-        
-        entity.Status = ReviewStatus.PendingReview;
     }
 }
