@@ -15,7 +15,7 @@ public class RuleOutcomeDetailsBuilder(RuleId ruleId, string target = RuleOutcom
         {
             if (outcome.RuleId != ruleId)
             {
-                throw new ArgumentException($"Invalid rule ID specified '{outcome.RuleId}' (does not match existing rule ID '{ruleId}' in the outcome)", nameof(outcome.RuleId));
+                throw new ArgumentException($"Invalid rule ID specified '{outcome.RuleId}' (does not match existing rule ID '{ruleId}' in the outcome)");
             }
 
             _totalScore += outcome.Score;
