@@ -10,6 +10,9 @@ public class WhenGettingFactory
     [RecursiveMoqInlineAutoData(VacancyStatus.Rejected, typeof(VacancyRejectedNotificationFactory))]
     [RecursiveMoqInlineAutoData(VacancyStatus.Review, typeof(VacancySentForReviewNotificationFactory))]
     [RecursiveMoqInlineAutoData(VacancyStatus.Submitted, typeof(VacancySubmittedNotificationFactory))]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Approved, typeof(VacancyApprovedNotificationFactory))]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Referred, typeof(VacancyReferredNotificationFactory))]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Closed, typeof(VacancyClosedNotificationFactory))]
     public void Then_The_Correct_Factory_Is_Returned(
         VacancyStatus status,
         Type type,

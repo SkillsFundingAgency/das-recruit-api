@@ -14,7 +14,8 @@ public class VacancyNotificationStrategy(
     VacancySentForReviewNotificationFactory vacancySentForReviewNotificationFactory,
     VacancySubmittedNotificationFactory vacancySubmittedNotificationFactory,
     VacancyApprovedNotificationFactory vacancyApprovedNotificationFactory,
-    VacancyReferredNotificationFactory vacancyReferredNotificationFactory) : IVacancyNotificationStrategy
+    VacancyReferredNotificationFactory vacancyReferredNotificationFactory,
+    VacancyClosedNotificationFactory vacancyClosedNotificationFactory) : IVacancyNotificationStrategy
 {
     public IVacancyNotificationFactory Create(VacancyEntity vacancy)
     {
@@ -26,6 +27,7 @@ public class VacancyNotificationStrategy(
             VacancyStatus.Submitted => vacancySubmittedNotificationFactory,
             VacancyStatus.Approved => vacancyApprovedNotificationFactory,
             VacancyStatus.Referred => vacancyReferredNotificationFactory,
+            VacancyStatus.Closed => vacancyClosedNotificationFactory,
             _ => throw new EntityStateNotSupportedException($"Missing email handler: no registered handler for Vacancy Status {vacancy.Status}")
         };
     }
