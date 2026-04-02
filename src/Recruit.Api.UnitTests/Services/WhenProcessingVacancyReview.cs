@@ -26,6 +26,7 @@ public class WhenProcessingVacancyReview
         VacancySnapshot snapshot)
     {
         // arrange
+        entity.Status = ReviewStatus.New;
         entity.VacancySnapshot = JsonSerializer.Serialize(snapshot);
         var sut = new AutomatedReviewService([new MockRule(FailedOutcome)]);
 
@@ -33,7 +34,7 @@ public class WhenProcessingVacancyReview
         await sut.ProcessVacancyReviewAsync(entity, CancellationToken.None);
 
         // assert
-        entity.Status.Should().Be(ReviewStatus.PendingReview);
+        entity.Status.Should().Be(ReviewStatus.New);
         entity.AutomatedQaOutcome.Should().Be(nameof(RuleSetDecision.Refer));
         entity.AutomatedQaOutcomeIndicators.Should().Be("True");
     }
@@ -44,6 +45,7 @@ public class WhenProcessingVacancyReview
         VacancySnapshot snapshot)
     {
         // arrange
+        entity.Status = ReviewStatus.New;
         entity.VacancySnapshot = JsonSerializer.Serialize(snapshot);
         var sut = new AutomatedReviewService([new MockRule(PassedOutcome)]);
 
@@ -51,7 +53,7 @@ public class WhenProcessingVacancyReview
         await sut.ProcessVacancyReviewAsync(entity, CancellationToken.None);
 
         // assert
-        entity.Status.Should().Be(ReviewStatus.PendingReview);
+        entity.Status.Should().Be(ReviewStatus.New);
         entity.AutomatedQaOutcome.Should().Be(nameof(RuleSetDecision.Approve));
         entity.AutomatedQaOutcomeIndicators.Should().Be("False");
     }
