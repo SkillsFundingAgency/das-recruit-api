@@ -192,6 +192,7 @@ public static class VacancyExtensions
             CreatedDate = entity.CreatedDate,
             ApplicationMethod = entity.ApplicationMethod,
             LegalEntityName = entity.LegalEntityName,
+            TransferInfo = entity.TransferInfo,
             TransferInfoUkprn = transferInfo?.Ukprn,
             TransferInfoProviderName = transferInfo?.ProviderName,
             TransferInfoReason = transferInfo?.Reason,
@@ -200,6 +201,8 @@ public static class VacancyExtensions
             IsTraineeship = false,
             IsTaskListCompleted = entity.OwnerType is OwnerType.Employer or OwnerType.Provider && entity.HasSubmittedAdditionalQuestions,
             SourceOrigin = entity.SourceOrigin,
+            OwnerType = entity.OwnerType,
+            HasSubmittedAdditionalQuestions = entity.HasSubmittedAdditionalQuestions
         };
     }
 
