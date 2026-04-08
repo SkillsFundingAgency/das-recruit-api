@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.Data.Repositories;
 
@@ -13,6 +14,7 @@ public interface IUserRepository : IReadRepository<UserEntity, Guid>, IWriteRepo
     Task<List<UserEntity>> FindUsersByUkprnAsync(long ukprn, CancellationToken cancellationToken);
     Task<UserEntity?> FindUserByIdamsAsync(string idams, CancellationToken cancellationToken);
     Task<UserEntity?> FindUserByDfeUserIdAsync(string dfeUserId, CancellationToken cancellationToken);
+    Task<UserEntity?> FindUserByEmailAsync(string email, UserType userType, CancellationToken cancellationToken);
 }
 
 public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
@@ -181,6 +183,12 @@ public class UserRepository(IRecruitDataContext dataContext) : IUserRepository
     {
         var user = await dataContext.UserEntities.SingleOrDefaultAsync(x => x.DfEUserId == dfeUserId, cancellationToken);
         NotificationPreferenceDefaults.Update(user);
+        return user;
+    }
+
+    public async Task<UserEntity?> FindUserByEmailAsync(string email, UserType userType, CancellationToken cancellationToken)
+    {
+        var user = await dataContext.UserEntities.FirstOrDefaultAsync(x => x.Email == email && x.UserType == userType, cancellationToken);
         return user;
     }
 }
