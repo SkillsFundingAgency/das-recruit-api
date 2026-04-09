@@ -6,7 +6,7 @@ namespace SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
 
 public interface IVacancyNotificationStrategy
 {
-    IVacancyNotificationFactory Create(VacancyEntity vacancy);
+    IVacancyNotificationFactory Create(VacancyEntity vacancy, VacancyStatus? statusOverride = null);
 }
 
 public class VacancyNotificationStrategy(
@@ -17,11 +17,11 @@ public class VacancyNotificationStrategy(
     VacancyReferredNotificationFactory vacancyReferredNotificationFactory,
     VacancyClosedNotificationFactory vacancyClosedNotificationFactory) : IVacancyNotificationStrategy
 {
-    public IVacancyNotificationFactory Create(VacancyEntity vacancy)
+    public IVacancyNotificationFactory Create(VacancyEntity vacancy, VacancyStatus? statusOverride = null)
     {
         ArgumentNullException.ThrowIfNull(vacancy);
-
-        return vacancy.Status switch {
+        var status = statusOverride ?? vacancy.Status;
+        return status switch {
             VacancyStatus.Rejected => vacancyRejectedNotificationFactory,
             VacancyStatus.Review => vacancySentForReviewNotificationFactory,
             VacancyStatus.Submitted => vacancySubmittedNotificationFactory,
