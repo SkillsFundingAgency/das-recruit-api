@@ -53,7 +53,24 @@ public class UserController
         
         return TypedResults.Ok(result.ToGetResponse());
     }
-    
+
+    [HttpPost, Route("by/email")]
+    [ProducesResponseType(typeof(RecruitUser), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetOneByEmail(
+        [FromServices] IUserRepository repository,
+        [FromBody] GetUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.FindUserByEmailAsync(request.Email, UserTypeExtensions.ToDomain(request.UserType), cancellationToken);
+        if (result is null)
+        {
+            return TypedResults.NotFound();
+        }
+
+        return TypedResults.Ok(result.ToGetResponse());
+    }
+
     [HttpGet, Route("by/employerAccountId/{employerAccountId:long}")]
     [ProducesResponseType(typeof(List<RecruitUser>), StatusCodes.Status200OK)]
     public async Task<IResult> GetAllByEmployerAccountId(
