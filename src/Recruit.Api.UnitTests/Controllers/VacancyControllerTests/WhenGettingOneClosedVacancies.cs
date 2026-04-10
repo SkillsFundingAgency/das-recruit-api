@@ -58,7 +58,7 @@ internal class WhenGettingOneClosedVacancies
     }
     
     [Test, MoqAutoData]
-    public async Task Get_ReturnsNotFound_WhenRefernce_Is_Invalid(long vacancyReference,
+    public async Task Get_ReturnsNotFound_WhenReference_Is_Invalid(long vacancyReference,
         Mock<IVacancyRepository> repository,
         [Greedy] VacancyController sut,
         CancellationToken token)
