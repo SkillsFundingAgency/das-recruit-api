@@ -408,11 +408,15 @@ public class VacancyController : Controller
 
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
 
-        if (result.Entity.Status == VacancyStatus.Closed)
+        if (result.StatusChanged is true)
         {
-            await eventsService.PublishVacancyClosedEvent(result.Entity);
+            switch (result.Entity.Status)
+            {
+                case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
+                case VacancyStatus.Submitted: await eventsService.PublishVacancySubmittedEvent(result.Entity); break; 
+            }
         }
-        
+
         return result.Created
             ? TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPutResponse())
             : TypedResults.Ok(result.Entity.ToPutResponse());
@@ -424,6 +428,7 @@ public class VacancyController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> PatchOne(
         [FromServices] IVacancyRepository repository,
+        [FromServices] IEventsService eventsService,
         [FromRoute] Guid vacancyId,
         [FromBody] JsonPatchDocument<Vacancy> patchRequest,
         CancellationToken cancellationToken)
@@ -453,7 +458,16 @@ public class VacancyController : Controller
             return TypedResults.ValidationProblem(ex.ToProblemsDictionary());
         }
     
-        await repository.UpsertOneAsync(vacancyEntity, cancellationToken);
+        var result = await repository.UpsertOneAsync(vacancyEntity, cancellationToken);
+        if (result.StatusChanged is true)
+        {
+            switch (result.Entity.Status)
+            {
+                case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
+                case VacancyStatus.Submitted: await eventsService.PublishVacancySubmittedEvent(result.Entity); break; 
+            }
+        }
+        
         return TypedResults.Ok(vacancyEntity.ToPatchResponse());
     }
 
