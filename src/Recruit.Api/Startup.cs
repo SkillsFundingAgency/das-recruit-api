@@ -113,6 +113,7 @@ internal class Startup
             c.DocumentFilter<JsonPatchDocumentFilter>();
             c.DocumentFilter<HealthChecksFilter>();
             c.MapType<VacancyReference>(() => new OpenApiSchema { Type = "string" });
+            c.SchemaFilter<FlagsEnumSchemaFilter>();
         });
         services.AddApiVersioning(opt =>
         {

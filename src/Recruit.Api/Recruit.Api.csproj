@@ -61,4 +61,10 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
+
+  <Target Name="GenerateSwaggerJson" AfterTargets="Build">
+    <Exec Command="dotnet &quot;$([System.IO.Path]::Combine($(NuGetPackageRoot), 'swashbuckle.aspnetcore.cli', '10.1.7', 'tools', 'net10.0', 'any', 'dotnet-swagger.dll'))&quot; tofile --output &quot;$(MSBuildThisFileDirectory)swagger.json&quot; &quot;$(OutputPath)$(AssemblyName).dll&quot; v1"
+          WorkingDirectory="$(MSBuildThisFileDirectory)"
+          ContinueOnError="true" />
+  </Target>
 </Project>
