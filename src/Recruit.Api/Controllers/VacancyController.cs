@@ -413,7 +413,6 @@ public class VacancyController : Controller
             switch (result.Entity.Status)
             {
                 case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
-                case VacancyStatus.Submitted: await eventsService.PublishVacancySubmittedEvent(result.Entity); break; 
             }
         }
 
@@ -464,7 +463,6 @@ public class VacancyController : Controller
             switch (result.Entity.Status)
             {
                 case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
-                case VacancyStatus.Submitted: await eventsService.PublishVacancySubmittedEvent(result.Entity); break; 
             }
         }
         

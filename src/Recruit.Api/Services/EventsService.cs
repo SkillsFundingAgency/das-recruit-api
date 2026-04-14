@@ -11,7 +11,6 @@ public interface IEventsService
 {
     Task PublishVacancyReviewCreatedEventAsync(VacancyReviewEntity entity);
     Task PublishVacancyClosedEvent(VacancyEntity entity);
-    Task PublishVacancySubmittedEvent(VacancyEntity entity);
 }
 
 public class EventsService(ILogger<EventsService> logger, IMessageSession messageSession): IEventsService
@@ -41,11 +40,5 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
     {
         ArgumentNullException.ThrowIfNull(entity);
         await messageSession.Publish(new VacancyClosedEvent { VacancyId = entity.Id, VacancyReference = entity.VacancyReference!.Value });
-    }
-
-    public async Task PublishVacancySubmittedEvent(VacancyEntity entity)
-    {
-        ArgumentNullException.ThrowIfNull(entity);
-        await messageSession.Publish(new VacancySubmittedEvent(entity.Id));
     }
 }

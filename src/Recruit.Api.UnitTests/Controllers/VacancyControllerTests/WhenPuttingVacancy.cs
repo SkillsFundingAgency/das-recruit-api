@@ -63,30 +63,4 @@ public class WhenPuttingVacancy
         result.Should().BeOfType<Ok<SFA.DAS.Recruit.Api.Models.Vacancy>>();
         eventsService.Verify(x => x.PublishVacancyClosedEvent(It.IsAny<VacancyEntity>()), Times.Never);
     }
-    
-    [Test, RecruitAutoData]
-    public async Task Then_The_Vacancy_Submitted_Event_Is_Raised_When_The_Record_Is_Set_To_Submitted(
-        Guid id,
-        PutVacancyRequest request,
-        Mock<IVacancyRepository> repository,
-        Mock<IEventsService> eventsService,
-        Mock<IUserRepository> userRepository,
-        Mock<IValidator<VacancyRequest>> validator,
-        [Greedy] VacancyController sut,
-        CancellationToken token)
-    {
-        // arrange
-        request.Status = VacancyStatus.Submitted;
-        var entity = request.ToDomain(id);
-        repository
-            .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyEntity>(), token))
-            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, false, true));
-
-        // act
-        var result = await sut.PutOne(repository.Object, userRepository.Object, eventsService.Object,validator.Object, id, request,null, false, token);
-
-        // assert
-        result.Should().BeOfType<Ok<SFA.DAS.Recruit.Api.Models.Vacancy>>();
-        eventsService.Verify(x => x.PublishVacancySubmittedEvent(entity), Times.Once);
-    }
 }
