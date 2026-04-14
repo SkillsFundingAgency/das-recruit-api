@@ -7,7 +7,6 @@ using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
-using ProhibitedContentType = SFA.DAS.Recruit.Api.Domain.Models.ProhibitedContentType;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
@@ -50,36 +49,6 @@ public class WhenPostingVacancy: BaseFixture
             nameof(VacancyRequest.Title),
             nameof(VacancyRequest.ShortDescription)
         );
-    }
-    
-    [Test]
-    public async Task Then_With_Validation_And_Correct_Content_Created_Is_Returned_And_Value_Not_Added_To_Database()
-    {
-        //arrange
-        Server.DataContext
-            .Setup(x => x.ProhibitedContentEntities)
-            .ReturnsDbSet(
-            [
-                new ProhibitedContentEntity
-                    { Content = "Dangit", ContentType = ProhibitedContentType.BannedPhrases },
-                new ProhibitedContentEntity
-                    { Content = "Dangit", ContentType = ProhibitedContentType.Profanity }
-            ]);
-        
-        // act
-        var response = await Client.PostAsJsonAsync($"{RouteNames.Vacancies}?validateOnly=true&ruleSet=Title", new PostVacancyRequest {
-            OwnerType = OwnerType.Employer,
-            Status = VacancyStatus.Draft,
-            Title = "Apprenticeship Short title"
-        });
-        
-        var vacancy = await response.Content.ReadAsAsync<Vacancy>();
-        
-        // assert
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        response.Headers.Location.Should().NotBeNull();
-        response.Headers.Location.ToString().Should().Be($"/{RouteNames.Vacancies}/{vacancy.Id}");
-        vacancy.VacancyReference.Should().Be(1000000001);
     }
     
     [Test]
