@@ -12,10 +12,10 @@ This repository represents the codebase for an API designed for internal use wit
 &nbsp;
 
 ## Features
-�	Retrieve application reviews by account ID or UKPRN.
-�	Get dashboard counts for application reviews.
-�	Update and upsert application reviews.
-�	Comprehensive unit tests using NUnit and Moq.
+*	Retrieve application reviews by account ID or UKPRN.
+*	Get dashboard counts for application reviews.
+*	Update and upsert application reviews.
+*	Comprehensive unit tests using NUnit and Moq.
 
 ## Contents
 
