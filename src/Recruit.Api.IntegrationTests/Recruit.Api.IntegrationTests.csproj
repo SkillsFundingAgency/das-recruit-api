@@ -50,6 +50,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Recruit.Api.UnitTests\Recruit.Api.UnitTests.csproj" />
       <ProjectReference Include="..\Recruit.Api\Recruit.Api.csproj" />
+      <ProjectReference Include="..\SFA.DAS.Recruit.Contracts\SFA.DAS.Recruit.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

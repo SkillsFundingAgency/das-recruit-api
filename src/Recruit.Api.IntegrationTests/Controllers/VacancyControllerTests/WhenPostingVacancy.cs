@@ -1,12 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 using ProhibitedContentType = SFA.DAS.Recruit.Api.Domain.Models.ProhibitedContentType;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
@@ -17,7 +17,7 @@ public class WhenPostingVacancy: BaseFixture
     public async Task Then_Without_Required_Fields_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.PostAsJsonAsync(RouteNames.Vacancies, new {});
+        var response = await Client.PostAsJsonAsync(new PostVacanciesApiRequest().PostUrl, new {});
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert
@@ -34,7 +34,7 @@ public class WhenPostingVacancy: BaseFixture
     public async Task Then_With_Validation_And_Incorrect_Content_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.PostAsJsonAsync($"{RouteNames.Vacancies}?validateOnly=true&ruleSet=ShortDescription,Title", new PostVacancyRequest {
+        var response = await Client.PostAsJsonAsync(new PostVacanciesApiRequest { ValidateOnly = true, RuleSet = Contracts.ApiResponses.VacancyRuleSet.ShortDescription | Contracts.ApiResponses.VacancyRuleSet.Title }.PostUrl, new PostVacancyRequest {
             OwnerType = OwnerType.Employer,
             Status = VacancyStatus.Draft,
             Title = "Short title",
@@ -67,7 +67,7 @@ public class WhenPostingVacancy: BaseFixture
             ]);
         
         // act
-        var response = await Client.PostAsJsonAsync($"{RouteNames.Vacancies}?validateOnly=true&ruleSet=Title", new PostVacancyRequest {
+        var response = await Client.PostAsJsonAsync(new PostVacanciesApiRequest { ValidateOnly = true, RuleSet = Contracts.ApiResponses.VacancyRuleSet.Title }.PostUrl, new PostVacancyRequest {
             OwnerType = OwnerType.Employer,
             Status = VacancyStatus.Draft,
             Title = "Apprenticeship Short title"
@@ -78,7 +78,7 @@ public class WhenPostingVacancy: BaseFixture
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
-        response.Headers.Location.ToString().Should().Be($"/{RouteNames.Vacancies}/{vacancy.Id}");
+        response.Headers.Location.ToString().Should().Be($"/api/vacancies/{vacancy.Id}");
         vacancy.VacancyReference.Should().Be(1000000001);
     }
     
@@ -107,7 +107,7 @@ public class WhenPostingVacancy: BaseFixture
             .ReturnsAsync(vacancyReference.Value);
         
         // act
-        var response = await Client.PostAsJsonAsync(RouteNames.Vacancies, request);
+        var response = await Client.PostAsJsonAsync(new PostVacanciesApiRequest().PostUrl, request);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
@@ -126,7 +126,7 @@ public class WhenPostingVacancy: BaseFixture
         
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
-        response.Headers.Location.ToString().Should().Be($"/{RouteNames.Vacancies}/{vacancy.Id}");
+        response.Headers.Location.ToString().Should().Be($"/api/vacancies/{vacancy.Id}");
         
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -159,7 +159,7 @@ public class WhenPostingVacancy: BaseFixture
             .ReturnsAsync(vacancyReference.Value);
         
         // act
-        var response = await Client.PostAsJsonAsync(RouteNames.Vacancies, request);
+        var response = await Client.PostAsJsonAsync(new PostVacanciesApiRequest().PostUrl, request);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
@@ -194,7 +194,7 @@ public class WhenPostingVacancy: BaseFixture
             .ReturnsAsync(vacancyReference.Value);
         
         // act
-        var response = await Client.PostAsJsonAsync(RouteNames.Vacancies, request);
+        var response = await Client.PostAsJsonAsync(new PostVacanciesApiRequest().PostUrl, request);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
@@ -228,7 +228,7 @@ public class WhenPostingVacancy: BaseFixture
             .ReturnsAsync(vacancyReference.Value);
         
         // act
-        var response = await Client.PostAsJsonAsync(RouteNames.Vacancies, request);
+        var response = await Client.PostAsJsonAsync(new PostVacanciesApiRequest().PostUrl, request);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert

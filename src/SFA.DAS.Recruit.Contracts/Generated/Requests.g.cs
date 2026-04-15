@@ -178,9 +178,9 @@ public class PatchEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest 
 }
 
 // GET /api/notifications/batch/by/date
-public record GetNotificationsBatchByDateApiRequest(System.DateTimeOffset DateTime) : IGetApiRequest
+public record GetNotificationsBatchByDateApiRequest(System.DateTime DateTime) : IGetApiRequest
 {
-    public string GetUrl => QueryHelpers.AddQueryString($"api/notifications/batch/by/date", new Dictionary<string, string?> { ["dateTime"] = DateTime.ToString() });
+    public string GetUrl => QueryHelpers.AddQueryString($"api/notifications/batch/by/date", new Dictionary<string, string?> { ["dateTime"] = DateTime.ToString("s") });
 }
 
 // GET /api/notifications/batch/by/userstatus
@@ -385,9 +385,9 @@ public record GetVacanciesByVacancyReferenceLiveApiRequest(long VacancyReference
 }
 
 // GET /api/vacancies/live
-public record GetVacanciesLiveApiRequest(int? Page, int? PageSize, System.DateTimeOffset? ClosingDate) : IGetApiRequest
+public record GetVacanciesLiveApiRequest(int? Page, int? PageSize, System.DateTime? ClosingDate) : IGetApiRequest
 {
-    public string GetUrl => QueryHelpers.AddQueryString($"api/vacancies/live", new Dictionary<string, string?> { ["page"] = Page?.ToString(), ["pageSize"] = PageSize?.ToString(), ["closingDate"] = ClosingDate?.ToString() });
+    public string GetUrl => QueryHelpers.AddQueryString($"api/vacancies/live", new Dictionary<string, string?> { ["page"] = Page?.ToString(), ["pageSize"] = PageSize?.ToString(), ["closingDate"] = ClosingDate?.ToString("s") });
 }
 
 // GET /api/vacancies/{vacancyReference}/closed
@@ -471,10 +471,10 @@ public record GetVacancyreferenceApiRequest() : IGetApiRequest
 }
 
 // GET /api/vacancyreviews
-public record GetVacancyreviewsApiRequest(List<ReviewStatus>? ReviewStatus, System.DateTimeOffset? ExpiredAssignationDateTime) : IGetApiRequest
+public record GetVacancyreviewsApiRequest(List<ReviewStatus>? ReviewStatus, System.DateTime? ExpiredAssignationDateTime) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/vacancyreviews",
-        new KeyValuePair<string, string?>[] { new("expiredAssignationDateTime", ExpiredAssignationDateTime?.ToString()) }
+        new KeyValuePair<string, string?>[] { new("expiredAssignationDateTime", ExpiredAssignationDateTime?.ToString("s")) }
         .Concat((ReviewStatus ?? []).Select(v => new KeyValuePair<string, string?>("reviewStatus", v.ToString()))));
 }
 
@@ -537,15 +537,15 @@ public record GetVacancyreviewsQaDashboardApiRequest() : IGetApiRequest
 }
 
 // GET /api/users/vacancyreviews
-public record GetUsersVacancyreviewsApiRequest(string UserId, System.DateTimeOffset? AssignationExpiry, ReviewStatus? Status) : IGetApiRequest
+public record GetUsersVacancyreviewsApiRequest(string UserId, System.DateTime? AssignationExpiry, ReviewStatus? Status) : IGetApiRequest
 {
-    public string GetUrl => QueryHelpers.AddQueryString($"api/users/vacancyreviews", new Dictionary<string, string?> { ["userId"] = UserId, ["assignationExpiry"] = AssignationExpiry?.ToString(), ["status"] = Status?.ToString() });
+    public string GetUrl => QueryHelpers.AddQueryString($"api/users/vacancyreviews", new Dictionary<string, string?> { ["userId"] = UserId, ["assignationExpiry"] = AssignationExpiry?.ToString("s"), ["status"] = Status?.ToString() });
 }
 
 // GET /api/users/vacancyreviews/count
-public record GetUsersVacancyreviewsCountApiRequest(string UserEmail, bool? ApprovedFirstTime, System.DateTimeOffset? AssignationExpiry) : IGetApiRequest
+public record GetUsersVacancyreviewsCountApiRequest(string UserEmail, bool? ApprovedFirstTime, System.DateTime? AssignationExpiry) : IGetApiRequest
 {
-    public string GetUrl => QueryHelpers.AddQueryString($"api/users/vacancyreviews/count", new Dictionary<string, string?> { ["userEmail"] = UserEmail, ["approvedFirstTime"] = ApprovedFirstTime?.ToString(), ["assignationExpiry"] = AssignationExpiry?.ToString() });
+    public string GetUrl => QueryHelpers.AddQueryString($"api/users/vacancyreviews/count", new Dictionary<string, string?> { ["userEmail"] = UserEmail, ["approvedFirstTime"] = ApprovedFirstTime?.ToString(), ["assignationExpiry"] = AssignationExpiry?.ToString("s") });
 }
 
 // GET /health

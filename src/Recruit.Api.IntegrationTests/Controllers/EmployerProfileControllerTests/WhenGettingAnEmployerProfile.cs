@@ -1,6 +1,6 @@
-﻿using SFA.DAS.Recruit.Api.Core;
-using SFA.DAS.Recruit.Api.Domain.Entities;
+﻿using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.EmployerProfileControllerTests;
 
@@ -18,7 +18,7 @@ public class WhenGettingAnEmployerProfile : BaseFixture
         Server.DataContext.Setup(x => x.EmployerProfileEntities).ReturnsDbSet(items);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.EmployerProfile}/2");
+        var response = await Client.GetAsync(new GetEmployerProfilesByAccountLegalEntityIdApiRequest(2).GetUrl);
         var employerProfile = await response.Content.ReadAsAsync<EmployerProfile>();
 
         // assert
@@ -39,7 +39,7 @@ public class WhenGettingAnEmployerProfile : BaseFixture
         Server.DataContext.Setup(x => x.EmployerProfileEntities).ReturnsDbSet(items);
 
         // act
-        var response = await Client.GetAsync($"/{RouteNames.Employer}/12/{RouteElements.EmployerProfiles}");
+        var response = await Client.GetAsync(new GetEmployerByAccountIdProfilesApiRequest(12).GetUrl);
         var employerProfiles = await response.Content.ReadAsAsync<List<EmployerProfile>>();
 
         // assert

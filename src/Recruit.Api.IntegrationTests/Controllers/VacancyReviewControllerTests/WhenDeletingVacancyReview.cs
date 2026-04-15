@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyReviewControllerTests;
 
@@ -15,7 +15,7 @@ public class WhenDeletingVacancyReview: BaseFixture
             .ReturnsDbSet(Fixture.CreateMany<VacancyReviewEntity>(10).ToList());
 
         // act
-        var response = await Client.DeleteAsync($"{RouteNames.VacancyReviews}/{Guid.NewGuid()}");
+        var response = await Client.DeleteAsync(new DeleteVacancyreviewsByIdApiRequest(Guid.NewGuid()).DeleteUrl);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -30,7 +30,7 @@ public class WhenDeletingVacancyReview: BaseFixture
         Server.DataContext.Setup(x => x.VacancyReviewEntities).ReturnsDbSet(items);
 
         // act
-        var response = await Client.DeleteAsync($"{RouteNames.VacancyReviews}/{itemToDelete.Id}");
+        var response = await Client.DeleteAsync(new DeleteVacancyreviewsByIdApiRequest(itemToDelete.Id).DeleteUrl);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);

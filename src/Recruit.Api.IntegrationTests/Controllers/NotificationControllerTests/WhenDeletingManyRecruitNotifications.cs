@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControllerTests;
 
@@ -62,7 +62,7 @@ public class WhenDeletingManyRecruitNotifications : BaseFixture
         Server.DataContext.Setup(x => x.RecruitNotifications).ReturnsDbSet(Items);
 
         // act
-        var response = await Client.DeleteAsync($"{RouteNames.Notifications}");
+        var response = await Client.DeleteAsync(new DeleteNotificationsApiRequest(null).DeleteUrl);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
