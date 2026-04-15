@@ -3,10 +3,12 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.Report;
+using SFA.DAS.Recruit.Api.Models.Responses.Report;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -68,25 +70,25 @@ public class ReportController(ILogger<ReportController> logger)
     }
 
     [HttpGet]
-    [Route($"{RouteElements.Qa}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(Report), StatusCodes.Status200OK)]
     public async Task<IResult> GetMany(
         [FromServices] IReportRepository reportRepository,
+        [FromQuery] ReportOwnerType ownerType,
         CancellationToken token = default)
     {
         try
         {
-            logger.LogInformation("Recruit API: Received request to get reports for Qa");
+            logger.LogInformation("Recruit API: Received request to get reports for {OwnerType}", ownerType);
 
-            var reports = await reportRepository.GetMany(token);
+            var reports = await reportRepository.GetMany(ownerType, token);
 
             return TypedResults.Ok(reports.Select(r => r.ToResponse()).ToList());
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Unable to get reports for Qa : An error occurred");
+            logger.LogError(e, "Unable to get reports for {OwnerType} : An error occurred", ownerType);
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
@@ -114,6 +116,33 @@ public class ReportController(ILogger<ReportController> logger)
         catch (Exception e)
         {
             logger.LogError(e, "Unable to generate report : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
+    [Route($"generate-qa/{{reportId:guid}}")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetQaReportResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> GenerateQa(
+        [FromServices] IReportRepository reportRepository,
+        [FromRoute, Required] Guid reportId,
+        CancellationToken token = default)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received request to generate QA report for report Id: {ReportId}", reportId);
+
+            var reports = await reportRepository.GenerateQa(reportId, token);
+
+            await reportRepository.IncrementReportDownloadCountAsync(reportId, token);
+
+            return TypedResults.Ok(reports.ToGetQaResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to generate QA report : An error occurred");
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
