@@ -674,6 +674,14 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GetQaReportResponse
+    {
+        [Newtonsoft.Json.JsonProperty("qaReports", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<QaReport>? QaReports { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetUserRequest
     {
         [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.AllowNull)]
@@ -1841,6 +1849,74 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [Newtonsoft.Json.JsonProperty("totalVacanciesSubmittedLastTwelveHours", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int TotalVacanciesSubmittedLastTwelveHours { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class QaReport
+    {
+        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? VacancyTitle { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("vacancyReference", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long VacancyReference { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("submissionNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int SubmissionNumber { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("dateSubmitted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? DateSubmitted { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("slaDeadline", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? SlaDeadline { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("reviewStarted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? ReviewStarted { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("reviewCompleted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? ReviewCompleted { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("outcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Outcome { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("numberOfIssuesReported", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int NumberOfIssuesReported { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("vacancySubmittedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? VacancySubmittedBy { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("vacancySubmittedByUser", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? VacancySubmittedByUser { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("employer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Employer { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("displayName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? DisplayName { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("trainingProvider", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? TrainingProvider { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("vacancyPostcode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? VacancyPostcode { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("programmeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? ProgrammeId { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("referredFields", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string>? ReferredFields { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("reviewedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? ReviewedBy { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("reviewerComment", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? ReviewerComment { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("slaExceededByHours", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? SlaExceededByHours { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("timeTakenToReview", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? TimeTakenToReview { get; set; } = default!;
 
     }
 

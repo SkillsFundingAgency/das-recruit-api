@@ -3066,12 +3066,19 @@
         }
       }
     },
-    "/api/reports/qa": {
+    "/api/reports": {
       "get": {
         "tags": [
           "Report"
         ],
         "parameters": [
+          {
+            "name": "ownerType",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ReportOwnerType"
+            }
+          },
           {
             "name": "X-Version",
             "in": "header",
@@ -3105,6 +3112,88 @@
           },
           "200": {
             "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Report"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Report"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Report"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Report"
+        ],
+        "parameters": [
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostReportRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostReportRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostReportRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostReportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
             "content": {
               "text/plain": {
                 "schema": {
@@ -3204,12 +3293,21 @@
         }
       }
     },
-    "/api/reports": {
-      "post": {
+    "/api/reports/generate-qa/{reportId}": {
+      "get": {
         "tags": [
           "Report"
         ],
         "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
           {
             "name": "X-Version",
             "in": "header",
@@ -3217,30 +3315,6 @@
             "example": "1.0"
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostReportRequest"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostReportRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostReportRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostReportRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "500": {
             "description": "Internal Server Error"
@@ -3265,22 +3339,22 @@
               }
             }
           },
-          "201": {
-            "description": "Created",
+          "200": {
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Report"
+                  "$ref": "#/components/schemas/GetQaReportResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Report"
+                  "$ref": "#/components/schemas/GetQaReportResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Report"
+                  "$ref": "#/components/schemas/GetQaReportResponse"
                 }
               }
             }
@@ -6933,6 +7007,19 @@
         },
         "additionalProperties": false
       },
+      "GetQaReportResponse": {
+        "type": "object",
+        "properties": {
+          "qaReports": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QaReport"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "GetUserRequest": {
         "required": [
           "email",
@@ -8453,6 +8540,103 @@
           "totalVacanciesSubmittedLastTwelveHours": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "QaReport": {
+        "type": "object",
+        "properties": {
+          "vacancyTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "vacancyReference": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "submissionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dateSubmitted": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "slaDeadline": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reviewStarted": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reviewCompleted": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "nullable": true
+          },
+          "numberOfIssuesReported": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vacancySubmittedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "vacancySubmittedByUser": {
+            "type": "string",
+            "nullable": true
+          },
+          "employer": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "trainingProvider": {
+            "type": "string",
+            "nullable": true
+          },
+          "vacancyPostcode": {
+            "type": "string",
+            "nullable": true
+          },
+          "programmeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "referredFields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "reviewedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "reviewerComment": {
+            "type": "string",
+            "nullable": true
+          },
+          "slaExceededByHours": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeTakenToReview": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

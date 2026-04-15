@@ -276,10 +276,17 @@ public record GetReportsByUkprnProviderApiRequest(int Ukprn) : IGetApiRequest
     public string GetUrl => $"api/reports/{Ukprn}/provider";
 }
 
-// GET /api/reports/qa
-public record GetReportsQaApiRequest() : IGetApiRequest
+// GET /api/reports
+public record GetReportsApiRequest(ReportOwnerType? OwnerType) : IGetApiRequest
 {
-    public string GetUrl => $"api/reports/qa";
+    public string GetUrl => QueryHelpers.AddQueryString($"api/reports", new Dictionary<string, string?> { ["ownerType"] = OwnerType?.ToString() });
+}
+
+// POST /api/reports
+public class PostReportsApiRequest : IPostApiRequest<PostReportRequest>
+{
+    public string PostUrl => $"api/reports";
+    public PostReportRequest Data { get; set; } = default!;
 }
 
 // GET /api/reports/generate/{reportId}
@@ -288,11 +295,10 @@ public record GetReportsGenerateByReportIdApiRequest(System.Guid ReportId) : IGe
     public string GetUrl => $"api/reports/generate/{ReportId}";
 }
 
-// POST /api/reports
-public class PostReportsApiRequest : IPostApiRequest<PostReportRequest>
+// GET /api/reports/generate-qa/{reportId}
+public record GetReportsGenerateQaByReportIdApiRequest(System.Guid ReportId) : IGetApiRequest
 {
-    public string PostUrl => $"api/reports";
-    public PostReportRequest Data { get; set; } = default!;
+    public string GetUrl => $"api/reports/generate-qa/{ReportId}";
 }
 
 // GET /api/user/{id}
