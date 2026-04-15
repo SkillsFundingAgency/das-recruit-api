@@ -285,6 +285,7 @@ public class VacancyController : Controller
     public async Task<IResult> PostOne(
         [FromServices] IVacancyRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IEventsService eventsService,
         [FromServices] IValidator<VacancyRequest> validator,
         [FromBody] PostVacancyRequest request,
         [FromQuery] VacancyRuleSet? ruleSet,
@@ -343,6 +344,12 @@ public class VacancyController : Controller
         entity.CreatedDate = DateTime.UtcNow;
         
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
+        
+        if (result.Entity.Status == VacancyStatus.Closed)
+        {
+            await eventsService.PublishVacancyClosedEvent(result.Entity);
+        }
+        
         return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
 
@@ -424,6 +431,7 @@ public class VacancyController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> PatchOne(
         [FromServices] IVacancyRepository repository,
+        [FromServices] IEventsService eventsService,
         [FromRoute] Guid vacancyId,
         [FromBody] JsonPatchDocument<Vacancy> patchRequest,
         CancellationToken cancellationToken)
@@ -433,6 +441,8 @@ public class VacancyController : Controller
         {
             return Results.NotFound();
         }
+        
+        var originalVacancyStatus = vacancyEntity.Status;
         
         try
         {
@@ -454,6 +464,12 @@ public class VacancyController : Controller
         }
     
         await repository.UpsertOneAsync(vacancyEntity, cancellationToken);
+        
+        if (originalVacancyStatus is not VacancyStatus.Closed && vacancyEntity.Status is VacancyStatus.Closed)
+        {
+            await eventsService.PublishVacancyClosedEvent(vacancyEntity);
+        }
+        
         return TypedResults.Ok(vacancyEntity.ToPatchResponse());
     }
 
