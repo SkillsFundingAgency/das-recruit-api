@@ -14,6 +14,14 @@ public static class ReportExtensions
         };
     }
 
+    public static GetQaReportResponse ToGetQaResponse(this List<Domain.Models.QaReport> reports)
+    {
+        return new GetQaReportResponse
+        {
+            QaReports = reports
+        };
+    }
+
     public static ReportEntity ToEntity(this PostReportRequest request)
     {
         return new ReportEntity
