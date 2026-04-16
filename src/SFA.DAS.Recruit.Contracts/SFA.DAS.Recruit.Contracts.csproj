@@ -7,17 +7,6 @@
     <AssemblyName>SFA.DAS.Recruit.Contracts</AssemblyName>
 
     <!--
-        LOCAL DEVELOPMENT: points directly at the SFA.DAS.ApiContracts.Build project
-        in the sibling das-shared-packages repo so there is no NuGet publish step needed.
-
-        When this is promoted to a proper NuGet package, replace the two <Import> statements
-        below with:
-            <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="x.x.x" />
-        and remove this property entirely.
-    -->
-    <_ApiContractsBuildDir>$(MSBuildThisFileDirectory)..\..\..\das-shared-packages\SFA.DAS.ApiContracts.Build\SFA.DAS.ApiContracts.Build\</_ApiContractsBuildDir>
-
-    <!--
         Committed swagger.json from Recruit.Api.
         Update this file manually (after API changes) by running dotnet build on Recruit.Api,
         which requires dotnet tool restore for the swashbuckle CLI.
@@ -29,35 +18,19 @@
     <ApiContractsClientName>RecruitApiV2</ApiContractsClientName>
   </PropertyGroup>
 
-  <!--
-      Import tooling props first so defaults are established, then our PropertyGroup
-      above has already overridden the values that matter (swagger path, namespace, output dir).
-  -->
-  <Import Project="$(_ApiContractsBuildDir)build\SFA.DAS.ApiContracts.Build.props" />
-
   <ItemGroup>
-    <!--
-        NSwag.MSBuild: provides $(NSwagExe_Net80) which the imported .props resolves
-        into $(ApiContractsNSwagCommand). PrivateAssets=all keeps it out of the
-        published package — it is a build-time tool only.
-    -->
-    <PackageReference Include="NSwag.MSBuild" Version="14.2.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.171-prerelease-2" />
 
     <!--
         SFA.DAS.Apim.Shared: provides IGetApiRequest, IPostApiRequest etc. that the
         generated Requests.g.cs references. This becomes a public dependency of the
         published NuGet package so consumers do not need to reference it separately.
-
-        LOCAL DEVELOPMENT: swap for a ProjectReference if you prefer to avoid NuGet:
-            <ProjectReference Include="..\..\..\..\..\das-shared-packages\SFA.DAS.Apim.Shared\SFA.DAS.Apim.Shared\SFA.DAS.Apim.Shared.csproj" />
     -->
-    <PackageReference Include="SFA.DAS.Apim.Shared" Version="*" />
+    <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.167" />
   </ItemGroup>
 
-  <!-- Import the generation targets — these register the GenerateApiContracts build target -->
-  <Import Project="$(_ApiContractsBuildDir)build\SFA.DAS.ApiContracts.Build.targets" />
+  <ItemGroup>
+    <Folder Include="Generated\" />
+  </ItemGroup>
 
 </Project>
