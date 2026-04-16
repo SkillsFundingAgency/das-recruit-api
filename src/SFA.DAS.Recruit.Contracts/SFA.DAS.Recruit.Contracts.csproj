@@ -26,7 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.171-prerelease-2" />
+    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.171" />
 
     <!--
         SFA.DAS.Apim.Shared: provides IGetApiRequest, IPostApiRequest etc. that the
