@@ -285,6 +285,7 @@ public class VacancyController : Controller
     public async Task<IResult> PostOne(
         [FromServices] IVacancyRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IEventsService eventsService,
         [FromServices] IValidator<VacancyRequest> validator,
         [FromBody] PostVacancyRequest request,
         [FromQuery] VacancyRuleSet? ruleSet,
@@ -343,6 +344,15 @@ public class VacancyController : Controller
         entity.CreatedDate = DateTime.UtcNow;
         
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
+        
+        if (result.StatusChanged is true)
+        {
+            switch (result.Entity.Status)
+            {
+                case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
+            }
+        }
+        
         return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
 
