@@ -28,6 +28,15 @@ jobs:
       arguments: -o $(build.artifactstagingdirectory)/publish -c ${{ parameters.BuildConfiguration }} --no-build
       modifyOutputPath: true
       zipAfterPublish: true
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet pack'
+    inputs:
+      command: pack
+      packagesToPack: src/SFA.DAS.Recruit.Contracts/SFA.DAS.Recruit.Contracts.csproj;
+      packDirectory: '$(build.artifactstagingdirectory)/publish'
+      versioningScheme: byBuildNumber
+      buildProperties: 'Version="$(Build.BuildNumber)"'    
 
   - task: CopyFiles@2
     displayName: Copy Files to $(build.artifactstagingdirectory)/publish
