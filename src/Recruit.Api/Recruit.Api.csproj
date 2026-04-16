@@ -34,7 +34,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.0" />
-    
+    <PackageReference Include="Microsoft.Data.SqlClient.Extensions.Azure" Version="1.0.0" />
     <PackageReference Include="SFA.DAS.Api.Common" Version="17.1.164" />
     
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
