@@ -15,6 +15,7 @@ public class WhenPostingVacancy
     [Test, RecruitAutoData]
     public async Task Then_The_Vacancy_Closed_Event_Is_Raised_When_The_Record_Is_Set_To_Closed(
         Guid id,
+        VacancyEntity updatedEntity,
         PostVacancyRequest request,
         Mock<IVacancyRepository> repository,
         Mock<IEventsService> eventsService,
@@ -25,16 +26,16 @@ public class WhenPostingVacancy
     {
         // arrange
         request.Status = VacancyStatus.Closed;
-        var entity = request.ToDomain();
+        updatedEntity.Status = VacancyStatus.Closed;
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyEntity>(), token))
-            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
+            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(updatedEntity, true, true));
 
         // act
         var result = await sut.PostOne(repository.Object, userRepository.Object, eventsService.Object, validator.Object, request, null, false, token);
 
         // assert
         result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
-        eventsService.Verify(x => x.PublishVacancyClosedEvent(entity), Times.Once);
+        eventsService.Verify(x => x.PublishVacancyClosedEvent(updatedEntity), Times.Once);
     }
 }
