@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using SFA.DAS.Recruit.Api.Domain.Models;
-using SFA.DAS.Recruit.Api.Models.Responses;
 using SFA.DAS.Recruit.Contracts.ApiRequests;
+using SFA.DAS.Recruit.Contracts.ApiResponses;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyReferenceControllerTests;
 

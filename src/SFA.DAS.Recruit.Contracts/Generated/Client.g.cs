@@ -17,16 +17,16 @@ using Microsoft.Extensions.Options;
 using SFA.DAS.Apim.Shared.Interfaces;
 using SFA.DAS.Apim.Shared.Models;
 
-public class RecruitApiV2Configuration : IInternalApiConfiguration
+public class RecruitApiConfiguration : IInternalApiConfiguration
 {
     public required string Url { get; set; }
     public required string Identifier { get; set; }
 }
 
-public interface IRecruitApiV2Client<T> : IInternalApiClient<T>;
+public interface IRecruitApiClient<T> : IInternalApiClient<T>;
 
-public class RecruitApiV2Client(IInternalApiClient<RecruitApiV2Configuration> apiClient)
-    : IRecruitApiV2Client<RecruitApiV2Configuration>
+public class RecruitApiClient(IInternalApiClient<RecruitApiConfiguration> apiClient)
+    : IRecruitApiClient<RecruitApiConfiguration>
 {
     public Task<TResponse> Get<TResponse>(IGetApiRequest request) => apiClient.Get<TResponse>(request);
     public Task<HttpStatusCode> GetResponseCode(IGetApiRequest request) => apiClient.GetResponseCode(request);
@@ -47,18 +47,18 @@ public class RecruitApiV2Client(IInternalApiClient<RecruitApiV2Configuration> ap
     public Task<ApiResponse<TResponse>> PutWithResponseCode<TData, TResponse>(IPutApiRequest<TData> request) => apiClient.PutWithResponseCode<TData, TResponse>(request);
 }
 
-public static class AddRecruitApiV2ClientExtension
+public static class AddRecruitApiClientExtension
 {
-    public static IServiceCollection AddRecruitApiV2Client(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddRecruitApiClient(this IServiceCollection services, IConfiguration configuration)
     {
-        if (!configuration.GetSection(nameof(RecruitApiV2Configuration)).GetChildren().Any())
+        if (!configuration.GetSection(nameof(RecruitApiConfiguration)).GetChildren().Any())
             throw new ArgumentException(
-                $"Cannot find {nameof(RecruitApiV2Configuration)} in configuration. " +
-                $"Please add a section called {nameof(RecruitApiV2Configuration)} with Url and Identifier properties.");
+                $"Cannot find {nameof(RecruitApiConfiguration)} in configuration. " +
+                $"Please add a section called {nameof(RecruitApiConfiguration)} with Url and Identifier properties.");
 
-        services.AddTransient<IRecruitApiV2Client<RecruitApiV2Configuration>, RecruitApiV2Client>();
-        services.Configure<RecruitApiV2Configuration>(configuration.GetSection(nameof(RecruitApiV2Configuration)));
-        services.AddSingleton(cfg => cfg.GetService<IOptions<RecruitApiV2Configuration>>()!.Value);
+        services.AddTransient<IRecruitApiClient<RecruitApiConfiguration>, RecruitApiClient>();
+        services.Configure<RecruitApiConfiguration>(configuration.GetSection(nameof(RecruitApiConfiguration)));
+        services.AddSingleton(cfg => cfg.GetService<IOptions<RecruitApiConfiguration>>()!.Value);
         return services;
     }
 }

@@ -14,13 +14,13 @@ using System.Linq;
 using SFA.DAS.Apim.Shared.Interfaces;
 using SFA.DAS.Recruit.Contracts.ApiResponses;
 
-// GET /api/applicationreviews/{applicationId}
+/// <summary>GET /api/applicationreviews/{applicationId} &#x2192; <see cref="GetApplicationReviewResponse"/></summary>
 public record GetApplicationreviewsByApplicationIdApiRequest(System.Guid ApplicationId) : IGetApiRequest
 {
     public string GetUrl => $"api/applicationreviews/{ApplicationId}";
 }
 
-// PUT /api/applicationreviews/{applicationId}
+/// <summary>PUT /api/applicationreviews/{applicationId} &#x2192; <see cref="PutApplicationReviewResponse"/></summary>
 public class PutApplicationreviewsByApplicationIdApiRequest : IPutApiRequest<PutApplicationReviewRequest>
 {
     public required System.Guid ApplicationId { get; init; }
@@ -28,7 +28,7 @@ public class PutApplicationreviewsByApplicationIdApiRequest : IPutApiRequest<Put
     public PutApplicationReviewRequest Data { get; set; } = default!;
 }
 
-// PATCH /api/applicationreviews/{applicationId}
+/// <summary>PATCH /api/applicationreviews/{applicationId} &#x2192; <see cref="PatchApplicationReviewResponse"/></summary>
 public class PatchApplicationreviewsByApplicationIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required System.Guid ApplicationId { get; init; }
@@ -36,62 +36,62 @@ public class PatchApplicationreviewsByApplicationIdApiRequest : IPatchApiRequest
     public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
-// GET /api/applicationreviews
+/// <summary>GET /api/applicationreviews &#x2192; <see cref="GetApplicationReviewResponse"/></summary>
 public record GetApplicationreviewsApiRequest(System.Guid ApplicationId) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/applicationreviews", new Dictionary<string, string?> { ["applicationId"] = ApplicationId.ToString() });
 }
 
-// POST /api/applicationreviews
+/// <summary>POST /api/applicationreviews &#x2192; List&lt;<see cref="GetApplicationReviewResponse"/>&gt;</summary>
 public class PostApplicationreviewsApiRequest : IPostApiRequest<System.Collections.Generic.List<System.Guid>>
 {
     public string PostUrl => $"api/applicationreviews";
     public System.Collections.Generic.List<System.Guid> Data { get; set; } = default!;
 }
 
-// GET /api/applicationreviews/{vacancyReference}
+/// <summary>GET /api/applicationreviews/{vacancyReference} &#x2192; List&lt;<see cref="GetApplicationReviewResponse"/>&gt;</summary>
 public record GetApplicationreviewsByVacancyReferenceApiRequest(long VacancyReference) : IGetApiRequest
 {
     public string GetUrl => $"api/applicationreviews/{VacancyReference}";
 }
 
-// GET /api/applicationreviews/{vacancyReference}/candidate/{candidateId}
+/// <summary>GET /api/applicationreviews/{vacancyReference}/candidate/{candidateId} &#x2192; <see cref="GetApplicationReviewResponse"/></summary>
 public record GetApplicationreviewsByVacancyReferenceCandidateByCandidateIdApiRequest(long VacancyReference, System.Guid CandidateId) : IGetApiRequest
 {
     public string GetUrl => $"api/applicationreviews/{VacancyReference}/candidate/{CandidateId}";
 }
 
-// GET /api/applicationreviews/{vacancyReference}/count
+/// <summary>GET /api/applicationreviews/{vacancyReference}/count &#x2192; <see cref="ApplicationReviewsStats"/></summary>
 public record GetApplicationreviewsByVacancyReferenceCountApiRequest(long VacancyReference) : IGetApiRequest
 {
     public string GetUrl => $"api/applicationreviews/{VacancyReference}/count";
 }
 
-// GET /api/applicationreviews/{vacancyReference}/temp-status/{status}
+/// <summary>GET /api/applicationreviews/{vacancyReference}/temp-status/{status} &#x2192; List&lt;<see cref="GetApplicationReviewResponse"/>&gt;</summary>
 public record GetApplicationreviewsByVacancyReferenceTempStatusByStatusApiRequest(long VacancyReference, ApplicationReviewStatus Status) : IGetApiRequest
 {
     public string GetUrl => $"api/applicationreviews/{VacancyReference}/temp-status/{Status}";
 }
 
-// GET /api/employer/{accountId}/applicationreviews
+/// <summary>GET /api/employer/{accountId}/applicationreviews &#x2192; <see cref="ApplicationReviewsResponse"/></summary>
 public record GetEmployerByAccountIdApplicationreviewsApiRequest(long AccountId, int? PageNumber, int? PageSize, string SortColumn, bool? IsAscending) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/applicationreviews", new Dictionary<string, string?> { ["pageNumber"] = PageNumber?.ToString(), ["pageSize"] = PageSize?.ToString(), ["sortColumn"] = SortColumn, ["isAscending"] = IsAscending?.ToString() });
 }
 
-// GET /api/employer/{accountId}/applicationreviews/dashboard
+/// <summary>GET /api/employer/{accountId}/applicationreviews/dashboard &#x2192; <see cref="EmployerDashboardModel"/></summary>
 public record GetEmployerByAccountIdApplicationreviewsDashboardApiRequest(long AccountId) : IGetApiRequest
 {
     public string GetUrl => $"api/employer/{AccountId}/applicationreviews/dashboard";
 }
 
-// GET /api/employer/{accountId}/alerts
+/// <summary>GET /api/employer/{accountId}/alerts &#x2192; <see cref="EmployerAlertsModel"/></summary>
 public record GetEmployerByAccountIdAlertsApiRequest(long AccountId, string UserId) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/alerts", new Dictionary<string, string?> { ["userId"] = UserId });
 }
 
-// GET /api/employer/{accountId}/applicationreviews/dashboard/vacancies
+/// <summary>GET /api/employer/{accountId}/applicationreviews/dashboard/vacancies &#x2192; <see cref="VacancyDashboardResponse"/></summary>
 public record GetEmployerByAccountIdApplicationreviewsDashboardVacanciesApiRequest(long AccountId, int? PageNumber, int? PageSize, string SortColumn, bool? IsAscending, List<ApplicationReviewStatus>? Status) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/applicationreviews/dashboard/vacancies",
@@ -99,7 +99,7 @@ public record GetEmployerByAccountIdApplicationreviewsDashboardVacanciesApiReque
         .Concat((Status ?? []).Select(v => new KeyValuePair<string, string?>("status", v.ToString()))));
 }
 
-// POST /api/employer/{accountId}/applicationreviews/count
+/// <summary>POST /api/employer/{accountId}/applicationreviews/count &#x2192; <see cref="ApplicationReviewsStats"/></summary>
 public class PostEmployerByAccountIdApplicationreviewsCountApiRequest : IPostApiRequest<System.Collections.Generic.List<long>>
 {
     public required long AccountId { get; init; }
@@ -108,19 +108,19 @@ public class PostEmployerByAccountIdApplicationreviewsCountApiRequest : IPostApi
     public System.Collections.Generic.List<long> Data { get; set; } = default!;
 }
 
-// GET /api/employer/{accountId}/profiles
+/// <summary>GET /api/employer/{accountId}/profiles &#x2192; List&lt;<see cref="EmployerProfile"/>&gt;</summary>
 public record GetEmployerByAccountIdProfilesApiRequest(long AccountId) : IGetApiRequest
 {
     public string GetUrl => $"api/employer/{AccountId}/profiles";
 }
 
-// GET /api/employer/profiles/{accountLegalEntityId}
+/// <summary>GET /api/employer/profiles/{accountLegalEntityId} &#x2192; <see cref="EmployerProfile"/></summary>
 public record GetEmployerProfilesByAccountLegalEntityIdApiRequest(long AccountLegalEntityId) : IGetApiRequest
 {
     public string GetUrl => $"api/employer/profiles/{AccountLegalEntityId}";
 }
 
-// PUT /api/employer/profiles/{accountLegalEntityId}
+/// <summary>PUT /api/employer/profiles/{accountLegalEntityId} &#x2192; <see cref="PutEmployerProfileResponse"/></summary>
 public class PutEmployerProfilesByAccountLegalEntityIdApiRequest : IPutApiRequest<PutEmployerProfileRequest>
 {
     public required long AccountLegalEntityId { get; init; }
@@ -128,13 +128,13 @@ public class PutEmployerProfilesByAccountLegalEntityIdApiRequest : IPutApiReques
     public PutEmployerProfileRequest Data { get; set; } = default!;
 }
 
-// DELETE /api/employer/profiles/{accountLegalEntityId}
+/// <summary>DELETE /api/employer/profiles/{accountLegalEntityId}</summary>
 public record DeleteEmployerProfilesByAccountLegalEntityIdApiRequest(long AccountLegalEntityId) : IDeleteApiRequest
 {
     public string DeleteUrl => $"api/employer/profiles/{AccountLegalEntityId}";
 }
 
-// PATCH /api/employer/profiles/{accountLegalEntityId}
+/// <summary>PATCH /api/employer/profiles/{accountLegalEntityId} &#x2192; <see cref="PatchEmployerProfileResponse"/></summary>
 public class PatchEmployerProfilesByAccountLegalEntityIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required long AccountLegalEntityId { get; init; }
@@ -142,13 +142,13 @@ public class PatchEmployerProfilesByAccountLegalEntityIdApiRequest : IPatchApiRe
     public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
-// GET /api/employer/profiles/{accountLegalEntityId}/addresses
+/// <summary>GET /api/employer/profiles/{accountLegalEntityId}/addresses &#x2192; List&lt;<see cref="EmployerProfileAddress"/>&gt;</summary>
 public record GetEmployerProfilesByAccountLegalEntityIdAddressesApiRequest(long AccountLegalEntityId) : IGetApiRequest
 {
     public string GetUrl => $"api/employer/profiles/{AccountLegalEntityId}/addresses";
 }
 
-// POST /api/employer/profiles/{accountLegalEntityId}/addresses
+/// <summary>POST /api/employer/profiles/{accountLegalEntityId}/addresses &#x2192; <see cref="EmployerProfileAddress"/></summary>
 public class PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest : IPostApiRequest<PostEmployerProfileAddressRequest>
 {
     public required long AccountLegalEntityId { get; init; }
@@ -156,19 +156,19 @@ public class PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest : IPo
     public PostEmployerProfileAddressRequest Data { get; set; } = default!;
 }
 
-// GET /api/employer/profiles/{accountLegalEntityId}/addresses/{id}
+/// <summary>GET /api/employer/profiles/{accountLegalEntityId}/addresses/{id} &#x2192; <see cref="EmployerProfileAddress"/></summary>
 public record GetEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest(long AccountLegalEntityId, int Id) : IGetApiRequest
 {
     public string GetUrl => $"api/employer/profiles/{AccountLegalEntityId}/addresses/{Id}";
 }
 
-// DELETE /api/employer/profiles/{accountLegalEntityId}/addresses/{id}
+/// <summary>DELETE /api/employer/profiles/{accountLegalEntityId}/addresses/{id}</summary>
 public record DeleteEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest(long AccountLegalEntityId, int Id) : IDeleteApiRequest
 {
     public string DeleteUrl => $"api/employer/profiles/{AccountLegalEntityId}/addresses/{Id}";
 }
 
-// PATCH /api/employer/profiles/{accountLegalEntityId}/addresses/{id}
+/// <summary>PATCH /api/employer/profiles/{accountLegalEntityId}/addresses/{id} &#x2192; <see cref="EmployerProfileAddress"/></summary>
 public class PatchEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required long AccountLegalEntityId { get; init; }
@@ -177,26 +177,26 @@ public class PatchEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest 
     public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
-// GET /api/notifications/batch/by/date
+/// <summary>GET /api/notifications/batch/by/date &#x2192; <see cref="GetBatchByDateResponse"/></summary>
 public record GetNotificationsBatchByDateApiRequest(System.DateTime DateTime) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/notifications/batch/by/date", new Dictionary<string, string?> { ["dateTime"] = DateTime.ToString("s") });
 }
 
-// GET /api/notifications/batch/by/userstatus
+/// <summary>GET /api/notifications/batch/by/userstatus &#x2192; <see cref="GetBatchByDateResponse"/></summary>
 public record GetNotificationsBatchByUserstatusApiRequest(UserStatus? Status) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/notifications/batch/by/userstatus", new Dictionary<string, string?> { ["status"] = Status?.ToString() });
 }
 
-// DELETE /api/notifications
+/// <summary>DELETE /api/notifications &#x2192; List&lt;string&gt;</summary>
 public record DeleteNotificationsApiRequest(List<long>? Ids) : IDeleteApiRequest
 {
     public string DeleteUrl => QueryHelpers.AddQueryString($"api/notifications",
         (Ids ?? []).Select(v => new KeyValuePair<string, string?>("ids", v.ToString())));
 }
 
-// POST /api/applicationreviews/{id}/create-notifications
+/// <summary>POST /api/applicationreviews/{id}/create-notifications &#x2192; List&lt;<see cref="NotificationEmail"/>&gt;</summary>
 public class PostApplicationreviewsByIdCreateNotificationsApiRequest : IPostApiRequest<object>
 {
     public required System.Guid Id { get; init; }
@@ -204,7 +204,7 @@ public class PostApplicationreviewsByIdCreateNotificationsApiRequest : IPostApiR
     public object Data { get; set; } = default!;
 }
 
-// POST /api/vacancies/{id}/create-notifications
+/// <summary>POST /api/vacancies/{id}/create-notifications &#x2192; List&lt;<see cref="NotificationEmail"/>&gt;</summary>
 public class PostVacanciesByIdCreateNotificationsApiRequest : IPostApiRequest<object>
 {
     public required System.Guid Id { get; init; }
@@ -212,31 +212,31 @@ public class PostVacanciesByIdCreateNotificationsApiRequest : IPostApiRequest<ob
     public object Data { get; set; } = default!;
 }
 
-// GET /api/prohibitedcontent/{contentType}
+/// <summary>GET /api/prohibitedcontent/{contentType} &#x2192; List&lt;string&gt;</summary>
 public record GetProhibitedcontentByContentTypeApiRequest(ProhibitedContentType ContentType) : IGetApiRequest
 {
     public string GetUrl => $"api/prohibitedcontent/{ContentType}";
 }
 
-// GET /api/provider/{ukprn}/applicationreviews
+/// <summary>GET /api/provider/{ukprn}/applicationreviews &#x2192; <see cref="ApplicationReviewsResponse"/></summary>
 public record GetProviderByUkprnApplicationreviewsApiRequest(int Ukprn, int? PageNumber, int? PageSize, string SortColumn, bool? IsAscending) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/provider/{Ukprn}/applicationreviews", new Dictionary<string, string?> { ["pageNumber"] = PageNumber?.ToString(), ["pageSize"] = PageSize?.ToString(), ["sortColumn"] = SortColumn, ["isAscending"] = IsAscending?.ToString() });
 }
 
-// GET /api/provider/{ukprn}/applicationreviews/dashboard
+/// <summary>GET /api/provider/{ukprn}/applicationreviews/dashboard &#x2192; <see cref="ProviderDashboardModel"/></summary>
 public record GetProviderByUkprnApplicationreviewsDashboardApiRequest(int Ukprn) : IGetApiRequest
 {
     public string GetUrl => $"api/provider/{Ukprn}/applicationreviews/dashboard";
 }
 
-// GET /api/provider/{ukprn}/alerts
+/// <summary>GET /api/provider/{ukprn}/alerts &#x2192; <see cref="EmployerAlertsModel"/></summary>
 public record GetProviderByUkprnAlertsApiRequest(int Ukprn, string UserId) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/provider/{Ukprn}/alerts", new Dictionary<string, string?> { ["userId"] = UserId });
 }
 
-// GET /api/provider/{ukprn}/applicationreviews/dashboard/vacancies
+/// <summary>GET /api/provider/{ukprn}/applicationreviews/dashboard/vacancies &#x2192; <see cref="VacancyDashboardResponse"/></summary>
 public record GetProviderByUkprnApplicationreviewsDashboardVacanciesApiRequest(int Ukprn, int? PageNumber, int? PageSize, string SortColumn, bool? IsAscending, List<ApplicationReviewStatus>? Status) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/provider/{Ukprn}/applicationreviews/dashboard/vacancies",
@@ -244,7 +244,7 @@ public record GetProviderByUkprnApplicationreviewsDashboardVacanciesApiRequest(i
         .Concat((Status ?? []).Select(v => new KeyValuePair<string, string?>("status", v.ToString()))));
 }
 
-// POST /api/provider/{ukprn}/applicationreviews/count
+/// <summary>POST /api/provider/{ukprn}/applicationreviews/count &#x2192; <see cref="ApplicationReviewsStats"/></summary>
 public class PostProviderByUkprnApplicationreviewsCountApiRequest : IPostApiRequest<System.Collections.Generic.List<long>>
 {
     public required int Ukprn { get; init; }
@@ -252,62 +252,62 @@ public class PostProviderByUkprnApplicationreviewsCountApiRequest : IPostApiRequ
     public System.Collections.Generic.List<long> Data { get; set; } = default!;
 }
 
-// GET /api/referencedata/candidate-skills
+/// <summary>GET /api/referencedata/candidate-skills &#x2192; List&lt;string&gt;</summary>
 public record GetReferencedataCandidateSkillsApiRequest() : IGetApiRequest
 {
     public string GetUrl => $"api/referencedata/candidate-skills";
 }
 
-// GET /api/referencedata/candidate-qualifications
+/// <summary>GET /api/referencedata/candidate-qualifications &#x2192; List&lt;string&gt;</summary>
 public record GetReferencedataCandidateQualificationsApiRequest() : IGetApiRequest
 {
     public string GetUrl => $"api/referencedata/candidate-qualifications";
 }
 
-// GET /api/reports/{reportId}
+/// <summary>GET /api/reports/{reportId} &#x2192; <see cref="Report"/></summary>
 public record GetReportsByReportIdApiRequest(System.Guid ReportId) : IGetApiRequest
 {
     public string GetUrl => $"api/reports/{ReportId}";
 }
 
-// GET /api/reports/{ukprn}/provider
+/// <summary>GET /api/reports/{ukprn}/provider &#x2192; List&lt;<see cref="Report"/>&gt;</summary>
 public record GetReportsByUkprnProviderApiRequest(int Ukprn) : IGetApiRequest
 {
     public string GetUrl => $"api/reports/{Ukprn}/provider";
 }
 
-// GET /api/reports
+/// <summary>GET /api/reports &#x2192; <see cref="Report"/></summary>
 public record GetReportsApiRequest(ReportOwnerType? OwnerType) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/reports", new Dictionary<string, string?> { ["ownerType"] = OwnerType?.ToString() });
 }
 
-// POST /api/reports
+/// <summary>POST /api/reports &#x2192; <see cref="Report"/></summary>
 public class PostReportsApiRequest : IPostApiRequest<PostReportRequest>
 {
     public string PostUrl => $"api/reports";
     public PostReportRequest Data { get; set; } = default!;
 }
 
-// GET /api/reports/generate/{reportId}
+/// <summary>GET /api/reports/generate/{reportId} &#x2192; List&lt;<see cref="ApplicationReviewReport"/>&gt;</summary>
 public record GetReportsGenerateByReportIdApiRequest(System.Guid ReportId) : IGetApiRequest
 {
     public string GetUrl => $"api/reports/generate/{ReportId}";
 }
 
-// GET /api/reports/generate-qa/{reportId}
+/// <summary>GET /api/reports/generate-qa/{reportId} &#x2192; <see cref="GetQaReportResponse"/></summary>
 public record GetReportsGenerateQaByReportIdApiRequest(System.Guid ReportId) : IGetApiRequest
 {
     public string GetUrl => $"api/reports/generate-qa/{ReportId}";
 }
 
-// GET /api/user/{id}
+/// <summary>GET /api/user/{id} &#x2192; <see cref="RecruitUser"/></summary>
 public record GetUserByIdApiRequest(System.Guid Id) : IGetApiRequest
 {
     public string GetUrl => $"api/user/{Id}";
 }
 
-// PUT /api/user/{id}
+/// <summary>PUT /api/user/{id} &#x2192; <see cref="PutUserResponse"/></summary>
 public class PutUserByIdApiRequest : IPutApiRequest<PutUserRequest>
 {
     public required System.Guid Id { get; init; }
@@ -315,7 +315,7 @@ public class PutUserByIdApiRequest : IPutApiRequest<PutUserRequest>
     public PutUserRequest Data { get; set; } = default!;
 }
 
-// PATCH /api/user/{id}
+/// <summary>PATCH /api/user/{id} &#x2192; <see cref="RecruitUser"/></summary>
 public class PatchUserByIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required System.Guid Id { get; init; }
@@ -323,44 +323,44 @@ public class PatchUserByIdApiRequest : IPatchApiRequest<System.Collections.Gener
     public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
-// POST /api/user/by/email
+/// <summary>POST /api/user/by/email &#x2192; <see cref="RecruitUser"/></summary>
 public class PostUserByEmailApiRequest : IPostApiRequest<GetUserRequest>
 {
     public string PostUrl => $"api/user/by/email";
     public GetUserRequest Data { get; set; } = default!;
 }
 
-// GET /api/user/by/employeraccountid/{employerAccountId}
+/// <summary>GET /api/user/by/employeraccountid/{employerAccountId} &#x2192; List&lt;<see cref="RecruitUser"/>&gt;</summary>
 public record GetUserByEmployeraccountidByEmployerAccountIdApiRequest(long EmployerAccountId, NotificationTypes? NotificationType) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/user/by/employeraccountid/{EmployerAccountId}", new Dictionary<string, string?> { ["notificationType"] = NotificationType?.ToString() });
 }
 
-// GET /api/user/by/ukprn/{ukprn}
+/// <summary>GET /api/user/by/ukprn/{ukprn} &#x2192; List&lt;<see cref="RecruitUser"/>&gt;</summary>
 public record GetUserByUkprnByUkprnApiRequest(long Ukprn, NotificationTypes? NotificationType) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/user/by/ukprn/{Ukprn}", new Dictionary<string, string?> { ["notificationType"] = NotificationType?.ToString() });
 }
 
-// GET /api/user/by/dfeuserid/{dfeUserId}
+/// <summary>GET /api/user/by/dfeuserid/{dfeUserId} &#x2192; <see cref="RecruitUser"/></summary>
 public record GetUserByDfeuseridByDfeUserIdApiRequest(string DfeUserId) : IGetApiRequest
 {
     public string GetUrl => $"api/user/by/dfeuserid/{DfeUserId}";
 }
 
-// GET /api/user/by/idams/{idams}
+/// <summary>GET /api/user/by/idams/{idams} &#x2192; <see cref="RecruitUser"/></summary>
 public record GetUserByIdamsByIdamsApiRequest(string Idams) : IGetApiRequest
 {
     public string GetUrl => $"api/user/by/idams/{Idams}";
 }
 
-// GET /api/vacancies/{vacancyId}
+/// <summary>GET /api/vacancies/{vacancyId} &#x2192; <see cref="Vacancy"/></summary>
 public record GetVacanciesByVacancyIdApiRequest(System.Guid VacancyId) : IGetApiRequest
 {
     public string GetUrl => $"api/vacancies/{VacancyId}";
 }
 
-// PUT /api/vacancies/{vacancyId}
+/// <summary>PUT /api/vacancies/{vacancyId} &#x2192; <see cref="Vacancy"/></summary>
 public class PutVacanciesByVacancyIdApiRequest : IPutApiRequest<PutVacancyRequest>
 {
     public required System.Guid VacancyId { get; init; }
@@ -370,13 +370,13 @@ public class PutVacanciesByVacancyIdApiRequest : IPutApiRequest<PutVacancyReques
     public PutVacancyRequest Data { get; set; } = default!;
 }
 
-// DELETE /api/vacancies/{vacancyId}
+/// <summary>DELETE /api/vacancies/{vacancyId}</summary>
 public record DeleteVacanciesByVacancyIdApiRequest(System.Guid VacancyId) : IDeleteApiRequest
 {
     public string DeleteUrl => $"api/vacancies/{VacancyId}";
 }
 
-// PATCH /api/vacancies/{vacancyId}
+/// <summary>PATCH /api/vacancies/{vacancyId} &#x2192; <see cref="Vacancy"/></summary>
 public class PatchVacanciesByVacancyIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required System.Guid VacancyId { get; init; }
@@ -384,50 +384,50 @@ public class PatchVacanciesByVacancyIdApiRequest : IPatchApiRequest<System.Colle
     public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
-// GET /api/vacancies/{vacancyReference}/live
+/// <summary>GET /api/vacancies/{vacancyReference}/live &#x2192; <see cref="Vacancy"/></summary>
 public record GetVacanciesByVacancyReferenceLiveApiRequest(long VacancyReference) : IGetApiRequest
 {
     public string GetUrl => $"api/vacancies/{VacancyReference}/live";
 }
 
-// GET /api/vacancies/live
+/// <summary>GET /api/vacancies/live &#x2192; <see cref="VacancyPagedResponse"/></summary>
 public record GetVacanciesLiveApiRequest(int? Page, int? PageSize, System.DateTime? ClosingDate) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/vacancies/live", new Dictionary<string, string?> { ["page"] = Page?.ToString(), ["pageSize"] = PageSize?.ToString(), ["closingDate"] = ClosingDate?.ToString("s") });
 }
 
-// GET /api/vacancies/{vacancyReference}/closed
+/// <summary>GET /api/vacancies/{vacancyReference}/closed &#x2192; <see cref="Vacancy"/></summary>
 public record GetVacanciesByVacancyReferenceClosedApiRequest(long VacancyReference) : IGetApiRequest
 {
     public string GetUrl => $"api/vacancies/{VacancyReference}/closed";
 }
 
-// POST /api/vacancies/closed
+/// <summary>POST /api/vacancies/closed &#x2192; <see cref="Vacancy"/></summary>
 public class PostVacanciesClosedApiRequest : IPostApiRequest<PostClosedVacanciesRequest>
 {
     public string PostUrl => $"api/vacancies/closed";
     public PostClosedVacanciesRequest Data { get; set; } = default!;
 }
 
-// GET /api/accounts/{accountId}/vacancies
+/// <summary>GET /api/accounts/{accountId}/vacancies &#x2192; <see cref="VacancySummaryPagedResponse"/></summary>
 public record GetAccountsByAccountIdVacanciesApiRequest(long AccountId, int? Page, int? PageSize, SortOrder? SortOrder, VacancySortColumn? SortColumn, FilteringOptions? FilterBy, string SearchTerm) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/accounts/{AccountId}/vacancies", new Dictionary<string, string?> { ["page"] = Page?.ToString(), ["pageSize"] = PageSize?.ToString(), ["sortOrder"] = SortOrder?.ToString(), ["sortColumn"] = SortColumn?.ToString(), ["filterBy"] = FilterBy?.ToString(), ["searchTerm"] = SearchTerm });
 }
 
-// GET /api/provider/{ukprn}/vacancies
+/// <summary>GET /api/provider/{ukprn}/vacancies &#x2192; <see cref="VacancySummaryPagedResponse"/></summary>
 public record GetProviderByUkprnVacanciesApiRequest(int Ukprn, int? Page, int? PageSize, SortOrder? SortOrder, VacancySortColumn? SortColumn, FilteringOptions? FilterBy, string SearchTerm) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/provider/{Ukprn}/vacancies", new Dictionary<string, string?> { ["page"] = Page?.ToString(), ["pageSize"] = PageSize?.ToString(), ["sortOrder"] = SortOrder?.ToString(), ["sortColumn"] = SortColumn?.ToString(), ["filterBy"] = FilterBy?.ToString(), ["searchTerm"] = SearchTerm });
 }
 
-// GET /api/vacancies/total-positions-available
+/// <summary>GET /api/vacancies/total-positions-available &#x2192; <see cref="TotalPositionsAvailableResponse"/></summary>
 public record GetVacanciesTotalPositionsAvailableApiRequest() : IGetApiRequest
 {
     public string GetUrl => $"api/vacancies/total-positions-available";
 }
 
-// POST /api/vacancies
+/// <summary>POST /api/vacancies &#x2192; <see cref="Vacancy"/></summary>
 public class PostVacanciesApiRequest : IPostApiRequest<PostVacancyRequest>
 {
     public VacancyRuleSet? RuleSet { get; set; }
@@ -436,33 +436,33 @@ public class PostVacanciesApiRequest : IPostApiRequest<PostVacancyRequest>
     public PostVacancyRequest Data { get; set; } = default!;
 }
 
-// GET /api/vacancies/count/user/{userId}
+/// <summary>GET /api/vacancies/count/user/{userId} &#x2192; <see cref="Int32DataResponse"/></summary>
 public record GetVacanciesCountUserByUserIdApiRequest(System.Guid UserId) : IGetApiRequest
 {
     public string GetUrl => $"api/vacancies/count/user/{UserId}";
 }
 
-// GET /api/provider/{ukprn}/vacancies/stats
+/// <summary>GET /api/provider/{ukprn}/vacancies/stats</summary>
 public record GetProviderByUkprnVacanciesStatsApiRequest(int Ukprn, List<long>? VacancyReferences) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/provider/{Ukprn}/vacancies/stats",
         (VacancyReferences ?? []).Select(v => new KeyValuePair<string, string?>("vacancyReferences", v.ToString())));
 }
 
-// GET /api/employer/{accountId}/vacancies/stats
+/// <summary>GET /api/employer/{accountId}/vacancies/stats</summary>
 public record GetEmployerByAccountIdVacanciesStatsApiRequest(long AccountId, List<long>? VacancyReferences) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/vacancies/stats",
         (VacancyReferences ?? []).Select(v => new KeyValuePair<string, string?>("vacancyReferences", v.ToString())));
 }
 
-// GET /api/vacancyanalytics/{vacancyReference}
+/// <summary>GET /api/vacancyanalytics/{vacancyReference} &#x2192; <see cref="VacancyAnalyticsResponse"/></summary>
 public record GetVacancyanalyticsByVacancyReferenceApiRequest(long VacancyReference) : IGetApiRequest
 {
     public string GetUrl => $"api/vacancyanalytics/{VacancyReference}";
 }
 
-// PUT /api/vacancyanalytics/{vacancyReference}
+/// <summary>PUT /api/vacancyanalytics/{vacancyReference} &#x2192; <see cref="VacancyAnalyticsResponse"/></summary>
 public class PutVacancyanalyticsByVacancyReferenceApiRequest : IPutApiRequest<PutVacancyAnalyticsRequest>
 {
     public required long VacancyReference { get; init; }
@@ -470,13 +470,13 @@ public class PutVacancyanalyticsByVacancyReferenceApiRequest : IPutApiRequest<Pu
     public PutVacancyAnalyticsRequest Data { get; set; } = default!;
 }
 
-// GET /api/vacancyreference
+/// <summary>GET /api/vacancyreference &#x2192; <see cref="VacancyReferenceResponse"/></summary>
 public record GetVacancyreferenceApiRequest() : IGetApiRequest
 {
     public string GetUrl => $"api/vacancyreference";
 }
 
-// GET /api/vacancyreviews
+/// <summary>GET /api/vacancyreviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>
 public record GetVacancyreviewsApiRequest(List<ReviewStatus>? ReviewStatus, System.DateTime? ExpiredAssignationDateTime) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/vacancyreviews",
@@ -484,13 +484,13 @@ public record GetVacancyreviewsApiRequest(List<ReviewStatus>? ReviewStatus, Syst
         .Concat((ReviewStatus ?? []).Select(v => new KeyValuePair<string, string?>("reviewStatus", v.ToString()))));
 }
 
-// GET /api/vacancyreviews/{id}
+/// <summary>GET /api/vacancyreviews/{id} &#x2192; <see cref="VacancyReview"/></summary>
 public record GetVacancyreviewsByIdApiRequest(System.Guid Id) : IGetApiRequest
 {
     public string GetUrl => $"api/vacancyreviews/{Id}";
 }
 
-// PUT /api/vacancyreviews/{id}
+/// <summary>PUT /api/vacancyreviews/{id} &#x2192; <see cref="VacancyReview"/></summary>
 public class PutVacancyreviewsByIdApiRequest : IPutApiRequest<PutVacancyReviewRequest>
 {
     public required System.Guid Id { get; init; }
@@ -498,13 +498,13 @@ public class PutVacancyreviewsByIdApiRequest : IPutApiRequest<PutVacancyReviewRe
     public PutVacancyReviewRequest Data { get; set; } = default!;
 }
 
-// DELETE /api/vacancyreviews/{id}
+/// <summary>DELETE /api/vacancyreviews/{id}</summary>
 public record DeleteVacancyreviewsByIdApiRequest(System.Guid Id) : IDeleteApiRequest
 {
     public string DeleteUrl => $"api/vacancyreviews/{Id}";
 }
 
-// PATCH /api/vacancyreviews/{id}
+/// <summary>PATCH /api/vacancyreviews/{id} &#x2192; <see cref="VacancyReview"/></summary>
 public class PatchVacancyreviewsByIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required System.Guid Id { get; init; }
@@ -512,7 +512,7 @@ public class PatchVacancyreviewsByIdApiRequest : IPatchApiRequest<System.Collect
     public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
-// GET /api/vacancies/{vacancyReference}/reviews
+/// <summary>GET /api/vacancies/{vacancyReference}/reviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>
 public record GetVacanciesByVacancyReferenceReviewsApiRequest(string VacancyReference, List<ReviewStatus>? Status, List<string>? ManualOutcome, bool? IncludeNoStatus) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/vacancies/{VacancyReference}/reviews",
@@ -521,13 +521,13 @@ public record GetVacanciesByVacancyReferenceReviewsApiRequest(string VacancyRefe
         .Concat((ManualOutcome ?? []).Select(v => new KeyValuePair<string, string?>("manualOutcome", v))));
 }
 
-// GET /api/accounts/{accountLegalEntityId}/vacancyreviews
+/// <summary>GET /api/accounts/{accountLegalEntityId}/vacancyreviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>
 public record GetAccountsByAccountLegalEntityIdVacancyreviewsApiRequest(long AccountLegalEntityId) : IGetApiRequest
 {
     public string GetUrl => $"api/accounts/{AccountLegalEntityId}/vacancyreviews";
 }
 
-// GET /api/accounts/{accountLegalEntityId}/vacancyreviews/count
+/// <summary>GET /api/accounts/{accountLegalEntityId}/vacancyreviews/count &#x2192; int</summary>
 public record GetAccountsByAccountLegalEntityIdVacancyreviewsCountApiRequest(long AccountLegalEntityId, List<ReviewStatus>? Status, List<string>? ManualOutcome, EmployerNameOption? EmployerNameOption) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/accounts/{AccountLegalEntityId}/vacancyreviews/count",
@@ -536,25 +536,25 @@ public record GetAccountsByAccountLegalEntityIdVacancyreviewsCountApiRequest(lon
         .Concat((ManualOutcome ?? []).Select(v => new KeyValuePair<string, string?>("manualOutcome", v))));
 }
 
-// GET /api/vacancyreviews/qa/dashboard
+/// <summary>GET /api/vacancyreviews/qa/dashboard &#x2192; <see cref="QaDashboard"/></summary>
 public record GetVacancyreviewsQaDashboardApiRequest() : IGetApiRequest
 {
     public string GetUrl => $"api/vacancyreviews/qa/dashboard";
 }
 
-// GET /api/users/vacancyreviews
+/// <summary>GET /api/users/vacancyreviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>
 public record GetUsersVacancyreviewsApiRequest(string UserId, System.DateTime? AssignationExpiry, ReviewStatus? Status) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/users/vacancyreviews", new Dictionary<string, string?> { ["userId"] = UserId, ["assignationExpiry"] = AssignationExpiry?.ToString("s"), ["status"] = Status?.ToString() });
 }
 
-// GET /api/users/vacancyreviews/count
+/// <summary>GET /api/users/vacancyreviews/count &#x2192; int</summary>
 public record GetUsersVacancyreviewsCountApiRequest(string UserEmail, bool? ApprovedFirstTime, System.DateTime? AssignationExpiry) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/users/vacancyreviews/count", new Dictionary<string, string?> { ["userEmail"] = UserEmail, ["approvedFirstTime"] = ApprovedFirstTime?.ToString(), ["assignationExpiry"] = AssignationExpiry?.ToString("s") });
 }
 
-// GET /health
+/// <summary>GET /health &#x2192; string</summary>
 public record GetHealthApiRequest() : IGetApiRequest
 {
     public string GetUrl => $"health";

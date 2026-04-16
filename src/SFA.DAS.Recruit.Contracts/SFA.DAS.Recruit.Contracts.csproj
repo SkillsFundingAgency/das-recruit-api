@@ -15,7 +15,7 @@
     <ApiContractsSwaggerJsonPath>$(MSBuildThisFileDirectory)..\Recruit.Api\swagger.json</ApiContractsSwaggerJsonPath>
     <ApiContractsNamespace>SFA.DAS.Recruit.Contracts</ApiContractsNamespace>
     <ApiContractsOutputDirectory>$(MSBuildThisFileDirectory)Generated</ApiContractsOutputDirectory>
-    <ApiContractsClientName>RecruitApiV2</ApiContractsClientName>
+    <ApiContractsClientName>RecruitApi</ApiContractsClientName>
     <IsPackable>true</IsPackable>
     <Authors>GOV.UK Education and Skills Funding Agency (ESFA) Digital Apprenticeship Service (DAS)</Authors>
     <Description>Recruit inner API request and response for use with APIM.</Description>
@@ -26,13 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.171" />
-
-    <!--
-        SFA.DAS.Apim.Shared: provides IGetApiRequest, IPostApiRequest etc. that the
-        generated Requests.g.cs references. This becomes a public dependency of the
-        published NuGet package so consumers do not need to reference it separately.
-    -->
+    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.172" />
     <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.167" />
   </ItemGroup>
 
