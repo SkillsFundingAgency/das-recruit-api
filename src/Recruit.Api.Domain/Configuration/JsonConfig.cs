@@ -4,5 +4,9 @@ namespace SFA.DAS.Recruit.Api.Domain.Configuration;
 
 public static class JsonConfig
 {
-    public static readonly JsonSerializerOptions Options = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    public static readonly JsonSerializerOptions Options = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true
+    };
 }

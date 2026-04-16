@@ -50,10 +50,11 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
     [HttpPut]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]   
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IResult> PutOne(
         [FromServices] IVacancyReviewRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IAutomatedReviewService reviewService,
         [FromServices] IEventsService eventsService,
         [FromRoute] Guid id,
         [FromBody] PutVacancyReviewRequest request,
@@ -63,7 +64,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
         {
             if (string.IsNullOrEmpty(request.SubmittedByUserId))
             {
-                logger.LogError("No user information supplied for Vacancy {0}", request.VacancyReference);
+                logger.LogError("No user information supplied for Vacancy {VacancyReference}", request.VacancyReference);
                 request.SubmittedByUserEmail = $"unknown-{request.VacancyReference}";
             }
             else
@@ -72,34 +73,47 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
 
                 if (submittedUser is null)
                 {
-                    logger.LogError("Unable to find user {0} for Vacancy {1}", request.SubmittedByUserId, request.VacancyReference);
+                    logger.LogError("Unable to find user {SubmittedByUserId} for Vacancy {VacancyReference}", request.SubmittedByUserId, request.VacancyReference);
                     request.SubmittedByUserEmail = $"unknown-{request.SubmittedByUserId}";
                 }
                 else
                 {
-                    request.SubmittedByUserEmail = submittedUser?.Email;    
+                    request.SubmittedByUserEmail = submittedUser?.Email;
                 }    
             }
         }
 
         try
         {
-            var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
-            if (result.Created)
+            var (entity, created) = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+            if (!created)
             {
-                await eventsService.PublishVacancyReviewCreatedEventAsync(result.Entity);
+                return TypedResults.Ok(entity.ToPutResponse());
             }
 
-            return result.Created
-                ? TypedResults.Created($"/{RouteNames.VacancyReviews}/{result.Entity.Id}", result.Entity.ToPutResponse())
-                : TypedResults.Ok(result.Entity.ToPutResponse());
+            try
+            {
+                // perform automated review
+                await reviewService.ProcessVacancyReviewAsync(entity, cancellationToken);
+                await repository.UpsertOneAsync(entity, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Error whilst performing VacancyReview automated reviews");
+            }
+            finally
+            {
+                // publish created event
+                await eventsService.PublishVacancyReviewCreatedEventAsync(entity);
+            }
+            
+            return TypedResults.Created($"/{RouteNames.VacancyReviews}/{entity.Id}", entity.ToPutResponse());    
         }
         catch (Exception e)
         {
             logger.LogError(e, "An error occured while updating VacancyReview");
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
-        
     }
     
     [HttpPatch]
