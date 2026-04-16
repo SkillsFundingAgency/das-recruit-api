@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
@@ -158,5 +159,72 @@ public class WhenPuttingVacancy: BaseFixture
 
         Server.DataContext.Verify(x => x.SetValues(targetItem, ItIs.EquivalentTo(request.ToDomain(targetItem.Id))), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Test]
+    public async Task Then_A_New_Vacancy_Without_VacancyReference_Is_Assigned_One()
+    {
+        // arrange
+        var vacancyReference = Fixture.Create<VacancyReference>();
+
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(Fixture.CreateMany<UserEntity>(10));
+
+        Server.DataContext
+            .Setup(x => x.VacancyEntities)
+            .ReturnsDbSet(Fixture.CreateMany<VacancyEntity>(10).ToList());
+
+        Server.DataContext
+            .Setup(x => x.GetNextVacancyReferenceAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vacancyReference.Value);
+
+        var request = Fixture.Build<PutVacancyRequest>()
+            .With(x => x.VacancyReference, (long?)null)
+            .Create();
+
+        // act
+        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}", request);
+        var vacancy = await response.Content.ReadAsAsync<Vacancy>();
+
+        // assert
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        vacancy.VacancyReference.Should().Be(vacancyReference.Value);
+        Server.DataContext.Verify(x => x.GetNextVacancyReferenceAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Test]
+    public async Task Then_An_Existing_Vacancy_Without_VacancyReference_Is_Assigned_One_On_Update()
+    {
+        // arrange
+        var vacancyReference = Fixture.Create<VacancyReference>();
+        var items = Fixture.CreateMany<VacancyEntity>(10).ToList();
+        var targetItem = items[5];
+        targetItem.VacancyReference = null;
+
+        Server.DataContext
+            .Setup(x => x.VacancyEntities)
+            .ReturnsDbSet(items);
+
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(Fixture.CreateMany<UserEntity>(10));
+
+        Server.DataContext
+            .Setup(x => x.GetNextVacancyReferenceAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vacancyReference.Value);
+
+        var request = Fixture.Build<PutVacancyRequest>()
+            .With(x => x.VacancyReference, (long?)null)
+            .Create();
+
+        // act
+        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{targetItem.Id}", request);
+        var vacancy = await response.Content.ReadAsAsync<Vacancy>();
+
+        // assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        vacancy.VacancyReference.Should().Be(vacancyReference.Value);
+        Server.DataContext.Verify(x => x.GetNextVacancyReferenceAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }

@@ -369,6 +369,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         var existingEntity = entity.Id == Guid.Empty ? null : await GetOneAsync(entity.Id, cancellationToken);
         if (existingEntity is null)
         {
+            entity.VacancyReference ??= (await GetNextVacancyReferenceAsync(cancellationToken)).Value;
             await dataContext.VacancyEntities.AddAsync(entity, cancellationToken);
             await dataContext.SaveChangesAsync(cancellationToken);
             return UpsertResult.Create(entity, true);
@@ -378,6 +379,11 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         if (existingEntity.ReviewRequestedByUserId != null && entity.ReviewRequestedByUserId == null && entity.TransferInfo == null)
         {
             entity.ReviewRequestedByUserId = existingEntity.ReviewRequestedByUserId;
+        }
+
+        if (existingEntity.VacancyReference == null && entity.VacancyReference == null)
+        {
+            entity.VacancyReference = (await GetNextVacancyReferenceAsync(cancellationToken)).Value;
         }
 
         dataContext.SetValues(existingEntity, entity);
