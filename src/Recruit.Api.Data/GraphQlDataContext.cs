@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -7,6 +8,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 
 namespace SFA.DAS.Recruit.Api.Data;
 
+[ExcludeFromCodeCoverage]
 public class GraphQlDataContext(IOptions<ConnectionStrings> config, DbContextOptions<GraphQlDataContext> options) : DbContext(options)
 {
     public DbSet<VacancyEntity> Vacancies { get; set; }

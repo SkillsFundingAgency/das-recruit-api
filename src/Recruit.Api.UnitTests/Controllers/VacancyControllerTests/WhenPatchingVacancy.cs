@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.JsonPatch;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Models;
@@ -14,7 +13,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.VacancyControllerTests;
 public class WhenPatchingVacancy
 {
     [Test, RecruitAutoData]
-    public async Task Then_The_Vacancy_Closed_Event_Is_Raised_When_The_Record_Is_Set_To_Closed(
+    public async Task Then_A_Vacancy_State_Change_Is_Handled(
         VacancyEntity vacancyEntity,
         VacancyEntity updatedEntity,
         Mock<IVacancyRepository> repository,
@@ -26,30 +25,21 @@ public class WhenPatchingVacancy
         vacancyEntity.Status = VacancyStatus.Live;
         var patchDocument = new JsonPatchDocument<Vacancy>();
         patchDocument.Replace(x => x.Status, VacancyStatus.Closed);
-        
         repository
             .Setup(x => x.GetOneAsync(vacancyEntity.Id, token))
             .ReturnsAsync(vacancyEntity);
-        
+
         updatedEntity.Status = VacancyStatus.Closed;
+        var upsertResult = UpsertResult.Create(updatedEntity, false, true);
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyEntity>(), token))
-            .ReturnsAsync(UpsertResult.Create(updatedEntity, false, true));
-        
-        VacancyEntity? capturedEntity = null;
-        eventsService
-            .Setup(x => x.PublishVacancyClosedEvent(It.IsAny<VacancyEntity>()))
-            .Callback<VacancyEntity>(x => capturedEntity = x)
-            .Returns(Task.CompletedTask);
+            .ReturnsAsync(upsertResult);
 
         // act
         var result = await sut.PatchOne(repository.Object, eventsService.Object, vacancyEntity.Id, patchDocument, token);
 
         // assert
         result.Should().BeOfType<Ok<Vacancy>>();
-        eventsService.Verify(x => x.PublishVacancyClosedEvent(It.IsAny<VacancyEntity>()), Times.Once);
-        capturedEntity.Should().NotBeNull();
-        capturedEntity.Id.Should().Be(updatedEntity.Id);
-        capturedEntity.VacancyReference.Should().Be(updatedEntity.VacancyReference);
+        eventsService.Verify(x => x.HandleVacancyStatusChange(upsertResult), Times.Once);
     }
 }

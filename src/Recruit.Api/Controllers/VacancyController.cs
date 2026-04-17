@@ -344,14 +344,7 @@ public class VacancyController : Controller
         entity.CreatedDate = DateTime.UtcNow;
         
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
-        
-        if (result.StatusChanged is true)
-        {
-            switch (result.Entity.Status)
-            {
-                case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
-            }
-        }
+        await eventsService.HandleVacancyStatusChange(result);
         
         return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
@@ -417,14 +410,7 @@ public class VacancyController : Controller
         }
 
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
-
-        if (result.StatusChanged is true)
-        {
-            switch (result.Entity.Status)
-            {
-                case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
-            }
-        }
+        await eventsService.HandleVacancyStatusChange(result);
 
         return result.Created
             ? TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPutResponse())
@@ -468,13 +454,7 @@ public class VacancyController : Controller
         }
     
         var result = await repository.UpsertOneAsync(vacancyEntity, cancellationToken);
-        if (result.StatusChanged is true)
-        {
-            switch (result.Entity.Status)
-            {
-                case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
-            }
-        }
+        await eventsService.HandleVacancyStatusChange(result);
         
         return TypedResults.Ok(vacancyEntity.ToPatchResponse());
     }
