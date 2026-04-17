@@ -345,9 +345,12 @@ public class VacancyController : Controller
         
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
         
-        if (result.Entity.Status == VacancyStatus.Closed)
+        if (result.StatusChanged is true)
         {
-            await eventsService.PublishVacancyClosedEvent(result.Entity);
+            switch (result.Entity.Status)
+            {
+                case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
+            }
         }
         
         return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPostResponse());
@@ -415,11 +418,14 @@ public class VacancyController : Controller
 
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
 
-        if (result.Entity.Status == VacancyStatus.Closed)
+        if (result.StatusChanged is true)
         {
-            await eventsService.PublishVacancyClosedEvent(result.Entity);
+            switch (result.Entity.Status)
+            {
+                case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
+            }
         }
-        
+
         return result.Created
             ? TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPutResponse())
             : TypedResults.Ok(result.Entity.ToPutResponse());
@@ -442,8 +448,6 @@ public class VacancyController : Controller
             return Results.NotFound();
         }
         
-        var originalVacancyStatus = vacancyEntity.Status;
-        
         try
         {
             patchRequest.ThrowIfOperationsOn([
@@ -463,11 +467,13 @@ public class VacancyController : Controller
             return TypedResults.ValidationProblem(ex.ToProblemsDictionary());
         }
     
-        await repository.UpsertOneAsync(vacancyEntity, cancellationToken);
-        
-        if (originalVacancyStatus is not VacancyStatus.Closed && vacancyEntity.Status is VacancyStatus.Closed)
+        var result = await repository.UpsertOneAsync(vacancyEntity, cancellationToken);
+        if (result.StatusChanged is true)
         {
-            await eventsService.PublishVacancyClosedEvent(vacancyEntity);
+            switch (result.Entity.Status)
+            {
+                case VacancyStatus.Closed: await eventsService.PublishVacancyClosedEvent(result.Entity); break; 
+            }
         }
         
         return TypedResults.Ok(vacancyEntity.ToPatchResponse());

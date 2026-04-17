@@ -23,6 +23,7 @@ public class StaticDataEmailHandler: AbstractEmailHandler
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancyRejectedByDfe);
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.EmployerVacancyApprovedByDfe);
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.EmployerVacancyRejectedByDfe);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.VacancyWithdrawnByQa);
     }
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)
