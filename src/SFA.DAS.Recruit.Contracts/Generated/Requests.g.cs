@@ -149,11 +149,17 @@ public record GetEmployerProfilesByAccountLegalEntityIdAddressesApiRequest(long 
 }
 
 /// <summary>POST /api/employer/profiles/{accountLegalEntityId}/addresses &#x2192; <see cref="EmployerProfileAddress"/></summary>
-public class PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest : IPostApiRequest<PostEmployerProfileAddressRequest>
+public class PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest : IPostApiRequest
 {
+    public PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest()
+    {
+        Data = RequestData;
+    }
+
     public required long AccountLegalEntityId { get; init; }
     public string PostUrl => $"api/employer/profiles/{AccountLegalEntityId}/addresses";
-    public PostEmployerProfileAddressRequest Data { get; set; } = default!;
+    public object Data { get; set; }
+    public PostEmployerProfileAddressRequest RequestData { get; set; } = default!;
 }
 
 /// <summary>GET /api/employer/profiles/{accountLegalEntityId}/addresses/{id} &#x2192; <see cref="EmployerProfileAddress"/></summary>
@@ -283,10 +289,16 @@ public record GetReportsApiRequest(ReportOwnerType? OwnerType) : IGetApiRequest
 }
 
 /// <summary>POST /api/reports &#x2192; <see cref="Report"/></summary>
-public class PostReportsApiRequest : IPostApiRequest<PostReportRequest>
+public class PostReportsApiRequest : IPostApiRequest
 {
+    public PostReportsApiRequest()
+    {
+        Data = RequestData;
+    }
+
     public string PostUrl => $"api/reports";
-    public PostReportRequest Data { get; set; } = default!;
+    public object Data { get; set; }
+    public PostReportRequest RequestData { get; set; } = default!;
 }
 
 /// <summary>GET /api/reports/generate/{reportId} &#x2192; List&lt;<see cref="ApplicationReviewReport"/>&gt;</summary>
@@ -324,10 +336,16 @@ public class PatchUserByIdApiRequest : IPatchApiRequest<System.Collections.Gener
 }
 
 /// <summary>POST /api/user/by/email &#x2192; <see cref="RecruitUser"/></summary>
-public class PostUserByEmailApiRequest : IPostApiRequest<GetUserRequest>
+public class PostUserByEmailApiRequest : IPostApiRequest
 {
+    public PostUserByEmailApiRequest()
+    {
+        Data = RequestData;
+    }
+
     public string PostUrl => $"api/user/by/email";
-    public GetUserRequest Data { get; set; } = default!;
+    public object Data { get; set; }
+    public GetUserRequest RequestData { get; set; } = default!;
 }
 
 /// <summary>GET /api/user/by/employeraccountid/{employerAccountId} &#x2192; List&lt;<see cref="RecruitUser"/>&gt;</summary>
@@ -403,10 +421,16 @@ public record GetVacanciesByVacancyReferenceClosedApiRequest(long VacancyReferen
 }
 
 /// <summary>POST /api/vacancies/closed &#x2192; <see cref="Vacancy"/></summary>
-public class PostVacanciesClosedApiRequest : IPostApiRequest<PostClosedVacanciesRequest>
+public class PostVacanciesClosedApiRequest : IPostApiRequest
 {
+    public PostVacanciesClosedApiRequest()
+    {
+        Data = RequestData;
+    }
+
     public string PostUrl => $"api/vacancies/closed";
-    public PostClosedVacanciesRequest Data { get; set; } = default!;
+    public object Data { get; set; }
+    public PostClosedVacanciesRequest RequestData { get; set; } = default!;
 }
 
 /// <summary>GET /api/accounts/{accountId}/vacancies &#x2192; <see cref="VacancySummaryPagedResponse"/></summary>
@@ -428,12 +452,18 @@ public record GetVacanciesTotalPositionsAvailableApiRequest() : IGetApiRequest
 }
 
 /// <summary>POST /api/vacancies &#x2192; <see cref="Vacancy"/></summary>
-public class PostVacanciesApiRequest : IPostApiRequest<PostVacancyRequest>
+public class PostVacanciesApiRequest : IPostApiRequest
 {
+    public PostVacanciesApiRequest()
+    {
+        Data = RequestData;
+    }
+
     public VacancyRuleSet? RuleSet { get; set; }
     public bool? ValidateOnly { get; set; }
     public string PostUrl => QueryHelpers.AddQueryString($"api/vacancies", new Dictionary<string, string?> { ["ruleSet"] = RuleSet?.ToString()?.Replace(" ", ""), ["validateOnly"] = ValidateOnly?.ToString() });
-    public PostVacancyRequest Data { get; set; } = default!;
+    public object Data { get; set; }
+    public PostVacancyRequest RequestData { get; set; } = default!;
 }
 
 /// <summary>GET /api/vacancies/count/user/{userId} &#x2192; <see cref="Int32DataResponse"/></summary>
