@@ -9,6 +9,7 @@
     <ApiContractsNamespace>SFA.DAS.Recruit.Contracts</ApiContractsNamespace>
     <ApiContractsOutputDirectory>$(MSBuildThisFileDirectory)Generated</ApiContractsOutputDirectory>
     <ApiContractsClientName>RecruitApi</ApiContractsClientName>
+    <ApiContractsJsonLibrary>Both</ApiContractsJsonLibrary>
     <IsPackable>true</IsPackable>
     <Authors>GOV.UK Education and Skills Funding Agency (ESFA) Digital Apprenticeship Service (DAS)</Authors>
     <Description>Recruit inner API request and response for use with APIM.</Description>
@@ -19,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.179" />
+    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.180-prerelease-3" />
     <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.178" />
   </ItemGroup>
 

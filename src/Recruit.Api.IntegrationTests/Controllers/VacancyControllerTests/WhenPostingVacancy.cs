@@ -108,7 +108,7 @@ public class WhenPostingVacancy: BaseFixture
         
         // act
         var response = await Client.PostAsJsonAsync(new PostVacanciesApiRequest().PostUrl, request);
-        var vacancy = await response.Content.ReadAsAsync<Vacancy>();
+        var vacancy = await response.Content.ReadAsAsync<SFA.DAS.Recruit.Contracts.ApiResponses.Vacancy>();
 
         // assert
         vacancy.Should().BeEquivalentTo(request, opt => opt
