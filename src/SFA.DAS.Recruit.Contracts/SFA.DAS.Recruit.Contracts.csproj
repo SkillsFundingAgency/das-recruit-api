@@ -5,13 +5,6 @@
     <Nullable>enable</Nullable>
     <RootNamespace>SFA.DAS.Recruit.Contracts</RootNamespace>
     <AssemblyName>SFA.DAS.Recruit.Contracts</AssemblyName>
-    
-    <!--
-    Committed swagger.json from Recruit.Api.
-    Update this file manually (after API changes) by running dotnet build on Recruit.Api,
-    which requires dotnet tool restore for the swashbuckle CLI.
-    The file lives next to Recruit.Api.csproj and is committed to source control.
-    -->
     <ApiContractsSwaggerJsonPath>$(MSBuildThisFileDirectory)..\Recruit.Api\swagger.json</ApiContractsSwaggerJsonPath>
     <ApiContractsNamespace>SFA.DAS.Recruit.Contracts</ApiContractsNamespace>
     <ApiContractsOutputDirectory>$(MSBuildThisFileDirectory)Generated</ApiContractsOutputDirectory>

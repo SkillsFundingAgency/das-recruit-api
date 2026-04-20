@@ -102,7 +102,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
         
     }
     
-    [HttpPatch]
+    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
