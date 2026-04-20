@@ -89,7 +89,7 @@ public class WhenHandlingVacancyStatusChange
         await sut.HandleVacancyStatusChange(UpsertResult.Create(vacancyEntity, false, true));
 
         // assert
-        encodingService.Verify(x => x.Encode(vacancyEntity.AccountLegalEntityId!.Value, EncodingType.AccountLegalEntityId), Times.Once);
+        encodingService.Verify(x => x.Encode(vacancyEntity.AccountLegalEntityId!.Value, EncodingType.PublicAccountLegalEntityId), Times.Once);
         messageSession.Verify(x => x.Publish(
             It.Is<VacancyApprovedEvent>(e => e.VacancyId == vacancyEntity.Id && e.VacancyReference == vacancyEntity.VacancyReference),
             It.IsAny<PublishOptions>()
