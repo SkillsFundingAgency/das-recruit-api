@@ -43,7 +43,7 @@ internal class WhenGeneratingQaReport : BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
 
         // act
-        var response = await Client.GetAsync(new GetReportsByReportIdApiRequest(reportEntity.Id).GetUrl);
+        var response = await Client.GetAsync(new GetReportsGenerateQaByReportIdApiRequest(reportEntity.Id).GetUrl);
         var result = await response.Content.ReadAsAsync<GetQaReportResponse>();
 
         // assert
