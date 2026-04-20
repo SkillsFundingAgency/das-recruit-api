@@ -50,7 +50,7 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
             case VacancyStatus.Approved:
                 await messageSession.Publish(new VacancyApprovedEvent
                 {
-                    AccountLegalEntityPublicHashedId = encodingService.Encode(result.Entity.AccountLegalEntityId!.Value, EncodingType.AccountLegalEntityId),
+                    AccountLegalEntityPublicHashedId = encodingService.Encode(result.Entity.AccountLegalEntityId!.Value, EncodingType.PublicAccountLegalEntityId),
                     Ukprn = result.Entity.Ukprn!.Value,
                     VacancyId = result.Entity.Id,
                     VacancyReference = result.Entity.VacancyReference!.Value,
