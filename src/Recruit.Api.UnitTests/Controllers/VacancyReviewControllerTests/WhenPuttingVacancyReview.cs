@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
+using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models.Mappers;
@@ -152,11 +153,11 @@ internal class WhenPuttingVacancyReview
 
         // assert
         result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.VacancyReview>>();
-        eventsService.Verify(x => x.PublishVacancyReviewCreatedEventAsync(entity), Times.Once);
+        eventsService.Verify(x => x.HandleVacancyReviewStatusChange(It.Is<UpsertResult<VacancyReviewEntity>>(r => r.Entity.Id == entity.Id)), Times.Once);
     }
     
     [Test, RecruitAutoData]
-    public async Task Then_The_Vacancy_Review_Created_Event_Is_Not_Raised_When_A_Record_Is_Updated(
+    public async Task Then_The_Vacancy_Review_Status_Change_Is_Handled(
         Guid id,
         PutVacancyReviewRequest request,
         Mock<IUserRepository> userRepository,
@@ -169,14 +170,14 @@ internal class WhenPuttingVacancyReview
         var entity = request.ToDomain(id);
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyReviewEntity>(), token))
-            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, false));
+            .ReturnsAsync(() => UpsertResult.Create(entity, false));
 
         // act
         var result = await sut.PutOne(repository.Object, userRepository.Object, Mock.Of<IAutomatedReviewService>(), eventsService.Object, id, request, token);
 
         // assert
         result.Should().BeOfType<Ok<SFA.DAS.Recruit.Api.Models.VacancyReview>>();
-        eventsService.Verify(x => x.PublishVacancyReviewCreatedEventAsync(entity), Times.Never);
+        eventsService.Verify(x => x.HandleVacancyReviewStatusChange(It.Is<UpsertResult<VacancyReviewEntity>>(r => r.Entity.Id == entity.Id)), Times.Once);
     }
     
     [Test, RecruitAutoData]

@@ -95,23 +95,4 @@ public class WhenHandlingVacancyStatusChange
             It.IsAny<PublishOptions>()
         ), Times.Once);
     }
-    
-    [Test, MoqAutoData]
-    public async Task Then_The_Vacancy_Submitted_Event_Is_Sent(
-        VacancyEntity vacancyEntity,
-        [Frozen] Mock<IMessageSession> messageSession,
-        [Greedy] EventsService sut)
-    {
-        // arrange
-        vacancyEntity.Status = VacancyStatus.Submitted;
-        
-        // act
-        await sut.HandleVacancyStatusChange(UpsertResult.Create(vacancyEntity, false, true));
-
-        // assert
-        messageSession.Verify(x => x.Publish(
-            It.Is<VacancySubmittedEvent>(e => e.VacancyId == vacancyEntity.Id),
-            It.IsAny<PublishOptions>()
-        ), Times.Once);
-    }
 }

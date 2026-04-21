@@ -6,6 +6,7 @@ using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Validators.Rules;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -14,21 +15,37 @@ namespace SFA.DAS.Recruit.Api.Services;
 
 public interface IEventsService
 {
-    Task PublishVacancyReviewCreatedEventAsync(VacancyReviewEntity entity);
+    Task HandleVacancyReviewStatusChange(UpsertResult<VacancyReviewEntity> result);
     Task HandleVacancyStatusChange(UpsertResult<VacancyEntity> result);
 }
 
 public class EventsService(ILogger<EventsService> logger, IMessageSession messageSession, IEncodingService encodingService): IEventsService
 {
-    public async Task PublishVacancyReviewCreatedEventAsync(VacancyReviewEntity entity)
+    public async Task HandleVacancyReviewStatusChange(UpsertResult<VacancyReviewEntity> result)
     {
-        ArgumentNullException.ThrowIfNull(entity);
-        var snapshot = JsonSerializer.Deserialize<VacancySnapshot>(entity.VacancySnapshot, JsonConfig.Options);
-        logger.LogInformation("Publishing VacancyReviewCreatedEvent, vacancyReviewId='{VacancyReviewId}, vacancyId='{VacancyId}' ", entity.Id, snapshot!.Id);
+        ArgumentNullException.ThrowIfNull(result);
+        if (result.StatusChanged is not true)
+        {
+            return;
+        }
 
-        var isResubmission = entity.SubmissionCount > 1;
-        var hasPassedAutoQaChecks = string.Equals(entity.AutomatedQaOutcome, nameof(RuleSetDecision.Approve), StringComparison.InvariantCultureIgnoreCase);
-        await messageSession.Publish(new VacancyReviewCreatedEvent(snapshot.Id, entity.Id, isResubmission, hasPassedAutoQaChecks));
+        var snapshot = JsonSerializer.Deserialize<VacancySnapshot>(result.Entity.VacancySnapshot, JsonConfig.Options);
+        switch (result.Entity.Status)
+        {
+            case ReviewStatus.New:
+                logger.LogInformation("Publishing VacancyReviewCreatedEvent, vacancyReviewId='{VacancyReviewId}, vacancyId='{VacancyId}' ", result.Entity.Id, snapshot!.Id);
+                var isResubmission = result.Entity.SubmissionCount > 1;
+                var hasPassedAutoQaChecks = string.Equals(result.Entity.AutomatedQaOutcome, nameof(RuleSetDecision.Approve), StringComparison.InvariantCultureIgnoreCase);
+                await messageSession.Publish(new VacancyReviewCreatedEvent(snapshot.Id, result.Entity.Id, isResubmission, hasPassedAutoQaChecks));
+                break;
+            case ReviewStatus.Closed:
+                if (result.Entity.ManualOutcome == nameof(ManualQaOutcome.Approved))
+                {
+                    logger.LogInformation("Publishing VacancyReviewApprovedEvent, vacancyReviewId='{VacancyReviewId}, vacancyId='{VacancyId}' ", result.Entity.Id, snapshot!.Id);
+                    await messageSession.Publish(new VacancyReviewApprovedEvent(result.Entity.Id, snapshot.Id));
+                }
+                break;
+        }
     }
     
     public async Task HandleVacancyStatusChange(UpsertResult<VacancyEntity> result)
@@ -55,9 +72,6 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
                     VacancyId = result.Entity.Id,
                     VacancyReference = result.Entity.VacancyReference!.Value,
                 });
-                break;
-            case VacancyStatus.Submitted:
-                await messageSession.Publish(new VacancySubmittedEvent(result.Entity.Id));
                 break;
         }
     }

@@ -85,29 +85,19 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
 
         try
         {
-            var (entity, created, _) = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
-            if (!created)
-            {
-                return TypedResults.Ok(entity.ToPutResponse());
-            }
-
-            try
+            var upsertResult = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+            if (upsertResult.Created)
             {
                 // perform automated review
-                await reviewService.ProcessVacancyReviewAsync(entity, cancellationToken);
-                await repository.UpsertOneAsync(entity, cancellationToken);
+                await reviewService.ProcessVacancyReviewAsync(upsertResult.Entity, cancellationToken);
+                await repository.UpsertOneAsync(upsertResult.Entity, cancellationToken);
             }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Error whilst performing VacancyReview automated reviews");
-            }
-            finally
-            {
-                // publish created event
-                await eventsService.PublishVacancyReviewCreatedEventAsync(entity);
-            }
+
+            await eventsService.HandleVacancyReviewStatusChange(upsertResult);
             
-            return TypedResults.Created($"/{RouteNames.VacancyReviews}/{entity.Id}", entity.ToPutResponse());    
+            return upsertResult.Created
+                ? TypedResults.Created($"/{RouteNames.VacancyReviews}/{upsertResult.Entity.Id}", upsertResult.Entity.ToPutResponse())
+                : TypedResults.Ok(upsertResult.Entity.ToPutResponse());
         }
         catch (Exception e)
         {
@@ -122,6 +112,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> PatchOne(
         [FromServices] IVacancyReviewRepository repository,
+        [FromServices] IEventsService eventsService,
         [FromRoute] Guid id,
         [FromBody] JsonPatchDocument<VacancyReview> patchRequest,
         CancellationToken cancellationToken)
@@ -147,7 +138,9 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
             return TypedResults.ValidationProblem(ex.ToProblemsDictionary());
         }
 
-        await repository.UpsertOneAsync(vacancyReview, cancellationToken);
+        var upsertResult = await repository.UpsertOneAsync(vacancyReview, cancellationToken);
+        await eventsService.HandleVacancyReviewStatusChange(upsertResult);
+        
         return TypedResults.Ok(vacancyReview.ToPatchResponse());
     }
     
