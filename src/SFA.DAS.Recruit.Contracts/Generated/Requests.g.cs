@@ -149,17 +149,11 @@ public record GetEmployerProfilesByAccountLegalEntityIdAddressesApiRequest(long 
 }
 
 /// <summary>POST /api/employer/profiles/{accountLegalEntityId}/addresses &#x2192; <see cref="EmployerProfileAddress"/></summary>
-public class PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest : IPostApiRequest
+public class PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest(PostEmployerProfileAddressRequest postEmployerProfileAddressRequest) : IPostApiRequest
 {
-    public PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest()
-    {
-        Data = RequestData;
-    }
-
     public required long AccountLegalEntityId { get; init; }
     public string PostUrl => $"api/employer/profiles/{AccountLegalEntityId}/addresses";
-    public object Data { get; set; }
-    public PostEmployerProfileAddressRequest RequestData { get; set; } = default!;
+    public object Data { get; set; } = postEmployerProfileAddressRequest;
 }
 
 /// <summary>GET /api/employer/profiles/{accountLegalEntityId}/addresses/{id} &#x2192; <see cref="EmployerProfileAddress"/></summary>
@@ -289,16 +283,10 @@ public record GetReportsApiRequest(ReportOwnerType? OwnerType) : IGetApiRequest
 }
 
 /// <summary>POST /api/reports &#x2192; <see cref="Report"/></summary>
-public class PostReportsApiRequest : IPostApiRequest
+public class PostReportsApiRequest(PostReportRequest postReportRequest) : IPostApiRequest
 {
-    public PostReportsApiRequest()
-    {
-        Data = RequestData;
-    }
-
     public string PostUrl => $"api/reports";
-    public object Data { get; set; }
-    public PostReportRequest RequestData { get; set; } = default!;
+    public object Data { get; set; } = postReportRequest;
 }
 
 /// <summary>GET /api/reports/generate/{reportId} &#x2192; List&lt;<see cref="ApplicationReviewReport"/>&gt;</summary>
@@ -336,16 +324,10 @@ public class PatchUserByIdApiRequest : IPatchApiRequest<System.Collections.Gener
 }
 
 /// <summary>POST /api/user/by/email &#x2192; <see cref="RecruitUser"/></summary>
-public class PostUserByEmailApiRequest : IPostApiRequest
+public class PostUserByEmailApiRequest(GetUserRequest getUserRequest) : IPostApiRequest
 {
-    public PostUserByEmailApiRequest()
-    {
-        Data = RequestData;
-    }
-
     public string PostUrl => $"api/user/by/email";
-    public object Data { get; set; }
-    public GetUserRequest RequestData { get; set; } = default!;
+    public object Data { get; set; } = getUserRequest;
 }
 
 /// <summary>GET /api/user/by/employeraccountid/{employerAccountId} &#x2192; List&lt;<see cref="RecruitUser"/>&gt;</summary>
@@ -421,16 +403,10 @@ public record GetVacanciesByVacancyReferenceClosedApiRequest(long VacancyReferen
 }
 
 /// <summary>POST /api/vacancies/closed &#x2192; <see cref="Vacancy"/></summary>
-public class PostVacanciesClosedApiRequest : IPostApiRequest
+public class PostVacanciesClosedApiRequest(PostClosedVacanciesRequest postClosedVacanciesRequest) : IPostApiRequest
 {
-    public PostVacanciesClosedApiRequest()
-    {
-        Data = RequestData;
-    }
-
     public string PostUrl => $"api/vacancies/closed";
-    public object Data { get; set; }
-    public PostClosedVacanciesRequest RequestData { get; set; } = default!;
+    public object Data { get; set; } = postClosedVacanciesRequest;
 }
 
 /// <summary>GET /api/accounts/{accountId}/vacancies &#x2192; <see cref="VacancySummaryPagedResponse"/></summary>
@@ -452,18 +428,12 @@ public record GetVacanciesTotalPositionsAvailableApiRequest() : IGetApiRequest
 }
 
 /// <summary>POST /api/vacancies &#x2192; <see cref="Vacancy"/></summary>
-public class PostVacanciesApiRequest : IPostApiRequest
+public class PostVacanciesApiRequest(PostVacancyRequest postVacancyRequest) : IPostApiRequest
 {
-    public PostVacanciesApiRequest()
-    {
-        Data = RequestData;
-    }
-
     public VacancyRuleSet? RuleSet { get; set; }
     public bool? ValidateOnly { get; set; }
     public string PostUrl => QueryHelpers.AddQueryString($"api/vacancies", new Dictionary<string, string?> { ["ruleSet"] = RuleSet?.ToString()?.Replace(" ", ""), ["validateOnly"] = ValidateOnly?.ToString() });
-    public object Data { get; set; }
-    public PostVacancyRequest RequestData { get; set; } = default!;
+    public object Data { get; set; } = postVacancyRequest;
 }
 
 /// <summary>GET /api/vacancies/count/user/{userId} &#x2192; <see cref="Int32DataResponse"/></summary>

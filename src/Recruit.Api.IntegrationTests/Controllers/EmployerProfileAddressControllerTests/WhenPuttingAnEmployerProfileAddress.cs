@@ -12,7 +12,7 @@ public class WhenPostingAnEmployerProfileAddress : BaseFixture
     public async Task Then_Without_Required_Fields_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.PostAsJsonAsync(new PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest { AccountLegalEntityId = 1 }.PostUrl, new {});
+        var response = await Client.PostAsJsonAsync(new PostEmployerProfilesByAccountLegalEntityIdAddressesApiRequest(null!) { AccountLegalEntityId = 1 }.PostUrl, new {});
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert

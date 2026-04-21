@@ -19,7 +19,7 @@ internal class WhenPostingReport : BaseFixture
         var request = Fixture.Create<PostReportRequest>();
 
         // act
-        var response = await Client.PostAsJsonAsync(new PostReportsApiRequest().PostUrl, request);
+        var response = await Client.PostAsJsonAsync(new PostReportsApiRequest(null!).PostUrl, request);
         var vacancyReview = await response.Content.ReadAsAsync<ReportEntity>();
 
         // assert
