@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.181" />
-    <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.178" />
+    <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.180" />
   </ItemGroup>
 
   <ItemGroup>

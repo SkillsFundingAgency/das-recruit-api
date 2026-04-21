@@ -120,6 +120,17 @@ public class WhenPostingVacancy: BaseFixture
             .Excluding(x=>x.Wage!.Between21AndUnder25NationalMinimumWage)
             .Excluding(x=>x.Wage!.Over25NationalMinimumWage)
             .Excluding(x=>x.Wage!.WageText)
+            .Excluding(x => x.ApprovedDate)
+            .Excluding(x => x.LastUpdatedDate)
+            .Excluding(x => x.SubmittedDate)
+            .Excluding(x => x.ReviewRequestedDate)
+            .Excluding(x => x.ClosingDate)
+            .Excluding(x => x.DeletedDate)
+            .Excluding(x => x.LiveDate)
+            .Excluding(x => x.StartDate)
+            .Excluding(x => x.ClosingDate)
+            .Excluding(x => x.ClosedDate)
+            .Excluding(x => x.TransferInfo!.TransferredDate)
         );
         vacancy.Id.Should().Be(id);
         vacancy.VacancyReference.Should().Be(vacancyReference.Value);

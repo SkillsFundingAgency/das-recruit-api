@@ -6360,10 +6360,10 @@
       },
       "ApplicationMethod": {
         "enum": [
-          "ThroughFindAnApprenticeship",
-          "ThroughExternalApplicationSite",
-          "ThroughFindATraineeship",
-          "Unspecified"
+          "throughFindAnApprenticeship",
+          "throughExternalApplicationSite",
+          "throughFindATraineeship",
+          "unspecified"
         ],
         "type": "string"
       },
@@ -6525,17 +6525,17 @@
       },
       "ApplicationReviewStatus": {
         "enum": [
-          "New",
-          "Successful",
-          "Unsuccessful",
-          "Shared",
-          "InReview",
-          "Interviewing",
-          "EmployerInterviewing",
-          "EmployerUnsuccessful",
-          "PendingShared",
-          "PendingToMakeUnsuccessful",
-          "AllShared"
+          "new",
+          "successful",
+          "unsuccessful",
+          "shared",
+          "inReview",
+          "interviewing",
+          "employerInterviewing",
+          "employerUnsuccessful",
+          "pendingShared",
+          "pendingToMakeUnsuccessful",
+          "allShared"
         ],
         "type": "string"
       },
@@ -6610,16 +6610,16 @@
       },
       "ApprenticeshipTypes": {
         "enum": [
-          "Standard",
-          "Foundation"
+          "standard",
+          "foundation"
         ],
         "type": "string"
       },
       "AvailableWhere": {
         "enum": [
-          "OneLocation",
-          "MultipleLocations",
-          "AcrossEngland"
+          "oneLocation",
+          "multipleLocations",
+          "acrossEngland"
         ],
         "type": "string"
       },
@@ -6645,12 +6645,12 @@
       },
       "ClosureReason": {
         "enum": [
-          "Auto",
-          "Manual",
-          "TransferredByQa",
-          "BlockedByQa",
-          "TransferredByEmployer",
-          "WithdrawnByQa"
+          "auto",
+          "manual",
+          "transferredByQa",
+          "blockedByQa",
+          "transferredByEmployer",
+          "withdrawnByQa"
         ],
         "type": "string"
       },
@@ -6674,9 +6674,9 @@
       },
       "DurationUnit": {
         "enum": [
-          "Week",
-          "Month",
-          "Year"
+          "week",
+          "month",
+          "year"
         ],
         "type": "string"
       },
@@ -6770,9 +6770,9 @@
       },
       "EmployerNameOption": {
         "enum": [
-          "RegisteredName",
-          "TradingName",
-          "Anonymous"
+          "registeredName",
+          "tradingName",
+          "anonymous"
         ],
         "type": "string"
       },
@@ -6864,35 +6864,35 @@
       },
       "FilteringOptions": {
         "enum": [
-          "All",
-          "Draft",
-          "Review",
-          "Submitted",
-          "Referred",
-          "Live",
-          "Closed",
-          "Approved",
-          "NewApplications",
-          "AllApplications",
-          "ClosingSoon",
-          "ClosingSoonWithNoApplications",
-          "Transferred",
-          "EmployerReviewedApplications",
-          "NewSharedApplications",
-          "AllSharedApplications",
-          "Dashboard"
+          "all",
+          "draft",
+          "review",
+          "submitted",
+          "referred",
+          "live",
+          "closed",
+          "approved",
+          "newApplications",
+          "allApplications",
+          "closingSoon",
+          "closingSoonWithNoApplications",
+          "transferred",
+          "employerReviewedApplications",
+          "newSharedApplications",
+          "allSharedApplications",
+          "dashboard"
         ],
         "type": "string"
       },
       "GeoCodeMethod": {
         "enum": [
-          "Unspecified",
-          "ExistingVacancy",
-          "PostcodesIo",
-          "Loqate",
-          "PostcodesIoOutcode",
-          "OuterApi",
-          "FailedToGeoCode"
+          "unspecified",
+          "existingVacancy",
+          "postcodesIo",
+          "loqate",
+          "postcodesIoOutcode",
+          "outerApi",
+          "failedToGeoCode"
         ],
         "type": "string"
       },
@@ -7083,11 +7083,11 @@
       },
       "NotificationFrequency": {
         "enum": [
-          "NotSet",
-          "Never",
-          "Immediately",
-          "Daily",
-          "Weekly"
+          "notSet",
+          "never",
+          "immediately",
+          "daily",
+          "weekly"
         ],
         "type": "string"
       },
@@ -7125,21 +7125,21 @@
       },
       "NotificationScope": {
         "enum": [
-          "NotSet",
-          "UserSubmittedVacancies",
-          "OrganisationVacancies"
+          "notSet",
+          "userSubmittedVacancies",
+          "organisationVacancies"
         ],
         "type": "string"
       },
       "NotificationTypes": {
         "enum": [
-          "VacancyApprovedOrRejected",
-          "VacancyClosingSoon",
-          "ApplicationSubmitted",
-          "VacancySentForReview",
-          "SharedApplicationReviewedByEmployer",
-          "ProviderAttachedToVacancy",
-          "ApplicationSharedWithEmployer"
+          "vacancyApprovedOrRejected",
+          "vacancyClosingSoon",
+          "applicationSubmitted",
+          "vacancySentForReview",
+          "sharedApplicationReviewedByEmployer",
+          "providerAttachedToVacancy",
+          "applicationSharedWithEmployer"
         ],
         "type": "string"
       },
@@ -7166,22 +7166,22 @@
       },
       "OperationType": {
         "enum": [
-          "Add",
-          "Remove",
-          "Replace",
-          "Move",
-          "Copy",
-          "Test",
-          "Invalid"
+          "add",
+          "remove",
+          "replace",
+          "move",
+          "copy",
+          "test",
+          "invalid"
         ],
         "type": "string"
       },
       "OwnerType": {
         "enum": [
-          "Employer",
-          "Provider",
-          "External",
-          "Unknown"
+          "employer",
+          "provider",
+          "external",
+          "unknown"
         ],
         "type": "string"
       },
@@ -7727,8 +7727,8 @@
       },
       "ProhibitedContentType": {
         "enum": [
-          "BannedPhrases",
-          "Profanity"
+          "bannedPhrases",
+          "profanity"
         ],
         "type": "string"
       },
@@ -8673,8 +8673,8 @@
       },
       "QualificationWeighting": {
         "enum": [
-          "Essential",
-          "Desired"
+          "essential",
+          "desired"
         ],
         "type": "string"
       },
@@ -8808,15 +8808,15 @@
       },
       "ReportOwnerType": {
         "enum": [
-          "Provider",
-          "Qa"
+          "provider",
+          "qa"
         ],
         "type": "string"
       },
       "ReportType": {
         "enum": [
-          "ProviderApplications",
-          "QaApplications"
+          "providerApplications",
+          "qaApplications"
         ],
         "type": "string"
       },
@@ -8838,34 +8838,34 @@
       },
       "ReviewStatus": {
         "enum": [
-          "New",
-          "PendingReview",
-          "UnderReview",
-          "Closed"
+          "new",
+          "pendingReview",
+          "underReview",
+          "closed"
         ],
         "type": "string"
       },
       "SortOrder": {
         "enum": [
-          "Asc",
-          "Desc"
+          "asc",
+          "desc"
         ],
         "type": "string"
       },
       "SourceOrigin": {
         "enum": [
-          "Api",
-          "EmployerWeb",
-          "ProviderWeb",
-          "WebComplaint"
+          "api",
+          "employerWeb",
+          "providerWeb",
+          "webComplaint"
         ],
         "type": "string"
       },
       "SourceType": {
         "enum": [
-          "Clone",
-          "Extension",
-          "New"
+          "clone",
+          "extension",
+          "new"
         ],
         "type": "string"
       },
@@ -8960,22 +8960,22 @@
       },
       "TransferReason": {
         "enum": [
-          "EmployerRevokedPermission",
-          "BlockedByQa"
+          "employerRevokedPermission",
+          "blockedByQa"
         ],
         "type": "string"
       },
       "UserStatus": {
         "enum": [
-          "Active",
-          "Inactive"
+          "active",
+          "inactive"
         ],
         "type": "string"
       },
       "UserType": {
         "enum": [
-          "Employer",
-          "Provider"
+          "employer",
+          "provider"
         ],
         "type": "string"
       },
@@ -9578,23 +9578,23 @@
       },
       "VacancySortColumn": {
         "enum": [
-          "CreatedDate",
-          "Id",
-          "VacancyReference",
-          "ClosingDate"
+          "createdDate",
+          "id",
+          "vacancyReference",
+          "closingDate"
         ],
         "type": "string"
       },
       "VacancyStatus": {
         "enum": [
-          "Draft",
-          "Review",
-          "Rejected",
-          "Submitted",
-          "Referred",
-          "Live",
-          "Closed",
-          "Approved"
+          "draft",
+          "review",
+          "rejected",
+          "submitted",
+          "referred",
+          "live",
+          "closed",
+          "approved"
         ],
         "type": "string"
       },
@@ -9883,11 +9883,11 @@
       },
       "WageType": {
         "enum": [
-          "FixedWage",
-          "NationalMinimumWageForApprentices",
-          "NationalMinimumWage",
-          "CompetitiveSalary",
-          "Unspecified"
+          "fixedWage",
+          "nationalMinimumWageForApprentices",
+          "nationalMinimumWage",
+          "competitiveSalary",
+          "unspecified"
         ],
         "type": "string"
       },
