@@ -289,6 +289,7 @@ public class VacancyController : Controller
         [FromServices] IValidator<VacancyRequest> validator,
         [FromBody] PostVacancyRequest request,
         [FromQuery] VacancyRuleSet? ruleSet,
+        [FromQuery] bool validateOnly,
         CancellationToken cancellationToken)
     {
         if (ruleSet != null)
@@ -303,6 +304,15 @@ public class VacancyController : Controller
         }
 
         var entity = request.ToDomain();
+
+        if (validateOnly)
+        {
+            entity.VacancyReference = 1000000001;
+            entity.CreatedDate = DateTime.UtcNow;
+            entity.Status = VacancyStatus.Submitted;
+            entity.Id = Guid.NewGuid();
+            return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPostResponse());
+        }
 
         // This lookup should eventually be removed once we've migrated away from Mongo
         // We do this because currently the submitted user id is not the SQL user id, but could match
