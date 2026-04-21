@@ -9,10 +9,10 @@ public static class HttpResponseMessageExtensions
     {
         ArgumentNullException.ThrowIfNull(content);
 
-        var options = new JsonSerializerOptions {
+        var options = new JsonSerializerOptions 
+        {
             PropertyNameCaseInsensitive = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+            Converters = { new JsonStringEnumConverter() }
         };
 
         string json = await content.ReadAsStringAsync();

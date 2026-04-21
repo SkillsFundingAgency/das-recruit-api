@@ -63,16 +63,16 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum ApplicationMethod
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ThroughFindAnApprenticeship")]
+        [System.Runtime.Serialization.EnumMember(Value = @"throughFindAnApprenticeship")]
         ThroughFindAnApprenticeship = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ThroughExternalApplicationSite")]
+        [System.Runtime.Serialization.EnumMember(Value = @"throughExternalApplicationSite")]
         ThroughExternalApplicationSite = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ThroughFindATraineeship")]
+        [System.Runtime.Serialization.EnumMember(Value = @"throughFindATraineeship")]
         ThroughFindATraineeship = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Unspecified")]
+        [System.Runtime.Serialization.EnumMember(Value = @"unspecified")]
         Unspecified = 3,
 
     }
@@ -236,37 +236,37 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum ApplicationReviewStatus
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"New")]
+        [System.Runtime.Serialization.EnumMember(Value = @"new")]
         New = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Successful")]
+        [System.Runtime.Serialization.EnumMember(Value = @"successful")]
         Successful = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Unsuccessful")]
+        [System.Runtime.Serialization.EnumMember(Value = @"unsuccessful")]
         Unsuccessful = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Shared")]
+        [System.Runtime.Serialization.EnumMember(Value = @"shared")]
         Shared = 3,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"InReview")]
+        [System.Runtime.Serialization.EnumMember(Value = @"inReview")]
         InReview = 4,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Interviewing")]
+        [System.Runtime.Serialization.EnumMember(Value = @"interviewing")]
         Interviewing = 5,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"EmployerInterviewing")]
+        [System.Runtime.Serialization.EnumMember(Value = @"employerInterviewing")]
         EmployerInterviewing = 6,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"EmployerUnsuccessful")]
+        [System.Runtime.Serialization.EnumMember(Value = @"employerUnsuccessful")]
         EmployerUnsuccessful = 7,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"PendingShared")]
+        [System.Runtime.Serialization.EnumMember(Value = @"pendingShared")]
         PendingShared = 8,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"PendingToMakeUnsuccessful")]
+        [System.Runtime.Serialization.EnumMember(Value = @"pendingToMakeUnsuccessful")]
         PendingToMakeUnsuccessful = 9,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"AllShared")]
+        [System.Runtime.Serialization.EnumMember(Value = @"allShared")]
         AllShared = 10,
 
     }
@@ -341,10 +341,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum ApprenticeshipTypes
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Standard")]
+        [System.Runtime.Serialization.EnumMember(Value = @"standard")]
         Standard = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Foundation")]
+        [System.Runtime.Serialization.EnumMember(Value = @"foundation")]
         Foundation = 1,
 
     }
@@ -353,13 +353,13 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum AvailableWhere
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"OneLocation")]
+        [System.Runtime.Serialization.EnumMember(Value = @"oneLocation")]
         OneLocation = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"MultipleLocations")]
+        [System.Runtime.Serialization.EnumMember(Value = @"multipleLocations")]
         MultipleLocations = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"AcrossEngland")]
+        [System.Runtime.Serialization.EnumMember(Value = @"acrossEngland")]
         AcrossEngland = 2,
 
     }
@@ -381,22 +381,22 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum ClosureReason
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Auto")]
+        [System.Runtime.Serialization.EnumMember(Value = @"auto")]
         Auto = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Manual")]
+        [System.Runtime.Serialization.EnumMember(Value = @"manual")]
         Manual = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"TransferredByQa")]
+        [System.Runtime.Serialization.EnumMember(Value = @"transferredByQa")]
         TransferredByQa = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"BlockedByQa")]
+        [System.Runtime.Serialization.EnumMember(Value = @"blockedByQa")]
         BlockedByQa = 3,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"TransferredByEmployer")]
+        [System.Runtime.Serialization.EnumMember(Value = @"transferredByEmployer")]
         TransferredByEmployer = 4,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"WithdrawnByQa")]
+        [System.Runtime.Serialization.EnumMember(Value = @"withdrawnByQa")]
         WithdrawnByQa = 5,
 
     }
@@ -422,13 +422,13 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum DurationUnit
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Week")]
+        [System.Runtime.Serialization.EnumMember(Value = @"week")]
         Week = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Month")]
+        [System.Runtime.Serialization.EnumMember(Value = @"month")]
         Month = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Year")]
+        [System.Runtime.Serialization.EnumMember(Value = @"year")]
         Year = 2,
 
     }
@@ -515,13 +515,13 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum EmployerNameOption
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"RegisteredName")]
+        [System.Runtime.Serialization.EnumMember(Value = @"registeredName")]
         RegisteredName = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"TradingName")]
+        [System.Runtime.Serialization.EnumMember(Value = @"tradingName")]
         TradingName = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Anonymous")]
+        [System.Runtime.Serialization.EnumMember(Value = @"anonymous")]
         Anonymous = 2,
 
     }
@@ -605,55 +605,55 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum FilteringOptions
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"All")]
+        [System.Runtime.Serialization.EnumMember(Value = @"all")]
         All = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Draft")]
+        [System.Runtime.Serialization.EnumMember(Value = @"draft")]
         Draft = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Review")]
+        [System.Runtime.Serialization.EnumMember(Value = @"review")]
         Review = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Submitted")]
+        [System.Runtime.Serialization.EnumMember(Value = @"submitted")]
         Submitted = 3,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Referred")]
+        [System.Runtime.Serialization.EnumMember(Value = @"referred")]
         Referred = 4,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Live")]
+        [System.Runtime.Serialization.EnumMember(Value = @"live")]
         Live = 5,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Closed")]
+        [System.Runtime.Serialization.EnumMember(Value = @"closed")]
         Closed = 6,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Approved")]
+        [System.Runtime.Serialization.EnumMember(Value = @"approved")]
         Approved = 7,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"NewApplications")]
+        [System.Runtime.Serialization.EnumMember(Value = @"newApplications")]
         NewApplications = 8,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"AllApplications")]
+        [System.Runtime.Serialization.EnumMember(Value = @"allApplications")]
         AllApplications = 9,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ClosingSoon")]
+        [System.Runtime.Serialization.EnumMember(Value = @"closingSoon")]
         ClosingSoon = 10,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ClosingSoonWithNoApplications")]
+        [System.Runtime.Serialization.EnumMember(Value = @"closingSoonWithNoApplications")]
         ClosingSoonWithNoApplications = 11,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Transferred")]
+        [System.Runtime.Serialization.EnumMember(Value = @"transferred")]
         Transferred = 12,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"EmployerReviewedApplications")]
+        [System.Runtime.Serialization.EnumMember(Value = @"employerReviewedApplications")]
         EmployerReviewedApplications = 13,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"NewSharedApplications")]
+        [System.Runtime.Serialization.EnumMember(Value = @"newSharedApplications")]
         NewSharedApplications = 14,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"AllSharedApplications")]
+        [System.Runtime.Serialization.EnumMember(Value = @"allSharedApplications")]
         AllSharedApplications = 15,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Dashboard")]
+        [System.Runtime.Serialization.EnumMember(Value = @"dashboard")]
         Dashboard = 16,
 
     }
@@ -662,25 +662,25 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum GeoCodeMethod
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Unspecified")]
+        [System.Runtime.Serialization.EnumMember(Value = @"unspecified")]
         Unspecified = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ExistingVacancy")]
+        [System.Runtime.Serialization.EnumMember(Value = @"existingVacancy")]
         ExistingVacancy = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"PostcodesIo")]
+        [System.Runtime.Serialization.EnumMember(Value = @"postcodesIo")]
         PostcodesIo = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Loqate")]
+        [System.Runtime.Serialization.EnumMember(Value = @"loqate")]
         Loqate = 3,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"PostcodesIoOutcode")]
+        [System.Runtime.Serialization.EnumMember(Value = @"postcodesIoOutcode")]
         PostcodesIoOutcode = 4,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"OuterApi")]
+        [System.Runtime.Serialization.EnumMember(Value = @"outerApi")]
         OuterApi = 5,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"FailedToGeoCode")]
+        [System.Runtime.Serialization.EnumMember(Value = @"failedToGeoCode")]
         FailedToGeoCode = 6,
 
     }
@@ -846,19 +846,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum NotificationFrequency
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"NotSet")]
+        [System.Runtime.Serialization.EnumMember(Value = @"notSet")]
         NotSet = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Never")]
+        [System.Runtime.Serialization.EnumMember(Value = @"never")]
         Never = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Immediately")]
+        [System.Runtime.Serialization.EnumMember(Value = @"immediately")]
         Immediately = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Daily")]
+        [System.Runtime.Serialization.EnumMember(Value = @"daily")]
         Daily = 3,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Weekly")]
+        [System.Runtime.Serialization.EnumMember(Value = @"weekly")]
         Weekly = 4,
 
     }
@@ -900,13 +900,13 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum NotificationScope
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"NotSet")]
+        [System.Runtime.Serialization.EnumMember(Value = @"notSet")]
         NotSet = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"UserSubmittedVacancies")]
+        [System.Runtime.Serialization.EnumMember(Value = @"userSubmittedVacancies")]
         UserSubmittedVacancies = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"OrganisationVacancies")]
+        [System.Runtime.Serialization.EnumMember(Value = @"organisationVacancies")]
         OrganisationVacancies = 2,
 
     }
@@ -915,25 +915,25 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum NotificationTypes
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"VacancyApprovedOrRejected")]
+        [System.Runtime.Serialization.EnumMember(Value = @"vacancyApprovedOrRejected")]
         VacancyApprovedOrRejected = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"VacancyClosingSoon")]
+        [System.Runtime.Serialization.EnumMember(Value = @"vacancyClosingSoon")]
         VacancyClosingSoon = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ApplicationSubmitted")]
+        [System.Runtime.Serialization.EnumMember(Value = @"applicationSubmitted")]
         ApplicationSubmitted = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"VacancySentForReview")]
+        [System.Runtime.Serialization.EnumMember(Value = @"vacancySentForReview")]
         VacancySentForReview = 3,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"SharedApplicationReviewedByEmployer")]
+        [System.Runtime.Serialization.EnumMember(Value = @"sharedApplicationReviewedByEmployer")]
         SharedApplicationReviewedByEmployer = 4,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ProviderAttachedToVacancy")]
+        [System.Runtime.Serialization.EnumMember(Value = @"providerAttachedToVacancy")]
         ProviderAttachedToVacancy = 5,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ApplicationSharedWithEmployer")]
+        [System.Runtime.Serialization.EnumMember(Value = @"applicationSharedWithEmployer")]
         ApplicationSharedWithEmployer = 6,
 
     }
@@ -963,25 +963,25 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum OperationType
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Add")]
+        [System.Runtime.Serialization.EnumMember(Value = @"add")]
         Add = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Remove")]
+        [System.Runtime.Serialization.EnumMember(Value = @"remove")]
         Remove = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Replace")]
+        [System.Runtime.Serialization.EnumMember(Value = @"replace")]
         Replace = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Move")]
+        [System.Runtime.Serialization.EnumMember(Value = @"move")]
         Move = 3,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Copy")]
+        [System.Runtime.Serialization.EnumMember(Value = @"copy")]
         Copy = 4,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Test")]
+        [System.Runtime.Serialization.EnumMember(Value = @"test")]
         Test = 5,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Invalid")]
+        [System.Runtime.Serialization.EnumMember(Value = @"invalid")]
         Invalid = 6,
 
     }
@@ -990,16 +990,16 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum OwnerType
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Employer")]
+        [System.Runtime.Serialization.EnumMember(Value = @"employer")]
         Employer = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Provider")]
+        [System.Runtime.Serialization.EnumMember(Value = @"provider")]
         Provider = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"External")]
+        [System.Runtime.Serialization.EnumMember(Value = @"external")]
         External = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Unknown")]
+        [System.Runtime.Serialization.EnumMember(Value = @"unknown")]
         Unknown = 3,
 
     }
@@ -1520,10 +1520,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum ProhibitedContentType
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"BannedPhrases")]
+        [System.Runtime.Serialization.EnumMember(Value = @"bannedPhrases")]
         BannedPhrases = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Profanity")]
+        [System.Runtime.Serialization.EnumMember(Value = @"profanity")]
         Profanity = 1,
 
     }
@@ -2387,10 +2387,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum QualificationWeighting
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Essential")]
+        [System.Runtime.Serialization.EnumMember(Value = @"essential")]
         Essential = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Desired")]
+        [System.Runtime.Serialization.EnumMember(Value = @"desired")]
         Desired = 1,
 
     }
@@ -2512,10 +2512,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum ReportOwnerType
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Provider")]
+        [System.Runtime.Serialization.EnumMember(Value = @"provider")]
         Provider = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Qa")]
+        [System.Runtime.Serialization.EnumMember(Value = @"qa")]
         Qa = 1,
 
     }
@@ -2524,10 +2524,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum ReportType
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ProviderApplications")]
+        [System.Runtime.Serialization.EnumMember(Value = @"providerApplications")]
         ProviderApplications = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"QaApplications")]
+        [System.Runtime.Serialization.EnumMember(Value = @"qaApplications")]
         QaApplications = 1,
 
     }
@@ -2549,16 +2549,16 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum ReviewStatus
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"New")]
+        [System.Runtime.Serialization.EnumMember(Value = @"new")]
         New = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"PendingReview")]
+        [System.Runtime.Serialization.EnumMember(Value = @"pendingReview")]
         PendingReview = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"UnderReview")]
+        [System.Runtime.Serialization.EnumMember(Value = @"underReview")]
         UnderReview = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Closed")]
+        [System.Runtime.Serialization.EnumMember(Value = @"closed")]
         Closed = 3,
 
     }
@@ -2567,10 +2567,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum SortOrder
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Asc")]
+        [System.Runtime.Serialization.EnumMember(Value = @"asc")]
         Asc = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Desc")]
+        [System.Runtime.Serialization.EnumMember(Value = @"desc")]
         Desc = 1,
 
     }
@@ -2579,16 +2579,16 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum SourceOrigin
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Api")]
+        [System.Runtime.Serialization.EnumMember(Value = @"api")]
         Api = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"EmployerWeb")]
+        [System.Runtime.Serialization.EnumMember(Value = @"employerWeb")]
         EmployerWeb = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ProviderWeb")]
+        [System.Runtime.Serialization.EnumMember(Value = @"providerWeb")]
         ProviderWeb = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"WebComplaint")]
+        [System.Runtime.Serialization.EnumMember(Value = @"webComplaint")]
         WebComplaint = 3,
 
     }
@@ -2597,13 +2597,13 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum SourceType
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Clone")]
+        [System.Runtime.Serialization.EnumMember(Value = @"clone")]
         Clone = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Extension")]
+        [System.Runtime.Serialization.EnumMember(Value = @"extension")]
         Extension = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"New")]
+        [System.Runtime.Serialization.EnumMember(Value = @"new")]
         New = 2,
 
     }
@@ -2697,10 +2697,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum TransferReason
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"EmployerRevokedPermission")]
+        [System.Runtime.Serialization.EnumMember(Value = @"employerRevokedPermission")]
         EmployerRevokedPermission = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"BlockedByQa")]
+        [System.Runtime.Serialization.EnumMember(Value = @"blockedByQa")]
         BlockedByQa = 1,
 
     }
@@ -2709,10 +2709,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum UserStatus
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Active")]
+        [System.Runtime.Serialization.EnumMember(Value = @"active")]
         Active = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Inactive")]
+        [System.Runtime.Serialization.EnumMember(Value = @"inactive")]
         Inactive = 1,
 
     }
@@ -2721,10 +2721,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum UserType
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Employer")]
+        [System.Runtime.Serialization.EnumMember(Value = @"employer")]
         Employer = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Provider")]
+        [System.Runtime.Serialization.EnumMember(Value = @"provider")]
         Provider = 1,
 
     }
@@ -3281,16 +3281,16 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum VacancySortColumn
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"CreatedDate")]
+        [System.Runtime.Serialization.EnumMember(Value = @"createdDate")]
         CreatedDate = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Id")]
+        [System.Runtime.Serialization.EnumMember(Value = @"id")]
         Id = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"VacancyReference")]
+        [System.Runtime.Serialization.EnumMember(Value = @"vacancyReference")]
         VacancyReference = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"ClosingDate")]
+        [System.Runtime.Serialization.EnumMember(Value = @"closingDate")]
         ClosingDate = 3,
 
     }
@@ -3299,28 +3299,28 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum VacancyStatus
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Draft")]
+        [System.Runtime.Serialization.EnumMember(Value = @"draft")]
         Draft = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Review")]
+        [System.Runtime.Serialization.EnumMember(Value = @"review")]
         Review = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Rejected")]
+        [System.Runtime.Serialization.EnumMember(Value = @"rejected")]
         Rejected = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Submitted")]
+        [System.Runtime.Serialization.EnumMember(Value = @"submitted")]
         Submitted = 3,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Referred")]
+        [System.Runtime.Serialization.EnumMember(Value = @"referred")]
         Referred = 4,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Live")]
+        [System.Runtime.Serialization.EnumMember(Value = @"live")]
         Live = 5,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Closed")]
+        [System.Runtime.Serialization.EnumMember(Value = @"closed")]
         Closed = 6,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Approved")]
+        [System.Runtime.Serialization.EnumMember(Value = @"approved")]
         Approved = 7,
 
     }
@@ -3613,19 +3613,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public enum WageType
     {
 
-        [System.Runtime.Serialization.EnumMember(Value = @"FixedWage")]
+        [System.Runtime.Serialization.EnumMember(Value = @"fixedWage")]
         FixedWage = 0,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"NationalMinimumWageForApprentices")]
+        [System.Runtime.Serialization.EnumMember(Value = @"nationalMinimumWageForApprentices")]
         NationalMinimumWageForApprentices = 1,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"NationalMinimumWage")]
+        [System.Runtime.Serialization.EnumMember(Value = @"nationalMinimumWage")]
         NationalMinimumWage = 2,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"CompetitiveSalary")]
+        [System.Runtime.Serialization.EnumMember(Value = @"competitiveSalary")]
         CompetitiveSalary = 3,
 
-        [System.Runtime.Serialization.EnumMember(Value = @"Unspecified")]
+        [System.Runtime.Serialization.EnumMember(Value = @"unspecified")]
         Unspecified = 4,
 
     }
