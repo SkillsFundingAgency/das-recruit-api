@@ -100,6 +100,10 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
         modelBuilder.ApplyConfiguration(new ReportEntityConfiguration());
         modelBuilder.ApplyConfiguration(new VacancyAnalyticsEntityConfiguration());
 
+        modelBuilder.Entity<VacancyReviewEntity>()
+            .HasQueryFilter(rv => VacancyEntities
+                .Any(v => v.VacancyReference == rv.VacancyReference));
+
         base.OnModelCreating(modelBuilder);
     }
 }

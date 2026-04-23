@@ -13,12 +13,16 @@ internal class WhenGettingQaDashboard : BaseFixture
     public async Task Then_The_QaDashboard_Model_Is_Returned(ReviewStatus status)
     {
         // arrange
-        var items = Fixture.CreateMany<VacancyReviewEntity>(10).ToList();
-        foreach (var vacancyReviewEntity in items)
+        var vacancyReviewEntities = Fixture.CreateMany<VacancyReviewEntity>(10).ToList();
+        var vacancyEntities = Fixture.CreateMany<VacancyEntity>(10).ToList();
+        
+        foreach (var (review, vacancy) in vacancyReviewEntities.Zip(vacancyEntities))
         {
-            vacancyReviewEntity.Status = status;
+            review.Status = status;
+            vacancy.VacancyReference = review.VacancyReference;
         }
-        Server.DataContext.Setup(x => x.VacancyReviewEntities).ReturnsDbSet(items);
+        Server.DataContext.Setup(x => x.VacancyReviewEntities).ReturnsDbSet(vacancyReviewEntities);
+        Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet(vacancyEntities);
 
         // act
         var response = await Client.GetAsync(new GetVacancyreviewsQaDashboardApiRequest().GetUrl);
@@ -27,7 +31,7 @@ internal class WhenGettingQaDashboard : BaseFixture
         // assert
         response.EnsureSuccessStatusCode();
         qaDashboard.Should().NotBeNull();
-        qaDashboard.TotalVacanciesForReview.Should().Be(items.Count);
+        qaDashboard.TotalVacanciesForReview.Should().Be(vacancyReviewEntities.Count);
     }
 
     [Test]
