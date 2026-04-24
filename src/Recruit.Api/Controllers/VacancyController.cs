@@ -302,9 +302,9 @@ public class VacancyController : Controller
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }    
         }
-        
+
         var entity = request.ToDomain();
-        
+
         if (validateOnly)
         {
             entity.VacancyReference = 1000000001;
@@ -313,7 +313,6 @@ public class VacancyController : Controller
             entity.Id = Guid.NewGuid();
             return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPostResponse());
         }
-        
 
         // This lookup should eventually be removed once we've migrated away from Mongo
         // We do this because currently the submitted user id is not the SQL user id, but could match
