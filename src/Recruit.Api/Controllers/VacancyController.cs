@@ -310,7 +310,7 @@ public class VacancyController : Controller
             entity.VacancyReference = 1000000001;
             entity.CreatedDate = DateTime.UtcNow;
             entity.Status = VacancyStatus.Submitted;
-            entity.Id = Guid.NewGuid();
+            entity.Id = request.Id ?? Guid.NewGuid();
             return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPostResponse());
         }
 
@@ -335,6 +335,19 @@ public class VacancyController : Controller
             if (userId is not null)
             {
                 entity.ReviewRequestedByUserId = userId;
+            }
+        }
+        
+        //If vacancy exists then throw error - this is mainly to cover being submitted from the external Vacancies Manage API
+        if (request.Id != null)
+        {
+            var vacancy = await repository.GetOneAsync(request.Id.Value, cancellationToken);
+            if (vacancy is not null)
+            {
+                return Results.Conflict(new ValidationProblemDetails(new Dictionary<string, string[]>
+                {
+                    { "Id", ["Unable to create Vacancy. Vacancy already submitted"] }
+                }));
             }
         }
         

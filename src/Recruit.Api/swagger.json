@@ -7694,6 +7694,11 @@
           "reviewRequestedByUserId": {
             "type": "string",
             "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8385,6 +8390,11 @@
           },
           "reviewRequestedByUserId": {
             "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
             "nullable": true
           },
           "vacancyReference": {
