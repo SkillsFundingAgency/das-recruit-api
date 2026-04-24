@@ -74,7 +74,7 @@ public record GetApplicationreviewsByVacancyReferenceTempStatusByStatusApiReques
 }
 
 /// <summary>GET /api/employer/{accountId}/applicationreviews &#x2192; <see cref="ApplicationReviewsResponse"/></summary>
-public record GetEmployerByAccountIdApplicationreviewsApiRequest(long AccountId, int? PageNumber, int? PageSize, string SortColumn, bool? IsAscending) : IGetApiRequest
+public record GetEmployerByAccountIdApplicationreviewsApiRequest(long AccountId, int? PageNumber, int? PageSize, string? SortColumn, bool? IsAscending) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/applicationreviews", new Dictionary<string, string?> { ["pageNumber"] = PageNumber?.ToString(), ["pageSize"] = PageSize?.ToString(), ["sortColumn"] = SortColumn, ["isAscending"] = IsAscending?.ToString() });
 }
@@ -86,16 +86,16 @@ public record GetEmployerByAccountIdApplicationreviewsDashboardApiRequest(long A
 }
 
 /// <summary>GET /api/employer/{accountId}/alerts &#x2192; <see cref="EmployerAlertsModel"/></summary>
-public record GetEmployerByAccountIdAlertsApiRequest(long AccountId, string UserId) : IGetApiRequest
+public record GetEmployerByAccountIdAlertsApiRequest(long AccountId, string? UserId) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/alerts", new Dictionary<string, string?> { ["userId"] = UserId });
 }
 
 /// <summary>GET /api/employer/{accountId}/applicationreviews/dashboard/vacancies &#x2192; <see cref="VacancyDashboardResponse"/></summary>
-public record GetEmployerByAccountIdApplicationreviewsDashboardVacanciesApiRequest(long AccountId, int? PageNumber, int? PageSize, string SortColumn, bool? IsAscending, List<ApplicationReviewStatus>? Status) : IGetApiRequest
+public record GetEmployerByAccountIdApplicationreviewsDashboardVacanciesApiRequest(long AccountId, int? PageNumber, int? PageSize, string? SortColumn, bool? IsAscending, List<ApplicationReviewStatus>? Status) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/applicationreviews/dashboard/vacancies",
-        new KeyValuePair<string, string?>[] { new("pageNumber", PageNumber?.ToString()), new("pageSize", PageSize?.ToString()), new("sortColumn", SortColumn), new("isAscending", IsAscending?.ToString()) }
+        new KeyValuePair<string, string?>[] { new("pageNumber", PageNumber?.ToString()), new("pageSize", PageSize?.ToString()), new("sortColumn", SortColumn?.ToString()), new("isAscending", IsAscending?.ToString()) }
         .Concat((Status ?? []).Select(v => new KeyValuePair<string, string?>("status", v.ToString()))));
 }
 
@@ -103,7 +103,7 @@ public record GetEmployerByAccountIdApplicationreviewsDashboardVacanciesApiReque
 public class PostEmployerByAccountIdApplicationreviewsCountApiRequest : IPostApiRequest<System.Collections.Generic.List<long>>
 {
     public required long AccountId { get; init; }
-    public string ApplicationSharedFilteringStatus { get; set; }
+    public string? ApplicationSharedFilteringStatus { get; set; }
     public string PostUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/applicationreviews/count", new Dictionary<string, string?> { ["applicationSharedFilteringStatus"] = ApplicationSharedFilteringStatus });
     public System.Collections.Generic.List<long> Data { get; set; } = default!;
 }
@@ -219,7 +219,7 @@ public record GetProhibitedcontentByContentTypeApiRequest(ProhibitedContentType 
 }
 
 /// <summary>GET /api/provider/{ukprn}/applicationreviews &#x2192; <see cref="ApplicationReviewsResponse"/></summary>
-public record GetProviderByUkprnApplicationreviewsApiRequest(int Ukprn, int? PageNumber, int? PageSize, string SortColumn, bool? IsAscending) : IGetApiRequest
+public record GetProviderByUkprnApplicationreviewsApiRequest(int Ukprn, int? PageNumber, int? PageSize, string? SortColumn, bool? IsAscending) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/provider/{Ukprn}/applicationreviews", new Dictionary<string, string?> { ["pageNumber"] = PageNumber?.ToString(), ["pageSize"] = PageSize?.ToString(), ["sortColumn"] = SortColumn, ["isAscending"] = IsAscending?.ToString() });
 }
@@ -231,16 +231,16 @@ public record GetProviderByUkprnApplicationreviewsDashboardApiRequest(int Ukprn)
 }
 
 /// <summary>GET /api/provider/{ukprn}/alerts &#x2192; <see cref="EmployerAlertsModel"/></summary>
-public record GetProviderByUkprnAlertsApiRequest(int Ukprn, string UserId) : IGetApiRequest
+public record GetProviderByUkprnAlertsApiRequest(int Ukprn, string? UserId) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/provider/{Ukprn}/alerts", new Dictionary<string, string?> { ["userId"] = UserId });
 }
 
 /// <summary>GET /api/provider/{ukprn}/applicationreviews/dashboard/vacancies &#x2192; <see cref="VacancyDashboardResponse"/></summary>
-public record GetProviderByUkprnApplicationreviewsDashboardVacanciesApiRequest(int Ukprn, int? PageNumber, int? PageSize, string SortColumn, bool? IsAscending, List<ApplicationReviewStatus>? Status) : IGetApiRequest
+public record GetProviderByUkprnApplicationreviewsDashboardVacanciesApiRequest(int Ukprn, int? PageNumber, int? PageSize, string? SortColumn, bool? IsAscending, List<ApplicationReviewStatus>? Status) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/provider/{Ukprn}/applicationreviews/dashboard/vacancies",
-        new KeyValuePair<string, string?>[] { new("pageNumber", PageNumber?.ToString()), new("pageSize", PageSize?.ToString()), new("sortColumn", SortColumn), new("isAscending", IsAscending?.ToString()) }
+        new KeyValuePair<string, string?>[] { new("pageNumber", PageNumber?.ToString()), new("pageSize", PageSize?.ToString()), new("sortColumn", SortColumn?.ToString()), new("isAscending", IsAscending?.ToString()) }
         .Concat((Status ?? []).Select(v => new KeyValuePair<string, string?>("status", v.ToString()))));
 }
 
@@ -410,13 +410,13 @@ public class PostVacanciesClosedApiRequest(PostClosedVacanciesRequest postClosed
 }
 
 /// <summary>GET /api/accounts/{accountId}/vacancies &#x2192; <see cref="VacancySummaryPagedResponse"/></summary>
-public record GetAccountsByAccountIdVacanciesApiRequest(long AccountId, int? Page, int? PageSize, SortOrder? SortOrder, VacancySortColumn? SortColumn, FilteringOptions? FilterBy, string SearchTerm) : IGetApiRequest
+public record GetAccountsByAccountIdVacanciesApiRequest(long AccountId, int? Page, int? PageSize, SortOrder? SortOrder, VacancySortColumn? SortColumn, FilteringOptions? FilterBy, string? SearchTerm) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/accounts/{AccountId}/vacancies", new Dictionary<string, string?> { ["page"] = Page?.ToString(), ["pageSize"] = PageSize?.ToString(), ["sortOrder"] = SortOrder?.ToString(), ["sortColumn"] = SortColumn?.ToString(), ["filterBy"] = FilterBy?.ToString(), ["searchTerm"] = SearchTerm });
 }
 
 /// <summary>GET /api/provider/{ukprn}/vacancies &#x2192; <see cref="VacancySummaryPagedResponse"/></summary>
-public record GetProviderByUkprnVacanciesApiRequest(int Ukprn, int? Page, int? PageSize, SortOrder? SortOrder, VacancySortColumn? SortColumn, FilteringOptions? FilterBy, string SearchTerm) : IGetApiRequest
+public record GetProviderByUkprnVacanciesApiRequest(int Ukprn, int? Page, int? PageSize, SortOrder? SortOrder, VacancySortColumn? SortColumn, FilteringOptions? FilterBy, string? SearchTerm) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/provider/{Ukprn}/vacancies", new Dictionary<string, string?> { ["page"] = Page?.ToString(), ["pageSize"] = PageSize?.ToString(), ["sortOrder"] = SortOrder?.ToString(), ["sortColumn"] = SortColumn?.ToString(), ["filterBy"] = FilterBy?.ToString(), ["searchTerm"] = SearchTerm });
 }
@@ -543,13 +543,13 @@ public record GetVacancyreviewsQaDashboardApiRequest() : IGetApiRequest
 }
 
 /// <summary>GET /api/users/vacancyreviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>
-public record GetUsersVacancyreviewsApiRequest(string UserId, System.DateTime? AssignationExpiry, ReviewStatus? Status) : IGetApiRequest
+public record GetUsersVacancyreviewsApiRequest(string? UserId, System.DateTime? AssignationExpiry, ReviewStatus? Status) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/users/vacancyreviews", new Dictionary<string, string?> { ["userId"] = UserId, ["assignationExpiry"] = AssignationExpiry?.ToString("s"), ["status"] = Status?.ToString() });
 }
 
 /// <summary>GET /api/users/vacancyreviews/count &#x2192; int</summary>
-public record GetUsersVacancyreviewsCountApiRequest(string UserEmail, bool? ApprovedFirstTime, System.DateTime? AssignationExpiry) : IGetApiRequest
+public record GetUsersVacancyreviewsCountApiRequest(string? UserEmail, bool? ApprovedFirstTime, System.DateTime? AssignationExpiry) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/users/vacancyreviews/count", new Dictionary<string, string?> { ["userEmail"] = UserEmail, ["approvedFirstTime"] = ApprovedFirstTime?.ToString(), ["assignationExpiry"] = AssignationExpiry?.ToString("s") });
 }

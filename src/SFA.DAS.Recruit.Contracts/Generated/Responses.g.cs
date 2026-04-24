@@ -60,6 +60,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ApplicationMethod
     {
 
@@ -94,27 +95,27 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset CreatedDate { get; set; } = default!;
+        public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? SubmittedDate { get; set; } = default!;
+        public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? DateSharedWithEmployer { get; set; } = default!;
+        public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewedDate { get; set; } = default!;
+        public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? StatusUpdatedDate { get; set; } = default!;
+        public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? WithdrawnDate { get; set; } = default!;
+        public System.DateTime? WithdrawnDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateId")]
         [Newtonsoft.Json.JsonProperty("candidateId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -205,11 +206,11 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyClosingDate")]
         [Newtonsoft.Json.JsonProperty("vacancyClosingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? VacancyClosingDate { get; set; } = default!;
+        public System.DateTime? VacancyClosingDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationSubmittedDate")]
         [Newtonsoft.Json.JsonProperty("applicationSubmittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ApplicationSubmittedDate { get; set; } = default!;
+        public System.DateTime? ApplicationSubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("availableWhere")]
         [Newtonsoft.Json.JsonProperty("availableWhere", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -233,6 +234,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ApplicationReviewStatus
     {
 
@@ -338,6 +340,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ApprenticeshipTypes
     {
 
@@ -350,6 +353,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum AvailableWhere
     {
 
@@ -378,6 +382,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ClosureReason
     {
 
@@ -419,6 +424,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum DurationUnit
     {
 
@@ -512,6 +518,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum EmployerNameOption
     {
 
@@ -602,6 +609,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum FilteringOptions
     {
 
@@ -659,6 +667,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum GeoCodeMethod
     {
 
@@ -702,27 +711,27 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset CreatedDate { get; set; } = default!;
+        public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? SubmittedDate { get; set; } = default!;
+        public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? DateSharedWithEmployer { get; set; } = default!;
+        public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewedDate { get; set; } = default!;
+        public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? StatusUpdatedDate { get; set; } = default!;
+        public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? WithdrawnDate { get; set; } = default!;
+        public System.DateTime? WithdrawnDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateId")]
         [Newtonsoft.Json.JsonProperty("candidateId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -843,6 +852,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum NotificationFrequency
     {
 
@@ -897,6 +907,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum NotificationScope
     {
 
@@ -912,6 +923,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum NotificationTypes
     {
 
@@ -960,6 +972,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum OperationType
     {
 
@@ -987,6 +1000,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum OwnerType
     {
 
@@ -1050,27 +1064,27 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset CreatedDate { get; set; } = default!;
+        public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? SubmittedDate { get; set; } = default!;
+        public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? DateSharedWithEmployer { get; set; } = default!;
+        public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewedDate { get; set; } = default!;
+        public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? StatusUpdatedDate { get; set; } = default!;
+        public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? WithdrawnDate { get; set; } = default!;
+        public System.DateTime? WithdrawnDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateId")]
         [Newtonsoft.Json.JsonProperty("candidateId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1212,11 +1226,11 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("fromDate")]
         [Newtonsoft.Json.JsonProperty("fromDate", Required = Newtonsoft.Json.Required.Always)]
-        public System.DateTimeOffset FromDate { get; set; } = default!;
+        public System.DateTime FromDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("toDate")]
         [Newtonsoft.Json.JsonProperty("toDate", Required = Newtonsoft.Json.Required.Always)]
-        public System.DateTimeOffset ToDate { get; set; } = default!;
+        public System.DateTime ToDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ukprn")]
         [Newtonsoft.Json.JsonProperty("ukprn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1276,39 +1290,39 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("approvedDate")]
         [Newtonsoft.Json.JsonProperty("approvedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ApprovedDate { get; set; } = default!;
+        public System.DateTime? ApprovedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastUpdatedDate")]
         [Newtonsoft.Json.JsonProperty("lastUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastUpdatedDate { get; set; } = default!;
+        public System.DateTime? LastUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? SubmittedDate { get; set; } = default!;
+        public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedDate")]
         [Newtonsoft.Json.JsonProperty("reviewRequestedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewRequestedDate { get; set; } = default!;
+        public System.DateTime? ReviewRequestedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedDate { get; set; } = default!;
+        public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("deletedDate")]
         [Newtonsoft.Json.JsonProperty("deletedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? DeletedDate { get; set; } = default!;
+        public System.DateTime? DeletedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("liveDate")]
         [Newtonsoft.Json.JsonProperty("liveDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LiveDate { get; set; } = default!;
+        public System.DateTime? LiveDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("startDate")]
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? StartDate { get; set; } = default!;
+        public System.DateTime? StartDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosingDate { get; set; } = default!;
+        public System.DateTime? ClosingDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewCount")]
         [Newtonsoft.Json.JsonProperty("reviewCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1517,6 +1531,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ProhibitedContentType
     {
 
@@ -1590,23 +1605,23 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     {
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? SubmittedDate { get; set; } = default!;
+        public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? WithdrawnDate { get; set; } = default!;
+        public System.DateTime? WithdrawnDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? DateSharedWithEmployer { get; set; } = default!;
+        public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewedDate { get; set; } = default!;
+        public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? StatusUpdatedDate { get; set; } = default!;
+        public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateId")]
         [Newtonsoft.Json.JsonProperty("candidateId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1689,27 +1704,27 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset CreatedDate { get; set; } = default!;
+        public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? SubmittedDate { get; set; } = default!;
+        public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? DateSharedWithEmployer { get; set; } = default!;
+        public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewedDate { get; set; } = default!;
+        public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? StatusUpdatedDate { get; set; } = default!;
+        public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? WithdrawnDate { get; set; } = default!;
+        public System.DateTime? WithdrawnDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateId")]
         [Newtonsoft.Json.JsonProperty("candidateId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1827,11 +1842,11 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset CreatedDate { get; set; } = default!;
+        public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastSignedInDate")]
         [Newtonsoft.Json.JsonProperty("lastSignedInDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastSignedInDate { get; set; } = default!;
+        public System.DateTime? LastSignedInDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerAccountIds")]
         [Newtonsoft.Json.JsonProperty("employerAccountIds", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1843,19 +1858,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredVacanciesEmployerRevokedPermissionAlertDismissedOn")]
         [Newtonsoft.Json.JsonProperty("transferredVacanciesEmployerRevokedPermissionAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn { get; set; } = default!;
+        public System.DateTime? TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesBlockedProviderAlertDismissedOn")]
         [Newtonsoft.Json.JsonProperty("closedVacanciesBlockedProviderAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
+        public System.DateTime? ClosedVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredVacanciesBlockedProviderAlertDismissedOn")]
         [Newtonsoft.Json.JsonProperty("transferredVacanciesBlockedProviderAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? TransferredVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
+        public System.DateTime? TransferredVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesWithdrawnByQaAlertDismissedOn")]
         [Newtonsoft.Json.JsonProperty("closedVacanciesWithdrawnByQaAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedVacanciesWithdrawnByQaAlertDismissedOn { get; set; } = default!;
+        public System.DateTime? ClosedVacanciesWithdrawnByQaAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("notificationPreferences")]
         [Newtonsoft.Json.JsonProperty("notificationPreferences", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1927,39 +1942,39 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("approvedDate")]
         [Newtonsoft.Json.JsonProperty("approvedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ApprovedDate { get; set; } = default!;
+        public System.DateTime? ApprovedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastUpdatedDate")]
         [Newtonsoft.Json.JsonProperty("lastUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastUpdatedDate { get; set; } = default!;
+        public System.DateTime? LastUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? SubmittedDate { get; set; } = default!;
+        public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedDate")]
         [Newtonsoft.Json.JsonProperty("reviewRequestedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewRequestedDate { get; set; } = default!;
+        public System.DateTime? ReviewRequestedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedDate { get; set; } = default!;
+        public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("deletedDate")]
         [Newtonsoft.Json.JsonProperty("deletedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? DeletedDate { get; set; } = default!;
+        public System.DateTime? DeletedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("liveDate")]
         [Newtonsoft.Json.JsonProperty("liveDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LiveDate { get; set; } = default!;
+        public System.DateTime? LiveDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("startDate")]
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? StartDate { get; set; } = default!;
+        public System.DateTime? StartDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosingDate { get; set; } = default!;
+        public System.DateTime? ClosingDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewCount")]
         [Newtonsoft.Json.JsonProperty("reviewCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2136,7 +2151,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? CreatedDate { get; set; } = default!;
+        public System.DateTime? CreatedDate { get; set; } = default!;
 
     }
 
@@ -2153,15 +2168,15 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.DateTimeOffset? CreatedDate { get; set; } = default!;
+        public System.DateTime? CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("slaDeadLine")]
         [Newtonsoft.Json.JsonProperty("slaDeadLine", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.DateTimeOffset? SlaDeadLine { get; set; } = default!;
+        public System.DateTime? SlaDeadLine { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewedDate { get; set; } = default!;
+        public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
@@ -2182,7 +2197,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedDate { get; set; } = default!;
+        public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualOutcome")]
         [Newtonsoft.Json.JsonProperty("manualOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2281,19 +2296,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSubmitted")]
         [Newtonsoft.Json.JsonProperty("dateSubmitted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? DateSubmitted { get; set; } = default!;
+        public System.DateTime? DateSubmitted { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("slaDeadline")]
         [Newtonsoft.Json.JsonProperty("slaDeadline", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? SlaDeadline { get; set; } = default!;
+        public System.DateTime? SlaDeadline { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewStarted")]
         [Newtonsoft.Json.JsonProperty("reviewStarted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewStarted { get; set; } = default!;
+        public System.DateTime? ReviewStarted { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewCompleted")]
         [Newtonsoft.Json.JsonProperty("reviewCompleted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewCompleted { get; set; } = default!;
+        public System.DateTime? ReviewCompleted { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("outcome")]
         [Newtonsoft.Json.JsonProperty("outcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2384,6 +2399,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum QualificationWeighting
     {
 
@@ -2417,15 +2433,15 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset CreatedDate { get; set; } = default!;
+        public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("updatedDate")]
         [Newtonsoft.Json.JsonProperty("updatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? UpdatedDate { get; set; } = default!;
+        public System.DateTime? UpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastSignedInDate")]
         [Newtonsoft.Json.JsonProperty("lastSignedInDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastSignedInDate { get; set; } = default!;
+        public System.DateTime? LastSignedInDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("name")]
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.AllowNull)]
@@ -2445,19 +2461,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredVacanciesEmployerRevokedPermissionAlertDismissedOn")]
         [Newtonsoft.Json.JsonProperty("transferredVacanciesEmployerRevokedPermissionAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn { get; set; } = default!;
+        public System.DateTime? TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesBlockedProviderAlertDismissedOn")]
         [Newtonsoft.Json.JsonProperty("closedVacanciesBlockedProviderAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
+        public System.DateTime? ClosedVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredVacanciesBlockedProviderAlertDismissedOn")]
         [Newtonsoft.Json.JsonProperty("transferredVacanciesBlockedProviderAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? TransferredVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
+        public System.DateTime? TransferredVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesWithdrawnByQaAlertDismissedOn")]
         [Newtonsoft.Json.JsonProperty("closedVacanciesWithdrawnByQaAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedVacanciesWithdrawnByQaAlertDismissedOn { get; set; } = default!;
+        public System.DateTime? ClosedVacanciesWithdrawnByQaAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("notificationPreferences")]
         [Newtonsoft.Json.JsonProperty("notificationPreferences", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2492,7 +2508,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset CreatedDate { get; set; } = default!;
+        public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdBy")]
         [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2509,6 +2525,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ReportOwnerType
     {
 
@@ -2521,6 +2538,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ReportType
     {
 
@@ -2546,6 +2564,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ReviewStatus
     {
 
@@ -2564,6 +2583,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum SortOrder
     {
 
@@ -2576,6 +2596,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum SourceOrigin
     {
 
@@ -2594,6 +2615,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum SourceType
     {
 
@@ -2684,7 +2706,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredDate")]
         [Newtonsoft.Json.JsonProperty("transferredDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset TransferredDate { get; set; } = default!;
+        public System.DateTime TransferredDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reason")]
         [Newtonsoft.Json.JsonProperty("reason", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2694,6 +2716,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum TransferReason
     {
 
@@ -2706,6 +2729,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum UserStatus
     {
 
@@ -2718,6 +2742,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum UserType
     {
 
@@ -2779,43 +2804,43 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("approvedDate")]
         [Newtonsoft.Json.JsonProperty("approvedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ApprovedDate { get; set; } = default!;
+        public System.DateTime? ApprovedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? CreatedDate { get; set; } = default!;
+        public System.DateTime? CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastUpdatedDate")]
         [Newtonsoft.Json.JsonProperty("lastUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LastUpdatedDate { get; set; } = default!;
+        public System.DateTime? LastUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? SubmittedDate { get; set; } = default!;
+        public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedDate")]
         [Newtonsoft.Json.JsonProperty("reviewRequestedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewRequestedDate { get; set; } = default!;
+        public System.DateTime? ReviewRequestedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedDate { get; set; } = default!;
+        public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("deletedDate")]
         [Newtonsoft.Json.JsonProperty("deletedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? DeletedDate { get; set; } = default!;
+        public System.DateTime? DeletedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("liveDate")]
         [Newtonsoft.Json.JsonProperty("liveDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? LiveDate { get; set; } = default!;
+        public System.DateTime? LiveDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("startDate")]
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? StartDate { get; set; } = default!;
+        public System.DateTime? StartDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosingDate { get; set; } = default!;
+        public System.DateTime? ClosingDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewCount")]
         [Newtonsoft.Json.JsonProperty("reviewCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2993,7 +3018,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     {
         [System.Text.Json.Serialization.JsonPropertyName("analyticsDate")]
         [Newtonsoft.Json.JsonProperty("analyticsDate", Required = Newtonsoft.Json.Required.Always)]
-        public System.DateTimeOffset AnalyticsDate { get; set; } = default!;
+        public System.DateTime AnalyticsDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("viewsCount")]
         [Newtonsoft.Json.JsonProperty("viewsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3022,7 +3047,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("updatedDate")]
         [Newtonsoft.Json.JsonProperty("updatedDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset UpdatedDate { get; set; } = default!;
+        public System.DateTime UpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("analytics")]
         [Newtonsoft.Json.JsonProperty("analytics", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3107,15 +3132,15 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.Always)]
-        public System.DateTimeOffset CreatedDate { get; set; } = default!;
+        public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("slaDeadLine")]
         [Newtonsoft.Json.JsonProperty("slaDeadLine", Required = Newtonsoft.Json.Required.Always)]
-        public System.DateTimeOffset SlaDeadLine { get; set; } = default!;
+        public System.DateTime SlaDeadLine { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ReviewedDate { get; set; } = default!;
+        public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
@@ -3140,7 +3165,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedDate { get; set; } = default!;
+        public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualOutcome")]
         [Newtonsoft.Json.JsonProperty("manualOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3198,6 +3223,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [System.Flags]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum VacancyRuleSet : long
     {
 
@@ -3278,6 +3304,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum VacancySortColumn
     {
 
@@ -3296,6 +3323,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum VacancyStatus
     {
 
@@ -3362,7 +3390,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? CreatedDate { get; set; } = default!;
+        public System.DateTime? CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3371,7 +3399,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosingDate { get; set; } = default!;
+        public System.DateTime? ClosingDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("duration")]
         [Newtonsoft.Json.JsonProperty("duration", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3384,7 +3412,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? ClosedDate { get; set; } = default!;
+        public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closureReason")]
         [Newtonsoft.Json.JsonProperty("closureReason", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3402,7 +3430,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("startDate")]
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? StartDate { get; set; } = default!;
+        public System.DateTime? StartDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingTitle")]
         [Newtonsoft.Json.JsonProperty("trainingTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3427,7 +3455,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("transferInfoTransferredDate")]
         [Newtonsoft.Json.JsonProperty("transferInfoTransferredDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? TransferInfoTransferredDate { get; set; } = default!;
+        public System.DateTime? TransferInfoTransferredDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingProviderName")]
         [Newtonsoft.Json.JsonProperty("trainingProviderName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3610,6 +3638,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum WageType
     {
 
@@ -3640,6 +3669,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum Response
     {
 
@@ -3649,6 +3679,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum Response2
     {
 
