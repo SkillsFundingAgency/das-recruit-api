@@ -8,5 +8,6 @@ public enum ManualQaOutcome
     Approved,
     Referred,
     Transferred,
-    Blocked
+    Blocked,
+    Bypassed,
 }

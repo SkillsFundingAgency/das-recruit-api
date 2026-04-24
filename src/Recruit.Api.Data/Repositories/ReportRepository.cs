@@ -5,6 +5,7 @@ using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
+using ManualQaOutcome = SFA.DAS.Recruit.Api.Domain.Enums.ManualQaOutcome;
 
 namespace SFA.DAS.Recruit.Api.Data.Repositories;
 
@@ -91,7 +92,7 @@ public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportR
 
         var rawData = await recruitDataContext.VacancyReviewEntities
             .AsNoTracking()
-            .Where(r => r.CreatedDate >= criteria.FromDate && r.CreatedDate <= criteria.ToDate)
+            .Where(r => r.CreatedDate >= criteria.FromDate && r.CreatedDate <= criteria.ToDate && r.ManualOutcome != nameof(ManualQaOutcome.Bypassed))
             .Join(
                 recruitDataContext.VacancyEntities.AsNoTracking(),
                 r => r.VacancyReference,
