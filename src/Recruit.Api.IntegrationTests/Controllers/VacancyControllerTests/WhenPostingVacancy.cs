@@ -89,7 +89,6 @@ public class WhenPostingVacancy: BaseFixture
     public async Task Then_The_Vacancy_Is_Added()
     {
         // arrange
-        var id = Guid.NewGuid();
         var vacancyReference = Fixture.Create<VacancyReference>();
         var request = Fixture.Create<SFA.DAS.Recruit.Contracts.ApiResponses.PostVacancyRequest>();
 
@@ -103,7 +102,7 @@ public class WhenPostingVacancy: BaseFixture
         
         Server.DataContext
             .Setup(x => x.VacancyEntities.AddAsync(It.IsAny<VacancyEntity>(), It.IsAny<CancellationToken>()))
-            .Callback((VacancyEntity entity, CancellationToken _) => { entity.Id = id; });
+            .Callback((VacancyEntity entity, CancellationToken _) => { entity.Id = request.Id!.Value; });
         
         Server.DataContext
             .Setup(x => x.GetNextVacancyReferenceAsync(It.IsAny<CancellationToken>()))
@@ -135,8 +134,9 @@ public class WhenPostingVacancy: BaseFixture
             .Excluding(x => x.ClosingDate)
             .Excluding(x => x.ClosedDate)
             .Excluding(x => x.TransferInfo!.TransferredDate)
+            .Excluding(x=>x.Id)
         );
-        vacancy.Id.Should().Be(id);
+        vacancy.Id.Should().Be(request.Id!.Value);
         vacancy.VacancyReference.Should().Be(vacancyReference.Value);
         
         response.StatusCode.Should().Be(HttpStatusCode.Created);

@@ -344,11 +344,12 @@ public class VacancyController : Controller
             var vacancy = await repository.GetOneAsync(request.Id.Value, cancellationToken);
             if (vacancy is not null)
             {
-                return Results.Conflict(new ValidationProblemDetails(new Dictionary<string, string[]>
+                return Results.BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
                 {
                     { "Id", ["Unable to create Vacancy. Vacancy already submitted"] }
                 }));
             }
+            entity.Id = request.Id.Value;
         }
         
         var vacancyReference = await repository.GetNextVacancyReferenceAsync(cancellationToken);

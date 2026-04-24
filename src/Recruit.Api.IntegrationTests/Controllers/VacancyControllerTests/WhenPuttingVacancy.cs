@@ -113,6 +113,7 @@ public class WhenPuttingVacancy: BaseFixture
 
         // assert
         vacancy.Should().BeEquivalentTo(request, opt => opt
+            .Excluding(x => x.Id)
             .Excluding(x => x.SubmittedByUserId)
             .Excluding(x => x.ReviewRequestedByUserId)
             .Excluding(x=>x.Wage!.ApprenticeMinimumWage)
@@ -122,7 +123,7 @@ public class WhenPuttingVacancy: BaseFixture
             .Excluding(x=>x.Wage!.Over25NationalMinimumWage)
             .Excluding(x=>x.Wage!.WageText)
         );
-        
+
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
         response.Headers.Location.ToString().Should().Be($"/api/vacancies/{vacancy.Id}");
@@ -154,6 +155,7 @@ public class WhenPuttingVacancy: BaseFixture
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         vacancy.Should().BeEquivalentTo(request, opt => opt
+            .Excluding(x => x.Id)
             .Excluding(x => x.SubmittedByUserId)
             .Excluding(x => x.ReviewRequestedByUserId)
             .Excluding(x=>x.Wage!.ApprenticeMinimumWage)

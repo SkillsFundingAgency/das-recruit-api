@@ -65,7 +65,7 @@ public class WhenPostingVacancy
         var conflictResult = result as IValueHttpResult;
         conflictResult.Should().NotBeNull();
         result.Should().BeAssignableTo<IStatusCodeHttpResult>()
-            .Which.StatusCode.Should().Be(StatusCodes.Status409Conflict);
+            .Which.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         var problemDetails = (conflictResult!.Value as ValidationProblemDetails)!;
         problemDetails.Errors.Should().ContainKey("Id");
         problemDetails.Errors["Id"].Should().Contain("Unable to create Vacancy. Vacancy already submitted");

@@ -10,16 +10,15 @@ public class VacancyValidator : AbstractValidator<VacancyRequest>
     public VacancyValidator(
         IProhibitedContentRepository profanityListProvider, 
         IHtmlSanitizerService htmlSanitizerService, 
-        TimeProvider timeProvider, 
-        IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService, 
+        TimeProvider timeProvider,  
         IMinimumWageProvider minimumWageProvider)
     {
-        ValidateVacancy(profanityListProvider, htmlSanitizerService, timeProvider, externalWebsiteHealthCheckService);
+        ValidateVacancy(profanityListProvider, htmlSanitizerService, timeProvider);
         ValidateVacancyCrossFieldRules(minimumWageProvider);
     }
     
     private void ValidateVacancy(IProhibitedContentRepository profanityListProvider,
-        IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+        IHtmlSanitizerService htmlSanitizerService, TimeProvider timeProvider)
     {
         RuleFor(x => x.Title).VacancyTitleValidation(profanityListProvider);
         RuleFor(x => x.Wage).VacancyWageValidation();
@@ -62,7 +61,7 @@ public class VacancyValidator : AbstractValidator<VacancyRequest>
             RuleFor(x=>x.AdditionalTrainingDescription).VacancyAdditionalTrainingInformationValidation(profanityListProvider, htmlSanitizerService);
         });
         RuleFor(x=>x.OutcomeDescription).VacancyOutcomeDescriptionValidation(profanityListProvider, htmlSanitizerService);
-        RuleFor(x => x).VacancyApplicationMethodValidation(profanityListProvider, externalWebsiteHealthCheckService);
+        RuleFor(x => x).VacancyApplicationMethodValidation(profanityListProvider);
         When(x => x.Contact != null, () =>
         {
             RuleFor(x => x.Contact).VacancyContactDetailValidation(profanityListProvider);    
@@ -70,7 +69,7 @@ public class VacancyValidator : AbstractValidator<VacancyRequest>
         RuleFor(x=>x.ThingsToConsider).VacancyThingsToConsiderValidation(profanityListProvider, htmlSanitizerService);
         RuleFor(x => x.EmployerDescription)
             .VacancyEmployerInformationValidation(htmlSanitizerService, profanityListProvider);
-        RuleFor(x => x.EmployerWebsiteUrl).VacancyEmployerWebsiteValidation(externalWebsiteHealthCheckService);
+        RuleFor(x => x.EmployerWebsiteUrl).VacancyEmployerWebsiteValidation();
         RuleFor(x => x.TrainingProvider)!.VacancyTrainingProviderValidation();
     }
     
