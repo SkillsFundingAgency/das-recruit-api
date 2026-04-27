@@ -85,7 +85,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
 
         try
         {
-            var (entity, created) = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+            var (entity, created, _) = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
             if (!created)
             {
                 return TypedResults.Ok(entity.ToPutResponse());

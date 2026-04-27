@@ -1,6 +1,7 @@
 ﻿using Esfa.Recruit.Vacancies.Client.Domain.Events;
 using NServiceBus;
 using SFA.DAS.Recruit.Api.Core.Events;
+using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Validators.Rules;
