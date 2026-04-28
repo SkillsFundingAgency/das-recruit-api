@@ -65,4 +65,5 @@ public class VacancyRequest
     public List<ReviewFieldIndicator>? ProviderReviewFieldIndicators { get; init; }
     public string? SubmittedByUserId { get; set; }
     public string? ReviewRequestedByUserId { get; set; }
+    public Guid? Id {get; set;}
 }

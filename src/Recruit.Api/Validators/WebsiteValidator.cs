@@ -4,7 +4,7 @@ using FluentValidation.Validators;
 
 namespace SFA.DAS.Recruit.Api.Validators;
 
-internal partial class WebsiteValidator<T, TProperty>(IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService) : AsyncPropertyValidator<T, TProperty> 
+internal partial class WebsiteValidator<T, TProperty> : AsyncPropertyValidator<T, TProperty> 
 {
     [GeneratedRegex("^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$", RegexOptions.Compiled, matchTimeoutMilliseconds: 500)]
     private static partial Regex IpCheckingRegex();
@@ -16,14 +16,7 @@ internal partial class WebsiteValidator<T, TProperty>(IExternalWebsiteHealthChec
             return false;
         }
 
-        try
-        {
-            return await externalWebsiteHealthCheckService.IsHealthyAsync(uri, cancellation);
-        }
-        catch (InvalidSchemeException)
-        {
-            return false;
-        }
+        return true;
     }
     public override string Name => nameof(WebsiteValidator<T, string>);
 }

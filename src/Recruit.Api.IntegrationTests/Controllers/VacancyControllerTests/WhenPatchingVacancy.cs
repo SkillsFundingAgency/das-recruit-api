@@ -1,10 +1,10 @@
 using System.Net;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.UnitTests;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
@@ -22,7 +22,7 @@ public class WhenPatchingVacancy: BaseFixture
         patchDocument.Add(x => x.ShortDescription, "shortDescription");
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}", patchDocument);
+        var response = await Client.PatchAsync(new PatchVacanciesByVacancyIdApiRequest { VacancyId = Guid.NewGuid() }.PatchUrl, patchDocument);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -41,7 +41,7 @@ public class WhenPatchingVacancy: BaseFixture
         patchDocument.Add(x => x.CreatedDate, DateTime.Now);
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.Vacancies}/{items[1].Id}", patchDocument);
+        var response = await Client.PatchAsync(new PatchVacanciesByVacancyIdApiRequest { VacancyId = items[1].Id }.PatchUrl, patchDocument);
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert
@@ -68,7 +68,7 @@ public class WhenPatchingVacancy: BaseFixture
         patchDocument.Add(x => x.ShortDescription, "shortDescription");
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.Vacancies}/{targetItem.Id}", patchDocument);
+        var response = await Client.PatchAsync(new PatchVacanciesByVacancyIdApiRequest { VacancyId = targetItem.Id }.PatchUrl, patchDocument);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);

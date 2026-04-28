@@ -1,5 +1,5 @@
 ﻿using SFA.DAS.Recruit.Api.Controllers;
-using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ReferenceDataControllerTests;
 
@@ -30,7 +30,7 @@ public class WhenGettingCandidateSkills: BaseFixture
         ]; 
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.ReferenceData}/candidate-skills");
+        var response = await Client.GetAsync(new GetReferencedataCandidateSkillsApiRequest().GetUrl);
         var skills = await response.Content.ReadAsAsync<List<string>>();
 
         // assert

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
 using HotChocolate.AspNetCore;
@@ -113,6 +114,7 @@ internal class Startup
             c.DocumentFilter<JsonPatchDocumentFilter>();
             c.DocumentFilter<HealthChecksFilter>();
             c.MapType<VacancyReference>(() => new OpenApiSchema { Type = "string" });
+            c.SchemaFilter<FlagsEnumSchemaFilter>();
         });
         services.AddApiVersioning(opt =>
         {

@@ -5,6 +5,7 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Responses.Report;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ReportControllerTests;
 
@@ -42,7 +43,7 @@ internal class WhenGeneratingQaReport : BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Reports}/generate-qa/{reportEntity.Id}");
+        var response = await Client.GetAsync(new GetReportsGenerateQaByReportIdApiRequest(reportEntity.Id).GetUrl);
         var result = await response.Content.ReadAsAsync<GetQaReportResponse>();
 
         // assert
@@ -78,7 +79,7 @@ internal class WhenGeneratingQaReport : BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Reports}/generate-qa/{Guid.NewGuid()}");
+        var response = await Client.GetAsync(new GetReportsGenerateQaByReportIdApiRequest(Guid.NewGuid()).GetUrl);
         var result = await response.Content.ReadAsAsync<GetQaReportResponse>();
 
         // assert
@@ -123,7 +124,7 @@ internal class WhenGeneratingQaReport : BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Reports}/generate-qa/{reportEntity.Id}");
+        var response = await Client.GetAsync(new GetReportsGenerateQaByReportIdApiRequest(reportEntity.Id).GetUrl);
         var result = await response.Content.ReadAsAsync<GetQaReportResponse>();
 
         // assert
@@ -152,7 +153,7 @@ internal class WhenGeneratingQaReport : BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet(Fixture.CreateMany<VacancyEntity>(5).ToList());
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Reports}/generate-qa/{reportEntity.Id}");
+        var response = await Client.GetAsync(new GetReportsGenerateQaByReportIdApiRequest(reportEntity.Id).GetUrl);
         var result = await response.Content.ReadAsAsync<GetQaReportResponse>();
 
         // assert

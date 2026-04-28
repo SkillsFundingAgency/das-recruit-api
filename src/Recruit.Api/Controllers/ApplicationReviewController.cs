@@ -229,7 +229,7 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
         }
     }
 
-    [HttpPatch]
+    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
     [Route($"{RouteNames.ApplicationReview}/{{applicationId:guid}}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

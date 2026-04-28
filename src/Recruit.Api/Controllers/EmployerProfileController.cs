@@ -59,7 +59,7 @@ public class EmployerProfileController: ControllerBase
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
 
-    [HttpPatch]
+    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
     [ProducesResponseType(typeof(PatchEmployerProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

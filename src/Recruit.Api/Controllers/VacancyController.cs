@@ -302,18 +302,17 @@ public class VacancyController : Controller
                 return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }    
         }
-        
+
         var entity = request.ToDomain();
-        
+
         if (validateOnly)
         {
             entity.VacancyReference = 1000000001;
             entity.CreatedDate = DateTime.UtcNow;
             entity.Status = VacancyStatus.Submitted;
-            entity.Id = Guid.NewGuid();
+            entity.Id = request.Id ?? Guid.NewGuid();
             return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPostResponse());
         }
-        
 
         // This lookup should eventually be removed once we've migrated away from Mongo
         // We do this because currently the submitted user id is not the SQL user id, but could match
@@ -337,6 +336,20 @@ public class VacancyController : Controller
             {
                 entity.ReviewRequestedByUserId = userId;
             }
+        }
+        
+        //If vacancy exists then throw error - this is mainly to cover being submitted from the external Vacancies Manage API
+        if (request.Id != null)
+        {
+            var vacancy = await repository.GetOneAsync(request.Id.Value, cancellationToken);
+            if (vacancy is not null)
+            {
+                return Results.BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
+                {
+                    { "Id", ["Unable to create Vacancy. Vacancy already submitted"] }
+                }));
+            }
+            entity.Id = request.Id.Value;
         }
         
         var vacancyReference = await repository.GetNextVacancyReferenceAsync(cancellationToken);
@@ -431,7 +444,7 @@ public class VacancyController : Controller
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
     
-    [HttpPatch, Route("{vacancyId:guid}")]
+    [HttpPatch, Route("{vacancyId:guid}"), Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Apim.Shared.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -9,6 +9,7 @@ using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.UnitTests;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
@@ -18,7 +19,7 @@ public class WhenPuttingVacancy: BaseFixture
     public async Task Then_Without_Required_Fields_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}", new {});
+        var response = await Client.PutAsJsonAsync(new PutVacanciesByVacancyIdApiRequest { VacancyId = Guid.NewGuid() }.PutUrl, new {});
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert
@@ -36,12 +37,18 @@ public class WhenPuttingVacancy: BaseFixture
     public async Task Then_With_Validation_And_Incorrect_Content_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}?validateOnly=true&ruleSet=ShortDescription,Title", new PutVacancyRequest {
-            OwnerType = OwnerType.Employer,
-            Status = VacancyStatus.Draft,
-            Title = "Short title",
-            ShortDescription = "Short description"
-        });
+        var request = new PutVacanciesByVacancyIdApiRequest {
+            VacancyId = Guid.NewGuid(),
+            ValidateOnly = true,
+            RuleSet = Contracts.ApiResponses.VacancyRuleSet.ShortDescription | Contracts.ApiResponses.VacancyRuleSet.Title,
+            Data = new Contracts.ApiResponses.PutVacancyRequest {
+                OwnerType = Contracts.ApiResponses.OwnerType.Employer,
+                Status = Contracts.ApiResponses.VacancyStatus.Draft,
+                Title = "Short title",
+                ShortDescription = "Short description"
+            }
+        };
+        var response = await Client.PutAsJsonAsync(request.PutUrl, request.Data);
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert
@@ -69,7 +76,7 @@ public class WhenPuttingVacancy: BaseFixture
             ]);
         
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}?validateOnly=true&ruleSet=Title", new PutVacancyRequest {
+        var response = await Client.PutAsJsonAsync(new PutVacanciesByVacancyIdApiRequest { VacancyId = Guid.NewGuid(), ValidateOnly = true, RuleSet = Contracts.ApiResponses.VacancyRuleSet.Title }.PutUrl, new PutVacancyRequest {
             OwnerType = OwnerType.Employer,
             Status = VacancyStatus.Draft,
             Title = "Apprenticeship Short title"
@@ -80,7 +87,7 @@ public class WhenPuttingVacancy: BaseFixture
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
-        response.Headers.Location.ToString().Should().Be($"/{RouteNames.Vacancies}/{vacancy.Id}");
+        response.Headers.Location.ToString().Should().Be($"/api/vacancies/{vacancy.Id}");
         vacancy.VacancyReference.Should().Be(1000000001);
     }
     
@@ -101,11 +108,12 @@ public class WhenPuttingVacancy: BaseFixture
         var expectedEntity = request.ToDomain(id);
         
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{id}", request);
+        var response = await Client.PutAsJsonAsync(new PutVacanciesByVacancyIdApiRequest { VacancyId = id }.PutUrl, request);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
         vacancy.Should().BeEquivalentTo(request, opt => opt
+            .Excluding(x => x.Id)
             .Excluding(x => x.SubmittedByUserId)
             .Excluding(x => x.ReviewRequestedByUserId)
             .Excluding(x=>x.Wage!.ApprenticeMinimumWage)
@@ -115,10 +123,10 @@ public class WhenPuttingVacancy: BaseFixture
             .Excluding(x=>x.Wage!.Over25NationalMinimumWage)
             .Excluding(x=>x.Wage!.WageText)
         );
-        
+
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         response.Headers.Location.Should().NotBeNull();
-        response.Headers.Location.ToString().Should().Be($"/{RouteNames.Vacancies}/{vacancy.Id}");
+        response.Headers.Location.ToString().Should().Be($"/api/vacancies/{vacancy.Id}");
 
         Server.DataContext.Verify(x => x.VacancyEntities.AddAsync(ItIs.EquivalentTo(expectedEntity), It.IsAny<CancellationToken>()), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
@@ -141,12 +149,13 @@ public class WhenPuttingVacancy: BaseFixture
         var request = Fixture.Create<PutVacancyRequest>();
         
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{targetItem.Id}", request);
+        var response = await Client.PutAsJsonAsync(new PutVacanciesByVacancyIdApiRequest { VacancyId = targetItem.Id }.PutUrl, request);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         vacancy.Should().BeEquivalentTo(request, opt => opt
+            .Excluding(x => x.Id)
             .Excluding(x => x.SubmittedByUserId)
             .Excluding(x => x.ReviewRequestedByUserId)
             .Excluding(x=>x.Wage!.ApprenticeMinimumWage)
@@ -184,7 +193,7 @@ public class WhenPuttingVacancy: BaseFixture
             .Create();
 
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}", request);
+        var response = await Client.PutAsJsonAsync(new PutVacanciesByVacancyIdApiRequest { VacancyId = Guid.NewGuid() }.PutUrl, request);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
@@ -219,7 +228,7 @@ public class WhenPuttingVacancy: BaseFixture
             .Create();
 
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.Vacancies}/{targetItem.Id}", request);
+        var response = await Client.PutAsJsonAsync(new PutVacanciesByVacancyIdApiRequest { VacancyId = targetItem.Id }.PutUrl, request);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert

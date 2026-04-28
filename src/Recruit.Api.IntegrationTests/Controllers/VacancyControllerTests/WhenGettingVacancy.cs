@@ -1,7 +1,7 @@
 using System.Net;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
@@ -16,7 +16,8 @@ public class WhenGettingVacancy: BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet(items);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Vacancies}/{expected.Id}");
+        var request = new GetVacanciesByVacancyIdApiRequest(expected.Id);
+        var response = await Client.GetAsync(request.GetUrl);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
@@ -33,7 +34,8 @@ public class WhenGettingVacancy: BaseFixture
             .ReturnsDbSet(Fixture.CreateMany<VacancyEntity>(10).ToList());
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}");
+        var request = new GetVacanciesByVacancyIdApiRequest(Guid.NewGuid());
+        var response = await Client.GetAsync(request.GetUrl);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
