@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 using FluentValidation;
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.Providers;

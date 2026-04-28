@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;

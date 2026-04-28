@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Operations;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Repositories;
@@ -16,6 +16,7 @@ public class WhenPatchingAnEmployerProfileAddress
         long accountLegalEntityId,
         int id,
         Mock<IEmployerProfileAddressRepository> repository,
+        JsonPatchDocument patchRequest,
         [Greedy] EmployerProfileAddressController sut,
         CancellationToken token)
     {
@@ -25,7 +26,7 @@ public class WhenPatchingAnEmployerProfileAddress
             .ReturnsAsync(() => null);
 
         // act
-        var result = await sut.PatchOne(repository.Object, accountLegalEntityId, id, new JsonPatchDocument(), token);
+        var result = await sut.PatchOne(repository.Object, accountLegalEntityId, id, patchRequest, token);
         
         // assert
         repository.Verify(x => x.GetOneAsync(ItIs.EquivalentTo(new EmployerProfileAddressKey(accountLegalEntityId, id)), token), Times.Once());

@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Operations;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.Exceptions;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
 

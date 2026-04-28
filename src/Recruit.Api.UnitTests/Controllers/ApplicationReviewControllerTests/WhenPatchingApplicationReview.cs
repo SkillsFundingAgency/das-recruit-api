@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -14,6 +14,7 @@ public class WhenPatchingApplicationReview
     [Test, RecursiveMoqAutoData]
     public async Task Patch_Returns_Ok_When_Application_Review_Is_Patched(
         Guid id,
+        JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
         [Greedy] ApplicationReviewController controller,
@@ -25,7 +26,7 @@ public class WhenPatchingApplicationReview
         providerMock.Setup(p => p.Update(It.IsAny<ApplicationReviewEntity>(), It.IsAny<CancellationToken>())).ReturnsAsync(applicationReview);
 
         // Act
-        var result = await controller.Patch(id, new JsonPatchDocument<ApplicationReview>(), CancellationToken.None);
+        var result = await controller.Patch(id, patchDocument, CancellationToken.None);
 
         // Assert
         var okResult = result.Should().BeOfType<Ok<PatchApplicationReviewResponse>>().Subject;
@@ -36,6 +37,7 @@ public class WhenPatchingApplicationReview
     [Test, RecursiveMoqAutoData]
     public async Task Patch_Returns_NotFound_When_Application_Review_Does_Not_Exist(
         Guid id,
+        JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
         [Greedy] ApplicationReviewController controller,
@@ -46,7 +48,7 @@ public class WhenPatchingApplicationReview
         providerMock.Setup(p => p.GetByApplicationId(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((ApplicationReviewEntity?)null);
 
         // Act
-        var result = await controller.Patch(id, new JsonPatchDocument<ApplicationReview>(), CancellationToken.None);
+        var result = await controller.Patch(id, patchDocument, CancellationToken.None);
 
         // Assert
         providerMock.Verify(p => p.GetById(id, CancellationToken.None), Times.Once);
@@ -58,6 +60,7 @@ public class WhenPatchingApplicationReview
     [Test, RecursiveMoqAutoData]
     public async Task When_Application_Not_Found_By_Id_Found_By_ApplicationId_And_Updated(
         Guid id,
+        JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
         [Greedy] ApplicationReviewController controller,
@@ -70,7 +73,7 @@ public class WhenPatchingApplicationReview
             .ReturnsAsync(applicationReview);
 
         // Act
-        var result = await controller.Patch(id, new JsonPatchDocument<ApplicationReview>(), CancellationToken.None);
+        var result = await controller.Patch(id, patchDocument, CancellationToken.None);
 
         // Assert
         var okResult = result.Should().BeOfType<Ok<PatchApplicationReviewResponse>>().Subject;
@@ -81,6 +84,7 @@ public class WhenPatchingApplicationReview
     [Test, RecursiveMoqAutoData]
     public async Task Patch_ReturnsInternalServerException_WhenApplicationReview_Throws_Exception(
         Guid id,
+        JsonPatchDocument<ApplicationReview> patchDocument,
         ApplicationReviewEntity applicationReview,
         [Frozen] Mock<IApplicationReviewsProvider> providerMock,
         [Greedy] ApplicationReviewController controller,
@@ -90,7 +94,7 @@ public class WhenPatchingApplicationReview
         providerMock.Setup(p => p.Update(It.IsAny<ApplicationReviewEntity>(), It.IsAny<CancellationToken>())).ThrowsAsync(new Exception());
 
         // Act
-        var result = await controller.Patch(id, new JsonPatchDocument<ApplicationReview>(), CancellationToken.None);
+        var result = await controller.Patch(id, patchDocument, CancellationToken.None);
 
         // Assert
         result.Should().BeOfType<ProblemHttpResult>();
