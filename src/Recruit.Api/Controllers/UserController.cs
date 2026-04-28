@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Exceptions;
-using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Operations;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
@@ -28,8 +28,10 @@ public class UserController
                     {
                         path = nameof(UserEntity.EmployerAccounts),
                         op = operation.op,
-                        value = (operation.value as JArray)!.Select(x => new UserEmployerAccountEntity
-                            { UserId = (Guid)key, EmployerAccountId = x.Value<long>()! })
+                        value = JsonSerializer.Deserialize<long[]>(
+                                ((JsonElement)operation.value).GetRawText())!
+                            .Select(accountId => new UserEmployerAccountEntity
+                            { UserId = (Guid)key, EmployerAccountId = accountId })
                     },
                     _ => throw new JsonPatchException(new JsonPatchError(null, operation, $"Operation type '{operation.op}' not supported for property '{nameof(UserEntity.EmployerAccounts)}'"))
                 };
@@ -175,7 +177,7 @@ public class UserController
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
     
-    [HttpPatch, Route("{id:guid}"), Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
+    [HttpPatch, Route("{id:guid}")]
     [ProducesResponseType(typeof(RecruitUser), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

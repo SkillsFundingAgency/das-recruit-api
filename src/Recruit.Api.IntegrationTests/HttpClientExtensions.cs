@@ -1,6 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.JsonPatch;
-using Newtonsoft.Json;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 

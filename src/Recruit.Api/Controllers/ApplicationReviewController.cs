@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
 using FluentValidation;
-using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.Providers;
@@ -229,7 +229,7 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
         }
     }
 
-    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
+    [HttpPatch]
     [Route($"{RouteNames.ApplicationReview}/{{applicationId:guid}}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

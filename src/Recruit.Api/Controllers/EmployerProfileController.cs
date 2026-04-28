@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Exceptions;
+﻿using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
@@ -59,7 +59,7 @@ public class EmployerProfileController: ControllerBase
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
 
-    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
+    [HttpPatch]
     [ProducesResponseType(typeof(PatchEmployerProfileResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
