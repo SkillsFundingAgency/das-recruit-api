@@ -197,7 +197,7 @@ public record DeleteNotificationsApiRequest(List<long>? Ids) : IDeleteApiRequest
 }
 
 /// <summary>POST /api/applicationreviews/{id}/create-notifications &#x2192; List&lt;<see cref="NotificationEmail"/>&gt;</summary>
-public class PostApplicationreviewsByIdCreateNotificationsApiRequest : IPostApiRequest<object>
+public class PostApplicationreviewsByIdCreateNotificationsApiRequest : IPostApiRequest
 {
     public required System.Guid Id { get; init; }
     public string PostUrl => $"api/applicationreviews/{Id}/create-notifications";
@@ -209,6 +209,15 @@ public class PostVacanciesByIdCreateNotificationsApiRequest : IPostApiRequest<ob
 {
     public required System.Guid Id { get; init; }
     public string PostUrl => $"api/vacancies/{Id}/create-notifications";
+    public object Data { get; set; } = default!;
+}
+
+/// <summary>POST /api/vacancies/{id}/create-notifications/{status} &#x2192; List&lt;<see cref="NotificationEmail"/>&gt;</summary>
+public class PostVacanciesByIdCreateNotificationsByStatusApiRequest : IPostApiRequest<object>
+{
+    public required System.Guid Id { get; init; }
+    public required VacancyStatus Status { get; init; }
+    public string PostUrl => $"api/vacancies/{Id}/create-notifications/{Status}";
     public object Data { get; set; } = default!;
 }
 
