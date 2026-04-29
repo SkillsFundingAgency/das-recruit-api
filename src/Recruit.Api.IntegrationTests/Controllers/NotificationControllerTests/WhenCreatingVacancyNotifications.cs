@@ -1,8 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControllerTests;
 
@@ -11,7 +11,6 @@ public class WhenCreatingVacancyNotifications: BaseFixture
     [Test]
     [RecursiveMoqInlineAutoData(VacancyStatus.Draft)]
     [RecursiveMoqInlineAutoData(VacancyStatus.Live)]
-    [RecursiveMoqInlineAutoData(VacancyStatus.Closed)]
     public async Task And_No_Handler_Is_Registered_For_The_Status_Then_NotImplemented_Returned(VacancyStatus status, VacancyEntity vacancy)
     {
         // arrange
@@ -19,7 +18,7 @@ public class WhenCreatingVacancyNotifications: BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
         
         // act
-        var response = await Client.PostAsync($"{RouteNames.Vacancies}/{vacancy.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostVacanciesByIdCreateNotificationsApiRequest { Id = vacancy.Id }.PostUrl, null);
         var errors = await response.Content.ReadAsAsync<ProblemDetails>();
         
         // assert
@@ -35,7 +34,7 @@ public class WhenCreatingVacancyNotifications: BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.Vacancies}/{id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostVacanciesByIdCreateNotificationsApiRequest { Id = id }.PostUrl, null);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);

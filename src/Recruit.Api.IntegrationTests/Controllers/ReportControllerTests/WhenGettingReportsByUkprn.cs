@@ -1,7 +1,7 @@
-﻿using SFA.DAS.Recruit.Api.Core;
-using SFA.DAS.Recruit.Api.Domain.Entities;
+﻿using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ReportControllerTests;
@@ -19,7 +19,7 @@ internal class WhenGettingReportsByUkprn : BaseFixture
         Server.DataContext.Setup(x => x.ReportEntities).ReturnsDbSet(items);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Reports}/{expected.Criteria?.Ukprn}/provider");
+        var response = await Client.GetAsync(new GetReportsByUkprnProviderApiRequest((int)expected.Criteria!.Ukprn).GetUrl);
         var reports = await response.Content.ReadAsAsync<List<Report>>();
 
         // assert

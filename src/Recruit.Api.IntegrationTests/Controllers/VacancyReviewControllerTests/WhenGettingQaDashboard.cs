@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyReviewControllerTests;
 internal class WhenGettingQaDashboard : BaseFixture
@@ -25,7 +25,7 @@ internal class WhenGettingQaDashboard : BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet(vacancyEntities);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.VacancyReviews}/qa/dashboard");
+        var response = await Client.GetAsync(new GetVacancyreviewsQaDashboardApiRequest().GetUrl);
         var qaDashboard = await response.Content.ReadAsAsync<QaDashboard>();
 
         // assert
@@ -48,7 +48,7 @@ internal class WhenGettingQaDashboard : BaseFixture
         Server.DataContext.Setup(x => x.VacancyReviewEntities).ReturnsDbSet(items);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.VacancyReviews}/qa/dashboard");
+        var response = await Client.GetAsync(new GetVacancyreviewsQaDashboardApiRequest().GetUrl);
         var qaDashboard = await response.Content.ReadAsAsync<QaDashboard>();
 
         // assert
@@ -65,7 +65,7 @@ internal class WhenGettingQaDashboard : BaseFixture
     public async Task Then_InternalServerException_Is_Returned()
     {
         // act
-        var response = await Client.GetAsync($"{RouteNames.VacancyReviews}/qa/dashboard");
+        var response = await Client.GetAsync(new GetVacancyreviewsQaDashboardApiRequest().GetUrl);
         var errors = await response.Content.ReadAsAsync<ProblemDetails>();
 
         // assert

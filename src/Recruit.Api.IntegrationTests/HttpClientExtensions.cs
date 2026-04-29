@@ -11,7 +11,7 @@ public static class HttpClientExtensions
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(patchDocument);
 
-        // IMPORTANT: System.Json.Text.JsonSerializer does not serialise JsonPatchDocument correctly 
+        // IMPORTANT: System.Json.Text.JsonSerializer does not serialise JsonPatchDocument correctly
         string stringContent = JsonConvert.SerializeObject(patchDocument);
         var requestContent = new StringContent(stringContent, System.Text.Encoding.UTF8, "application/json-patch+json");
         return client.PatchAsync(requestUri, requestContent);

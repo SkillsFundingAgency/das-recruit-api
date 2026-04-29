@@ -1,9 +1,9 @@
-﻿using SFA.DAS.Recruit.Api.Core;
-using SFA.DAS.Recruit.Api.Domain.Entities;
+﻿using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
@@ -33,7 +33,7 @@ public class WhenGettingVacanciesByUkprn: BaseFixture
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(applicationReviewItems);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Provider}/{ukprn}/{RouteElements.Vacancies}");
+        var response = await Client.GetAsync(new GetProviderByUkprnVacanciesApiRequest(ukprn, null, null, null, null, null, null).GetUrl);
         var pagedResponse = await response.Content.ReadAsAsync<PagedResponse<VacancySummary>>();
 
         // assert
@@ -71,7 +71,7 @@ public class WhenGettingVacanciesByUkprn: BaseFixture
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet(applicationReviewItems);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Provider}/{ukprn}/{RouteElements.Vacancies}?page=3&pageSize=10&sortOrder=Asc");
+        var response = await Client.GetAsync(new GetProviderByUkprnVacanciesApiRequest(ukprn, 3, 10, SFA.DAS.Recruit.Contracts.ApiResponses.SortOrder.Asc, null, null, null).GetUrl);
         var pagedResponse = await response.Content.ReadAsAsync<PagedResponse<VacancySummary>>();
 
         // assert

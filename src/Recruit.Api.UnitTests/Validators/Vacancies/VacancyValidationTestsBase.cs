@@ -14,7 +14,6 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Validators.Vacancies;
 public abstract class VacancyValidationTestsBase
 {
     private readonly Mock<IProhibitedContentRepository> _prohibitedContentRepository = new();
-    private readonly IExternalWebsiteHealthCheckService _externalWebsiteHealthCheckService;
     private readonly IHtmlSanitizerService _htmlSanitizerService = new HtmlSanitizerService();
     protected TimeProvider TimeProvider = new FakeTimeProvider(new DateTimeOffset(DateTime.UtcNow));
     protected readonly Mock<IMinimumWageProvider> MinimumWageProvider;
@@ -25,7 +24,6 @@ public abstract class VacancyValidationTestsBase
         externalWebsiteMessageHandler.Protected()
             .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync((HttpRequestMessage _, CancellationToken _) => new HttpResponseMessage(HttpStatusCode.OK));
-        _externalWebsiteHealthCheckService = new ExternalWebsiteHealthCheckService(Mock.Of<ILogger<ExternalWebsiteHealthCheckService>>(), new HttpClient(externalWebsiteMessageHandler.Object));
         _prohibitedContentRepository
             .Setup(x => x.GetByContentTypeAsync(ProhibitedContentType.Profanity,
                 It.IsAny<CancellationToken>())).ReturnsAsync([
@@ -53,7 +51,7 @@ public abstract class VacancyValidationTestsBase
     {
         get
         {
-            var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object, _htmlSanitizerService, TimeProvider, _externalWebsiteHealthCheckService, MinimumWageProvider.Object);
+            var fluentValidator = new VacancyValidator(_prohibitedContentRepository.Object, _htmlSanitizerService, TimeProvider, MinimumWageProvider.Object);
             return new EntityValidator<VacancyRequest, VacancyRuleSet>(fluentValidator);
         }
     }

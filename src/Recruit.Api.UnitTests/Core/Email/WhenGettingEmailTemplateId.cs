@@ -4,7 +4,8 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email;
 
 public class WhenGettingEmailTemplateId
 {
-    public static object[] ProductionTestCases = {
+    public static readonly object[] ProductionTestCases =
+    [
         new object[] { (ProductionEmailTemplateIds x) => x.ApplicationSharedWithEmployer, new Guid("53058846-e369-4396-87b2-015c9d16360a") },
         new object[] { (ProductionEmailTemplateIds x) => x.ApplicationSubmittedToEmployerDaily, new Guid("1c8c9e72-86c1-4fd1-8020-f4fe354a6e79") },
         new object[] { (ProductionEmailTemplateIds x) => x.ApplicationSubmittedToEmployerImmediate, new Guid("e07a6992-4d17-4167-b526-2ead6fe9ad4d") },
@@ -21,7 +22,8 @@ public class WhenGettingEmailTemplateId
         new object[] { (ProductionEmailTemplateIds x) => x.ProviderVacancyRejectedByEmployer, new Guid("8df54598-fea3-45c2-83f3-cca010a6443c") },
         new object[] { (ProductionEmailTemplateIds x) => x.ProviderVacancySentForEmployerReview, new Guid("2b69c0b2-bcc0-4988-82b6-868874e5617b") },
         new object[] { (ProductionEmailTemplateIds x) => x.SharedApplicationReviewedByEmployer, new Guid("2f1b70d4-c722-4815-85a0-80a080eac642") },
-    };
+        new object[] { (ProductionEmailTemplateIds x) => x.VacancyWithdrawnByQa, new Guid("fb61e9bb-cb49-49c9-8f5d-609ff9d22ac5") }
+    ];
     
     [TestCaseSource(nameof(ProductionTestCases))]
     public void Then_The_Production_Template_Ids_Are_Correct(Func<ProductionEmailTemplateIds, Guid> func, Guid expectedGuid)
@@ -37,7 +39,8 @@ public class WhenGettingEmailTemplateId
 
     }
     
-    public static object[] DevelopmentTestCases = {
+    public static readonly object[] DevelopmentTestCases =
+    [
         new object[] { (DevelopmentEmailTemplateIds x) => x.ApplicationSharedWithEmployer, new Guid("f6fc57e6-7318-473d-8cb5-ca653035391a") },
         new object[] { (DevelopmentEmailTemplateIds x) => x.ApplicationSubmittedToEmployerDaily, new Guid("b793a50f-49f0-4b3f-a4c3-46a8f857e48c") },
         new object[] { (DevelopmentEmailTemplateIds x) => x.ApplicationSubmittedToEmployerImmediate, new  Guid("8aedd294-fd12-4b77-b4b8-2066744e1fdc") },
@@ -54,7 +57,8 @@ public class WhenGettingEmailTemplateId
         new object[] { (DevelopmentEmailTemplateIds x) => x.ProviderVacancyRejectedByEmployer, new Guid("6e663255-c59d-4964-bcbe-b5881a14c530") },
         new object[] { (DevelopmentEmailTemplateIds x) => x.ProviderVacancySentForEmployerReview, new Guid("83f6cede-31c3-4dc9-b2ec-922856ba9bdc") },
         new object[] { (DevelopmentEmailTemplateIds x) => x.SharedApplicationReviewedByEmployer, new Guid("feb4191d-a373-4040-9bc6-93c09d8039b5") },
-    };
+        new object[] { (DevelopmentEmailTemplateIds x) => x.VacancyWithdrawnByQa, new Guid("7e49460e-14fb-401d-981d-b0dd9510fd5e") }
+    ];
     
     [TestCaseSource(nameof(DevelopmentTestCases))]
     public void Then_The_Development_Template_Ids_Are_Correct(Func<DevelopmentEmailTemplateIds, Guid> func, Guid expectedGuid)

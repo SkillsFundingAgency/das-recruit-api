@@ -28,15 +28,16 @@ public class WhenPuttingVacancy
         var entity = request.ToDomain(id);
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyEntity>(), token))
-            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
+            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, false, true));
 
         // act
         var result = await sut.PutOne(repository.Object, userRepository.Object, eventsService.Object,validator.Object, id, request,null, false, token);
 
         // assert
-        result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
+        result.Should().BeOfType<Ok<SFA.DAS.Recruit.Api.Models.Vacancy>>();
         eventsService.Verify(x => x.PublishVacancyClosedEvent(entity), Times.Once);
     }
+    
     [Test, RecruitAutoData]
     public async Task Then_The_Vacancy_Closed_Event_Is_Not_Raised_When_The_Record_Is_Not_Set_To_Closed(
         Guid id,
@@ -53,13 +54,13 @@ public class WhenPuttingVacancy
         var entity = request.ToDomain(id);
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyEntity>(), token))
-            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, true));
+            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(entity, false, true));
 
         // act
         var result = await sut.PutOne(repository.Object, userRepository.Object, eventsService.Object,validator.Object, id, request,null, false, token);
 
         // assert
-        result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
+        result.Should().BeOfType<Ok<SFA.DAS.Recruit.Api.Models.Vacancy>>();
         eventsService.Verify(x => x.PublishVacancyClosedEvent(It.IsAny<VacancyEntity>()), Times.Never);
     }
 }

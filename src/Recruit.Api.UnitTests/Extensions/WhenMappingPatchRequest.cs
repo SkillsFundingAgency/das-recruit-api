@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.JsonPatch;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 
@@ -11,7 +11,7 @@ internal class WhenMappingPatchRequest
     {
         // act
         var result = source.ToEntity();
-        
+
         // assert
         result.Should().BeEquivalentTo(source);
     }
