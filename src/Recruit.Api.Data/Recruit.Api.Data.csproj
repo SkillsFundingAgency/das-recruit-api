@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>SFA.DAS.Recruit.Api.Data</RootNamespace>
     <AssemblyName>SFA.DAS.Recruit.Api.Data</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -11,8 +11,8 @@
   <ItemGroup>
     <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.12" />
     <PackageReference Include="HotChocolate.Types.OffsetPagination" Version="15.1.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.21" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using SFA.DAS.Encoding;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControllerTests;
 
@@ -24,7 +24,7 @@ public class WhenCreatingApplicationReviewNotificationsForSharedApplicationsEmai
         Server.DataContext.Setup(x => x.UserEmployerAccountEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReviews[1].Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReviews[1].Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
 
         // assert
@@ -67,7 +67,7 @@ public class WhenCreatingApplicationReviewNotificationsForSharedApplicationsEmai
             .Returns(expectedHashedAccountId);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReview.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReview.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
 
         // assert

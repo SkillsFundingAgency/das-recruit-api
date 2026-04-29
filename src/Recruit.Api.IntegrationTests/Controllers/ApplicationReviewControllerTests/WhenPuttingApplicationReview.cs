@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ApplicationReviewControllerTests;
 
@@ -19,7 +19,7 @@ public class WhenPuttingApplicationReview : BaseFixture
         request.AccountLegalEntityId = 0;
         
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.ApplicationReview}/{id}", request);
+        var response = await Client.PutAsJsonAsync(new PutApplicationreviewsByApplicationIdApiRequest { ApplicationId = id }.PutUrl, request);
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert

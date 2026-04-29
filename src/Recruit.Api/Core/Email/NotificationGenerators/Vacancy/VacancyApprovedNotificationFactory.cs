@@ -21,7 +21,9 @@ public class VacancyApprovedNotificationFactory(
     
     public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, Dictionary<string, string> data, CancellationToken cancellationToken)
     {
-        if (vacancy is not { Status: VacancyStatus.Approved })
+        // approved is a transitory status on the way to live so permit both, if we're handling
+        // a live vacancy here then the override status will have been used
+        if (vacancy is not { Status: VacancyStatus.Approved or VacancyStatus.Live})
         {
             return new RecruitNotificationsResult();
         }

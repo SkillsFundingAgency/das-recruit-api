@@ -159,7 +159,7 @@ public static class VacancyEmployerExtension
         });
     }
 
-    public static void VacancyEmployerWebsiteValidation(this IRuleBuilderInitial<VacancyRequest, string?> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    public static void VacancyEmployerWebsiteValidation(this IRuleBuilderInitial<VacancyRequest, string?> rule)
     {
         rule
         .Cascade(CascadeMode.Stop)                
@@ -172,7 +172,7 @@ public static class VacancyEmployerExtension
             .WithErrorCode("82")
             .WithState(_ => VacancyRuleSet.EmployerWebsiteUrl)
             .When(v => !string.IsNullOrEmpty(v.EmployerWebsiteUrl))
-            .MustBeValidWebsiteAsync(externalWebsiteHealthCheckService)
+            .MustBeValidWebsiteAsync()
             .WithMessage("Enter a valid website address")
             .WithErrorCode("86")
             .WithState(_ => VacancyRuleSet.EmployerWebsiteUrl)

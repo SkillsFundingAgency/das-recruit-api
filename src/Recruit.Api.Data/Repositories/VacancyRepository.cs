@@ -372,8 +372,10 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             entity.VacancyReference ??= (await GetNextVacancyReferenceAsync(cancellationToken)).Value;
             await dataContext.VacancyEntities.AddAsync(entity, cancellationToken);
             await dataContext.SaveChangesAsync(cancellationToken);
-            return UpsertResult.Create(entity, true);
+            return UpsertResult.Create(entity, true, false); // do we want to notify on create?
         }
+
+        var oldStatus = existingEntity.Status;
 
         //FAI-2857 - temp setting of review requested by user id so it isnt over-written 
         if (existingEntity.ReviewRequestedByUserId != null && entity.ReviewRequestedByUserId == null && entity.TransferInfo == null)
@@ -388,7 +390,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
 
         dataContext.SetValues(existingEntity, entity);
         await dataContext.SaveChangesAsync(cancellationToken);
-        return UpsertResult.Create(entity, false);
+        return UpsertResult.Create(entity, false, oldStatus != existingEntity.Status);
     }
 
     public async Task<bool> DeleteOneAsync(Guid key, CancellationToken cancellationToken)

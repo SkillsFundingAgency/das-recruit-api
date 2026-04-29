@@ -85,7 +85,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
 
         try
         {
-            var (entity, created) = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+            var (entity, created, _) = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
             if (!created)
             {
                 return TypedResults.Ok(entity.ToPutResponse());
@@ -116,7 +116,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
         }
     }
     
-    [HttpPatch]
+    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

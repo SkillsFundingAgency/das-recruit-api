@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.NotificationControllerTests;
 
@@ -24,7 +24,7 @@ public class WhenCreatingApplicationReviewNotifications : BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReviews[1].Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReviews[1].Id }.PostUrl, null);
         var errors = await response.Content.ReadAsAsync<ProblemDetails>();
 
         // assert
@@ -40,7 +40,7 @@ public class WhenCreatingApplicationReviewNotifications : BaseFixture
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = id }.PostUrl, null);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -55,7 +55,7 @@ public class WhenCreatingApplicationReviewNotifications : BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReviews[1].Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReviews[1].Id }.PostUrl, null);
         var errors = await response.Content.ReadAsAsync<ProblemDetails>();
 
         // assert

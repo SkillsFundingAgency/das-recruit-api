@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Models.Requests.EmployerProfile;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.EmployerProfileControllerTests;
 
@@ -12,7 +12,7 @@ public class WhenPuttingAnEmployerProfile : BaseFixture
     public async Task Then_Without_Required_Fields_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.EmployerProfile}/1", new {});
+        var response = await Client.PutAsJsonAsync(new PutEmployerProfilesByAccountLegalEntityIdApiRequest { AccountLegalEntityId = 1 }.PutUrl, new {});
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert

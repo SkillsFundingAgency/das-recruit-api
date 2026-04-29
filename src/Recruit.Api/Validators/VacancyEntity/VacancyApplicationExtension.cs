@@ -9,7 +9,7 @@ namespace SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 public static class VacancyApplicationExtension
 {
-    public static void VacancyApplicationMethodValidation(this IRuleBuilderInitial<VacancyRequest, VacancyRequest> rule, IProhibitedContentRepository profanityListProvider, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    public static void VacancyApplicationMethodValidation(this IRuleBuilderInitial<VacancyRequest, VacancyRequest> rule, IProhibitedContentRepository profanityListProvider)
     {
         rule.ChildRules(c =>
         {
@@ -43,13 +43,13 @@ public static class VacancyApplicationExtension
 
             c.When(x => x.ApplicationMethod == ApplicationMethod.ThroughExternalApplicationSite, () =>
             {
-                c.RuleFor(x=>x.ApplicationUrl!).VacancyApplicationUrlValidation(externalWebsiteHealthCheckService);
+                c.RuleFor(x=>x.ApplicationUrl!).VacancyApplicationUrlValidation();
                 c.RuleFor(x=>x.ApplicationInstructions!).VacancyApplicationInstructionsValidation(profanityListProvider);
             });
         });
         
     }
-    private static void VacancyApplicationUrlValidation(this IRuleBuilderInitial<VacancyRequest, string> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    private static void VacancyApplicationUrlValidation(this IRuleBuilderInitial<VacancyRequest, string> rule)
     {
         rule
             .Cascade(CascadeMode.Stop)
@@ -65,7 +65,7 @@ public static class VacancyApplicationExtension
             .WithMessage("Application website link must be a valid link")
             .WithErrorCode("86")
             .WithState(_ => VacancyRuleSet.ApplicationMethod)
-            .MustBeValidWebsiteAsync(externalWebsiteHealthCheckService)
+            .MustBeValidWebsiteAsync()
             .WithMessage("Enter a valid website address")
             .WithErrorCode("86.1")
             .WithState(_ => VacancyRuleSet.ApplicationMethod)

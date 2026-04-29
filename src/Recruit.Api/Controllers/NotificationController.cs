@@ -143,4 +143,43 @@ public class NotificationController : ControllerBase
             return ex.ToResponse();
         }
     }
+    
+    [HttpPost, Route($"~/{RouteNames.Vacancies}/{{id:guid}}/create-notifications/{{status}}")]
+    [ProducesResponseType(typeof(IEnumerable<NotificationEmail>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    public async Task<IResult> CreateVacancyNotificationsForStatus(
+        [FromServices] IVacancyRepository vacancyRepository,
+        [FromServices] INotificationsRepository notificationsRepository,
+        [FromServices] IVacancyNotificationStrategy strategy,
+        [FromServices] IEmailFactory emailFactory,
+        [FromRoute] Guid id,
+        [FromRoute] VacancyStatus status,
+        [FromBody] Dictionary<string, string>? data,
+        CancellationToken cancellationToken
+    )
+    {
+        var vacancy = await vacancyRepository.GetOneAsync(id, cancellationToken);
+        if (vacancy is null)
+        {
+            return TypedResults.NotFound("The specified vacancy does not exist");
+        }
+
+        try
+        {
+            var notificationFactory = strategy.Create(vacancy, status);
+            var recruitNotifications = await notificationFactory.CreateAsync(vacancy, data ?? [], cancellationToken);
+            if (recruitNotifications.Delayed is { Count: > 0 })
+            {
+                await notificationsRepository.InsertManyAsync(recruitNotifications.Delayed, cancellationToken);
+            }
+            var results = emailFactory.CreateFrom(recruitNotifications.Immediate);
+            return TypedResults.Ok(results);
+        }
+        catch (EntityStateNotSupportedException ex)
+        {
+            return ex.ToResponse();
+        }
+    }
 }
