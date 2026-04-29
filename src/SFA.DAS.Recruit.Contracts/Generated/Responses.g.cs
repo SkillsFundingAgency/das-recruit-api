@@ -174,36 +174,6 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ApplicationReviewJsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<ApplicationReviewOperation>? Operations { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ApplicationReviewOperation
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("path")]
-        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Path { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("op")]
-        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Op { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("from")]
-        [Newtonsoft.Json.JsonProperty("from", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? From { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? Value { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class ApplicationReviewReport
     {
         [System.Text.Json.Serialization.JsonPropertyName("applicationId")]
@@ -861,15 +831,6 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class JsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Operation>? Operations { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class NotificationEmail
     {
         [System.Text.Json.Serialization.JsonPropertyName("templateId")]
@@ -1007,6 +968,34 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("value")]
         [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public object? Value { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    public enum OperationType
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Add")]
+        Add = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Remove")]
+        Remove = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Replace")]
+        Replace = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Move")]
+        Move = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Copy")]
+        Copy = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Test")]
+        Test = 5,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Invalid")]
+        Invalid = 6,
 
     }
 
@@ -2501,36 +2490,6 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class RecruitUserJsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<RecruitUserOperation>? Operations { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class RecruitUserOperation
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("path")]
-        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Path { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("op")]
-        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Op { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("from")]
-        [Newtonsoft.Json.JsonProperty("from", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? From { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? Value { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class Report
     {
         [System.Text.Json.Serialization.JsonPropertyName("id")]
@@ -3143,36 +3102,6 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyJsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<VacancyOperation>? Operations { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyOperation
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("path")]
-        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Path { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("op")]
-        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Op { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("from")]
-        [Newtonsoft.Json.JsonProperty("from", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? From { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? Value { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class VacancyPagedResponse
     {
         [System.Text.Json.Serialization.JsonPropertyName("pageInfo")]
@@ -3294,36 +3223,6 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public OwnerType OwnerType { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyReviewJsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<VacancyReviewOperation>? Operations { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyReviewOperation
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("path")]
-        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Path { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("op")]
-        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Op { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("from")]
-        [Newtonsoft.Json.JsonProperty("from", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? From { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? Value { get; set; } = default!;
 
     }
 

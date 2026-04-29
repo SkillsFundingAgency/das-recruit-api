@@ -444,7 +444,7 @@ public class VacancyController : Controller
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
     
-    [HttpPatch, Route("{vacancyId:guid}")]
+    [HttpPatch, Route("{vacancyId:guid}"), Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

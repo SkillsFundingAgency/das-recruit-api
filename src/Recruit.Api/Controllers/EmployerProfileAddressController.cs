@@ -56,7 +56,7 @@ public class EmployerProfileAddressController: ControllerBase
         return TypedResults.Created($"/{RouteNames.EmployerProfile}/{result.Entity.AccountLegalEntityId}/{RouteElements.EmployerProfileAddresses}/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
     
-    [HttpPatch, Route("{id:int}")]
+    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json"), Route("{id:int}")]
     [ProducesResponseType(typeof(EmployerProfileAddress), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

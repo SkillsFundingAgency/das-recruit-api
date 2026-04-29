@@ -29,11 +29,11 @@ public class PutApplicationreviewsByApplicationIdApiRequest : IPutApiRequest<Put
 }
 
 /// <summary>PATCH /api/applicationreviews/{applicationId} &#x2192; <see cref="PatchApplicationReviewResponse"/></summary>
-public class PatchApplicationreviewsByApplicationIdApiRequest : IPatchApiRequest<ApplicationReviewJsonPatchDocument>
+public class PatchApplicationreviewsByApplicationIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required System.Guid ApplicationId { get; init; }
     public string PatchUrl => $"api/applicationreviews/{ApplicationId}";
-    public ApplicationReviewJsonPatchDocument Data { get; set; } = default!;
+    public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/applicationreviews &#x2192; <see cref="GetApplicationReviewResponse"/></summary>
@@ -135,11 +135,11 @@ public record DeleteEmployerProfilesByAccountLegalEntityIdApiRequest(long Accoun
 }
 
 /// <summary>PATCH /api/employer/profiles/{accountLegalEntityId} &#x2192; <see cref="PatchEmployerProfileResponse"/></summary>
-public class PatchEmployerProfilesByAccountLegalEntityIdApiRequest : IPatchApiRequest<JsonPatchDocument>
+public class PatchEmployerProfilesByAccountLegalEntityIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required long AccountLegalEntityId { get; init; }
     public string PatchUrl => $"api/employer/profiles/{AccountLegalEntityId}";
-    public JsonPatchDocument Data { get; set; } = default!;
+    public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/employer/profiles/{accountLegalEntityId}/addresses &#x2192; List&lt;<see cref="EmployerProfileAddress"/>&gt;</summary>
@@ -169,12 +169,12 @@ public record DeleteEmployerProfilesByAccountLegalEntityIdAddressesByIdApiReques
 }
 
 /// <summary>PATCH /api/employer/profiles/{accountLegalEntityId}/addresses/{id} &#x2192; <see cref="EmployerProfileAddress"/></summary>
-public class PatchEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest : IPatchApiRequest<JsonPatchDocument>
+public class PatchEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required long AccountLegalEntityId { get; init; }
     public required int Id { get; init; }
     public string PatchUrl => $"api/employer/profiles/{AccountLegalEntityId}/addresses/{Id}";
-    public JsonPatchDocument Data { get; set; } = default!;
+    public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/notifications/batch/by/date &#x2192; <see cref="GetBatchByDateResponse"/></summary>
@@ -325,11 +325,11 @@ public class PutUserByIdApiRequest : IPutApiRequest<PutUserRequest>
 }
 
 /// <summary>PATCH /api/user/{id} &#x2192; <see cref="RecruitUser"/></summary>
-public class PatchUserByIdApiRequest : IPatchApiRequest<RecruitUserJsonPatchDocument>
+public class PatchUserByIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required System.Guid Id { get; init; }
     public string PatchUrl => $"api/user/{Id}";
-    public RecruitUserJsonPatchDocument Data { get; set; } = default!;
+    public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
 /// <summary>POST /api/user/by/email &#x2192; <see cref="RecruitUser"/></summary>
@@ -386,11 +386,11 @@ public record DeleteVacanciesByVacancyIdApiRequest(System.Guid VacancyId) : IDel
 }
 
 /// <summary>PATCH /api/vacancies/{vacancyId} &#x2192; <see cref="Vacancy"/></summary>
-public class PatchVacanciesByVacancyIdApiRequest : IPatchApiRequest<VacancyJsonPatchDocument>
+public class PatchVacanciesByVacancyIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required System.Guid VacancyId { get; init; }
     public string PatchUrl => $"api/vacancies/{VacancyId}";
-    public VacancyJsonPatchDocument Data { get; set; } = default!;
+    public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/vacancies/{vacancyReference}/live &#x2192; <see cref="Vacancy"/></summary>
@@ -514,11 +514,11 @@ public record DeleteVacancyreviewsByIdApiRequest(System.Guid Id) : IDeleteApiReq
 }
 
 /// <summary>PATCH /api/vacancyreviews/{id} &#x2192; <see cref="VacancyReview"/></summary>
-public class PatchVacancyreviewsByIdApiRequest : IPatchApiRequest<VacancyReviewJsonPatchDocument>
+public class PatchVacancyreviewsByIdApiRequest : IPatchApiRequest<System.Collections.Generic.List<string>>
 {
     public required System.Guid Id { get; init; }
     public string PatchUrl => $"api/vacancyreviews/{Id}";
-    public VacancyReviewJsonPatchDocument Data { get; set; } = default!;
+    public System.Collections.Generic.List<string> Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/vacancies/{vacancyReference}/reviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>

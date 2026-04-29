@@ -208,7 +208,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
+            "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -216,7 +216,7 @@
                 }
               }
             },
-            "application/json": {
+            "application/json-patch+json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -1409,7 +1409,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
+            "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -1417,7 +1417,7 @@
                 }
               }
             },
-            "application/json": {
+            "application/json-patch+json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -1803,7 +1803,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
+            "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -1811,7 +1811,7 @@
                 }
               }
             },
-            "application/json": {
+            "application/json-patch+json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -3683,7 +3683,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
+            "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -3691,7 +3691,7 @@
                 }
               }
             },
-            "application/json": {
+            "application/json-patch+json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -4327,7 +4327,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
+            "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -4335,7 +4335,7 @@
                 }
               }
             },
-            "application/json": {
+            "application/json-patch+json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -5762,7 +5762,7 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
+            "application/json": {
               "schema": {
                 "type": "array",
                 "items": {
@@ -5770,7 +5770,7 @@
                 }
               }
             },
-            "application/json": {
+            "application/json-patch+json": {
               "schema": {
                 "type": "array",
                 "items": {
