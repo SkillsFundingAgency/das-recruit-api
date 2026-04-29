@@ -1,7 +1,7 @@
-﻿using SFA.DAS.Recruit.Api.Core;
-using SFA.DAS.Recruit.Api.Domain.Entities;
+﻿using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 [TestFixture]
@@ -23,7 +23,7 @@ internal class WhenGettingTotalPositionsAvailable : BaseFixture
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet(items);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Vacancies}/{RouteElements.TotalPositionsAvailable}");
+        var response = await Client.GetAsync(new GetVacanciesTotalPositionsAvailableApiRequest().GetUrl);
         var payload = await response.Content.ReadAsAsync<TotalPositionsAvailableResponse>();
 
         // assert

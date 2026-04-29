@@ -1,11 +1,13 @@
 ﻿using System.Net;
+using System.Text.Json;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.UnitTests;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyReviewControllerTests;
 
@@ -23,7 +25,7 @@ public class WhenPatchingVacancyReview: BaseFixture
         patchDocument.Add(x => x.ManualOutcome, "manualOutcome");
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.VacancyReviews}/{Guid.NewGuid()}", patchDocument);
+        var response = await Client.PatchAsync(new PatchVacancyreviewsByIdApiRequest { Id = Guid.NewGuid() }.PatchUrl, patchDocument);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -42,7 +44,7 @@ public class WhenPatchingVacancyReview: BaseFixture
         patchDocument.Add(x => x.VacancyReference, new VacancyReference(123));
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.VacancyReviews}/{items[1].Id}", patchDocument);
+        var response = await Client.PatchAsync(new PatchVacancyreviewsByIdApiRequest { Id = items[1].Id }.PatchUrl, patchDocument);
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
 
@@ -66,7 +68,7 @@ public class WhenPatchingVacancyReview: BaseFixture
         patchDocument.Add(x => x.CreatedDate, DateTime.Now);
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.VacancyReviews}/{items[1].Id}", patchDocument);
+        var response = await Client.PatchAsync(new PatchVacancyreviewsByIdApiRequest { Id = items[1].Id }.PatchUrl, patchDocument);
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert
@@ -94,7 +96,7 @@ public class WhenPatchingVacancyReview: BaseFixture
         patchDocument.Add(x => x.ManualOutcome, "manualOutcome");
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.VacancyReviews}/{targetItem.Id}", patchDocument);
+        var response = await Client.PatchAsync(new PatchVacancyreviewsByIdApiRequest { Id = targetItem.Id }.PatchUrl, patchDocument);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);

@@ -1,12 +1,13 @@
 ﻿using System.Net;
+using System.Text.Json;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.User;
 using SFA.DAS.Recruit.Api.UnitTests;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.UserControllerTests;
 
@@ -24,7 +25,7 @@ public class WhenPatchingUser: BaseFixture
         patchDocument.Add(x => x.Email, "email");
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.User}/{Guid.NewGuid()}", patchDocument);
+        var response = await Client.PatchAsync(new PatchUserByIdApiRequest { Id = Guid.NewGuid() }.PatchUrl, patchDocument);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -43,10 +44,11 @@ public class WhenPatchingUser: BaseFixture
             .ReturnsDbSet(items);
     
         var patchDocument = new JsonPatchDocument<RecruitUser>();
+        
         patchDocument.Operations.Add(new Operation<RecruitUser>("replace", path, "some value"));
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.User}/{items[1].Id}", patchDocument);
+        var response = await Client.PatchAsync(new PatchUserByIdApiRequest { Id = items[1].Id }.PatchUrl, patchDocument);
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
     
         // assert
@@ -77,7 +79,7 @@ public class WhenPatchingUser: BaseFixture
         patchDocument.Replace(x => x.EmployerAccountIds, [123, 456]);
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.User}/{targetItem.Id}", patchDocument);
+        var response = await Client.PatchAsync(new PatchUserByIdApiRequest { Id = targetItem.Id }.PatchUrl, patchDocument);
     
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);

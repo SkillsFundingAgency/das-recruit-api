@@ -2,12 +2,12 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
 using SFA.DAS.Recruit.Api.UnitTests;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyReviewControllerTests;
 
@@ -17,7 +17,7 @@ public class WhenPuttingVacancyReview: BaseFixture
     public async Task Then_Without_Required_Fields_Bad_Request_Is_Returned()
     {
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.VacancyReviews}/{Guid.NewGuid()}", new {});
+        var response = await Client.PutAsJsonAsync(new PutVacancyreviewsByIdApiRequest { Id = Guid.NewGuid() }.PutUrl, new {});
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert
@@ -48,7 +48,7 @@ public class WhenPuttingVacancyReview: BaseFixture
             .Create();
         
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.VacancyReviews}/{id}", request);
+        var response = await Client.PutAsJsonAsync(new PutVacancyreviewsByIdApiRequest { Id = id }.PutUrl, request);
         var vacancyReview = await response.Content.ReadAsAsync<VacancyReview>();
 
         // assert
@@ -78,7 +78,7 @@ public class WhenPuttingVacancyReview: BaseFixture
         var request = Fixture.Create<PutVacancyReviewRequest>();
         
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.VacancyReviews}/{targetItem.Id}", request);
+        var response = await Client.PutAsJsonAsync(new PutVacancyreviewsByIdApiRequest { Id = targetItem.Id }.PutUrl, request);
         var vacancyReview = await response.Content.ReadAsAsync<VacancyReview>();
 
         // assert
@@ -119,7 +119,7 @@ public class WhenPuttingVacancyReview: BaseFixture
             .Create();
 
         // act
-        var response = await Client.PutAsJsonAsync($"{RouteNames.VacancyReviews}/{id}", request);
+        var response = await Client.PutAsJsonAsync(new PutVacancyreviewsByIdApiRequest { Id = id }.PutUrl, request);
         var vacancyReview = await response.Content.ReadAsAsync<VacancyReview>();
 
         // assert

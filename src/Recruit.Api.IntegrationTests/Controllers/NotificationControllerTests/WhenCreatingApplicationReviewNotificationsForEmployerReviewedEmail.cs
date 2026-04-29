@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -25,7 +25,7 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
         Server.DataContext.Setup(x => x.UserEmployerAccountEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReviews[1].Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReviews[1].Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
 
         // assert
@@ -100,7 +100,7 @@ public class WhenCreatingApplicationReviewNotificationsForEmployerReviewedEmail:
             .Callback<IEnumerable<RecruitNotificationEntity>>(x => capturedNotifications = x);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReview.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReview.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
 
         // assert

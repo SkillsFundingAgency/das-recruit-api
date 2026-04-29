@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models.Requests.Report;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.ReportControllerTests;
 internal class WhenPostingReport : BaseFixture
@@ -19,7 +19,7 @@ internal class WhenPostingReport : BaseFixture
         var request = Fixture.Create<PostReportRequest>();
 
         // act
-        var response = await Client.PostAsJsonAsync($"{RouteNames.Reports}", request);
+        var response = await Client.PostAsJsonAsync(new PostReportsApiRequest(null!).PostUrl, request);
         var vacancyReview = await response.Content.ReadAsAsync<ReportEntity>();
 
         // assert

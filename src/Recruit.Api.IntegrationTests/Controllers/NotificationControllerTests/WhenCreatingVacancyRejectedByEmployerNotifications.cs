@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -23,7 +23,7 @@ public class WhenCreatingVacancyRejectedByEmployerNotifications: BaseFixture
         Server.DataContext.Setup(x => x.UserEmployerAccountEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.Vacancies}/{vacancy.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostVacanciesByIdCreateNotificationsApiRequest { Id = vacancy.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
 
         // assert
@@ -57,7 +57,7 @@ public class WhenCreatingVacancyRejectedByEmployerNotifications: BaseFixture
         var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
         
         // act
-        var response = await Client.PostAsync($"{RouteNames.Vacancies}/{vacancy.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostVacanciesByIdCreateNotificationsApiRequest { Id = vacancy.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
     
         // assert

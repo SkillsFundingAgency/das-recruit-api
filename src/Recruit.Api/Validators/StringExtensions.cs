@@ -78,8 +78,8 @@ public static class FluentExtensions
         return Uri.TryCreate(arg, UriKind.RelativeOrAbsolute, out _);
     }
         
-    public static IRuleBuilderOptions<T, string> MustBeValidWebsiteAsync<T>(this IRuleBuilder<T, string> rule, IExternalWebsiteHealthCheckService externalWebsiteHealthCheckService)
+    public static IRuleBuilderOptions<T, string> MustBeValidWebsiteAsync<T>(this IRuleBuilder<T, string> rule)
     {
-        return rule.SetAsyncValidator(new WebsiteValidator<T, string>(externalWebsiteHealthCheckService));
+        return rule.SetAsyncValidator(new WebsiteValidator<T, string>());
     }
 }

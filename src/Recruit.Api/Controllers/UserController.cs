@@ -175,7 +175,7 @@ public class UserController
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
     
-    [HttpPatch, Route("{id:guid}")]
+    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json"), Route("{id:guid}")]
     [ProducesResponseType(typeof(RecruitUser), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
