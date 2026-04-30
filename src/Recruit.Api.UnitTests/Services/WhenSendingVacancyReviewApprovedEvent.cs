@@ -40,7 +40,7 @@ public class WhenSendingVacancyReviewApprovedEvent
             Id = vacancyReviewId,
             Status = ReviewStatus.Closed,
             VacancySnapshot = $"{{\"id\": \"{vacancyId}\"}}",
-            ManualOutcome = nameof(manualQaOutcome),
+            ManualOutcome = manualQaOutcome.ToString(),
             SubmissionCount = 1
         };
 
