@@ -10,8 +10,11 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Services;
 
 public class WhenSendingVacancyReviewApprovedEvent
 {
-    [Test, MoqAutoData]
+    [Test]
+    [MoqInlineAutoData(ManualQaOutcome.Approved)]
+    [MoqInlineAutoData(ManualQaOutcome.Bypassed)]
     public async Task Then_The_Vacancy_Review_Approved_Event_Is_Published(
+        ManualQaOutcome manualQaOutcome,
         Guid vacancyId,
         Guid vacancyReviewId,
         [Frozen] Mock<IMessageSession> messageSession,
@@ -37,7 +40,7 @@ public class WhenSendingVacancyReviewApprovedEvent
             Id = vacancyReviewId,
             Status = ReviewStatus.Closed,
             VacancySnapshot = $"{{\"id\": \"{vacancyId}\"}}",
-            ManualOutcome = nameof(ManualQaOutcome.Approved),
+            ManualOutcome = nameof(manualQaOutcome),
             SubmissionCount = 1
         };
 
