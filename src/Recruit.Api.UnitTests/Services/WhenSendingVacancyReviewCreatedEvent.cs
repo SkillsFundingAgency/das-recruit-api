@@ -1,5 +1,6 @@
 ﻿using NServiceBus;
 using SFA.DAS.Recruit.Api.Core.Events;
+using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -56,7 +57,7 @@ public class WhenSendingVacancyReviewCreatedEvent
             .Returns(Task.CompletedTask);
 
         // act
-        await eventsService.PublishVacancyReviewCreatedEventAsync(entity);
+        await eventsService.HandleVacancyReviewStatusChange(UpsertResult.Create(entity, true, true));
 
         // assert
         capturedEvent.Should().NotBeNull();
