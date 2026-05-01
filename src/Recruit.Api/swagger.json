@@ -6740,6 +6740,13 @@
         ],
         "type": "string"
       },
+      "ArchiveType": {
+        "enum": [
+          "Auto",
+          "Manual"
+        ],
+        "type": "string"
+      },
       "AvailableWhere": {
         "enum": [
           "OneLocation",
@@ -7005,7 +7012,8 @@
           "EmployerReviewedApplications",
           "NewSharedApplications",
           "AllSharedApplications",
-          "Dashboard"
+          "Dashboard",
+          "Archived"
         ],
         "type": "string"
       },
@@ -7598,6 +7606,9 @@
           "sourceType": {
             "$ref": "#/components/schemas/SourceType"
           },
+          "archiveType": {
+            "$ref": "#/components/schemas/ArchiveType"
+          },
           "sourceVacancyReference": {
             "type": "integer",
             "format": "int64",
@@ -7644,6 +7655,11 @@
             "nullable": true
           },
           "closingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "archivedDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -7817,6 +7833,10 @@
             "nullable": true
           },
           "reviewRequestedByUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "archivedByUserId": {
             "type": "string",
             "nullable": true
           },
@@ -8295,6 +8315,9 @@
           "sourceType": {
             "$ref": "#/components/schemas/SourceType"
           },
+          "archiveType": {
+            "$ref": "#/components/schemas/ArchiveType"
+          },
           "sourceVacancyReference": {
             "type": "integer",
             "format": "int64",
@@ -8341,6 +8364,11 @@
             "nullable": true
           },
           "closingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "archivedDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -8514,6 +8542,10 @@
             "nullable": true
           },
           "reviewRequestedByUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "archivedByUserId": {
             "type": "string",
             "nullable": true
           },
@@ -9153,6 +9185,14 @@
           "sourceType": {
             "$ref": "#/components/schemas/SourceType"
           },
+          "archiveType": {
+            "$ref": "#/components/schemas/ArchiveType"
+          },
+          "archivedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "sourceVacancyReference": {
             "type": "integer",
             "format": "int64",
@@ -9378,6 +9418,11 @@
             "nullable": true
           },
           "reviewRequestedByUserId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "archivedByUserId": {
             "type": "string",
             "format": "uuid",
             "nullable": true
@@ -9729,7 +9774,8 @@
           "Referred",
           "Live",
           "Closed",
-          "Approved"
+          "Approved",
+          "Archived"
         ],
         "type": "string"
       },
