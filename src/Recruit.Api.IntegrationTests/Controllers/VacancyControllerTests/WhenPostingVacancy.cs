@@ -117,6 +117,7 @@ public class WhenPostingVacancy: BaseFixture
         vacancy.Should().BeEquivalentTo(request, opt => opt
             .Excluding(x => x.SubmittedByUserId)
             .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x => x.ArchivedByUserId)
             .Excluding(x=>x.Wage!.ApprenticeMinimumWage)
             .Excluding(x=>x.Wage!.Under18NationalMinimumWage)
             .Excluding(x=>x.Wage!.Between18AndUnder21NationalMinimumWage)

@@ -12,6 +12,7 @@ CREATE TABLE dbo.[Vacancy] (
     [SourceOrigin]                              nvarchar(20)        NULL, -- max is currently 12 chars
     [SourceType]                                nvarchar(20)        NULL, -- max is currently 9 chars
     [SourceVacancyReference]                    bigint              NULL,
+    [ArchiveType]                               nvarchar(20)        NULL, -- max is currently 12 chars
     [ApprovedDate]                              datetime            NULL,
     [CreatedDate]                               datetime            NOT NULL default CURRENT_TIMESTAMP,
     [LastUpdatedDate]                           datetime            NULL,
@@ -22,13 +23,15 @@ CREATE TABLE dbo.[Vacancy] (
     [LiveDate]                                  datetime            NULL,
     [StartDate]                                 datetime            NULL,
     [ClosingDate]                               datetime            NULL,
+    [ArchivedDate]                              datetime            NULL,
     [SubmittedByUserId]                         uniqueidentifier    NULL,
     [ReviewRequestedByUserId]                   uniqueidentifier    NULL,
+    [ArchivedByUserId]                          uniqueidentifier    NULL,
     [ReviewCount]                               int                 NOT NULL default 0,
     [ApplicationUrl]                            nvarchar(2000)      NULL, -- validation currently allows 2000
     [ApplicationMethod]                         nvarchar(50)        NULL, -- max is currently 30 chars
-    [ApplicationInstructions]                   nvarchar(1000)       NULL,
-    [ShortDescription]                          nvarchar(max)      NULL,
+    [ApplicationInstructions]                   nvarchar(1000)      NULL,
+    [ShortDescription]                          nvarchar(max)       NULL,
     [Description]                               nvarchar(max)       NULL,
     [AnonymousReason]                           nvarchar(1000)      NULL,
     [DisabilityConfident]                       bit                 NULL,

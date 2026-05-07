@@ -72,6 +72,7 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
 
     [HttpGet]
     [Route($"~/{RouteNames.ApplicationReview}/{{vacancyReference}}")]
+    [Route($"~/{RouteNames.Vacancies}/byRef/{{vacancyReference:long}}/{RouteElements.ApplicationReview}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(List<GetApplicationReviewResponse>), StatusCodes.Status200OK)]
@@ -92,6 +93,32 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
         catch (Exception e)
         {
             logger.LogError(e, "Unable to Get application reviews by vacancyReference : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
+    [Route($"~/{RouteNames.Vacancies}/byId/{{vacancyId:guid}}/{RouteElements.ApplicationReview}")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(List<GetApplicationReviewResponse>), StatusCodes.Status200OK)]
+    public async Task<IResult> GetManyByVacancyId(
+        [FromRoute][Required] Guid vacancyId,
+        CancellationToken token)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received query to get all application reviews by vacancyId : {Id}", vacancyId);
+
+            var response = await provider.GetAllByVacancyId(vacancyId, token);
+
+            return response is null or { Count: 0 }
+                ? Results.NotFound()
+                : TypedResults.Ok(response.ToGetResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to Get application reviews by vacancyId : An error occurred");
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }

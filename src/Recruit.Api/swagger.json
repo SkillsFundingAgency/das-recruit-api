@@ -544,6 +544,162 @@
         }
       }
     },
+    "/api/vacancies/byref/{vacancyReference}/applicationreviews": {
+      "get": {
+        "tags": [
+          "ApplicationReview"
+        ],
+        "parameters": [
+          {
+            "name": "vacancyReference",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetApplicationReviewResponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetApplicationReviewResponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetApplicationReviewResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/vacancies/byid/{vacancyId}/applicationreviews": {
+      "get": {
+        "tags": [
+          "ApplicationReview"
+        ],
+        "parameters": [
+          {
+            "name": "vacancyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetApplicationReviewResponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetApplicationReviewResponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetApplicationReviewResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/applicationreviews/{vacancyReference}/candidate/{candidateId}": {
       "get": {
         "tags": [
@@ -6740,6 +6896,13 @@
         ],
         "type": "string"
       },
+      "ArchiveType": {
+        "enum": [
+          "Auto",
+          "Manual"
+        ],
+        "type": "string"
+      },
       "AvailableWhere": {
         "enum": [
           "OneLocation",
@@ -7599,6 +7762,9 @@
           "sourceType": {
             "$ref": "#/components/schemas/SourceType"
           },
+          "archiveType": {
+            "$ref": "#/components/schemas/ArchiveType"
+          },
           "sourceVacancyReference": {
             "type": "integer",
             "format": "int64",
@@ -7645,6 +7811,11 @@
             "nullable": true
           },
           "closingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "archivedDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -7818,6 +7989,10 @@
             "nullable": true
           },
           "reviewRequestedByUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "archivedByUserId": {
             "type": "string",
             "nullable": true
           },
@@ -8296,6 +8471,9 @@
           "sourceType": {
             "$ref": "#/components/schemas/SourceType"
           },
+          "archiveType": {
+            "$ref": "#/components/schemas/ArchiveType"
+          },
           "sourceVacancyReference": {
             "type": "integer",
             "format": "int64",
@@ -8342,6 +8520,11 @@
             "nullable": true
           },
           "closingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "archivedDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -8515,6 +8698,10 @@
             "nullable": true
           },
           "reviewRequestedByUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "archivedByUserId": {
             "type": "string",
             "nullable": true
           },
@@ -9154,6 +9341,14 @@
           "sourceType": {
             "$ref": "#/components/schemas/SourceType"
           },
+          "archiveType": {
+            "$ref": "#/components/schemas/ArchiveType"
+          },
+          "archivedDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "sourceVacancyReference": {
             "type": "integer",
             "format": "int64",
@@ -9379,6 +9574,11 @@
             "nullable": true
           },
           "reviewRequestedByUserId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "archivedByUserId": {
             "type": "string",
             "format": "uuid",
             "nullable": true

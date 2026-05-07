@@ -17,6 +17,7 @@ public class VacancyEntity
     public OwnerType? OwnerType {get; set;}
     public SourceOrigin? SourceOrigin {get; set;}
     public SourceType? SourceType {get; set;}
+    public ArchiveType? ArchiveType {get; set; }
     public long? SourceVacancyReference {get; set;}
     public DateTime? ApprovedDate {get; set;}
     public DateTime? CreatedDate {get; set;}
@@ -28,6 +29,7 @@ public class VacancyEntity
     public DateTime? LiveDate {get; set;}
     public DateTime? StartDate {get; set;}
     public DateTime? ClosingDate {get; set;}
+    public DateTime? ArchivedDate {get; set; }
     public int ReviewCount {get; set;}
     public string? ApplicationUrl {get; set;}
     public ApplicationMethod? ApplicationMethod {get; set;}
@@ -80,4 +82,5 @@ public class VacancyEntity
     public string? ProviderReviewFieldIndicators {get; set;}
     public Guid? SubmittedByUserId { get; set; }
     public Guid? ReviewRequestedByUserId { get; set; }
+    public Guid? ArchivedByUserId { get; set; }
 }
