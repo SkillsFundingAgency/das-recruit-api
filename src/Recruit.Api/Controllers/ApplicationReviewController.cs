@@ -108,7 +108,7 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
     {
         try
         {
-            logger.LogInformation("Recruit API: Received query to get all application reviews by vacancyId : {vacancyId}", vacancyId);
+            logger.LogInformation("Recruit API: Received query to get all application reviews by vacancyId : {Id}", vacancyId);
 
             var response = await provider.GetAllByVacancyId(vacancyId, token);
 
