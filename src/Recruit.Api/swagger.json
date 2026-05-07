@@ -7005,7 +7005,8 @@
           "EmployerReviewedApplications",
           "NewSharedApplications",
           "AllSharedApplications",
-          "Dashboard"
+          "Dashboard",
+          "Archived"
         ],
         "type": "string"
       },
@@ -9729,7 +9730,8 @@
           "Referred",
           "Live",
           "Closed",
-          "Approved"
+          "Approved",
+          "Archived"
         ],
         "type": "string"
       },

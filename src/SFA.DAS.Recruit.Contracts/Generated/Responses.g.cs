@@ -664,6 +664,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Runtime.Serialization.EnumMember(Value = @"Dashboard")]
         Dashboard = 16,
 
+        [System.Runtime.Serialization.EnumMember(Value = @"Archived")]
+        Archived = 17,
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -3358,6 +3361,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Runtime.Serialization.EnumMember(Value = @"Approved")]
         Approved = 7,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Archived")]
+        Archived = 8,
 
     }
 
