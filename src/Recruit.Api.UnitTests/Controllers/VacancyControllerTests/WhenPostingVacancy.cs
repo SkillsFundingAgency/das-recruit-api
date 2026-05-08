@@ -1,8 +1,9 @@
-﻿using FluentValidation;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Controllers;
+using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -15,7 +16,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.VacancyControllerTests;
 public class WhenPostingVacancy
 {
     [Test, RecruitAutoData]
-    public async Task Then_The_Vacancy_Closed_Event_Is_Raised_When_The_Record_Is_Set_To_Closed(
+    public async Task Then_A_Vacancy_State_Change_Is_Handled(
         Guid id,
         VacancyEntity updatedEntity,
         PostVacancyRequest request,
@@ -30,16 +31,17 @@ public class WhenPostingVacancy
         request.Status = VacancyStatus.Closed;
         updatedEntity.Status = VacancyStatus.Closed;
         request.Id = null;
+        var upsertResult = UpsertResult.Create(updatedEntity, true, true);
         repository
             .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyEntity>(), token))
-            .ReturnsAsync(() => SFA.DAS.Recruit.Api.Data.Models.UpsertResult.Create(updatedEntity, true, true));
+            .ReturnsAsync(upsertResult);
 
         // act
         var result = await sut.PostOne(repository.Object, userRepository.Object, eventsService.Object, validator.Object, request, null, false, token);
 
         // assert
         result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
-        eventsService.Verify(x => x.PublishVacancyClosedEvent(updatedEntity), Times.Once);
+        eventsService.Verify(x => x.HandleVacancyStatusChange(upsertResult), Times.Once);
     }
 
     [Test, RecruitAutoData]
