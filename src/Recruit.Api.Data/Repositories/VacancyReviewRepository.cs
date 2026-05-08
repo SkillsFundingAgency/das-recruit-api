@@ -42,14 +42,15 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
         {
             await dataContext.VacancyReviewEntities.AddAsync(entity, cancellationToken);
             await dataContext.SaveChangesAsync(cancellationToken);
-            return UpsertResult.Create(entity, true);
+            return UpsertResult.Create(entity, true, true);
         }
         
+        var oldStatus = existingEntity.Status;
         existingEntity.SubmittedByUserEmail = entity.SubmittedByUserEmail;
 
         dataContext.SetValues(existingEntity, entity);
         await dataContext.SaveChangesAsync(cancellationToken);
-        return UpsertResult.Create(entity, false);
+        return UpsertResult.Create(entity, false, oldStatus != existingEntity.Status);
     }
 
     public async Task<bool> DeleteOneAsync(Guid key, CancellationToken cancellationToken)
