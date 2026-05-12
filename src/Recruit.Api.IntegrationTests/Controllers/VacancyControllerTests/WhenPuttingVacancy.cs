@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Apim.Shared.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -116,6 +115,8 @@ public class WhenPuttingVacancy: BaseFixture
             .Excluding(x => x.Id)
             .Excluding(x => x.SubmittedByUserId)
             .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x => x.ArchivedByUserId)
             .Excluding(x=>x.Wage!.ApprenticeMinimumWage)
             .Excluding(x=>x.Wage!.Under18NationalMinimumWage)
             .Excluding(x=>x.Wage!.Between18AndUnder21NationalMinimumWage)
@@ -158,6 +159,8 @@ public class WhenPuttingVacancy: BaseFixture
             .Excluding(x => x.Id)
             .Excluding(x => x.SubmittedByUserId)
             .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x => x.ArchivedByUserId)
             .Excluding(x=>x.Wage!.ApprenticeMinimumWage)
             .Excluding(x=>x.Wage!.Under18NationalMinimumWage)
             .Excluding(x=>x.Wage!.Between18AndUnder21NationalMinimumWage)

@@ -14,6 +14,7 @@ public class VacancyRequest
     [Required] public required OwnerType? OwnerType { get; init; }
     public SourceOrigin? SourceOrigin { get; init; }
     public SourceType? SourceType { get; init; }
+    public ArchiveType? ArchiveType { get; init; }
     public long? SourceVacancyReference { get; init; }
     public DateTime? ApprovedDate { get; init; }
     public DateTime? LastUpdatedDate { get; init; }
@@ -24,6 +25,7 @@ public class VacancyRequest
     public DateTime? LiveDate { get; init; }
     public DateTime? StartDate { get; init; }
     public DateTime? ClosingDate { get; init; }
+    public DateTime? ArchivedDate { get; init; }
     public int ReviewCount { get; init; }
     public string? ApplicationUrl { get; init; }
     public ApplicationMethod? ApplicationMethod { get; init; }
@@ -65,5 +67,6 @@ public class VacancyRequest
     public List<ReviewFieldIndicator>? ProviderReviewFieldIndicators { get; init; }
     public string? SubmittedByUserId { get; set; }
     public string? ReviewRequestedByUserId { get; set; }
+    public string? ArchivedByUserId { get; set; }
     public Guid? Id {get; set;}
 }
