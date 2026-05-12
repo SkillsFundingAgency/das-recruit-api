@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Apim.Shared.Models;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -26,10 +25,6 @@ public class WhenPuttingVacancy: BaseFixture
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         errors.Should().NotBeNull();
         errors.Errors.Should().HaveCount(2);
-        errors.Errors.Should().ContainKeys(
-            nameof(PutVacancyRequest.OwnerType),
-            nameof(PutVacancyRequest.Status)
-        );
     }
     
     

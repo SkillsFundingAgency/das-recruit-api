@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Exceptions;
-using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Operations;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using SFA.DAS.Recruit.Api.Core;
@@ -28,8 +28,8 @@ public class UserController
                     {
                         path = nameof(UserEntity.EmployerAccounts),
                         op = operation.op,
-                        value = (operation.value as JArray)!.Select(x => new UserEmployerAccountEntity
-                            { UserId = (Guid)key, EmployerAccountId = x.Value<long>()! })
+                        value = ((System.Text.Json.JsonElement)operation.value).EnumerateArray().Select(x => new UserEmployerAccountEntity
+                            { UserId = (Guid)key, EmployerAccountId = x.GetInt64()! })
                     },
                     _ => throw new JsonPatchException(new JsonPatchError(null, operation, $"Operation type '{operation.op}' not supported for property '{nameof(UserEntity.EmployerAccounts)}'"))
                 };

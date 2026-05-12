@@ -93,11 +93,6 @@ internal class Startup
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            })
-            .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
         services.RegisterDasEncodingService(Configuration);
