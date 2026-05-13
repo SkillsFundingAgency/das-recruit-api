@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.JsonPatch.Exceptions;
+﻿using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
 
 namespace SFA.DAS.Recruit.Api.Core.Extensions;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Operations;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Repositories;
@@ -15,11 +15,11 @@ public class WhenPatchingAnEmployerProfile
     public async Task Then_The_Profile_Is_NotFound(
         long accountLegalEntityId,
         Mock<IEmployerProfileRepository> repository,
-        JsonPatchDocument patchRequest,
         [Greedy] EmployerProfileController sut,
         CancellationToken token)
     {
         // arrange
+        var patchRequest = new JsonPatchDocument();
         repository
             .Setup(x => x.GetOneAsync(accountLegalEntityId, token))
             .ReturnsAsync(() => null);

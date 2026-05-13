@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
@@ -7,11 +7,12 @@ namespace SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 public class VacancyRequest
 {
     public long? AccountId { get; init; }
-    [Required] 
+    [BindRequired] 
     public required VacancyStatus? Status { get; set; }
     public ApprenticeshipTypes? ApprenticeshipType { get; init; }
     public string? Title { get; init; }
-    [Required] public required OwnerType? OwnerType { get; init; }
+    [BindRequired]
+    public required OwnerType? OwnerType { get; init; }
     public SourceOrigin? SourceOrigin { get; init; }
     public SourceType? SourceType { get; init; }
     public long? SourceVacancyReference { get; init; }

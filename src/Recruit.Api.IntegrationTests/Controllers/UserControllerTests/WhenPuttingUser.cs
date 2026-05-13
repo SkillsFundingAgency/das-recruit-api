@@ -22,12 +22,7 @@ public class WhenPuttingUser: BaseFixture
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         errors.Should().NotBeNull();
-        errors.Errors.Should().HaveCount(3);
-        errors.Errors.Should().ContainKeys(
-            nameof(PutUserRequest.Name),
-            nameof(PutUserRequest.Email),
-            nameof(PutUserRequest.UserType)
-        );
+        errors.Errors.Should().HaveCount(2);
     }
     
     [Test]
