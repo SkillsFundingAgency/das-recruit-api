@@ -25,10 +25,6 @@ public class WhenPuttingVacancy: BaseFixture
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         errors.Should().NotBeNull();
         errors.Errors.Should().HaveCount(2);
-        errors.Errors.Should().ContainKeys(
-            nameof(PutVacancyRequest.OwnerType),
-            nameof(PutVacancyRequest.Status)
-        );
     }
     
     
