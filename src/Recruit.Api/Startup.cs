@@ -105,6 +105,7 @@ internal class Startup
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Recruit.Api", Version = "v1" });
             c.OperationFilter<SwaggerVersionHeaderFilter>();
+            c.OperationFilter<JsonPatchDocumentTypeFilter>();
             c.DocumentFilter<JsonPatchDocumentFilter>();
             c.DocumentFilter<HealthChecksFilter>();
             c.MapType<VacancyReference>(() => new OpenApiSchema { Type = "string" });
