@@ -1,0 +1,33 @@
+namespace SFA.DAS.Recruit.Api.Data.ReferenceData;
+
+public static class Reference
+{
+    public static readonly List<string> CandidateQualifications = [
+        "GCSE",
+        "A Level",
+        "T Level",
+        "BTEC",
+        "Degree",
+        "Other"
+    ];
+    
+    public static readonly List<string> CandidateSkills = [
+        "Communication skills",
+        "IT skills",
+        "Attention to detail",
+        "Organisation skills",
+        "Customer care skills",
+        "Problem solving skills",
+        "Presentation skills",
+        "Administrative skills",
+        "Number skills",
+        "Analytical skills",
+        "Logical",
+        "Team working",
+        "Creative",
+        "Initiative",
+        "Non judgemental",
+        "Patience",
+        "Physical fitness"
+    ];
+}

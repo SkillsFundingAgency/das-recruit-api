@@ -19,18 +19,18 @@ public class VacancyReviewEntity
     [MaxLength(255)]
     public string? ReviewedByUserEmail { get; init; }
     [MaxLength(255)]
-    public required string SubmittedByUserEmail { get; init; }
+    public required string SubmittedByUserEmail { get; set; }
     public DateTime? ClosedDate { get; init; }
     [MaxLength(50)]
     public string? ManualOutcome { get; set; }
     public string? ManualQaComment { get; init; }
     public required string ManualQaFieldIndicators { get; init; }
-    public string? AutomatedQaOutcome { get; init; }
+    public string? AutomatedQaOutcome { get; set; }
     [MaxLength(20)]
-    public string? AutomatedQaOutcomeIndicators { get; init; }
+    public string? AutomatedQaOutcomeIndicators { get; set; }
     public required string DismissedAutomatedQaOutcomeIndicators { get; init; }
     public required string UpdatedFieldIdentifiers { get; init; }
-    public required string VacancySnapshot { get; init; }
+    public required string VacancySnapshot { get; set; }
     public required long AccountId { get; init; }
     public required long AccountLegalEntityId { get; init; }
     public required long Ukprn { get; init; }

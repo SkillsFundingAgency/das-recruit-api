@@ -12,10 +12,10 @@ This repository represents the codebase for an API designed for internal use wit
 &nbsp;
 
 ## Features
-•	Retrieve application reviews by account ID or UKPRN.
-•	Get dashboard counts for application reviews.
-•	Update and upsert application reviews.
-•	Comprehensive unit tests using NUnit and Moq.
+*	Retrieve application reviews by account ID or UKPRN.
+*	Get dashboard counts for application reviews.
+*	Update and upsert application reviews.
+*	Comprehensive unit tests using NUnit and Moq.
 
 ## Contents
 
@@ -125,6 +125,14 @@ In order to run this project locally you will need the following:
 * Access to a SQL server (emulated or hosted) hosting the DAS Recruit database.
 * Azure Storage Emulator (or [Azurite](https://github.com/Azure/Azurite) as an alternative)
 * Azure Storage Explorer (Optional)
+
+After cloning, restore the local .NET tools (used for Swagger generation at build time):
+
+```
+dotnet tool restore
+```
+
+This installs the Swashbuckle CLI tool defined in `dotnet-tools.json`. Building `Recruit.Api` will then automatically regenerate `swagger.json` whenever API endpoints change. The generated file is committed to source control and is also used by `SFA.DAS.Recruit.Contracts` to generate typed API client code â€” if you add or modify endpoints, commit the updated `swagger.json` alongside your changes.
 
 <a id="localConfig"></a>
 ### Add configuration to Azure Storage Emulator

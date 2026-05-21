@@ -1,13 +1,10 @@
 ﻿using System.Net;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
-using SFA.DAS.Recruit.Api.Testing.Data.Generators;
-using SFA.DAS.Recruit.Api.Testing.Diagnostics;
-using SFA.DAS.Recruit.Api.Testing.Http;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.UserControllerTests;
 
@@ -22,7 +19,7 @@ public class WhenGettingUser: MsSqlBaseFixture
         NotificationPreferenceDefaults.Update(expected);
 
         // act
-        var response = await Measure.ThisAsync(async () => await Client.GetAsync($"{RouteNames.User}/{expected.Id}"));
+        var response = await Client.GetAsync(new GetUserByIdApiRequest(expected.Id).GetUrl);
         var user = await response.Content.ReadAsAsync<RecruitUser>();
     
         // assert
@@ -35,8 +32,8 @@ public class WhenGettingUser: MsSqlBaseFixture
     public async Task Then_The_User_Is_NotFound()
     {
         // act
-        var response = await Measure.ThisAsync(async () => await Client.GetAsync($"{RouteNames.User}/{Guid.NewGuid()}"));
-    
+        var response = await Client.GetAsync(new GetUserByIdApiRequest(Guid.NewGuid()).GetUrl);
+
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -57,9 +54,9 @@ public class WhenGettingUser: MsSqlBaseFixture
         var expected2 = items[2];
         
         // act
-        var response = await Measure.ThisAsync(async () => await Client.GetAsync($"{RouteNames.User}/by/employerAccountId/{employerAccountId}"));
+        var response = await Client.GetAsync(new GetUserByEmployeraccountidByEmployerAccountIdApiRequest(123, null).GetUrl);
         var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
-    
+
         // assert
         response.EnsureSuccessStatusCode();
         users.Should().NotBeNull();
@@ -96,7 +93,7 @@ public class WhenGettingUser: MsSqlBaseFixture
         });
         
         // act
-        var response = await Client.GetAsync($"{RouteNames.User}/by/employerAccountId/{employerAccountId}?notificationType={nameof(NotificationTypes.ApplicationSubmitted)}");
+        var response = await Client.GetAsync(new GetUserByEmployeraccountidByEmployerAccountIdApiRequest(123, SFA.DAS.Recruit.Contracts.ApiResponses.NotificationTypes.ApplicationSubmitted).GetUrl);
         var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
     
         // assert
@@ -123,9 +120,9 @@ public class WhenGettingUser: MsSqlBaseFixture
         var expected2 = items[2];
     
         // act
-        var response = await Client.GetAsync($"{RouteNames.User}/by/ukprn/{ukprn}");
+        var response = await Client.GetAsync(new GetUserByUkprnByUkprnApiRequest(999999, null).GetUrl);
         var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
-    
+
         // assert
         response.EnsureSuccessStatusCode();
         users.Should().NotBeNull();
@@ -163,7 +160,7 @@ public class WhenGettingUser: MsSqlBaseFixture
         });
     
         // act
-        var response = await Client.GetAsync($"{RouteNames.User}/by/ukprn/{ukprn}?notificationType={nameof(NotificationTypes.ApplicationSubmitted)}");
+        var response = await Client.GetAsync(new GetUserByUkprnByUkprnApiRequest(999999, SFA.DAS.Recruit.Contracts.ApiResponses.NotificationTypes.ApplicationSubmitted).GetUrl);
         var users = await response.Content.ReadAsAsync<List<RecruitUser>>();
     
         // assert
@@ -182,7 +179,7 @@ public class WhenGettingUser: MsSqlBaseFixture
         var expected1 = items[1];
     
         // act
-        var response = await Client.GetAsync($"{RouteNames.User}/by/idams/{expected1.IdamsUserId}");
+        var response = await Client.GetAsync(new GetUserByIdamsByIdamsApiRequest(expected1.IdamsUserId).GetUrl);
         var user = await response.Content.ReadAsAsync<RecruitUser>();
     
         // assert
@@ -199,7 +196,7 @@ public class WhenGettingUser: MsSqlBaseFixture
         var expected1 = items[1];
     
         // act
-        var response = await Client.GetAsync($"{RouteNames.User}/by/dfeuserid/{expected1.DfEUserId}");
+        var response = await Client.GetAsync(new GetUserByDfeuseridByDfeUserIdApiRequest(expected1.DfEUserId).GetUrl);
         var user = await response.Content.ReadAsAsync<RecruitUser>();
     
         // assert

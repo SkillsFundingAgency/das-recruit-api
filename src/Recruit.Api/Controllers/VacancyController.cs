@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Exceptions;
+using FluentValidation;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data;
+using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
@@ -14,6 +16,10 @@ using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests;
 using SFA.DAS.Recruit.Api.Models.Requests.Vacancy;
 using SFA.DAS.Recruit.Api.Models.Responses;
+using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
+using SFA.DAS.Recruit.Api.Services;
+using SFA.DAS.Recruit.Api.Validators;
+using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
@@ -45,9 +51,14 @@ public class VacancyController : Controller
     {
         var result = await repository.GetOneLiveVacancyByVacancyReferenceAsync(vacancyReference, cancellationToken);
 
-        return result is null
-            ? Results.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+        if (result == null)
+        {
+            return Results.NotFound();
+        }
+        
+        var vacancy = result.ToGetResponse();
+        vacancy.AddWageData();
+        return TypedResults.Ok(vacancy);
     }
 
     [HttpGet, Route("live")]
@@ -64,7 +75,12 @@ public class VacancyController : Controller
 
         var vacancies = await repository.GetManyLiveVacancies(page, pageSize, closingDate, cancellationToken);
 
-        return TypedResults.Ok(vacancies.ToPagedResponse(x => x.ToGetResponse()));
+        return TypedResults.Ok(vacancies.ToPagedResponse(x =>
+        {
+            var response = x.ToGetResponse();
+            response.AddWageData();
+            return response;
+        }));
     }
 
     [HttpGet, Route("{vacancyReference:long}/closed")]
@@ -78,10 +94,14 @@ public class VacancyController : Controller
         try
         {
             var result = await repository.GetOneClosedVacancyByVacancyReference(vacancyReference, cancellationToken);
-
-            return result is null
-                ? Results.NotFound()
-                : TypedResults.Ok(result.ToGetResponse());
+            if (result == null)
+            {
+                return Results.NotFound();
+            }
+        
+            var vacancy = result.ToGetResponse();
+            vacancy.AddWageData();
+            return TypedResults.Ok(vacancy);
         }
         catch (InvalidVacancyReferenceException)
         {
@@ -100,7 +120,12 @@ public class VacancyController : Controller
         var result = await repository.GetManyClosedVacanciesByVacancyReferences(request.VacancyReferences, cancellationToken);
 
         return TypedResults.Ok(result
-            .Select(v => v.ToGetResponse())
+            .Select(v =>
+            {
+                var response = v.ToGetResponse();
+                response.AddWageData();
+                return response;
+            })
             .ToList());
     }
 
@@ -243,26 +268,61 @@ public class VacancyController : Controller
         return TypedResults.Ok(vacancySummaries);
     }
 
+    [HttpGet]
+    [Route($"{RouteElements.TotalPositionsAvailable}")]
+    [ProducesResponseType(typeof(TotalPositionsAvailableResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> GetTotalPositionsAvailable(
+        [FromServices] IVacancyRepository repository,
+        CancellationToken cancellationToken = default)
+    {
+        int response = await repository.GetLiveVacanciesCountAsync(cancellationToken);
+        return TypedResults.Ok(new TotalPositionsAvailableResponse(response));
+    }
+
     [HttpPost]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IResult> PostOne(
         [FromServices] IVacancyRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IEventsService eventsService,
+        [FromServices] IValidator<VacancyRequest> validator,
         [FromBody] PostVacancyRequest request,
+        [FromQuery] VacancyRuleSet? ruleSet,
+        [FromQuery] bool validateOnly,
         CancellationToken cancellationToken)
     {
+        if (ruleSet != null)
+        {
+            var context = new ValidationContext<VacancyRequest>(request);
+            context.RootContextData.Add(ValidationConstants.ValidationsRulesKey, ruleSet);
+            var validationResult = await validator.ValidateAsync(context, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            }    
+        }
+
         var entity = request.ToDomain();
+
+        if (validateOnly)
+        {
+            entity.VacancyReference = 1000000001;
+            entity.CreatedDate = DateTime.UtcNow;
+            entity.Status = VacancyStatus.Submitted;
+            entity.Id = request.Id ?? Guid.NewGuid();
+            return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPostResponse());
+        }
 
         // This lookup should eventually be removed once we've migrated away from Mongo
         // We do this because currently the submitted user id is not the SQL user id, but could match
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.SubmittedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.SubmittedByUserId = user.Id;
+                entity.SubmittedByUserId = userId;
             }
         }
         
@@ -271,11 +331,25 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.ReviewRequestedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.ReviewRequestedByUserId = user.Id;
+                entity.ReviewRequestedByUserId = userId;
             }
+        }
+        
+        //If vacancy exists then throw error - this is mainly to cover being submitted from the external Vacancies Manage API
+        if (request.Id != null)
+        {
+            var vacancy = await repository.GetOneAsync(request.Id.Value, cancellationToken);
+            if (vacancy is not null)
+            {
+                return Results.BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
+                {
+                    { "Id", ["Unable to create Vacancy. Vacancy already submitted"] }
+                }));
+            }
+            entity.Id = request.Id.Value;
         }
         
         var vacancyReference = await repository.GetNextVacancyReferenceAsync(cancellationToken);
@@ -283,9 +357,11 @@ public class VacancyController : Controller
         entity.CreatedDate = DateTime.UtcNow;
         
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
+        await eventsService.HandleVacancyStatusChange(result);
+        
         return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPostResponse());
     }
-    
+
     [HttpPut, Route("{vacancyId:guid}")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status201Created)]
@@ -293,10 +369,33 @@ public class VacancyController : Controller
     public async Task<IResult> PutOne(
         [FromServices] IVacancyRepository repository,
         [FromServices] IUserRepository userRepository,
+        [FromServices] IEventsService eventsService,
+        [FromServices] IValidator<VacancyRequest> validator,
         [FromRoute] Guid vacancyId,
         [FromBody] PutVacancyRequest request,
+        [FromQuery] VacancyRuleSet? ruleSet,
+        [FromQuery] bool validateOnly,
         CancellationToken cancellationToken)
     {
+        if (ruleSet != null)
+        {
+            var context = new ValidationContext<VacancyRequest>(request);
+            context.RootContextData.Add(ValidationConstants.ValidationsRulesKey, ruleSet);
+            var validationResult = await validator.ValidateAsync(context, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
+            }    
+        }
+        
+        if (validateOnly)
+        {
+            var id = Guid.NewGuid();
+            return TypedResults.Created($"/{RouteNames.Vacancies}/{id}",
+                new VacancyEntity { Id = id, Status = VacancyStatus.Submitted, VacancyReference = 1000000001 }
+                    .ToPutResponse());
+        }
+        
         var entity = request.ToDomain(vacancyId);
         
         // This lookup should eventually be removed once we've migrated away from Mongo
@@ -304,10 +403,10 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.SubmittedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.SubmittedByUserId = user.Id;
+                entity.SubmittedByUserId = userId;
             }
         }
         
@@ -316,32 +415,34 @@ public class VacancyController : Controller
         // the IdamsUserId, DfEUserId or the actual UserId.
         if (request.ReviewRequestedByUserId is not null)
         {
-            var user = await userRepository.FindByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
-            if (user is not null)
+            var userId = await userRepository.FindIdByUserIdAsync(request.ReviewRequestedByUserId, cancellationToken);
+            if (userId is not null)
             {
-                entity.ReviewRequestedByUserId = user.Id;
+                entity.ReviewRequestedByUserId = userId;
             }
         }
 
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
-        
+        await eventsService.HandleVacancyStatusChange(result);
+
         return result.Created
             ? TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPutResponse())
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
     
-    [HttpPatch, Route("{vacancyId:guid}")]
+    [HttpPatch, Route("{vacancyId:guid}"), Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> PatchOne(
         [FromServices] IVacancyRepository repository,
+        [FromServices] IEventsService eventsService,
         [FromRoute] Guid vacancyId,
         [FromBody] JsonPatchDocument<Vacancy> patchRequest,
         CancellationToken cancellationToken)
     {
-        var vacancy = await repository.GetOneAsync(vacancyId, cancellationToken);
-        if (vacancy is null)
+        var vacancyEntity = await repository.GetOneAsync(vacancyId, cancellationToken);
+        if (vacancyEntity is null)
         {
             return Results.NotFound();
         }
@@ -351,22 +452,24 @@ public class VacancyController : Controller
             patchRequest.ThrowIfOperationsOn([
                 nameof(Vacancy.Id),
                 nameof(Vacancy.ApprenticeshipType),
-                nameof(Vacancy.OwnerType),
                 nameof(Vacancy.VacancyReference),
                 nameof(Vacancy.CreatedDate),
                 nameof(Vacancy.AccountId),
             ]);
-            
-            var patchDocument = patchRequest.ToDomain<Vacancy, VacancyEntity>();
-            patchDocument.ApplyTo(vacancy);
+
+            var vacancy = VacancyMapper.FromEntity(vacancyEntity);
+            patchRequest.ApplyTo(vacancy);
+            vacancyEntity = VacancyMapper.ToEntity(vacancy);
         }
         catch (JsonPatchException ex)
         {
             return TypedResults.ValidationProblem(ex.ToProblemsDictionary());
         }
     
-        await repository.UpsertOneAsync(vacancy, cancellationToken);
-        return TypedResults.Ok(vacancy.ToPatchResponse());
+        var result = await repository.UpsertOneAsync(vacancyEntity, cancellationToken);
+        await eventsService.HandleVacancyStatusChange(result);
+        
+        return TypedResults.Ok(vacancyEntity.ToPatchResponse());
     }
 
     [HttpDelete]
@@ -381,7 +484,7 @@ public class VacancyController : Controller
     {
         try
         {
-            bool deleted = await repository.DeleteOneAsync(vacancyId, cancellationToken);
+            var deleted = await repository.DeleteOneAsync(vacancyId, cancellationToken);
             return deleted
                 ? Results.NoContent()
                 : Results.NotFound();
@@ -390,5 +493,48 @@ public class VacancyController : Controller
         {
             return Results.Problem(ex.ToProblemDetails());
         }
+    }
+
+    [HttpGet]
+    [Route("count/user/{userId:guid}")]
+    [ProducesResponseType(typeof(DataResponse<int>), StatusCodes.Status200OK)]
+    public async Task<IResult> CountByUserId(
+        [FromRoute] Guid userId,
+        [FromServices] IUserRepository userRepository,
+        [FromServices] IVacancyRepository vacancyRepository,
+        CancellationToken cancellationToken)
+    {
+        var user = await userRepository.FindByUserIdAsync($"{userId}", cancellationToken);
+        if (user is null)
+        {
+            return TypedResults.Ok(new DataResponse<int>(0)); 
+        }
+
+        var count = await vacancyRepository.CountVacanciesByUserIdAsync(user.Id, cancellationToken);
+        return TypedResults.Ok(new DataResponse<int>(count));
+    }
+    
+    [HttpGet, Route($"~/{RouteNames.Provider}/{{ukprn:int}}/{RouteElements.Vacancies}/stats")]
+    public async Task<IResult> GetProviderVacancyApplicationStats(
+        [FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+        [FromRoute] int ukprn,
+        [FromQuery] List<long> vacancyReferences,
+        CancellationToken cancellationToken = default)
+    {
+        var applicationReviewStats = await applicationReviewsProvider.GetVacancyReferencesCountByUkprn(ukprn, vacancyReferences, cancellationToken);
+        var applicationReviewStatsDict = applicationReviewStats.ToDictionary(x => x.VacancyReference);
+        return TypedResults.Ok(new DataResponse<Dictionary<long, ApplicationReviewsStats>>(applicationReviewStatsDict));
+    }
+    
+    [HttpGet, Route($"~/{RouteNames.Employer}/{{accountId:long}}/{RouteElements.Vacancies}/stats")]
+    public async Task<IResult> GetEmployerVacancyApplicationStats(
+        [FromServices] IApplicationReviewsProvider applicationReviewsProvider,
+        [FromRoute] long accountId,
+        [FromQuery] List<long> vacancyReferences,
+        CancellationToken cancellationToken = default)
+    {
+        var applicationReviewStats = await applicationReviewsProvider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, null, cancellationToken);
+        var applicationReviewStatsDict = applicationReviewStats.ToDictionary(x => x.VacancyReference);
+        return TypedResults.Ok(new DataResponse<Dictionary<long, ApplicationReviewsStats>>(applicationReviewStatsDict));
     }
 }

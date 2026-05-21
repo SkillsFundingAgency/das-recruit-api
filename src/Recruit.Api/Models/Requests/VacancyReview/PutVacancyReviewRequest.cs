@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
@@ -15,7 +15,7 @@ public class PutVacancyReviewRequest
     public required ReviewStatus Status { get; init; }
     public required byte? SubmissionCount { get; init; }
     public string? ReviewedByUserEmail { get; init; }
-    public required string SubmittedByUserEmail { get; init; }
+    public string? SubmittedByUserEmail { get; set; }
     public DateTime? ClosedDate { get; init; }
     public string? ManualOutcome { get; init; }
     public string? ManualQaComment { get; init; }
@@ -29,4 +29,5 @@ public class PutVacancyReviewRequest
     public long AccountId { get; set; }
     public long AccountLegalEntityId { get; set; }
     public OwnerType OwnerType { get; set; }
+    public string? SubmittedByUserId { get; set; }
 }

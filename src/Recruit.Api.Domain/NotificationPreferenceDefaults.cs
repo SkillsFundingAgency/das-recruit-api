@@ -38,10 +38,10 @@ internal static class EmployerNotificationPreferences
     private const string Channel = "Email"; 
     
     private static readonly List<NotificationPreference> EmployerDefaults = [
-        new (NotificationTypes.ApplicationSubmitted, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily),
-        new (NotificationTypes.VacancyApprovedOrRejected, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet),
-        new (NotificationTypes.VacancySentForReview, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet),
-        new (NotificationTypes.ApplicationSharedWithEmployer, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately),
+        new (NotificationTypes.ApplicationSubmitted, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Never),
+        new (NotificationTypes.VacancyApprovedOrRejected, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Never),
+        new (NotificationTypes.VacancySentForReview, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Never),
+        new (NotificationTypes.ApplicationSharedWithEmployer, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Never),
     ];
 
     public static void UpdateWithDefaults(NotificationPreferences preferences)
@@ -57,10 +57,10 @@ internal static class ProviderNotificationPreferences
     private const string Channel = "Email"; 
     
     private static readonly List<NotificationPreference> ProviderDefaults = [
-        new (NotificationTypes.ApplicationSubmitted, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily),
-        new (NotificationTypes.VacancyApprovedOrRejected, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet),
-        new (NotificationTypes.SharedApplicationReviewedByEmployer, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily),
-        new (NotificationTypes.ProviderAttachedToVacancy, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately),
+        new (NotificationTypes.ApplicationSubmitted, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Never),
+        new (NotificationTypes.VacancyApprovedOrRejected, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Never),
+        new (NotificationTypes.SharedApplicationReviewedByEmployer, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Never),
+        new (NotificationTypes.ProviderAttachedToVacancy, Channel, NotificationScope.OrganisationVacancies, NotificationFrequency.Never),
     ];
 
     public static void UpdateWithDefaults(NotificationPreferences preferences)

@@ -18,6 +18,62 @@ public class WhenGettingUsersForNotificationTyp
     }
 
     [Test, RecursiveMoqAutoData]
+    public void Then_Employers_Are_Included_And_Only_Active_Providers_Are_Returned(
+        UserEntity employerOne,
+        UserEntity employerTwo,
+        UserEntity providerOne,
+        UserEntity providerTwo,
+        UserEntity providerThree)
+    {
+        // arrange
+        var now = DateTime.UtcNow;
+        var preferences = new NotificationPreferences {
+            EventPreferences = [
+                new NotificationPreference(
+                    NotificationTypes.SharedApplicationReviewedByEmployer,
+                    "",
+                    NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately)
+            ]
+        };
+        
+        employerOne.UserType = UserType.Employer;
+        employerOne.LastSignedInDate = now.AddYears(-2);
+        employerOne.NotificationPreferences = preferences;
+        employerTwo.UserType = UserType.Employer;
+        employerTwo.LastSignedInDate = null;
+        employerTwo.NotificationPreferences = preferences;
+        providerOne.UserType = UserType.Provider;
+        providerOne.LastSignedInDate = null;
+        providerOne.NotificationPreferences = preferences;
+        providerTwo.UserType = UserType.Provider;
+        providerTwo.LastSignedInDate = now.AddYears(-2);
+        providerTwo.NotificationPreferences = preferences;
+        providerThree.UserType = UserType.Provider;
+        providerThree.LastSignedInDate = now.AddMonths(-6);
+        providerThree.NotificationPreferences = preferences;
+        
+        var users = new List<UserEntity>
+        {
+            employerOne,
+            employerTwo,
+            providerOne,
+            providerTwo,
+            providerThree
+        };
+
+        // act
+        var result = users.GetUsersForNotificationType(NotificationTypes.SharedApplicationReviewedByEmployer);
+
+        // assert
+        result.Should().Contain(employerOne); 
+        result.Should().Contain(employerTwo); 
+        result.Should().Contain(providerThree);
+        result.Should().NotContain(providerOne);
+        result.Should().NotContain(providerTwo);
+    }
+
+    [Test, RecursiveMoqAutoData]
     public void Then_Users_Who_Do_Not_Want_The_Email_Are_Not_Returned(List<UserEntity> users)
     {
         // arrange
@@ -42,7 +98,7 @@ public class WhenGettingUsersForNotificationTyp
         result.Should().BeEmpty();
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public void Then_The_Originating_User_Is_Notified(List<UserEntity> users)
     {
         // arrange
@@ -77,7 +133,7 @@ public class WhenGettingUsersForNotificationTyp
         result.Should().Contain(users[1]);
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public void Then_Users_In_The_Organisation_That_Want_To_Know_About_All_Other_Changes_Are_Notified(List<UserEntity> users)
     {
         // arrange
@@ -113,7 +169,7 @@ public class WhenGettingUsersForNotificationTyp
         result.Should().Contain(users[2]);
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public void Then_The_Default_Behaviour_When_The_User_Has_A_Preference_Is_That_The_User_Should_Be_Notified(List<UserEntity> users)
     {
         // arrange
@@ -134,10 +190,7 @@ public class WhenGettingUsersForNotificationTyp
         var result = users.GetUsersForNotificationType(NotificationTypes.SharedApplicationReviewedByEmployer);
 
         // assert
-        result.Should().HaveCount(3);
-        result.Should().Contain(users[0]);
-        result.Should().Contain(users[1]);
-        result.Should().Contain(users[2]);
+        result.Should().HaveCount(0);
     }
     
     [Test, RecursiveMoqAutoData]

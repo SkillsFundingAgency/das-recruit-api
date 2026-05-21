@@ -34,10 +34,12 @@ public class VacancyProvider(IVacancyRepository vacancyRepository) : IVacancyPro
     {
         var vacancies = await vacancyRepository.GetEmployerDashboard(accountId, token);
         var vacanciesClosingSoon = await vacancyRepository.GetEmployerVacanciesClosingSoonWithApplications(accountId, token);
+        var vacanciesForEmployerReview = await vacancyRepository.GetEmployerReviewVacancies(accountId, token);
         
         var model = (VacancyDashboardModel)vacancies;
         model.ClosingSoonVacanciesCount = vacanciesClosingSoon.Sum(c => c.Item1);
         model.ClosingSoonWithNoApplications = vacanciesClosingSoon.Where(c=>!c.Item2).Sum(c => c.Item1);
+        model.ReviewVacanciesCount = vacanciesForEmployerReview;
         return model;
     }
 

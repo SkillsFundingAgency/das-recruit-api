@@ -10,6 +10,9 @@ public class WhenGettingFactory
     [RecursiveMoqInlineAutoData(VacancyStatus.Rejected, typeof(VacancyRejectedNotificationFactory))]
     [RecursiveMoqInlineAutoData(VacancyStatus.Review, typeof(VacancySentForReviewNotificationFactory))]
     [RecursiveMoqInlineAutoData(VacancyStatus.Submitted, typeof(VacancySubmittedNotificationFactory))]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Approved, typeof(VacancyApprovedNotificationFactory))]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Referred, typeof(VacancyReferredNotificationFactory))]
+    [RecursiveMoqInlineAutoData(VacancyStatus.Closed, typeof(VacancyClosedNotificationFactory))]
     public void Then_The_Correct_Factory_Is_Returned(
         VacancyStatus status,
         Type type,
@@ -24,5 +27,20 @@ public class WhenGettingFactory
 
         // assert
         result.Should().BeOfType(type);
+    }
+    
+    [Test, MoqAutoData]
+    public void Then_The_Overridden_Status_Takes_Precedence(
+        VacancyEntity vacancy,
+        [Greedy] VacancyNotificationStrategy sut)
+    {
+        // arrange
+        vacancy.Status = VacancyStatus.Live;
+
+        // act
+        var result = sut.Create(vacancy, VacancyStatus.Approved);
+
+        // assert
+        result.Should().BeOfType(typeof(VacancyApprovedNotificationFactory));
     }
 }

@@ -24,7 +24,7 @@ public class Vacancy
     public DateTime? ClosedDate { get; init; }
     public DateTime? DeletedDate { get; init; }
     public DateTime? LiveDate { get; init; }
-    public DateTime? StartDate { get; init; }
+    public DateTime? StartDate { get; set; }
     public DateTime? ClosingDate { get; init; }
     public int ReviewCount { get; init; }
     public string? ApplicationUrl { get; init; }
@@ -49,8 +49,8 @@ public class Vacancy
     public int? NumberOfPositions { get; init; }
     public string? OutcomeDescription { get; init; }
     public string? ProgrammeId { get; init; }
-    public List<string>? Skills { get; init; }
-    public List<Qualification>? Qualifications { get; set; }
+    public List<string> Skills { get; init; } = [];
+    public List<Qualification> Qualifications { get; set; } = [];
     public string? ThingsToConsider { get; init; }
     public string? TrainingDescription { get; init; }
     public string? AdditionalTrainingDescription { get; init; }
@@ -114,9 +114,9 @@ public class TrainingProvider
 
 public class Qualification
 {
-    public string QualificationType { get; set; }
-    public string Subject { get; set; }
-    public string Grade { get; set; }
+    public string? QualificationType { get; set; }
+    public string? Subject { get; set; }
+    public string? Grade { get; set; }
     public int? Level { get; set; }
     public QualificationWeighting? Weighting { get; set; }
     public string? OtherQualificationName { get; set; }
@@ -132,4 +132,10 @@ public class Wage
     public decimal? FixedWageYearlyAmount { get; set; }
     public string? WageAdditionalInformation { get; set; }
     public string? CompanyBenefitsInformation { get; set; }
+    public decimal? ApprenticeMinimumWage { get; set; }
+    public decimal? Under18NationalMinimumWage { get; set; }
+    public decimal? Between18AndUnder21NationalMinimumWage { get; set; }
+    public decimal? Between21AndUnder25NationalMinimumWage { get; set; }
+    public decimal? Over25NationalMinimumWage { get; set; }
+    public string? WageText { get; set; }
 }

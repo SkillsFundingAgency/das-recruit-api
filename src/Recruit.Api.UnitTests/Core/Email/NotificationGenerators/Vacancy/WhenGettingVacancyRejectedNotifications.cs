@@ -35,7 +35,7 @@ public class WhenGettingVacancyRejectedNotifications
         vacancy.OwnerType = OwnerType.Provider;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
@@ -59,7 +59,7 @@ public class WhenGettingVacancyRejectedNotifications
         vacancy.OwnerType = OwnerType.Employer;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
@@ -79,13 +79,13 @@ public class WhenGettingVacancyRejectedNotifications
         vacancy.OwnerType = OwnerType.Employer;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()), Times.Never);
     }
 
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task The_Notifications_Contain_The_Correct_Values(
         VacancyEntity vacancy,
         UserEntity user,
@@ -104,6 +104,18 @@ public class WhenGettingVacancyRejectedNotifications
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.EmployerRejectedReason = "Some reason";
         vacancy.OwnerType = OwnerType.Provider;
+        user.NotificationPreferences = new NotificationPreferences {
+            EventPreferences = new List<NotificationPreference>() {
+                new(NotificationTypes.ApplicationSubmitted, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+                new(NotificationTypes.VacancyApprovedOrRejected, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+                new(NotificationTypes.VacancySentForReview, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+                new(NotificationTypes.ApplicationSharedWithEmployer, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+            }
+        };
 
         userRepository
             .Setup(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cts.Token))
@@ -116,7 +128,7 @@ public class WhenGettingVacancyRejectedNotifications
             .Returns(notificationSettingsUrl);
 
         // act
-        var results = await sut.CreateAsync(vacancy, cts.Token);
+        var results = await sut.CreateAsync(vacancy, [], cts.Token);
 
         // assert
         results.Delayed.Should().BeEmpty();
@@ -134,6 +146,6 @@ public class WhenGettingVacancyRejectedNotifications
         tokens["employerName"].Should().Be(vacancy.EmployerName);
         tokens["location"].Should().Be(vacancy.GetLocationText(JsonConfig.Options));
         tokens["notificationSettingsURL"].Should().Be(notificationSettingsUrl);
-        tokens["rejectedEmployerVacancyURL"].Should().Be($"{emailTemplateHelper.Object.RecruitProviderBaseUrl}/{vacancy.Ukprn}/vacancies/{vacancy.Id}/check-your-answers");
+        tokens["rejectedEmployerVacancyURL"].Should().Be(emailTemplateHelper.Object.ProviderReviewVacancyUrl(vacancy.Ukprn!.Value, vacancy.Id));
     }
 }

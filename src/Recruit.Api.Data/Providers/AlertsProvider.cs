@@ -4,6 +4,7 @@ using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
 namespace SFA.DAS.Recruit.Api.Data.Providers;
+
 public interface IAlertsProvider
 {
     Task<EmployerTransferredVacanciesAlertModel> GetEmployerTransferredVacanciesAlertByAccountId(long accountId, string userId, TransferReason reason, CancellationToken token = default);
@@ -16,33 +17,35 @@ public interface IAlertsProvider
 public class AlertsProvider(IVacancyRepository vacancyRepository,
     IUserRepository userRepository) : IAlertsProvider
 {
-    public async Task<EmployerTransferredVacanciesAlertModel> GetEmployerTransferredVacanciesAlertByAccountId(long accountId,
+    public async Task<EmployerTransferredVacanciesAlertModel> GetEmployerTransferredVacanciesAlertByAccountId(
+        long accountId,
         string userId,
         TransferReason reason,
         CancellationToken token = default)
     {
         var userEntity = await userRepository.FindByUserIdAsync(userId, token);
         if (userEntity is null)
-        {
             return new EmployerTransferredVacanciesAlertModel();
-        }
 
         var lastDismissedDate = reason switch {
             TransferReason.EmployerRevokedPermission => userEntity
                 .TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn.GetValueOrDefault(DateTime.MinValue),
-            TransferReason.BlockedByQa => userEntity.TransferredVacanciesBlockedProviderAlertDismissedOn
-                .GetValueOrDefault(DateTime.MinValue),
+            TransferReason.BlockedByQa => userEntity
+                .TransferredVacanciesBlockedProviderAlertDismissedOn.GetValueOrDefault(DateTime.MinValue),
             _ => DateTime.MinValue
         };
 
         var vacancies = await vacancyRepository.GetAllTransferInfoByAccountId(accountId, token);
 
-        var transferredProviders = vacancies
+        var matchingTransfers = vacancies
             .Select(v => ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo))
-            .Where(info => info != null
+            .Where(info => info is not null
                            && info.Reason == reason
                            && info.TransferredDate > lastDismissedDate)
-            .Select(info => info?.ProviderName)
+            .ToList();
+
+        var transferredProviders = matchingTransfers
+            .Select(info => info!.ProviderName)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Distinct()
             .OrderBy(name => name)
@@ -50,7 +53,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
 
         return new EmployerTransferredVacanciesAlertModel {
             TransferredVacanciesProviderNames = transferredProviders,
-            TransferredVacanciesCount = transferredProviders.Count
+            TransferredVacanciesCount = transferredProviders.Count != 0 ? matchingTransfers.Count : 0
         };
     }
 
@@ -67,7 +70,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var lastDismissedDate = userEntity
             .ClosedVacanciesBlockedProviderAlertDismissedOn.GetValueOrDefault(DateTime.MinValue);
 
-        var vacancies = await vacancyRepository.GetAllClosedEmployerVacanciesByClosureReason(accountId,ClosureReason.BlockedByQa,lastDismissedDate, token);
+        var vacancies = await vacancyRepository.GetAllClosedEmployerVacanciesByClosureReason(accountId, ClosureReason.BlockedByQa, lastDismissedDate, token);
 
         var blockedTransfers = vacancies
             .Select(v => new {
@@ -102,7 +105,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var lastDismissedDate = userEntity.ClosedVacanciesWithdrawnByQaAlertDismissedOn
             .GetValueOrDefault(DateTime.MinValue);
 
-        var vacancies = await vacancyRepository.GetAllClosedEmployerVacanciesByClosureReason(accountId,ClosureReason.WithdrawnByQa,lastDismissedDate, token, VacancyStatus.Closed);
+        var vacancies = await vacancyRepository.GetAllClosedEmployerVacanciesByClosureReason(accountId, ClosureReason.WithdrawnByQa, lastDismissedDate, token, VacancyStatus.Closed);
 
         var blockedTransfers = vacancies
             .Select(v => $"{v.Title} (VAC{v.VacancyReference})")
@@ -114,17 +117,17 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
     }
 
 
-    public async Task<ProviderTransferredVacanciesAlertModel> GetProviderTransferredVacanciesAlertByUkprn(int ukprn,
+    public async Task<ProviderTransferredVacanciesAlertModel> GetProviderTransferredVacanciesAlertByUkprn(
+        int ukprn,
         string userId,
         CancellationToken token = default)
     {
         var userEntity = await userRepository.FindByUserIdAsync(userId, token);
         if (userEntity is null)
-        {
             return new ProviderTransferredVacanciesAlertModel();
-        }
 
-        var lastDismissedDate = userEntity.TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn
+        var lastDismissedDate = userEntity
+            .TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn
             .GetValueOrDefault(DateTime.MinValue);
 
         var vacancies = await vacancyRepository.GetAllTransferInfoByUkprn(ukprn, token);
@@ -132,7 +135,7 @@ public class AlertsProvider(IVacancyRepository vacancyRepository,
         var legalEntityNames = vacancies
             .Select(v => ApiUtils.DeserializeOrNull<TransferInfo>(v.TransferInfo))
             .Where(info => info is not null && info.TransferredDate > lastDismissedDate)
-            .Select(info => info?.LegalEntityName)
+            .Select(info => info!.LegalEntityName)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Distinct()
             .OrderBy(name => name)

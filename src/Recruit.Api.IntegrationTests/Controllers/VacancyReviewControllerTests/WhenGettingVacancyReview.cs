@@ -1,11 +1,9 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
-using SFA.DAS.Recruit.Api.Testing.Data;
-using SFA.DAS.Recruit.Api.Testing.Http;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyReviewControllerTests;
 
@@ -20,7 +18,7 @@ public class WhenGettingVacancyReview: BaseFixture
         Server.DataContext.Setup(x => x.VacancyReviewEntities).ReturnsDbSet(items);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.VacancyReviews}/{expected.Id}");
+        var response = await Client.GetAsync(new GetVacancyreviewsByIdApiRequest(expected.Id).GetUrl);
         var vacancyReview = await response.Content.ReadAsAsync<VacancyReview>();
 
         // assert
@@ -45,7 +43,7 @@ public class WhenGettingVacancyReview: BaseFixture
             .ReturnsDbSet(Fixture.CreateMany<VacancyReviewEntity>(10).ToList());
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.VacancyReviews}/{Guid.NewGuid()}");
+        var response = await Client.GetAsync(new GetVacancyreviewsByIdApiRequest(Guid.NewGuid()).GetUrl);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -64,7 +62,7 @@ public class WhenGettingVacancyReview: BaseFixture
         var expected = items.Skip(2).Take(3);
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Vacancies}/{vacancyReference}/reviews/");
+        var response = await Client.GetAsync(new GetVacanciesByVacancyReferenceReviewsApiRequest(vacancyReference.ToString(), null, null, null).GetUrl);
         var vacancyReviews = await response.Content.ReadAsAsync<List<VacancyReview>>();
 
         // assert
@@ -87,10 +85,12 @@ public class WhenGettingVacancyReview: BaseFixture
             .ReturnsDbSet(Fixture.Create<List<VacancyReviewEntity>>());
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Vacancies}/{vacancyReference}/reviews/");
+        var response = await Client.GetAsync(new GetVacanciesByVacancyReferenceReviewsApiRequest(vacancyReference.ToString(), null, null, null).GetUrl);
 
         // assert
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Content.ReadAsStringAsync().Result.Should().Be("[]");
+        
     }
     
     [TestCase("null")]
@@ -106,7 +106,7 @@ public class WhenGettingVacancyReview: BaseFixture
             .ReturnsDbSet(Fixture.Create<List<VacancyReviewEntity>>());
 
         // act
-        var response = await Client.GetAsync($"{RouteNames.Vacancies}/{vacancyReference}/reviews/");
+        var response = await Client.GetAsync(new GetVacanciesByVacancyReferenceReviewsApiRequest(vacancyReference.ToString(), null, null, null).GetUrl);
         var payload = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert

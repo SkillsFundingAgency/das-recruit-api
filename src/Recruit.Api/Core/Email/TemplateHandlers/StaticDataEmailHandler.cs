@@ -18,6 +18,12 @@ public class StaticDataEmailHandler: AbstractEmailHandler
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancySentForEmployerReview);
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancyApprovedByEmployer);
         SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancyRejectedByEmployer);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderAttachedToVacancy);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancyApprovedByDfe);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.ProviderVacancyRejectedByDfe);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.EmployerVacancyApprovedByDfe);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.EmployerVacancyRejectedByDfe);
+        SupportedTemplates.Add(emailTemplateHelper.TemplateIds.VacancyWithdrawnByQa);
     }
     
     public override IEnumerable<NotificationEmail> CreateNotificationEmails(IEnumerable<RecruitNotificationEntity> recruitNotifications)

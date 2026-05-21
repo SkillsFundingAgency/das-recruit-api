@@ -23,7 +23,7 @@ internal class WhenUpsertingUser
 
         // assert
         context.Verify(x => x.SaveChangesAsync(token), Times.Once);
-        dbSet.Verify(x => x.Add(entity), Times.Once);
+        dbSet.Verify(x => x.AddAsync(entity, token), Times.Once);
         result.Created.Should().BeTrue();
     }
     

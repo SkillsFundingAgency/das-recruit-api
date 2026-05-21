@@ -34,12 +34,15 @@ public interface IVacancyRepository : IReadRepository<VacancyEntity, Guid>, IWri
     Task<VacancyEntity?> GetOneClosedVacancyByVacancyReference(VacancyReference vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyEntity>> GetManyClosedVacanciesByVacancyReferences(List<long> vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyDashboardCountModel>> GetEmployerDashboard(long accountId, CancellationToken cancellationToken);
+    Task<int> GetEmployerReviewVacancies(long accountId, CancellationToken cancellationToken);
     Task<List<(int, bool)>> GetEmployerVacanciesClosingSoonWithApplications(long accountId, CancellationToken cancellationToken);
     Task<List<VacancyDashboardCountModel>> GetProviderDashboard(int ukprn, CancellationToken cancellationToken);
     Task<List<(int, bool)>> GetProviderVacanciesClosingSoonWithApplications(int ukprn, CancellationToken cancellationToken);
 
     Task<List<VacancyClosureSummaryEntity>> GetAllClosedEmployerVacanciesByClosureReason(long accountId, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken, VacancyStatus? status = null);
     Task<List<VacancyClosureSummaryEntity>> GetAllClosedProviderVacanciesByClosureReason(int ukprn, ClosureReason closureReason, DateTime lastDismissedDate, CancellationToken cancellationToken);
+    Task<int> GetLiveVacanciesCountAsync(CancellationToken cancellationToken);
+    Task<int> CountVacanciesByUserIdAsync(Guid id, CancellationToken cancellationToken);
 }
 
 public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyRepository
@@ -86,8 +89,8 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             _ => query.Where(x => x.OwnerType == OwnerType.Employer)
         };
 
-        query = query.Where(c=>c.DeletedDate == null);
-        
+        query = query.Where(c => c.DeletedDate == null);
+
         // Apply search term
         query = ApplySearchTerm(query, searchTerm);
 
@@ -100,12 +103,13 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         int take = Math.Max(pageSize, (ushort)1);
 
         int count = await query.CountAsync(cancellationToken);
-        var items = await query.Select(c=>new VacancySummaryEntity {
+        var items = await query.Select(c => new VacancySummaryEntity {
                 Id = c.Id,
                 Title = c.Title,
                 VacancyReference = c.VacancyReference,
                 Status = c.Status,
                 ClosingDate = c.ClosingDate,
+                ClosedDate = c.ClosedDate,
                 ApplicationMethod = c.ApplicationMethod,
                 ApprenticeshipType = c.ApprenticeshipType,
                 CreatedDate = c.CreatedDate,
@@ -113,7 +117,8 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 TransferInfo = c.TransferInfo,
                 OwnerType = c.OwnerType,
                 HasSubmittedAdditionalQuestions = c.HasSubmittedAdditionalQuestions ?? false,
-                Ukprn = c.Ukprn
+                Ukprn = c.Ukprn,
+                SourceOrigin = c.SourceOrigin
             })
             .Skip(skip)
             .Take(take)
@@ -165,20 +170,22 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         int take = Math.Max(pageSize, (ushort)1);
 
         int count = await query.CountAsync(cancellationToken);
-        var items = await query.Select(c=>new VacancySummaryEntity {
-                Id = c.Id,
-                Title = c.Title,
-                VacancyReference = c.VacancyReference,
-                Status = c.Status,
-                ClosingDate = c.ClosingDate,
+        var items = await query.Select(c => new VacancySummaryEntity {
                 ApplicationMethod = c.ApplicationMethod,
                 ApprenticeshipType = c.ApprenticeshipType,
+                ClosingDate = c.ClosingDate,
                 CreatedDate = c.CreatedDate,
-                LegalEntityName = c.LegalEntityName,
-                TransferInfo = c.TransferInfo,
-                OwnerType = c.OwnerType,
+                ClosedDate = c.ClosedDate,
                 HasSubmittedAdditionalQuestions = c.HasSubmittedAdditionalQuestions ?? false,
-                Ukprn = c.Ukprn
+                Id = c.Id,
+                LegalEntityName = c.LegalEntityName,
+                OwnerType = c.OwnerType,
+                SourceOrigin = c.SourceOrigin,
+                Status = c.Status,
+                Title = c.Title,
+                TransferInfo = c.TransferInfo,
+                Ukprn = c.Ukprn,
+                VacancyReference = c.VacancyReference,
             })
             .Skip(skip)
             .Take(take)
@@ -313,6 +320,27 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         return vacancies;
     }
 
+    public Task<int> GetLiveVacanciesCountAsync(CancellationToken cancellationToken)
+    {
+        var utcNow = DateTime.UtcNow;
+
+        return dataContext.VacancyEntities
+            .AsNoTracking()
+            .Where(v =>
+                v.Status == VacancyStatus.Live &&
+                v.ClosingDate > utcNow)
+            .SumAsync(v => v.NumberOfPositions, cancellationToken)
+            .ContinueWith(t => t.Result ?? 0, cancellationToken);
+    }
+
+    public async Task<int> CountVacanciesByUserIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await dataContext
+            .VacancyEntities
+            .Where(x => x.SubmittedByUserId == id)
+            .CountAsync(cancellationToken);
+    }
+
     public async Task<List<VacancyTransferSummaryEntity>> GetAllTransferInfoByUkprn(int ukprn, CancellationToken cancellationToken)
     {
         return await dataContext.VacancyEntities
@@ -341,14 +369,28 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         var existingEntity = entity.Id == Guid.Empty ? null : await GetOneAsync(entity.Id, cancellationToken);
         if (existingEntity is null)
         {
+            entity.VacancyReference ??= (await GetNextVacancyReferenceAsync(cancellationToken)).Value;
             await dataContext.VacancyEntities.AddAsync(entity, cancellationToken);
             await dataContext.SaveChangesAsync(cancellationToken);
-            return UpsertResult.Create(entity, true);
+            return UpsertResult.Create(entity, true, false); // do we want to notify on create?
+        }
+
+        var oldStatus = existingEntity.Status;
+
+        //FAI-2857 - temp setting of review requested by user id so it isnt over-written 
+        if (existingEntity.ReviewRequestedByUserId != null && entity.ReviewRequestedByUserId == null && entity.TransferInfo == null)
+        {
+            entity.ReviewRequestedByUserId = existingEntity.ReviewRequestedByUserId;
+        }
+
+        if (existingEntity.VacancyReference == null && entity.VacancyReference == null)
+        {
+            entity.VacancyReference = (await GetNextVacancyReferenceAsync(cancellationToken)).Value;
         }
 
         dataContext.SetValues(existingEntity, entity);
         await dataContext.SaveChangesAsync(cancellationToken);
-        return UpsertResult.Create(entity, false);
+        return UpsertResult.Create(entity, false, oldStatus != existingEntity.Status);
     }
 
     public async Task<bool> DeleteOneAsync(Guid key, CancellationToken cancellationToken)
@@ -357,7 +399,7 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
         switch (entity)
         {
             case null: return false;
-            case { Status: VacancyStatus.Draft or VacancyStatus.Referred or VacancyStatus.Rejected, ClosedDate: null }:
+            case { Status: VacancyStatus.Draft or VacancyStatus.Referred or VacancyStatus.Rejected or VacancyStatus.Review, ClosedDate: null }:
             case { Status: VacancyStatus.Submitted, ClosedDate: null } when entity.ClosingDate < DateTime.UtcNow:
                 entity.DeletedDate = DateTime.UtcNow;
                 await dataContext.SaveChangesAsync(cancellationToken);
@@ -409,6 +451,20 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
             Status = c.Key,
             Count = c.Count()
         }).ToList();
+    }
+
+    public async Task<int> GetEmployerReviewVacancies(long accountId, CancellationToken cancellationToken)
+    {
+        var result = await dataContext.VacancyEntities.AsNoTracking()
+            .Where(c=>c.AccountId == accountId && c.OwnerType == OwnerType.Provider && c.Status == VacancyStatus.Review && c.DeletedDate == null)
+            .Select(c => new {
+                c.LegalEntityName,
+                c.Title,
+                c.VacancyReference
+            })
+            .CountAsync(cancellationToken);
+
+        return result;
     }
 
     public async Task<List<(int, bool)>> GetEmployerVacanciesClosingSoonWithApplications(long accountId,

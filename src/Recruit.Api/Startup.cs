@@ -1,13 +1,16 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using HotChocolate.AspNetCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
+using SFA.DAS.Api.Common.Middleware;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Recruit.Api.AppStart;
 using SFA.DAS.Recruit.Api.Data;
@@ -52,8 +55,7 @@ internal class Startup
 
     private bool IsEnvironmentLocalOrDev =>
         _environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase)
-        || _environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase)
-        || _environmentName.Equals("TEST", StringComparison.CurrentCultureIgnoreCase);
+        || _environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase);
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -75,7 +77,7 @@ internal class Startup
 
         services.Configure<ConnectionStrings>(Configuration.GetSection(nameof(ConnectionStrings)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<ConnectionStrings>>()!.Value);
-        var candidateAccountConfiguration = Configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
+        var connectionStrings = Configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
 
         services
             .AddMvc(o =>
@@ -91,16 +93,11 @@ internal class Startup
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            })
-            .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
         services.RegisterDasEncodingService(Configuration);
         services.AddApplicationDependencies(Configuration);
-        services.AddDatabaseRegistration(candidateAccountConfiguration!, Configuration["EnvironmentName"]);
+        services.AddDatabaseRegistration(connectionStrings!, Configuration["EnvironmentName"]);
         services.AddOpenTelemetryRegistration(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!);
         services.ConfigureHealthChecks();
         services.AddEndpointsApiExplorer();
@@ -111,6 +108,7 @@ internal class Startup
             c.DocumentFilter<JsonPatchDocumentFilter>();
             c.DocumentFilter<HealthChecksFilter>();
             c.MapType<VacancyReference>(() => new OpenApiSchema { Type = "string" });
+            c.SchemaFilter<FlagsEnumSchemaFilter>();
         });
         services.AddApiVersioning(opt =>
         {
@@ -118,11 +116,31 @@ internal class Startup
             opt.DefaultApiVersion = new ApiVersion(1, 0);
         });
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+        services
+            .AddGraphQLServer()
+            .ModifyCostOptions(options =>
+            {
+                options.MaxFieldCost = 10_000;
+            })
+            .AddAuthorization()
+            .AddPagingArguments()
+            .AddFiltering()
+            .AddSorting()
+            .AddProjections()
+            .AddTypes()
+            .DisableIntrospection(!IsEnvironmentLocalOrDev)
+            .RegisterDbContextFactory<GraphQlDataContext>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        
+        app.UseMiddleware<SecurityHeadersMiddleware>();
+        
         app.UseAuthentication();
             
         app.UseSwagger();
@@ -135,6 +153,29 @@ internal class Startup
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthorization();
-        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            var graphQlBuilder = endpoints
+                .MapGraphQL()
+                .WithOptions(new GraphQLServerOptions {
+                    EnableSchemaRequests = IsEnvironmentLocalOrDev,
+                    Tool = {
+                        Enable = IsEnvironmentLocalOrDev,
+                        ServeMode = GraphQLToolServeMode.Embedded
+                    }
+                });
+            
+            if (!IsEnvironmentLocalOrDev)
+            {
+                // TODO: could do with splitting the middleware and applying auth to the endpoint only
+                graphQlBuilder.RequireAuthorization();
+            }
+        });
+    }
+    
+    public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
+    {
+        serviceProvider.StartNServiceBus(Configuration);
     }
 }

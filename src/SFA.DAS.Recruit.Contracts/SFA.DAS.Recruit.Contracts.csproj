@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace>SFA.DAS.Recruit.Contracts</RootNamespace>
+    <AssemblyName>SFA.DAS.Recruit.Contracts</AssemblyName>
+    <ApiContractsSwaggerJsonPath>$(MSBuildThisFileDirectory)..\Recruit.Api\swagger.json</ApiContractsSwaggerJsonPath>
+    <ApiContractsNamespace>SFA.DAS.Recruit.Contracts</ApiContractsNamespace>
+    <ApiContractsOutputDirectory>$(MSBuildThisFileDirectory)Generated</ApiContractsOutputDirectory>
+    <ApiContractsClientName>RecruitApi</ApiContractsClientName>
+    <ApiContractsJsonLibrary>Both</ApiContractsJsonLibrary>
+    <IsPackable>true</IsPackable>
+    <Authors>GOV.UK Education and Skills Funding Agency (ESFA) Digital Apprenticeship Service (DAS)</Authors>
+    <Description>Recruit inner API request and response for use with APIM.</Description>
+    <License>https://github.com/SkillsFundingAgency/das-shared-packages/blob/master/LICENSE</License>
+    <PackageProjectUrl>https://github.com/SkillsFundingAgency/das-recruit-api</PackageProjectUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.187" />
+    <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.184" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Generated\" />
+  </ItemGroup>
+
+</Project>

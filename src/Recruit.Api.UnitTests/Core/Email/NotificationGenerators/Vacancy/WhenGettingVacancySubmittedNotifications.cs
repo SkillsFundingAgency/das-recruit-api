@@ -34,7 +34,7 @@ public class WhenGettingVacancySubmittedNotifications
         vacancy.OwnerType = OwnerType.Provider;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()),
@@ -58,7 +58,7 @@ public class WhenGettingVacancySubmittedNotifications
         vacancy.OwnerType = ownerType;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()),
@@ -78,14 +78,14 @@ public class WhenGettingVacancySubmittedNotifications
         vacancy.OwnerType = OwnerType.Provider;
 
         // act
-        await sut.CreateAsync(vacancy, CancellationToken.None);
+        await sut.CreateAsync(vacancy, [], CancellationToken.None);
 
         // assert
         userRepository.Verify(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, It.IsAny<CancellationToken>()),
             Times.Never);
     }
 
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task The_Notifications_Contain_The_Correct_Values(
         VacancyEntity vacancy,
         UserEntity user,
@@ -103,6 +103,18 @@ public class WhenGettingVacancySubmittedNotifications
         vacancy.Status = VacancyStatus.Submitted;
         vacancy.ReviewRequestedByUserId = Guid.NewGuid();
         vacancy.OwnerType = OwnerType.Provider;
+        user.NotificationPreferences = new NotificationPreferences {
+            EventPreferences = new List<NotificationPreference>() {
+                new(NotificationTypes.ApplicationSubmitted, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+                new(NotificationTypes.VacancyApprovedOrRejected, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+                new(NotificationTypes.VacancySentForReview, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+                new(NotificationTypes.ApplicationSharedWithEmployer, "Email", NotificationScope.OrganisationVacancies,
+                    NotificationFrequency.Immediately),
+            }
+        };
 
         userRepository
             .Setup(x => x.FindUsersByUkprnAsync(vacancy.Ukprn!.Value, cts.Token))
@@ -115,7 +127,7 @@ public class WhenGettingVacancySubmittedNotifications
             .Returns(notificationSettingsUrl);
 
         // act
-        var results = await sut.CreateAsync(vacancy, cts.Token);
+        var results = await sut.CreateAsync(vacancy, [], cts.Token);
 
         // assert
         results.Delayed.Should().BeEmpty();

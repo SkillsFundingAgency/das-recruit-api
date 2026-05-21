@@ -1,4 +1,5 @@
 mode: Mainline
+tag-prefix: SFA.DAS.Recruit.Contracts/
 commit-message-incrementing: MergeMessageOnly
 branches: {}
 ignore:

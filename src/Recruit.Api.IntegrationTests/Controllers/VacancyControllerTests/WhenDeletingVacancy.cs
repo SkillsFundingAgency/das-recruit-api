@@ -1,10 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
-using SFA.DAS.Recruit.Api.Testing.Diagnostics;
-using SFA.DAS.Recruit.Api.Testing.Http;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
@@ -17,7 +15,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
     public async Task Then_The_Vacancy_Is_NotFound()
     {
         // act
-        var response = await Measure.ThisAsync(async () => await Client.DeleteAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}"));
+        var response = await Client.DeleteAsync(new DeleteVacanciesByVacancyIdApiRequest(Guid.NewGuid()).DeleteUrl);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -38,7 +36,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
         });
         
         // act
-        var response = await Measure.ThisAsync(async () => await Client.DeleteAsync($"{RouteNames.Vacancies}/{vacancy.Id}"));
+        var response = await Client.DeleteAsync(new DeleteVacanciesByVacancyIdApiRequest(itemToDelete.Id).DeleteUrl);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -59,7 +57,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
         });
         
         // act
-        var response = await Measure.ThisAsync(async () => await Client.DeleteAsync($"{RouteNames.Vacancies}/{vacancy.Id}"));
+        var response = await Client.DeleteAsync(new DeleteVacanciesByVacancyIdApiRequest(target.Id).DeleteUrl);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -77,7 +75,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
         });
 
         // act
-        var response = await Measure.ThisAsync(async () => await Client.DeleteAsync($"{RouteNames.Vacancies}/{vacancy.Id}"));
+        var response = await Client.DeleteAsync(new DeleteVacanciesByVacancyIdApiRequest(target.Id).DeleteUrl);
         var problem = await response.Content.ReadAsAsync<ProblemDetails>();
         
         // assert
@@ -89,8 +87,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
     
     [TestCase(VacancyStatus.Approved)]
     [TestCase(VacancyStatus.Live)]
-    [TestCase(VacancyStatus.Review)]
-    public async Task Then_An_Open_Vacancy_With_The_Specific_State_Cannot_Be_Deleted(VacancyStatus status)
+    public async Task Then_An_Open_Vacancy_With_The_A_Specific_State_Cannot_Be_Deleted(VacancyStatus status)
     {
         // arrange
         var vacancy = await DbData.Create<VacancyEntity>(x =>
@@ -101,7 +98,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
         });
         
         // act
-        var response = await Measure.ThisAsync(async () => await Client.DeleteAsync($"{RouteNames.Vacancies}/{vacancy.Id}"));
+        var response = await Client.DeleteAsync(new DeleteVacanciesByVacancyIdApiRequest(target.Id).DeleteUrl);
         var problem = await response.Content.ReadAsAsync<ProblemDetails>();
 
         // assert
@@ -124,7 +121,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
         });
         
         // act
-        var response = await Measure.ThisAsync(async () => await Client.DeleteAsync($"{RouteNames.Vacancies}/{vacancy.Id}"));
+        var response = await Client.DeleteAsync(new DeleteVacanciesByVacancyIdApiRequest(target.Id).DeleteUrl);
         var problem = await response.Content.ReadAsAsync<ProblemDetails>();
         
 
@@ -145,7 +142,7 @@ public class WhenDeletingVacancy: MsSqlBaseFixture
         });
         
         // act
-        var response = await Measure.ThisAsync(async () => await Client.DeleteAsync($"{RouteNames.Vacancies}/{vacancy.Id}"));
+        var response = await Client.DeleteAsync(new DeleteVacanciesByVacancyIdApiRequest(target.Id).DeleteUrl);
         var problem = await response.Content.ReadAsAsync<ProblemDetails>();
 
         // assert

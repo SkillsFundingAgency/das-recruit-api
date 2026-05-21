@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models.Requests.ApplicationReview;
 using SFA.DAS.Recruit.Api.Validators;
+using SFA.DAS.Recruit.Api.Validators.ApplicationReview;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Validators;
 

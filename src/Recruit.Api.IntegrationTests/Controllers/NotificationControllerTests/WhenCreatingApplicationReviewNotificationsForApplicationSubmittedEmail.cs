@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using SFA.DAS.Encoding;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
@@ -30,7 +30,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         Server.DataContext.Setup(x => x.UserEmployerAccountEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReviews[1].Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReviews[1].Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
 
         // assert
@@ -38,7 +38,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         notificationEmails.Should().HaveCount(0);
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Immediate_Notifications_Are_Returned_For_Employer_User(
         string expectedHashedAccountId,
         ApplicationReviewEntity applicationReview,
@@ -54,7 +54,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
 
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
-        providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        providerUser.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         employerUser.UserType = UserType.Employer;
         employerUser.EmployerAccounts = [
@@ -64,8 +64,8 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
                 User = employerUser
             }
         ];
-        employerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        employerUser.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
@@ -76,7 +76,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             .Returns(expectedHashedAccountId);
     
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReview.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReview.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
     
         // assert
@@ -96,7 +96,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         });
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Immediate_Notifications_Are_Returned_For_Provider_User(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
@@ -108,11 +108,11 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.VacancyReference = applicationReview.VacancyReference;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
 
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
-        providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        providerUser.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         employerUser.UserType = UserType.Employer;
         employerUser.EmployerAccounts = [
@@ -122,7 +122,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
                 User = employerUser
             }
         ];
-        employerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately); 
+        employerUser.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately); 
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
@@ -130,7 +130,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         Server.DataContext.Setup(x => x.UserEmployerAccountEntities).ReturnsDbSet(employerUser.EmployerAccounts);
     
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReview.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReview.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
     
         // assert
@@ -150,7 +150,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         });
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task The_The_Location_Text_Is_Generated_For_Multiple_Cities(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
@@ -164,16 +164,17 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         vacancy.EmployerLocationOption = AvailableWhere.MultipleLocations;
         vacancy.EmployerLocations = ApiUtils.SerializeOrNull(addresses);
 
+        providerUser.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
-        providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        providerUser.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
         Server.DataContext.Setup(x => x.UserEntities).ReturnsDbSet([providerUser]);
     
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReview.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReview.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
     
         // assert
@@ -182,7 +183,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         notificationEmails[0].Tokens["location"].Should().Be(addresses.GetCityNames());
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Daily_Notifications_Are_Stored_For_Later_Delivery(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
@@ -196,8 +197,8 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
 
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
-        providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        providerUser.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
@@ -209,7 +210,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             .Callback<IEnumerable<RecruitNotificationEntity>>(x => capturedNotifications = x);
     
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReview.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReview.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
     
         // assert
@@ -234,7 +235,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
         dynamicData["location"].Should().Be("Recruiting nationally");
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Weekly_Notifications_Are_Stored_For_Later_Delivery(
         ApplicationReviewEntity applicationReview,
         VacancyEntity vacancy,
@@ -248,13 +249,13 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
 
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
-        providerUser.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Weekly);
+        providerUser.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Weekly);
         
         Server.DataContext.Setup(x => x.ApplicationReviewEntities).ReturnsDbSet([applicationReview]);
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
         Server.DataContext.Setup(x => x.UserEntities).ReturnsDbSet([providerUser]);
         
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
 
         IEnumerable<RecruitNotificationEntity>? capturedNotifications = null;
         Server.DataContext
@@ -262,7 +263,7 @@ public class WhenCreatingApplicationReviewNotificationsForApplicationSubmittedEm
             .Callback<IEnumerable<RecruitNotificationEntity>>(x => capturedNotifications = x);
     
         // act
-        var response = await Client.PostAsync($"{RouteNames.ApplicationReview}/{applicationReview.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostApplicationreviewsByIdCreateNotificationsApiRequest { Id = applicationReview.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
     
         // assert

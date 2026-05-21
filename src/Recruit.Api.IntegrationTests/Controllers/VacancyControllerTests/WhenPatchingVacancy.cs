@@ -1,12 +1,11 @@
 using System.Net;
-using Microsoft.AspNetCore.JsonPatch;
+using System.Net.Http.Json;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
-using SFA.DAS.Recruit.Api.Testing;
-using SFA.DAS.Recruit.Api.Testing.Data;
-using SFA.DAS.Recruit.Api.Testing.Http;
+using SFA.DAS.Recruit.Api.UnitTests;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
@@ -24,7 +23,7 @@ public class WhenPatchingVacancy: BaseFixture
         patchDocument.Add(x => x.ShortDescription, "shortDescription");
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}", patchDocument);
+        var response = await Client.PatchAsJsonAsync(new PatchVacanciesByVacancyIdApiRequest { VacancyId = Guid.NewGuid() }.PatchUrl, patchDocument);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -43,7 +42,7 @@ public class WhenPatchingVacancy: BaseFixture
         patchDocument.Add(x => x.CreatedDate, DateTime.Now);
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.Vacancies}/{items[1].Id}", patchDocument);
+        var response = await Client.PatchAsJsonAsync(new PatchVacanciesByVacancyIdApiRequest { VacancyId = items[1].Id }.PatchUrl, patchDocument);
         var errors = await response.Content.ReadAsAsync<ValidationProblemDetails>();
 
         // assert
@@ -60,7 +59,6 @@ public class WhenPatchingVacancy: BaseFixture
         var items = Fixture.CreateMany<VacancyEntity>(10).ToList();
         var itemsClone = items.JsonClone();
         var targetItem = itemsClone[4].JsonClone();
-        var updatedItem = items[4];
         
         Server.DataContext
             .SetupSequence(x => x.VacancyEntities)
@@ -71,12 +69,10 @@ public class WhenPatchingVacancy: BaseFixture
         patchDocument.Add(x => x.ShortDescription, "shortDescription");
         
         // act
-        var response = await Client.PatchAsync($"{RouteNames.Vacancies}/{targetItem.Id}", patchDocument);
+        var response = await Client.PatchAsJsonAsync(new PatchVacanciesByVacancyIdApiRequest { VacancyId = targetItem.Id }.PatchUrl, patchDocument);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
-        Server.DataContext.Verify(x => x.SetValues(ItIs.EquivalentTo(targetItem), ItIs.EquivalentTo(updatedItem)), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }

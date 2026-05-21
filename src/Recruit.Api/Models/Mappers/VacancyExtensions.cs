@@ -54,6 +54,7 @@ public static class VacancyExtensions
             ProviderReviewFieldIndicators = ApiUtils.SerializeOrNull(request.ProviderReviewFieldIndicators),
             Qualifications = ApiUtils.SerializeOrNull(request.Qualifications),
             ReviewCount = request.ReviewCount,
+            //ReviewRequestedByUserId = request.ReviewRequestedByUserId, // Currently does a lookup
             ReviewRequestedDate = request.ReviewRequestedDate,
             ShortDescription = request.ShortDescription,
             Skills = ApiUtils.SerializeOrNull(request.Skills),
@@ -62,7 +63,7 @@ public static class VacancyExtensions
             SourceVacancyReference = request.SourceVacancyReference,
             StartDate = request.StartDate,
             Status = request.Status ?? VacancyStatus.Draft,
-            //SubmittedByUserId = request.SubmittedByUserId,
+            //SubmittedByUserId = request.SubmittedByUserId, // Currently does a lookup
             SubmittedDate = request.SubmittedDate,
             ThingsToConsider = request.ThingsToConsider,
             Title = request.Title,
@@ -86,6 +87,7 @@ public static class VacancyExtensions
     {
         ArgumentNullException.ThrowIfNull(entity);
 
+        var employerLocations = ApiUtils.DeserializeOrNull<List<Address>>(entity.EmployerLocations);
         return new Vacancy {
             AccountId = entity.AccountId,
             AccountLegalEntityId = entity.AccountLegalEntityId,
@@ -113,8 +115,13 @@ public static class VacancyExtensions
             DisabilityConfident = entity.DisabilityConfident,
             EmployerDescription = entity.EmployerDescription,
             EmployerLocationInformation = entity.EmployerLocationInformation,
-            EmployerLocationOption = entity.EmployerLocationOption,
-            EmployerLocations = ApiUtils.DeserializeOrNull<List<Address>>(entity.EmployerLocations),
+            EmployerLocationOption = entity.EmployerLocationOption ?? employerLocations switch
+            {
+                { Count: 1 } => AvailableWhere.OneLocation,
+                { Count: > 1 } => AvailableWhere.MultipleLocations,
+                _ => AvailableWhere.AcrossEngland
+            },
+            EmployerLocations = employerLocations,
             EmployerName = entity.EmployerName,
             EmployerNameOption = entity.EmployerNameOption,
             EmployerRejectedReason = entity.EmployerRejectedReason,
@@ -133,12 +140,12 @@ public static class VacancyExtensions
             OwnerType = entity.OwnerType,
             ProgrammeId = entity.ProgrammeId,
             ProviderReviewFieldIndicators = ApiUtils.DeserializeOrNull<List<ReviewFieldIndicator>>(entity.ProviderReviewFieldIndicators),
-            Qualifications = ApiUtils.DeserializeOrNull<List<Qualification>>(entity.Qualifications),
+            Qualifications = ApiUtils.DeserializeOrNull<List<Qualification>>(entity.Qualifications) ?? [],
             ReviewCount = entity.ReviewCount,
             ReviewRequestedByUserId = entity.ReviewRequestedByUserId,
             ReviewRequestedDate = entity.ReviewRequestedDate,
             ShortDescription = entity.ShortDescription,
-            Skills = ApiUtils.DeserializeOrNull<List<string>>(entity.Skills),
+            Skills = ApiUtils.DeserializeOrNull<List<string>>(entity.Skills) ?? [],
             SourceOrigin = entity.SourceOrigin,
             SourceType = entity.SourceType,
             SourceVacancyReference = entity.SourceVacancyReference,
@@ -157,7 +164,7 @@ public static class VacancyExtensions
             },
             TransferInfo = ApiUtils.DeserializeOrNull<TransferInfo>(entity.TransferInfo),
             VacancyReference = entity.VacancyReference,
-            Wage = entity.Wage_WageType is null ? null : new Wage
+            Wage = entity.Wage_WageType is null && entity.Wage_Duration is null ? null : new Wage
             {
                 CompanyBenefitsInformation = entity.Wage_CompanyBenefitsInformation,
                 Duration = entity.Wage_Duration,
@@ -180,17 +187,22 @@ public static class VacancyExtensions
             VacancyReference = entity.VacancyReference,
             Title = entity.Title,
             ClosingDate = entity.ClosingDate,
+            ClosedDate = entity.ClosedDate,
             Status = entity.Status,
             CreatedDate = entity.CreatedDate,
             ApplicationMethod = entity.ApplicationMethod,
             LegalEntityName = entity.LegalEntityName,
+            TransferInfo = entity.TransferInfo,
             TransferInfoUkprn = transferInfo?.Ukprn,
             TransferInfoProviderName = transferInfo?.ProviderName,
             TransferInfoReason = transferInfo?.Reason,
             TransferInfoTransferredDate = transferInfo?.TransferredDate,
             ApprenticeshipType = entity.ApprenticeshipType,
             IsTraineeship = false,
-            IsTaskListCompleted = entity.OwnerType is OwnerType.Employer or OwnerType.Provider && entity.HasSubmittedAdditionalQuestions
+            IsTaskListCompleted = entity.OwnerType is OwnerType.Employer or OwnerType.Provider && entity.HasSubmittedAdditionalQuestions,
+            SourceOrigin = entity.SourceOrigin,
+            OwnerType = entity.OwnerType,
+            HasSubmittedAdditionalQuestions = entity.HasSubmittedAdditionalQuestions
         };
     }
 

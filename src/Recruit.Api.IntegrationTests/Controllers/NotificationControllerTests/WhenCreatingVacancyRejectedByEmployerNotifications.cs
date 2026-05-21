@@ -1,6 +1,6 @@
 ﻿using System.Net;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -24,7 +24,7 @@ public class WhenCreatingVacancyRejectedByEmployerNotifications: BaseFixture
         Server.DataContext.Setup(x => x.UserEmployerAccountEntities).ReturnsDbSet([]);
 
         // act
-        var response = await Client.PostAsync($"{RouteNames.Vacancies}/{vacancy.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostVacanciesByIdCreateNotificationsApiRequest { Id = vacancy.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
 
         // assert
@@ -45,19 +45,20 @@ public class WhenCreatingVacancyRejectedByEmployerNotifications: BaseFixture
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         vacancy.EmployerRejectedReason = "Some reason";
-        
+
+        providerUser.LastSignedInDate = DateTime.UtcNow;
         providerUser.UserType = UserType.Provider;
         providerUser.Ukprn = vacancy.Ukprn;
-        providerUser.SetEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        providerUser.InitEmailPref(NotificationTypes.VacancyApprovedOrRejected, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet([vacancy]);
         Server.DataContext.Setup(x => x.UserEntities).ReturnsDbSet([providerUser]);
         Server.DataContext.Setup(x => x.UserEmployerAccountEntities).ReturnsDbSet([]);
     
-        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"));
+        var templateHelper = new EmailTemplateHelper(new DevelopmentEmailTemplateIds(), new DevelopmentRecruitBaseUrls("local"), new DevelopmentFaaBaseUrls("local"));
         
         // act
-        var response = await Client.PostAsync($"{RouteNames.Vacancies}/{vacancy.Id}/create-notifications", null);
+        var response = await Client.PostAsync(new PostVacanciesByIdCreateNotificationsApiRequest { Id = vacancy.Id }.PostUrl, null);
         var notificationEmails = await response.Content.ReadAsAsync<List<NotificationEmail>>();
     
         // assert

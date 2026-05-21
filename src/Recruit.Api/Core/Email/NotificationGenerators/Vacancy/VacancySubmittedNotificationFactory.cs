@@ -12,7 +12,7 @@ public class VacancySubmittedNotificationFactory(
     IUserRepository userRepository,
     IEmailTemplateHelper emailTemplateHelper): IVacancyNotificationFactory
 {
-    public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, CancellationToken cancellationToken)
+    public async Task<RecruitNotificationsResult> CreateAsync(VacancyEntity vacancy, Dictionary<string, string> data, CancellationToken cancellationToken)
     {
         if (vacancy is not { Status: VacancyStatus.Submitted })
         {

@@ -1,12 +1,11 @@
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Exceptions;
-using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Operations;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Domain;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
@@ -29,8 +28,8 @@ public class UserController
                     {
                         path = nameof(UserEntity.EmployerAccounts),
                         op = operation.op,
-                        value = (operation.value as JArray)!.Select(x => new UserEmployerAccountEntity
-                            { UserId = (Guid)key, EmployerAccountId = x.Value<long>()! })
+                        value = ((System.Text.Json.JsonElement)operation.value).EnumerateArray().Select(x => new UserEmployerAccountEntity
+                            { UserId = (Guid)key, EmployerAccountId = x.GetInt64()! })
                     },
                     _ => throw new JsonPatchException(new JsonPatchError(null, operation, $"Operation type '{operation.op}' not supported for property '{nameof(UserEntity.EmployerAccounts)}'"))
                 };
@@ -54,7 +53,24 @@ public class UserController
         
         return TypedResults.Ok(result.ToGetResponse());
     }
-    
+
+    [HttpPost, Route("by/email")]
+    [ProducesResponseType(typeof(RecruitUser), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> GetOneByEmail(
+        [FromServices] IUserRepository repository,
+        [FromBody] GetUserRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.FindUserByEmailAsync(request.Email, UserTypeExtensions.ToDomain(request.UserType), cancellationToken);
+        if (result is null)
+        {
+            return TypedResults.NotFound();
+        }
+
+        return TypedResults.Ok(result.ToGetResponse());
+    }
+
     [HttpGet, Route("by/employerAccountId/{employerAccountId:long}")]
     [ProducesResponseType(typeof(List<RecruitUser>), StatusCodes.Status200OK)]
     public async Task<IResult> GetAllByEmployerAccountId(
@@ -142,7 +158,7 @@ public class UserController
         
         return TypedResults.Ok(result.ToGetResponse());
     }
-    
+
     [HttpPut, Route("{id:guid}")]
     [ProducesResponseType(typeof(PutUserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(PutUserResponse), StatusCodes.Status201Created)]
@@ -159,7 +175,7 @@ public class UserController
             : TypedResults.Ok(result.Entity.ToPutResponse());
     }
     
-    [HttpPatch, Route("{id:guid}")]
+    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json"), Route("{id:guid}")]
     [ProducesResponseType(typeof(RecruitUser), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

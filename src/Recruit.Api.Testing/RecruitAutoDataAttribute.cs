@@ -14,6 +14,7 @@ public static class RecruitFixtureBuilder
         fixture.Customizations.Add(new VacancyReviewEntitySpecimenBuilder());
         fixture.Customizations.Add(new VacancyEntitySpecimenBuilder());
         fixture.Customizations.Add(new RecruitNotificationEntitySpecimenBuilder());
+        fixture.Customizations.Add(new UserEntitySpecimenBuilder());
         return fixture;
     }
 }

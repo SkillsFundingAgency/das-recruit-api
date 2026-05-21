@@ -1,7 +1,10 @@
-using System.Collections.ObjectModel;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 
 namespace SFA.DAS.Recruit.Api.Domain.Entities;
+
+/*
+ IMPORTANT: if you add properties you MUST update the VacancyMapper, otherwise patch operations will cause data loss. 
+*/
 
 public class VacancyEntity
 {

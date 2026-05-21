@@ -2,5 +2,5 @@
 public record EmployerTransferredVacanciesAlertModel
 {
     public int TransferredVacanciesCount { get; init; }
-    public List<string?> TransferredVacanciesProviderNames { get; init; } = [];
+    public List<string> TransferredVacanciesProviderNames { get; init; } = [];
 }

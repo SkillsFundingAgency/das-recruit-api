@@ -1,5 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
+using HotChocolate.Execution.Configuration;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core.Email;
@@ -9,8 +10,12 @@ using SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
-using SFA.DAS.Recruit.Api.Data.VacancyReview;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
+using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Validators;
+using SFA.DAS.Recruit.Api.Services;
+using SFA.DAS.Recruit.Api.Validators.Rules;
+using SFA.DAS.Recruit.Api.Validators.Rules.VacancyRules;
 
 namespace SFA.DAS.Recruit.Api.AppStart;
 
@@ -21,6 +26,19 @@ public static class AddServiceRegistrationExtension
     {
         // validators
         services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
+        services.AddTransient<IHtmlSanitizerService, HtmlSanitizerService>();
+        services.AddTransient<IMinimumWageProvider, MinimumWageProvider>();
+        services.AddSingleton(TimeProvider.System);
+
+        services.AddScoped<VacancyAnonymousRule>();
+        services.AddScoped<VacancyBannedPhraseRule>();
+        services.AddScoped<VacancyProfanityRule>();
+        services.AddTransient<IEnumerable<IRule<VacancySnapshot>>>(sp =>
+        [
+            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyAnonymousRule))!,
+            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyBannedPhraseRule))!,
+            (IRule<VacancySnapshot>)sp.GetService(typeof(VacancyProfanityRule))!,
+        ]);
 
         // providers
         services.AddScoped<IApplicationReviewsProvider, ApplicationReviewsProvider>();
@@ -37,13 +55,19 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IVacancyReviewRepository, VacancyReviewRepository>();
         services.AddScoped<IVacancyRepository, VacancyRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
+        services.AddScoped<IVacancyAnalyticsRepository, VacancyAnalyticsRepository>();
+
+        services.AddDistributedMemoryCache();
 
         // email
-        string env = configuration["ResourceEnvironmentName"] ?? "local";
-        bool isProduction = env.Equals("PRD", StringComparison.CurrentCultureIgnoreCase);
+        var env = configuration["ResourceEnvironmentName"] ?? "local";
+        var isProduction = env.Equals("PRD", StringComparison.CurrentCultureIgnoreCase);
         services.AddSingleton<IRecruitBaseUrls>(isProduction
             ? new ProductionRecruitBaseUrls()
             : new DevelopmentRecruitBaseUrls(env));
+        services.AddSingleton<IFaaBaseUrl>(isProduction
+            ? new ProductionFaaBaseUrls()
+            : new DevelopmentFaaBaseUrls(env));
         services.AddSingleton<IEmailTemplateIds>(isProduction
             ? new ProductionEmailTemplateIds()
             : new DevelopmentEmailTemplateIds());
@@ -57,6 +81,9 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<VacancyRejectedNotificationFactory>();
         services.AddScoped<VacancySentForReviewNotificationFactory>();
         services.AddScoped<VacancySubmittedNotificationFactory>();
+        services.AddScoped<VacancyApprovedNotificationFactory>();
+        services.AddScoped<VacancyReferredNotificationFactory>();
+        services.AddScoped<VacancyClosedNotificationFactory>();
         services.AddScoped<IVacancyNotificationStrategy, VacancyNotificationStrategy>();
         
         // email template handlers
@@ -64,6 +91,10 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IEmailTemplateHandler, ApplicationSubmittedDelayedEmailHandler>();
         services.AddScoped<IEmailTemplateHandler, SharedApplicationReviewedByEmployerDelayedEmailHandler>();
         services.AddScoped<IEmailFactory, EmailFactory>();
+        
+        // services
+        services.AddScoped<IEventsService, EventsService>();
+        services.AddScoped<IAutomatedReviewService, AutomatedReviewService>();
     }
 
     public static void AddDatabaseRegistration(
@@ -82,6 +113,7 @@ public static class AddServiceRegistrationExtension
         {
             services.AddDbContext<RecruitDataContext>(options =>
                 options.UseSqlServer(config.SqlConnectionString), ServiceLifetime.Transient);
+            services.AddDbContextFactory<GraphQlDataContext>(options => options.UseSqlServer(config.SqlConnectionString), ServiceLifetime.Scoped);
         }
 
         services.AddScoped<IRecruitDataContext, RecruitDataContext>(provider =>
@@ -104,5 +136,13 @@ public static class AddServiceRegistrationExtension
         configuration.GetSection(nameof(dasEncodingConfig.Encodings)).Bind(dasEncodingConfig.Encodings);
         services.AddSingleton(dasEncodingConfig);
         services.AddSingleton<IEncodingService, EncodingService>();
+    }
+
+    public static IRequestExecutorBuilder AddTypes(this IRequestExecutorBuilder builder)
+    {
+        builder.AddTypeExtension(typeof(Data.Queries.PagedVacancyQuery));
+        builder.AddTypeExtension(typeof(Data.Queries.VacancyQuery));
+        builder.ConfigureSchema(b => b.TryAddRootType(() => new ObjectType(d => d.Name(OperationTypeNames.Query)), HotChocolate.Language.OperationType.Query));
+        return builder;
     }
 }

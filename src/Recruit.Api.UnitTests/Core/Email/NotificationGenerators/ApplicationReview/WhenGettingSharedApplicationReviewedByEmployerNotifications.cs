@@ -47,7 +47,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         // arrange
         vacancy.OwnerType = OwnerType.Employer;
         user.UserType = UserType.Provider;
-        user.SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        user.InitEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         
         vacancyRepository
             .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -102,7 +102,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
         result.Immediate.Should().BeEmpty();
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_The_Result_Should_Have_The_Required_Information(
         UserEntity user,
         VacancyEntity vacancy,
@@ -117,7 +117,7 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
     {
         // arrange
         user.UserType = UserType.Provider;
-        user.SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        user.InitEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
         vacancy.OwnerType = OwnerType.Provider;
         
         vacancyRepository
@@ -168,13 +168,17 @@ public class WhenGettingSharedApplicationReviewedByEmployerNotifications
     {
         // arrange
         // these users should receive notifications
-        users[0].SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
-        users[1].SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.UserSubmittedVacancies, NotificationFrequency.Immediately);
+        foreach (UserEntity userEntity in users)
+        {
+            userEntity.LastSignedInDate = DateTime.UtcNow.AddDays(-1);
+        }
+        users[0].InitEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Immediately);
+        users[1].InitEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.UserSubmittedVacancies, NotificationFrequency.Immediately);
         
         // these users should not receive notifications
-        users[2].SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Never);
+        users[2].InitEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.OrganisationVacancies, NotificationFrequency.Never);
         // this user does not match being the 'submitter'
-        users[3].SetEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.UserSubmittedVacancies, NotificationFrequency.Immediately);
+        users[3].InitEmailPref(NotificationTypes.SharedApplicationReviewedByEmployer, NotificationScope.UserSubmittedVacancies, NotificationFrequency.Immediately);
         
         vacancy.ReviewRequestedByUserId = users[1].Id;
         vacancy.OwnerType = OwnerType.Provider;

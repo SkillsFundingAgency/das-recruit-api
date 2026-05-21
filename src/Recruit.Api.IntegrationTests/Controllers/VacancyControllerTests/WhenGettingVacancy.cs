@@ -1,11 +1,7 @@
 using System.Net;
-using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models;
-using SFA.DAS.Recruit.Api.Models.Mappers;
-using SFA.DAS.Recruit.Api.Testing;
-using SFA.DAS.Recruit.Api.Testing.Diagnostics;
-using SFA.DAS.Recruit.Api.Testing.Http;
+using SFA.DAS.Recruit.Contracts.ApiRequests;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
@@ -19,7 +15,8 @@ public class WhenGettingVacancy: MsSqlBaseFixture
         var expected = items[new Random().Next(items.Count)];
 
         // act
-        var response = await Measure.ThisAsync(async () => await Client.GetAsync($"{RouteNames.Vacancies}/{expected.Id}"));
+        var request = new GetVacanciesByVacancyIdApiRequest(expected.Id);
+        var response = await Client.GetAsync(request.GetUrl);
         var vacancy = await response.Content.ReadAsAsync<Vacancy>();
 
         // assert
@@ -35,7 +32,8 @@ public class WhenGettingVacancy: MsSqlBaseFixture
         await DbData.CreateMany<VacancyEntity>(10);
 
         // act
-        var response = await Measure.ThisAsync(async () => await Client.GetAsync($"{RouteNames.Vacancies}/{Guid.NewGuid()}"));
+        var request = new GetVacanciesByVacancyIdApiRequest(Guid.NewGuid());
+        var response = await Client.GetAsync(request.GetUrl);
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);

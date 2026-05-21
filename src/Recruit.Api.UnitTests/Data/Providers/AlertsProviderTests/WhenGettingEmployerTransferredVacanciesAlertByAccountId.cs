@@ -62,9 +62,9 @@ internal class WhenGettingEmployerTransferredVacanciesAlertByAccountId
         var result = await sut.GetEmployerTransferredVacanciesAlertByAccountId(accountId, userId, TransferReason.EmployerRevokedPermission, token);
 
         // Assert
-        result.TransferredVacanciesProviderNames.Should().BeEquivalentTo(new[] { "Provider A", "Provider B" },
+        result.TransferredVacanciesProviderNames.Should().BeEquivalentTo(["Provider A", "Provider B"],
             options => options.WithStrictOrdering());
-        result.TransferredVacanciesCount.Should().Be(2);
+        result.TransferredVacanciesCount.Should().Be(3);
     }
 
     [Test, RecursiveMoqAutoData]

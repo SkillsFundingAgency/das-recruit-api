@@ -13,7 +13,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Core.Email.NotificationGenerators.Applic
 
 public class WhenGettingApplicationSubmittedDailyNotifications
 {
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Daily_Notifications_Should_Have_The_Required_Information_For_Provider_Created_Vacancy(
         UserEntity user,
         VacancyEntity vacancy,
@@ -30,7 +30,7 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         vacancy.OwnerType = OwnerType.Provider;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Provider;
-        user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
+        user.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
         
         vacancyRepository
             .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -74,7 +74,7 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         tokens["location"].Should().Be("Recruiting nationally");
     }
     
-    [Test, RecursiveMoqAutoData]
+    [Test, RecruitAutoData]
     public async Task Then_Daily_Notifications_Should_Have_The_Required_Information_For_Employer_Created_Vacancy(
         UserEntity user,
         VacancyEntity vacancy,
@@ -93,7 +93,7 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         vacancy.OwnerType = OwnerType.Employer;
         vacancy.EmployerLocationOption = AvailableWhere.AcrossEngland;
         user.UserType = UserType.Employer;
-        user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
+        user.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.Daily);
         
         vacancyRepository
             .Setup(x => x.GetOneByVacancyReferenceAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -149,7 +149,8 @@ public class WhenGettingApplicationSubmittedDailyNotifications
     {
         // arrange
         user.UserType = UserType.Provider;
-        user.SetEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet);
+
+        user.InitEmailPref(NotificationTypes.ApplicationSubmitted, NotificationScope.OrganisationVacancies, NotificationFrequency.NotSet);
         
         userRepository
             .Setup(x => x.FindUsersByUkprnAsync(It.IsAny<long>(), It.IsAny<CancellationToken>()))
@@ -162,6 +163,6 @@ public class WhenGettingApplicationSubmittedDailyNotifications
         var result = await sut.CreateAsync(applicationReview, CancellationToken.None);
 
         // assert
-        result.Delayed.Should().HaveCount(1);
+        result.Delayed.Should().HaveCount(0);
     }
 }

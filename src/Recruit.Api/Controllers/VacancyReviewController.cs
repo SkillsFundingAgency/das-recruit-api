@@ -1,22 +1,37 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.JsonPatch.Exceptions;
+using System.Net;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
+using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
-using SFA.DAS.Recruit.Api.Data.VacancyReview;
+using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
+using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController, Route($"{RouteNames.VacancyReviews}/{{id:guid}}")]
-public class VacancyReviewController: ControllerBase
+public class VacancyReviewController(ILogger<VacancyReviewController> logger): ControllerBase
 {
+    [HttpGet, Route($"~/{RouteNames.VacancyReviews}")]
+    [ProducesResponseType(typeof(List<VacancyReview>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetMany(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromQuery] List<ReviewStatus> reviewStatus,
+        [FromQuery] DateTime? expiredAssignationDateTime,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetManyByStatusAndExpiredAssignationDateTime(reviewStatus, expiredAssignationDateTime, cancellationToken);
+
+        return TypedResults.Ok(result.ToGetResponse());
+    }
+
     [HttpGet]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -35,26 +50,69 @@ public class VacancyReviewController: ControllerBase
     [HttpPut]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]   
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IResult> PutOne(
         [FromServices] IVacancyReviewRepository repository,
+        [FromServices] IUserRepository userRepository,
+        [FromServices] IAutomatedReviewService reviewService,
+        [FromServices] IEventsService eventsService,
         [FromRoute] Guid id,
         [FromBody] PutVacancyReviewRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+        if (string.IsNullOrEmpty(request.SubmittedByUserEmail))
+        {
+            if (string.IsNullOrEmpty(request.SubmittedByUserId))
+            {
+                logger.LogError("No user information supplied for Vacancy {VacancyReference}", request.VacancyReference);
+                request.SubmittedByUserEmail = $"unknown-{request.VacancyReference}";
+            }
+            else
+            {
+                var submittedUser = await userRepository.FindByUserIdAsync(request.SubmittedByUserId, cancellationToken);
 
-        return result.Created
-            ? TypedResults.Created($"/{RouteNames.VacancyReviews}/{result.Entity.Id}", result.Entity.ToPutResponse())
-            : TypedResults.Ok(result.Entity.ToPutResponse());
+                if (submittedUser is null)
+                {
+                    logger.LogError("Unable to find user {SubmittedByUserId} for Vacancy {VacancyReference}", request.SubmittedByUserId, request.VacancyReference);
+                    request.SubmittedByUserEmail = $"unknown-{request.SubmittedByUserId}";
+                }
+                else
+                {
+                    request.SubmittedByUserEmail = submittedUser?.Email;
+                }    
+            }
+        }
+
+        try
+        {
+            var upsertResult = await repository.UpsertOneAsync(request.ToDomain(id), cancellationToken);
+            if (upsertResult.Created)
+            {
+                // perform automated review
+                await reviewService.ProcessVacancyReviewAsync(upsertResult.Entity, cancellationToken);
+                await repository.UpsertOneAsync(upsertResult.Entity, cancellationToken);
+            }
+
+            await eventsService.HandleVacancyReviewStatusChange(upsertResult);
+            
+            return upsertResult.Created
+                ? TypedResults.Created($"/{RouteNames.VacancyReviews}/{upsertResult.Entity.Id}", upsertResult.Entity.ToPutResponse())
+                : TypedResults.Ok(upsertResult.Entity.ToPutResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "An error occured while updating VacancyReview");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
     }
     
-    [HttpPatch]
+    [HttpPatch, Consumes("application/json", "application/json-patch+json", "text/json", "application/*+json")]
     [ProducesResponseType(typeof(VacancyReview), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> PatchOne(
         [FromServices] IVacancyReviewRepository repository,
+        [FromServices] IEventsService eventsService,
         [FromRoute] Guid id,
         [FromBody] JsonPatchDocument<VacancyReview> patchRequest,
         CancellationToken cancellationToken)
@@ -80,7 +138,9 @@ public class VacancyReviewController: ControllerBase
             return TypedResults.ValidationProblem(ex.ToProblemsDictionary());
         }
 
-        await repository.UpsertOneAsync(vacancyReview, cancellationToken);
+        var upsertResult = await repository.UpsertOneAsync(vacancyReview, cancellationToken);
+        await eventsService.HandleVacancyReviewStatusChange(upsertResult);
+        
         return TypedResults.Ok(vacancyReview.ToPatchResponse());
     }
     
@@ -102,17 +162,48 @@ public class VacancyReviewController: ControllerBase
     [HttpGet, Route($"~/{RouteNames.Vacancies}/{{vacancyReference}}/reviews")]
     [ProducesResponseType(typeof(List<VacancyReview>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> GetManyByVacancyReference(
         [FromServices] IVacancyReviewRepository repository,
         [FromRoute] VacancyReference vacancyReference,
+        [FromQuery] List<ReviewStatus>? status,
+        [FromQuery] List<string>? manualOutcome,
+        [FromQuery] bool? includeNoStatus,
         CancellationToken cancellationToken)
     {
-        var result = await repository.GetManyByVacancyReference(vacancyReference, cancellationToken);
+        var statuses = status ?? new List<ReviewStatus>();
+        var result = await repository.GetManyByVacancyReferenceAndStatus(vacancyReference.Value, statuses, manualOutcome, includeNoStatus ?? false, cancellationToken);
 
-        return result is null or { Count: 0 }
-            ? Results.NotFound()
-            : TypedResults.Ok(result.ToGetResponse());
+        return TypedResults.Ok(result.ToGetResponse());
+    }
+
+    [HttpGet, Route($"~/{RouteNames.Account}/{{accountLegalEntityId}}/vacancyreviews")]
+    [ProducesResponseType(typeof(List<VacancyReview>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetManyByAccountLegalEntityId(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromRoute] long accountLegalEntityId,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetManyByAccountLegalEntityId(accountLegalEntityId, cancellationToken);
+
+        return TypedResults.Ok(result.ToGetResponse());
+    }
+
+    [HttpGet, Route($"~/{RouteNames.Account}/{{accountLegalEntityId}}/vacancyreviews/count")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetCountByAccountLegalEntityId(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromRoute] long accountLegalEntityId,
+        [FromQuery] List<ReviewStatus>? status,
+        [FromQuery] List<string>? manualOutcome,
+        [FromQuery] EmployerNameOption? employerNameOption,
+        CancellationToken cancellationToken)
+    {
+        var statuses = status ?? [];
+        var count = await repository.GetCountByAccountLegalEntityId(accountLegalEntityId, statuses, manualOutcome, employerNameOption, cancellationToken);
+
+        return TypedResults.Ok(count);
     }
 
     [HttpGet, Route($"~/{RouteNames.VacancyReviews}/qa/dashboard")]
@@ -132,5 +223,35 @@ public class VacancyReviewController: ControllerBase
         {
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
+    }
+
+    [HttpGet, Route("~/api/users/vacancyreviews")]
+    [ProducesResponseType(typeof(List<VacancyReview>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetManyByUser(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromQuery] string userId,
+        [FromQuery] DateTime? assignationExpiry,
+        [FromQuery] ReviewStatus? status,
+        CancellationToken cancellationToken)
+    {
+        var result = await repository.GetManyByReviewedByUserEmailAndAssignationExpiry(userId, assignationExpiry, status, cancellationToken);
+
+        return TypedResults.Ok(result.ToGetResponse());
+    }
+
+    [HttpGet, Route("~/api/users/vacancyreviews/count")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IResult> GetCountByUser(
+        [FromServices] IVacancyReviewRepository repository,
+        [FromQuery] string userEmail,
+        [FromQuery] bool? approvedFirstTime,
+        [FromQuery] DateTime? assignationExpiry,
+        CancellationToken cancellationToken)
+    {
+        var count = await repository.GetCountBySubmittedUserEmail(userEmail, approvedFirstTime, assignationExpiry, cancellationToken);
+
+        return TypedResults.Ok(count);
     }
 }
