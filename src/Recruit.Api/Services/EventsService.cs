@@ -76,6 +76,13 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
             case VacancyStatus.Submitted:
                 await messageSession.Publish(new VacancySubmittedEvent(result.Entity.Id));
                 break;
+            case VacancyStatus.Referred:
+                await messageSession.Publish(new VacancyReferredEvent
+                {
+                    VacancyId = result.Entity.Id,
+                    VacancyReference = result.Entity.VacancyReference!.GetValueOrDefault()
+                });
+                break;
         }
     }
 }

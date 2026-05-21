@@ -1,7 +1,7 @@
-// ReSharper disable once CheckNamespace - This is required for backwards compatibility
+﻿// ReSharper disable once CheckNamespace - This is required for backwards compatibility
 namespace Esfa.Recruit.Vacancies.Client.Domain.Events;
 
-public class VacancyClosedEvent
+public class VacancyReferredEvent
 {
     public Guid VacancyId { get; set; }
     public long VacancyReference { get; set; }
