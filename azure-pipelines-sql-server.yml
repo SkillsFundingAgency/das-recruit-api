@@ -110,7 +110,7 @@ stages:
 
   - job: RunTests
     pool:
-      name: DAS - Continuous Integration Agents
+      name: das-managed-devops-poc
       # vmImage: ubuntu-latest
     displayName: Run Tests
     dependsOn: DeploySQLDB
@@ -132,10 +132,10 @@ stages:
         version: '8.x'
 
     # Unit tests
-    # - powershell: |
-    #     dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
-    #   displayName: Run Unit Tests
-    #   workingDirectory: $(Pipeline.Workspace)/drop/src
+    - powershell: |
+        dotnet test --configuration "Release" --filter 'TestCategory!=Integration'
+      displayName: Run Unit Tests
+      workingDirectory: $(Pipeline.Workspace)/drop/src
 
     # Integration tests (point SQL DB)
     - powershell: |
