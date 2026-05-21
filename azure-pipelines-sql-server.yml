@@ -87,9 +87,9 @@ stages:
   - job: DeploySQLDB
     displayName: Deploy SQL DB using Dacpac
     pool:
-      name: das-managed-devops-poc
+      name: das-managed-pool-dp
       demands:
-      - ImageOverride -equals windows-2025
+      - ImageOverride -equals windows-2025-g2
     # dependsOn: DeploySQLServer
     variables:
       resourceGroupName: das-ci-poc-rg
@@ -112,9 +112,9 @@ stages:
 
   - job: RunTests
     pool:
-      name: das-managed-devops-poc
+      name: das-managed-pool-dp
       demands:
-      - ImageOverride -equals ubuntu-24.04
+      - ImageOverride -equals ubuntu-24.04-g2
     displayName: Run Tests
     dependsOn: DeploySQLDB
     variables:
