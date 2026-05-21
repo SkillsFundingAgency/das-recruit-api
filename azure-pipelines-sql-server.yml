@@ -90,7 +90,7 @@ stages:
       name: DAS - Continuous Deployment Agents
     dependsOn: DeploySQLServer
     variables:
-      resourceGroupName: das-ci-tests-rg
+      resourceGroupName: das-ci-poc-rg
       sqlServerName: das-ci-tests-sql
       serverName: das-ci-tests-sql.database.windows.net
     steps:
@@ -115,7 +115,7 @@ stages:
     displayName: Run Tests
     dependsOn: DeploySQLDB
     variables:
-      resourceGroupName: das-ci-tests-rg
+      resourceGroupName: das-ci-poc-rg
       sqlServerName: das-ci-tests-sql
       serverName: das-ci-tests-sql.database.windows.net
     steps:
