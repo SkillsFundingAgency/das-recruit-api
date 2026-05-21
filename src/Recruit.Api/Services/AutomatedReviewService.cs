@@ -18,10 +18,11 @@ public class AutomatedReviewService(IEnumerable<IRule<VacancySnapshot>> vacancyR
         var snapshot = JsonSerializer.Deserialize<VacancySnapshot>(entity.VacancySnapshot, JsonConfig.Options)!;
         var outcome = await vacancyRules.EvaluateAsync(snapshot, cancellationToken);
         entity.AutomatedQaOutcome = outcome.Decision.ToString();
-        entity.AutomatedQaOutcomeIndicators = outcome.RuleOutcomes
-            .Where(x => x.Details is not null)
-            .SelectMany(x => x.Details!)
-            .Any(x => x.Score > 0)
-            .ToString();
+        entity.AutomatedQaOutcomeIndicators = JsonSerializer.Serialize(outcome
+            .RuleOutcomes
+            .Where(x => x is { Details: not null, Score: > 0})
+            .SelectMany(o => o.Details!)
+            .Where(s => s.Score > 0)
+            .ToList());
     }
 }

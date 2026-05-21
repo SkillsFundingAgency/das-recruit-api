@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Exceptions;
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson.Operations;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;

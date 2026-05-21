@@ -27,6 +27,7 @@ internal class WhenPuttingVacancyReview
     {
         user.Email = userEmail;
         entity.SubmittedByUserEmail = userEmail;
+        entity.AutomatedQaOutcomeIndicators = "[]";
         userRepository
             .Setup(x => x.FindByUserIdAsync(submittedByUserId.ToString(), token))
             .ReturnsAsync(user);
@@ -59,6 +60,7 @@ internal class WhenPuttingVacancyReview
         // Arrange
         request.SubmittedByUserEmail = null;
         request.SubmittedByUserId = submittedByUserId;
+        entity.AutomatedQaOutcomeIndicators = "[]";
 
         userRepository
             .Setup(x => x.FindByUserIdAsync(submittedByUserId, token))
@@ -94,6 +96,7 @@ internal class WhenPuttingVacancyReview
         CancellationToken token)
     {
         // Arrange
+        entity.AutomatedQaOutcomeIndicators = "[]";
         request.SubmittedByUserEmail = null;
         request.SubmittedByUserId = null;
 

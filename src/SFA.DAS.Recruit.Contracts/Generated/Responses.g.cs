@@ -2236,7 +2236,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("automatedQaOutcomeIndicators")]
         [Newtonsoft.Json.JsonProperty("automatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? AutomatedQaOutcomeIndicators { get; set; } = default!;
+        public System.Collections.Generic.ICollection<RuleOutcome>? AutomatedQaOutcomeIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dismissedAutomatedQaOutcomeIndicators")]
         [Newtonsoft.Json.JsonProperty("dismissedAutomatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2628,6 +2628,56 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Runtime.Serialization.EnumMember(Value = @"Closed")]
         Closed = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    public enum RuleId
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"ProfanityChecks")]
+        ProfanityChecks = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"BannedPhraseChecks")]
+        BannedPhraseChecks = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"VacancyAnonymous")]
+        VacancyAnonymous = 2,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class RuleOutcome
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid Id { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("details")]
+        [Newtonsoft.Json.JsonProperty("details", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<RuleOutcome>? Details { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("ruleId")]
+        [Newtonsoft.Json.JsonProperty("ruleId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public RuleId RuleId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("score")]
+        [Newtonsoft.Json.JsonProperty("score", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int Score { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("narrative")]
+        [Newtonsoft.Json.JsonProperty("narrative", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Narrative { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        [Newtonsoft.Json.JsonProperty("data", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Data { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("target")]
+        [Newtonsoft.Json.JsonProperty("target", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Target { get; set; } = default!;
 
     }
 
@@ -3264,7 +3314,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("automatedQaOutcomeIndicators")]
         [Newtonsoft.Json.JsonProperty("automatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? AutomatedQaOutcomeIndicators { get; set; } = default!;
+        public System.Collections.Generic.ICollection<RuleOutcome>? AutomatedQaOutcomeIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dismissedAutomatedQaOutcomeIndicators")]
         [Newtonsoft.Json.JsonProperty("dismissedAutomatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.AllowNull)]

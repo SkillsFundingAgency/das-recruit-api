@@ -24,9 +24,8 @@
     <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.189" />
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch.SystemTextJson" Version="10.0.8" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Generated\" />
-  </ItemGroup>
-
+    
+  <PropertyGroup>
+      <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
 </Project>

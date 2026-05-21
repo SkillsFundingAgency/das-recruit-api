@@ -2,6 +2,7 @@
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
+using SFA.DAS.Recruit.Api.Validators.Rules;
 
 namespace SFA.DAS.Recruit.Api.Models.Mappers;
 
@@ -11,7 +12,7 @@ public static class VacancyReviewExtensions
     {
         return new VacancyReview {
             AutomatedQaOutcome = entity.AutomatedQaOutcome,
-            AutomatedQaOutcomeIndicators = entity.AutomatedQaOutcomeIndicators,
+            AutomatedQaOutcomeIndicators = ParseAutomatedQaIndicators(entity.AutomatedQaOutcomeIndicators),
             ClosedDate = entity.ClosedDate,
             CreatedDate = entity.CreatedDate,
             DismissedAutomatedQaOutcomeIndicators = JsonSerializer.Deserialize<List<string>>(entity.DismissedAutomatedQaOutcomeIndicators, JsonConfig.Options) ?? [],
@@ -35,7 +36,25 @@ public static class VacancyReviewExtensions
             Ukprn = entity.Ukprn
         };
     }
-    
+
+    private static List<RuleOutcome> ParseAutomatedQaIndicators(string? automatedQaOutcomeIndicators)
+    {
+        if (string.IsNullOrWhiteSpace(automatedQaOutcomeIndicators)
+            || string.Equals(automatedQaOutcomeIndicators, bool.FalseString, StringComparison.InvariantCultureIgnoreCase))
+        {
+            return [];
+        }
+        
+        if (string.Equals(automatedQaOutcomeIndicators, bool.TrueString, StringComparison.InvariantCultureIgnoreCase))
+        {
+            // for existing data we won't have reference to _what_ failed
+            return [new RuleOutcome(RuleId.ProfanityChecks, 100, "Unknown failure", "_Unknown_")];
+        }
+
+        var result = JsonSerializer.Deserialize<List<RuleOutcome>>(automatedQaOutcomeIndicators, JsonConfig.Options);
+        return result ?? [];
+    }
+
     public static VacancyReview ToGetResponse(this VacancyReviewEntity entity)
     {
         return ToResponseDto(entity);
@@ -76,7 +95,7 @@ public static class VacancyReviewExtensions
             ManualQaComment = request.ManualQaComment,
             ManualQaFieldIndicators = JsonSerializer.Serialize(request.ManualQaFieldIndicators, JsonConfig.Options),
             AutomatedQaOutcome = request.AutomatedQaOutcome,
-            AutomatedQaOutcomeIndicators = request.AutomatedQaOutcomeIndicators,
+            AutomatedQaOutcomeIndicators = JsonSerializer.Serialize(request.AutomatedQaOutcomeIndicators ?? []),
             DismissedAutomatedQaOutcomeIndicators = JsonSerializer.Serialize(request.DismissedAutomatedQaOutcomeIndicators, JsonConfig.Options),
             UpdatedFieldIdentifiers = JsonSerializer.Serialize(request.UpdatedFieldIdentifiers, JsonConfig.Options),
             VacancySnapshot = request.VacancySnapshot,

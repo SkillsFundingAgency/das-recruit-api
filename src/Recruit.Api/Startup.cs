@@ -4,8 +4,6 @@ using Asp.Versioning;
 using HotChocolate.AspNetCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;

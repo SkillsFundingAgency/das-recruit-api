@@ -82,6 +82,11 @@ public class WhenPatchingVacancyReview: BaseFixture
     {
         // arrange - some gymnastics because the mock isn't stateful or a proper DbSet
         var items = Fixture.CreateMany<VacancyReviewEntity>(10).ToList();
+        foreach (var item in items)
+        {
+            item.AutomatedQaOutcomeIndicators = "[]";
+        }
+        
         var itemsClone = items.JsonClone();
         var targetItem = itemsClone[4].JsonClone();
         var updatedItem = items[4];

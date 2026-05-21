@@ -4,6 +4,10 @@ public class RuleOutcome
 {
     public const string NoSpecificTarget = "";
 
+    public RuleOutcome()
+    { }
+    
+
     public RuleOutcome(RuleId ruleId, int score, string narrative, string target = NoSpecificTarget, IEnumerable<RuleOutcome>? details = null, string? data = null)
     {
         Id = Guid.NewGuid();
@@ -19,18 +23,18 @@ public class RuleOutcome
         }
     }
 
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public IEnumerable<RuleOutcome>? Details { get; set; }
     private bool HasDetails => Details?.Any() ?? false;
     public RuleId RuleId { get; set; }
     public int Score { get; set;  }
-    public string Narrative { get; set;  }
+    public string Narrative { get; set; } = string.Empty;
     public string? Data { get; set; }
 
     /// <summary>
     /// Field or reference that this outcome relates to
     /// </summary>
-    public string Target { get; set;  }
+    public string Target { get; set; } = NoSpecificTarget;
 
     public override string ToString()
     {
