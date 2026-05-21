@@ -90,7 +90,7 @@ stages:
       name: das-managed-devops-poc
       demands:
       - ImageOverride -equals windows-2025
-    dependsOn: DeploySQLServer
+    # dependsOn: DeploySQLServer
     variables:
       resourceGroupName: das-ci-poc-rg
       sqlServerName: das-ci-tests-sql
