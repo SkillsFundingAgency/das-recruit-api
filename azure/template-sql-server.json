@@ -32,7 +32,7 @@
     },
     "variables": {
       "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
-      "resourceNamePrefix": "das-ci-tests"
+      "resourceNamePrefix": "das-ci-poc"
     },
     "resources": [
       {
