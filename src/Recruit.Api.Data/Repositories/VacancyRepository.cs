@@ -562,6 +562,8 @@ public class VacancyRepository(IRecruitDataContext dataContext) : IVacancyReposi
                 query.Where(x =>
                     x.Status == VacancyStatus.Live || x.Status == VacancyStatus.Closed),
 
+            FilteringOptions.Archived => query.Where(x => x.Status == VacancyStatus.Archived),
+
             _ => query
         };
     }
