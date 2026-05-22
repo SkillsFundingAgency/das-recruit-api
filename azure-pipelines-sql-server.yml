@@ -89,7 +89,7 @@ stages:
     pool:
       name: das-mdp-poc
       demands:
-      - ImageOverride -equals windows-2025-g2
+      - ImageOverride -equals windows-2025
     # dependsOn: DeploySQLServer
     variables:
       resourceGroupName: das-ci-poc-rg
@@ -114,7 +114,7 @@ stages:
     pool:
       name: das-mdp-poc
       demands:
-      - ImageOverride -equals ubuntu-24.04-g2
+      - ImageOverride -equals ubuntu-24.04
     displayName: Run Tests
     dependsOn: DeploySQLDB
     variables:
