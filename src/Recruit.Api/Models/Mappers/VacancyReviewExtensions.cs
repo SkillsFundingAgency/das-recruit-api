@@ -11,7 +11,7 @@ public static class VacancyReviewExtensions
     private static VacancyReview ToResponseDto(this VacancyReviewEntity entity)
     {
         return new VacancyReview {
-            AutomatedQaOutcome = entity.AutomatedQaOutcome,
+            AutomatedQaOutcome = ParseAutomatedQaOutcome(entity),
             AutomatedQaOutcomeIndicators = ParseAutomatedQaIndicators(entity.AutomatedQaOutcomeIndicators),
             ClosedDate = entity.ClosedDate,
             CreatedDate = entity.CreatedDate,
@@ -37,22 +37,40 @@ public static class VacancyReviewExtensions
         };
     }
 
+    private static string? ParseAutomatedQaOutcome(VacancyReviewEntity entity)
+    {
+        if (entity.AutomatedQaOutcome is null || Enum.TryParse(entity.AutomatedQaOutcome, out RuleSetDecision _))
+        {
+            return entity.AutomatedQaOutcome;
+        }
+
+        try
+        {
+            var result = JsonSerializer.Deserialize<RuleSetOutcome>(entity.AutomatedQaOutcome, JsonConfig.Options);
+            return result?.Decision.ToString() ?? nameof(RuleSetDecision.Unknown);
+        }
+        catch
+        {
+            return entity.AutomatedQaOutcome;
+        }
+    }
+
     private static List<RuleOutcome> ParseAutomatedQaIndicators(string? automatedQaOutcomeIndicators)
     {
-        if (string.IsNullOrWhiteSpace(automatedQaOutcomeIndicators)
-            || string.Equals(automatedQaOutcomeIndicators, bool.FalseString, StringComparison.InvariantCultureIgnoreCase))
+        if (string.IsNullOrWhiteSpace(automatedQaOutcomeIndicators) || bool.TryParse(automatedQaOutcomeIndicators, out var _))
         {
             return [];
         }
         
-        if (string.Equals(automatedQaOutcomeIndicators, bool.TrueString, StringComparison.InvariantCultureIgnoreCase))
+        try
         {
-            // for existing data we won't have reference to _what_ failed
-            return [new RuleOutcome(RuleId.ProfanityChecks, 100, "Unknown failure", "_Unknown_")];
+            var result = JsonSerializer.Deserialize<List<RuleOutcome>>(automatedQaOutcomeIndicators, JsonConfig.Options);
+            return result ?? [];
         }
-
-        var result = JsonSerializer.Deserialize<List<RuleOutcome>>(automatedQaOutcomeIndicators, JsonConfig.Options);
-        return result ?? [];
+        catch
+        {
+            return [];
+        }
     }
 
     public static VacancyReview ToGetResponse(this VacancyReviewEntity entity)
