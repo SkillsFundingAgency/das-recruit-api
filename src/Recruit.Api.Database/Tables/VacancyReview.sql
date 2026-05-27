@@ -14,7 +14,7 @@ CREATE TABLE dbo.[VacancyReview] (
     [ManualQaComment]                           nvarchar(max)       NULL,
     [ManualQaFieldIndicators]                   nvarchar(max)       NOT NULL Default('[]'),
     [AutomatedQaOutcome]                        nvarchar(max)       NULL,
-    [AutomatedQaOutcomeIndicators]              nvarchar(20)        NULL,
+    [AutomatedQaOutcomeIndicators]              nvarchar(max)       NULL Default('[]'),
     [DismissedAutomatedQAOutcomeIndicators]     nvarchar(max)       NOT NULL Default('[]'),
     [UpdatedFieldIdentifiers]                   nvarchar(max)       NOT NULL Default('[]'),
     [VacancySnapshot]                           nvarchar(max)       NOT NULL,
