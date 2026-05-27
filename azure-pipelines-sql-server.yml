@@ -93,8 +93,8 @@ stages:
     # dependsOn: DeploySQLServer
     variables:
       resourceGroupName: das-ci-poc-rg
-      sqlServerName: das-ci-tests-sql
-      serverName: das-ci-tests-sql.database.windows.net
+      sqlServerName: das-ci-poc-sql
+      serverName: das-ci-poc-sql.database.windows.net
     steps:
     - checkout: das-platform-automation
     - download: current
@@ -119,8 +119,8 @@ stages:
     dependsOn: DeploySQLDB
     variables:
       resourceGroupName: das-ci-poc-rg
-      sqlServerName: das-ci-tests-sql
-      serverName: das-ci-tests-sql.database.windows.net
+      sqlServerName: das-ci-poc-sql
+      serverName: das-ci-poc-sql.database.windows.net
     steps:
     - checkout: das-platform-automation
     - download: current
