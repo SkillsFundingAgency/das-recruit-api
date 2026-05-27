@@ -18,6 +18,7 @@ public class VacancyEntityConfiguration : IEntityTypeConfiguration<VacancyEntity
         builder.Property(x => x.OwnerType).HasConversion(v => v.ToString(), v => Enum.Parse<OwnerType>(v)).IsRequired(false);
         builder.Property(x => x.SourceOrigin).HasConversion(v => v.ToString(), v => Enum.Parse<SourceOrigin>(v)).IsRequired(false);
         builder.Property(x => x.SourceType).HasConversion(v => v.ToString(), v => Enum.Parse<SourceType>(v)).IsRequired(false);
+        builder.Property(x => x.ArchiveType).HasConversion(v => v.ToString(), v => Enum.Parse<ArchiveType>(v)).IsRequired(false);
         builder.Property(x => x.ApplicationMethod).HasConversion(v => v.ToString(), v => Enum.Parse<ApplicationMethod>(v!)).IsRequired(false);
         builder.Property(x => x.EmployerLocationOption).HasConversion(v => v.ToString(), v => Enum.Parse<AvailableWhere>(v!)).IsRequired(false);
         builder.Property(x => x.EmployerNameOption).HasConversion(v => v.ToString(), v => Enum.Parse<EmployerNameOption>(v!)).IsRequired(false);
