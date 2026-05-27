@@ -14,6 +14,8 @@ public class Vacancy
     public OwnerType? OwnerType { get; init; }
     public SourceOrigin? SourceOrigin { get; init; }
     public SourceType? SourceType { get; init; }
+    public ArchiveType? ArchiveType { get; init; }
+    public DateTime? ArchivedDate { get; init; }
     public long? SourceVacancyReference { get; init; }
     public DateTime? ApprovedDate { get; init; }
     public DateTime? CreatedDate { get; init; }
@@ -66,6 +68,7 @@ public class Vacancy
     public List<ReviewFieldIndicator>? ProviderReviewFieldIndicators { get; init; }
     public Guid? SubmittedByUserId { get; init; }
     public Guid? ReviewRequestedByUserId { get; init; }
+    public Guid? ArchivedByUserId { get; init; }
 }
 
 public class Address

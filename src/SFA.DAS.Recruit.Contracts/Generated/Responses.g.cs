@@ -384,6 +384,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    public enum ArchiveType
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Auto")]
+        Auto = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Manual")]
+        Manual = 1,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum AvailableWhere
     {
 
@@ -693,6 +706,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Runtime.Serialization.EnumMember(Value = @"Dashboard")]
         Dashboard = 16,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Archived")]
+        Archived = 17,
 
     }
 
@@ -1295,6 +1311,11 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public SourceType SourceType { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("archiveType")]
+        [Newtonsoft.Json.JsonProperty("archiveType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ArchiveType ArchiveType { get; set; } = default!;
+
         [System.Text.Json.Serialization.JsonPropertyName("sourceVacancyReference")]
         [Newtonsoft.Json.JsonProperty("sourceVacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? SourceVacancyReference { get; set; } = default!;
@@ -1334,6 +1355,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosingDate { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("archivedDate")]
+        [Newtonsoft.Json.JsonProperty("archivedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? ArchivedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewCount")]
         [Newtonsoft.Json.JsonProperty("reviewCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1503,6 +1528,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedByUserId")]
         [Newtonsoft.Json.JsonProperty("reviewRequestedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ReviewRequestedByUserId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("archivedByUserId")]
+        [Newtonsoft.Json.JsonProperty("archivedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? ArchivedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("id")]
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1951,6 +1980,11 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public SourceType SourceType { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("archiveType")]
+        [Newtonsoft.Json.JsonProperty("archiveType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ArchiveType ArchiveType { get; set; } = default!;
+
         [System.Text.Json.Serialization.JsonPropertyName("sourceVacancyReference")]
         [Newtonsoft.Json.JsonProperty("sourceVacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? SourceVacancyReference { get; set; } = default!;
@@ -1990,6 +2024,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosingDate { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("archivedDate")]
+        [Newtonsoft.Json.JsonProperty("archivedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? ArchivedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewCount")]
         [Newtonsoft.Json.JsonProperty("reviewCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2159,6 +2197,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedByUserId")]
         [Newtonsoft.Json.JsonProperty("reviewRequestedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ReviewRequestedByUserId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("archivedByUserId")]
+        [Newtonsoft.Json.JsonProperty("archivedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? ArchivedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("id")]
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2897,6 +2939,15 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public SourceType SourceType { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("archiveType")]
+        [Newtonsoft.Json.JsonProperty("archiveType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ArchiveType ArchiveType { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("archivedDate")]
+        [Newtonsoft.Json.JsonProperty("archivedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? ArchivedDate { get; set; } = default!;
+
         [System.Text.Json.Serialization.JsonPropertyName("sourceVacancyReference")]
         [Newtonsoft.Json.JsonProperty("sourceVacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? SourceVacancyReference { get; set; } = default!;
@@ -3109,6 +3160,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedByUserId")]
         [Newtonsoft.Json.JsonProperty("reviewRequestedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ReviewRequestedByUserId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("archivedByUserId")]
+        [Newtonsoft.Json.JsonProperty("archivedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid? ArchivedByUserId { get; set; } = default!;
 
     }
 
@@ -3509,6 +3564,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Runtime.Serialization.EnumMember(Value = @"Approved")]
         Approved = 7,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Archived")]
+        Archived = 8,
 
     }
 
