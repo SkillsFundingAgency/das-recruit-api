@@ -55,6 +55,18 @@ public record GetApplicationreviewsByVacancyReferenceApiRequest(long VacancyRefe
     public string GetUrl => $"api/applicationreviews/{VacancyReference}";
 }
 
+/// <summary>GET /api/vacancies/byref/{vacancyReference}/applicationreviews &#x2192; List&lt;<see cref="GetApplicationReviewResponse"/>&gt;</summary>
+public record GetVacanciesByrefByVacancyReferenceApplicationreviewsApiRequest(long VacancyReference) : IGetApiRequest
+{
+    public string GetUrl => $"api/vacancies/byref/{VacancyReference}/applicationreviews";
+}
+
+/// <summary>GET /api/vacancies/byid/{vacancyId}/applicationreviews &#x2192; List&lt;<see cref="GetApplicationReviewResponse"/>&gt;</summary>
+public record GetVacanciesByidByVacancyIdApplicationreviewsApiRequest(System.Guid VacancyId) : IGetApiRequest
+{
+    public string GetUrl => $"api/vacancies/byid/{VacancyId}/applicationreviews";
+}
+
 /// <summary>GET /api/applicationreviews/{vacancyReference}/candidate/{candidateId} &#x2192; <see cref="GetApplicationReviewResponse"/></summary>
 public record GetApplicationreviewsByVacancyReferenceCandidateByCandidateIdApiRequest(long VacancyReference, System.Guid CandidateId) : IGetApiRequest
 {
