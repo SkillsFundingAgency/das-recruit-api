@@ -87,7 +87,7 @@ stages:
   - job: DeploySQLDB
     displayName: Deploy SQL DB using Dacpac
     pool:
-      name: das-mdp-poc
+      name: das-ci-poc-mdp
       demands:
       - ImageOverride -equals windows-2025
     # dependsOn: DeploySQLServer
@@ -112,7 +112,7 @@ stages:
 
   - job: RunTests
     pool:
-      name: das-mdp-poc
+      name: das-ci-poc-mdp
       demands:
       - ImageOverride -equals ubuntu-24.04
     displayName: Run Tests
