@@ -539,6 +539,15 @@ public class VacancyController([FromServices] IUserRepository userRepository) : 
                ?? await TryEmail()
                ?? await CreateUser();
 
+        // This lookup should eventually be removed once we've migrated away from Mongo
+        // We do this because currently the submitted user id is not the SQL user id, but could match
+        // the IdamsUserId, DfEUserId or the actual UserId.
+        async Task<Guid?> TrySubmittedId()
+        {
+            if (request.SubmittedByUserId is null) return null;
+            return await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, ct);
+        }
+
         // If we couldn't find the user by the ID, then we try to find the user based on the contact details
         async Task<Guid?> TryEmail()
         {
@@ -561,15 +570,6 @@ public class VacancyController([FromServices] IUserRepository userRepository) : 
                 ct);
 
             return user.Entity.Id;
-        }
-
-        // This lookup should eventually be removed once we've migrated away from Mongo
-        // We do this because currently the submitted user id is not the SQL user id, but could match
-        // the IdamsUserId, DfEUserId or the actual UserId.
-        async Task<Guid?> TrySubmittedId()
-        {
-            if (request.SubmittedByUserId is null) return null;
-            return await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, ct);
         }
     }
 }

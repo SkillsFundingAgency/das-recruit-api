@@ -81,15 +81,18 @@ public class WhenPostingVacancy: BaseFixture
     }
     
     [Test]
-    public async Task Then_The_Vacancy_Is_Added()
+    public async Task Then_The_Vacancy_Is_Added_User_Already_Exist()
     {
         // arrange
         var vacancyReference = Fixture.Create<VacancyReference>();
         var request = Fixture.Create<SFA.DAS.Recruit.Contracts.ApiResponses.PostVacancyRequest>();
+        var userEntity = Fixture.Create<UserEntity>();
+
+        request.SubmittedByUserId = userEntity.Id.ToString();
 
         Server.DataContext
             .Setup(x => x.UserEntities)
-            .ReturnsDbSet(Fixture.CreateMany<UserEntity>());
+            .ReturnsDbSet(new List<UserEntity> { userEntity });
         
         Server.DataContext
             .Setup(x => x.VacancyEntities)
@@ -139,9 +142,71 @@ public class WhenPostingVacancy: BaseFixture
         response.Headers.Location.Should().NotBeNull();
         response.Headers.Location.ToString().Should().Be($"/api/vacancies/{vacancy.Id}");
         
-        Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
+        Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
-    
+
+    [Test]
+    public async Task Then_The_Vacancy_Is_Added_New_User_Added()
+    {
+        // arrange
+        var vacancyReference = Fixture.Create<VacancyReference>();
+        var request = Fixture.Create<SFA.DAS.Recruit.Contracts.ApiResponses.PostVacancyRequest>();
+
+        Server.DataContext
+            .Setup(x => x.UserEntities)
+            .ReturnsDbSet(Fixture.Create<List<UserEntity>>());
+
+        Server.DataContext
+            .Setup(x => x.VacancyEntities)
+            .ReturnsDbSet(Fixture.CreateMany<VacancyEntity>(10).ToList());
+
+        Server.DataContext
+            .Setup(x => x.VacancyEntities.AddAsync(It.IsAny<VacancyEntity>(), It.IsAny<CancellationToken>()))
+            .Callback((VacancyEntity entity, CancellationToken _) => { entity.Id = request.Id!.Value; });
+
+        Server.DataContext
+            .Setup(x => x.GetNextVacancyReferenceAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(vacancyReference.Value);
+
+        // act
+        var requestTest = new PostVacanciesApiRequest(request);
+        var response = await Client.PostAsJsonAsync(requestTest.PostUrl, requestTest.Data);
+        var vacancy = await response.Content.ReadAsAsync<SFA.DAS.Recruit.Contracts.ApiResponses.Vacancy>();
+
+        // assert
+        vacancy.Should().BeEquivalentTo(request, opt => opt
+            .Excluding(x => x.SubmittedByUserId)
+            .Excluding(x => x.ReviewRequestedByUserId)
+            .Excluding(x => x.ArchivedByUserId)
+            .Excluding(x => x.Wage!.ApprenticeMinimumWage)
+            .Excluding(x => x.Wage!.Under18NationalMinimumWage)
+            .Excluding(x => x.Wage!.Between18AndUnder21NationalMinimumWage)
+            .Excluding(x => x.Wage!.Between21AndUnder25NationalMinimumWage)
+            .Excluding(x => x.Wage!.Over25NationalMinimumWage)
+            .Excluding(x => x.Wage!.WageText)
+            .Excluding(x => x.ApprovedDate)
+            .Excluding(x => x.LastUpdatedDate)
+            .Excluding(x => x.SubmittedDate)
+            .Excluding(x => x.ReviewRequestedDate)
+            .Excluding(x => x.ClosingDate)
+            .Excluding(x => x.DeletedDate)
+            .Excluding(x => x.LiveDate)
+            .Excluding(x => x.StartDate)
+            .Excluding(x => x.ClosingDate)
+            .Excluding(x => x.ClosedDate)
+            .Excluding(x => x.TransferInfo!.TransferredDate)
+            .Excluding(x => x.Id)
+        );
+        vacancy.Id.Should().Be(request.Id!.Value);
+        vacancy.VacancyReference.Should().Be(vacancyReference.Value);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+        response.Headers.Location.Should().NotBeNull();
+        response.Headers.Location.ToString().Should().Be($"/api/vacancies/{vacancy.Id}");
+
+        Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+    }
+
     [Test]
     public async Task Then_The_SubmittedUserId_Is_Looked_Up_IdamsUserId()
     {
