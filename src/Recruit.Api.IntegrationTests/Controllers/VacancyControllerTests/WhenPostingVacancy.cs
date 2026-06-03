@@ -139,7 +139,7 @@ public class WhenPostingVacancy: BaseFixture
         response.Headers.Location.Should().NotBeNull();
         response.Headers.Location.ToString().Should().Be($"/api/vacancies/{vacancy.Id}");
         
-        Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+        Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
     }
     
     [Test]

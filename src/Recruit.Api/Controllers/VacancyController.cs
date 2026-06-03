@@ -20,11 +20,12 @@ using SFA.DAS.Recruit.Api.Models.Responses.Vacancy;
 using SFA.DAS.Recruit.Api.Services;
 using SFA.DAS.Recruit.Api.Validators;
 using SFA.DAS.Recruit.Api.Validators.VacancyEntity;
+using UserType = SFA.DAS.Recruit.Api.Domain.Enums.UserType;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController, Route($"{RouteNames.Vacancies}")]
-public class VacancyController : Controller
+public class VacancyController([FromServices] IUserRepository userRepository) : Controller
 {
     [HttpGet, Route("{vacancyId:guid}")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
@@ -313,19 +314,9 @@ public class VacancyController : Controller
             entity.Id = request.Id ?? Guid.NewGuid();
             return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPostResponse());
         }
-
-        // This lookup should eventually be removed once we've migrated away from Mongo
-        // We do this because currently the submitted user id is not the SQL user id, but could match
-        // the IdamsUserId, DfEUserId or the actual UserId.
-        if (request.SubmittedByUserId is not null)
-        {
-            var userId = await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, cancellationToken);
-            if (userId is not null)
-            {
-                entity.SubmittedByUserId = userId;
-            }
-        }
         
+        entity.SubmittedByUserId = await ResolveSubmittedByUserIdAsync(request, cancellationToken);
+
         // This lookup should eventually be removed once we've migrated away from Mongo
         // We do this because currently the submitted user id is not the SQL user id, but could match
         // the IdamsUserId, DfEUserId or the actual UserId.
@@ -536,5 +527,49 @@ public class VacancyController : Controller
         var applicationReviewStats = await applicationReviewsProvider.GetVacancyReferencesCountByAccountId(accountId, vacancyReferences, null, cancellationToken);
         var applicationReviewStatsDict = applicationReviewStats.ToDictionary(x => x.VacancyReference);
         return TypedResults.Ok(new DataResponse<Dictionary<long, ApplicationReviewsStats>>(applicationReviewStatsDict));
+    }
+
+    private async Task<Guid> ResolveSubmittedByUserIdAsync(VacancyRequest request, CancellationToken ct)
+    {
+        var userType = request.OwnerType == OwnerType.Employer
+            ? UserType.Employer
+            : UserType.Provider;
+
+        return await TrySubmittedId()
+               ?? await TryEmail()
+               ?? await CreateUser();
+
+        // If we couldn't find the user by the ID, then we try to find the user based on the contact details
+        async Task<Guid?> TryEmail()
+        {
+            if (request.Contact?.Email is null) return null;
+            var user = await userRepository.FindUserByEmailAsync(request.Contact.Email, userType, ct);
+            return user?.Id;
+        }
+
+        // If the user doesn't exist then we want to create a new user based on the contact details provided and link to the vacancy
+        async Task<Guid> CreateUser()
+        {
+            var user = await userRepository.UpsertOneAsync(
+                new UserEntity {
+                    Id = Guid.NewGuid(),
+                    Name = request.Contact?.Name!,
+                    Email = request.Contact?.Email!,
+                    UserType = userType,
+                    CreatedDate = DateTime.UtcNow,
+                },
+                ct);
+
+            return user.Entity.Id;
+        }
+
+        // This lookup should eventually be removed once we've migrated away from Mongo
+        // We do this because currently the submitted user id is not the SQL user id, but could match
+        // the IdamsUserId, DfEUserId or the actual UserId.
+        async Task<Guid?> TrySubmittedId()
+        {
+            if (request.SubmittedByUserId is null) return null;
+            return await userRepository.FindIdByUserIdAsync(request.SubmittedByUserId, ct);
+        }
     }
 }
