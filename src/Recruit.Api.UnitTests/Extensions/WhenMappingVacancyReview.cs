@@ -24,7 +24,7 @@ public class WhenMappingVacancyReview
             VacancySnapshot = "vacancySnapshot",
             SubmissionCount = 2,
             AutomatedQaOutcome = "automatedQaOutcome",
-            AutomatedQaOutcomeIndicators = "automatedQaOutcomeIndicators",
+            AutomatedQaOutcomeIndicators = [],
             ClosedDate = DateTime.Now.AddDays(1),
             ManualOutcome = "manualOutcome",
             ManualQaComment = "manualQaComment",
@@ -43,11 +43,13 @@ public class WhenMappingVacancyReview
             .Excluding(x => x.DismissedAutomatedQaOutcomeIndicators)
             .Excluding(x => x.VacancyReference)
             .Excluding(x => x.SubmittedByUserId)
+            .Excluding(x => x.AutomatedQaOutcomeIndicators)
         );
 
         result.VacancyReference.Should().Be(1234L);
         result.ManualQaFieldIndicators.Should().Be("[\"one\",\"two\"]");
         result.DismissedAutomatedQaOutcomeIndicators.Should().Be("[\"three\",\"four\"]");
         result.UpdatedFieldIdentifiers.Should().Be("[]");
+        result.AutomatedQaOutcomeIndicators.Should().BeEquivalentTo("[]");
     }
 }

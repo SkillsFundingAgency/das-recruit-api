@@ -19,6 +19,10 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
         [Greedy] VacancyReviewController sut,
         CancellationToken token)
     {
+        foreach (var entity in entities)
+        {
+            entity.AutomatedQaOutcomeIndicators = "[]";
+        }
         var statuses = new List<ReviewStatus> { ReviewStatus.PendingReview };
 
         repository

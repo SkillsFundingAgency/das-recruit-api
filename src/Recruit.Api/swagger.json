@@ -96,11 +96,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PutApplicationReviewRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PutApplicationReviewRequest"
@@ -210,34 +205,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/ApplicationReviewJsonPatchDocument"
               }
             },
             "application/json-patch+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/ApplicationReviewJsonPatchDocument"
               }
             },
             "text/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/ApplicationReviewJsonPatchDocument"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/ApplicationReviewJsonPatchDocument"
               }
             }
           }
@@ -286,7 +269,8 @@
               }
             }
           }
-        }
+        },
+        "x-patch-document-type": "ApplicationReview"
       }
     },
     "/api/applicationreviews": {
@@ -371,15 +355,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "uuid"
-                }
-              }
-            },
             "application/json": {
               "schema": {
                 "type": "array",
@@ -1248,15 +1223,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int64"
-                }
-              }
-            },
             "application/json": {
               "schema": {
                 "type": "array",
@@ -1457,11 +1423,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PutEmployerProfileRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PutEmployerProfileRequest"
@@ -1567,34 +1528,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocument"
               }
             },
             "application/json-patch+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocument"
               }
             },
             "text/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocument"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocument"
               }
             }
           }
@@ -1787,11 +1736,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostEmployerProfileAddressRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PostEmployerProfileAddressRequest"
@@ -1961,34 +1905,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocument"
               }
             },
             "application/json-patch+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocument"
               }
             },
             "text/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocument"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocument"
               }
             }
           }
@@ -2425,14 +2357,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              }
-            },
             "application/json": {
               "schema": {
                 "type": "object",
@@ -2550,14 +2474,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string"
-                }
-              }
-            },
             "application/json": {
               "schema": {
                 "type": "object",
@@ -3042,15 +2958,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "format": "int64"
-                }
-              }
-            },
             "application/json": {
               "schema": {
                 "type": "array",
@@ -3427,11 +3334,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostReportRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PostReportRequest"
@@ -3731,11 +3633,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PutUserRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PutUserRequest"
@@ -3841,34 +3738,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/RecruitUserJsonPatchDocument"
               }
             },
             "application/json-patch+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/RecruitUserJsonPatchDocument"
               }
             },
             "text/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/RecruitUserJsonPatchDocument"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/RecruitUserJsonPatchDocument"
               }
             }
           }
@@ -3934,7 +3819,8 @@
               }
             }
           }
-        }
+        },
+        "x-patch-document-type": "RecruitUser"
       }
     },
     "/api/user/by/email": {
@@ -3952,11 +3838,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetUserRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/GetUserRequest"
@@ -4375,11 +4256,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PutVacancyRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PutVacancyRequest"
@@ -4485,34 +4361,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/VacancyJsonPatchDocument"
               }
             },
             "application/json-patch+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/VacancyJsonPatchDocument"
               }
             },
             "text/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/VacancyJsonPatchDocument"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/VacancyJsonPatchDocument"
               }
             }
           }
@@ -4578,7 +4442,8 @@
               }
             }
           }
-        }
+        },
+        "x-patch-document-type": "Vacancy"
       },
       "delete": {
         "tags": [
@@ -4876,11 +4741,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostClosedVacanciesRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PostClosedVacanciesRequest"
@@ -5229,11 +5089,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostVacancyRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PostVacancyRequest"
@@ -5532,11 +5387,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PutVacancyAnalyticsRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PutVacancyAnalyticsRequest"
@@ -5810,11 +5660,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PutVacancyReviewRequest"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PutVacancyReviewRequest"
@@ -5920,34 +5765,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/VacancyReviewJsonPatchDocument"
               }
             },
             "application/json-patch+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/VacancyReviewJsonPatchDocument"
               }
             },
             "text/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/VacancyReviewJsonPatchDocument"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/VacancyReviewJsonPatchDocument"
               }
             }
           }
@@ -6013,7 +5846,8 @@
               }
             }
           }
-        }
+        },
+        "x-patch-document-type": "VacancyReview"
       },
       "delete": {
         "tags": [
@@ -6746,6 +6580,41 @@
         },
         "additionalProperties": false
       },
+      "ApplicationReviewJsonPatchDocument": {
+        "type": "object",
+        "properties": {
+          "operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationReviewOperation"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApplicationReviewOperation": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "op": {
+            "type": "string",
+            "nullable": true
+          },
+          "from": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ApplicationReviewReport": {
         "type": "object",
         "properties": {
@@ -7336,6 +7205,20 @@
         },
         "additionalProperties": false
       },
+      "JsonPatchDocument": {
+        "type": "object",
+        "properties": {
+          "operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Operation"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "NotificationEmail": {
         "required": [
           "recipientAddress",
@@ -7452,18 +7335,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "OperationType": {
-        "enum": [
-          "Add",
-          "Remove",
-          "Replace",
-          "Move",
-          "Copy",
-          "Test",
-          "Invalid"
-        ],
-        "type": "string"
       },
       "OwnerType": {
         "enum": [
@@ -8798,7 +8669,10 @@
             "nullable": true
           },
           "automatedQaOutcomeIndicators": {
-            "type": "string",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RuleOutcome"
+            },
             "nullable": true
           },
           "dismissedAutomatedQaOutcomeIndicators": {
@@ -9089,6 +8963,41 @@
         },
         "additionalProperties": false
       },
+      "RecruitUserJsonPatchDocument": {
+        "type": "object",
+        "properties": {
+          "operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecruitUserOperation"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RecruitUserOperation": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "op": {
+            "type": "string",
+            "nullable": true
+          },
+          "from": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Report": {
         "type": "object",
         "properties": {
@@ -9167,6 +9076,50 @@
           "Closed"
         ],
         "type": "string"
+      },
+      "RuleId": {
+        "enum": [
+          "ProfanityChecks",
+          "BannedPhraseChecks",
+          "VacancyAnonymous"
+        ],
+        "type": "string"
+      },
+      "RuleOutcome": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RuleOutcome"
+            },
+            "nullable": true
+          },
+          "ruleId": {
+            "$ref": "#/components/schemas/RuleId"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "narrative": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "string",
+            "nullable": true
+          },
+          "target": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "SortOrder": {
         "enum": [
@@ -9681,6 +9634,41 @@
         },
         "additionalProperties": false
       },
+      "VacancyJsonPatchDocument": {
+        "type": "object",
+        "properties": {
+          "operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VacancyOperation"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VacancyOperation": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "op": {
+            "type": "string",
+            "nullable": true
+          },
+          "from": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "VacancyPagedResponse": {
         "type": "object",
         "properties": {
@@ -9789,7 +9777,10 @@
             "nullable": true
           },
           "automatedQaOutcomeIndicators": {
-            "type": "string",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RuleOutcome"
+            },
             "nullable": true
           },
           "dismissedAutomatedQaOutcomeIndicators": {
@@ -9824,6 +9815,41 @@
           },
           "ownerType": {
             "$ref": "#/components/schemas/OwnerType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VacancyReviewJsonPatchDocument": {
+        "type": "object",
+        "properties": {
+          "operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VacancyReviewOperation"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VacancyReviewOperation": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "op": {
+            "type": "string",
+            "nullable": true
+          },
+          "from": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "nullable": true
           }
         },
         "additionalProperties": false
