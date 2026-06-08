@@ -29,11 +29,11 @@ public class PutApplicationreviewsByApplicationIdApiRequest : IPutApiRequest<Put
 }
 
 /// <summary>PATCH /api/applicationreviews/{applicationId} &#x2192; <see cref="PatchApplicationReviewResponse"/></summary>
-public class PatchApplicationreviewsByApplicationIdApiRequest : IPatchApiRequest<Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<PatchApplicationReviewResponse>>
+public class PatchApplicationreviewsByApplicationIdApiRequest : IPatchApiRequest<Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<ApplicationReview>>
 {
     public required System.Guid ApplicationId { get; init; }
     public string PatchUrl => $"api/applicationreviews/{ApplicationId}";
-    public Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<PatchApplicationReviewResponse> Data { get; set; } = default!;
+    public Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<ApplicationReview> Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/applicationreviews &#x2192; <see cref="GetApplicationReviewResponse"/></summary>
@@ -147,11 +147,11 @@ public record DeleteEmployerProfilesByAccountLegalEntityIdApiRequest(long Accoun
 }
 
 /// <summary>PATCH /api/employer/profiles/{accountLegalEntityId} &#x2192; <see cref="PatchEmployerProfileResponse"/></summary>
-public class PatchEmployerProfilesByAccountLegalEntityIdApiRequest : IPatchApiRequest<Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<PatchEmployerProfileResponse>>
+public class PatchEmployerProfilesByAccountLegalEntityIdApiRequest : IPatchApiRequest<Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<JsonPatchDocument>>
 {
     public required long AccountLegalEntityId { get; init; }
     public string PatchUrl => $"api/employer/profiles/{AccountLegalEntityId}";
-    public Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<PatchEmployerProfileResponse> Data { get; set; } = default!;
+    public Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<JsonPatchDocument> Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/employer/profiles/{accountLegalEntityId}/addresses &#x2192; List&lt;<see cref="EmployerProfileAddress"/>&gt;</summary>
@@ -181,12 +181,12 @@ public record DeleteEmployerProfilesByAccountLegalEntityIdAddressesByIdApiReques
 }
 
 /// <summary>PATCH /api/employer/profiles/{accountLegalEntityId}/addresses/{id} &#x2192; <see cref="EmployerProfileAddress"/></summary>
-public class PatchEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest : IPatchApiRequest<Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<EmployerProfileAddress>>
+public class PatchEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest : IPatchApiRequest<Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<JsonPatchDocument>>
 {
     public required long AccountLegalEntityId { get; init; }
     public required int Id { get; init; }
     public string PatchUrl => $"api/employer/profiles/{AccountLegalEntityId}/addresses/{Id}";
-    public Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<EmployerProfileAddress> Data { get; set; } = default!;
+    public Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<JsonPatchDocument> Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/notifications/batch/by/date &#x2192; <see cref="GetBatchByDateResponse"/></summary>

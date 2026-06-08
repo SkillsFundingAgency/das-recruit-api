@@ -16,6 +16,10 @@ internal class WhenGettingVacancyReviewsByUserAndAssignationExpiry
         [Greedy] VacancyReviewController sut,
         CancellationToken token)
     {
+        foreach (var entity in entities)
+        {
+            entity.AutomatedQaOutcomeIndicators = "[]";
+        }
         var userId = "someone@example.com";
         DateTime? assignationExpiry = DateTime.UtcNow;
         var status = ReviewStatus.UnderReview;
@@ -41,6 +45,10 @@ internal class WhenGettingVacancyReviewsByUserAndAssignationExpiry
         [Greedy] VacancyReviewController sut,
         CancellationToken token)
     {
+        foreach (var entity in entities)
+        {
+            entity.AutomatedQaOutcomeIndicators = "[]";
+        }
         var userId = "someone@example.com";
         DateTime? assignationExpiry = null;
         var status = ReviewStatus.Closed;

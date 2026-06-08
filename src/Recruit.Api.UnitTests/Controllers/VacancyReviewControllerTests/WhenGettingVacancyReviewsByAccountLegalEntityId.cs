@@ -16,6 +16,10 @@ internal class WhenGettingVacancyReviewsByAccountLegalEntityId
         CancellationToken token)
     {
         var accountLegalEntityId = 123456L;
+        foreach (var entity in entities)
+        {
+            entity.AutomatedQaOutcomeIndicators = "[]";
+        }
 
         repository
             .Setup(x => x.GetManyByAccountLegalEntityId(

@@ -14,6 +14,10 @@ public class WhenGettingVacancyReview: BaseFixture
     {
         // arrange
         var items = Fixture.CreateMany<VacancyReviewEntity>(10).ToList();
+        foreach (var item in items)
+        {
+            item.AutomatedQaOutcomeIndicators = "[]";
+        }
         var expected = items[1];
         Server.DataContext.Setup(x => x.VacancyReviewEntities).ReturnsDbSet(items);
 
@@ -27,11 +31,13 @@ public class WhenGettingVacancyReview: BaseFixture
             .Excluding(x => x.ManualQaFieldIndicators)
             .Excluding(x => x.UpdatedFieldIdentifiers)
             .Excluding(x => x.DismissedAutomatedQaOutcomeIndicators)
+            .Excluding(x => x.AutomatedQaOutcomeIndicators)
         );
 
         vacancyReview.ManualQaFieldIndicators.Should().BeEquivalentTo(JsonSerializer.Deserialize<List<string>>(expected.ManualQaFieldIndicators));
         vacancyReview.UpdatedFieldIdentifiers.Should().BeEquivalentTo(JsonSerializer.Deserialize<List<string>>(expected.UpdatedFieldIdentifiers));
         vacancyReview.DismissedAutomatedQaOutcomeIndicators.Should().BeEquivalentTo(JsonSerializer.Deserialize<List<string>>(expected.DismissedAutomatedQaOutcomeIndicators));
+        vacancyReview.AutomatedQaOutcomeIndicators.Should().BeEquivalentTo(JsonSerializer.Deserialize<List<string>>(expected.AutomatedQaOutcomeIndicators));
     }
     
     [Test]
@@ -54,6 +60,10 @@ public class WhenGettingVacancyReview: BaseFixture
     {
         // arrange
         var items = Fixture.CreateMany<VacancyReviewEntity>(10).ToList();
+        foreach (var item in items)
+        {
+            item.AutomatedQaOutcomeIndicators = "[]";
+        }
         items[2].VacancyReference = vacancyReference;
         items[3].VacancyReference = vacancyReference;
         items[4].VacancyReference = vacancyReference;
@@ -72,6 +82,7 @@ public class WhenGettingVacancyReview: BaseFixture
             .Excluding(x => x.ManualQaFieldIndicators)
             .Excluding(x => x.UpdatedFieldIdentifiers)
             .Excluding(x => x.DismissedAutomatedQaOutcomeIndicators)
+            .Excluding(x => x.AutomatedQaOutcomeIndicators)
         );
     }
     

@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Api.Validators.Rules;
 
 namespace SFA.DAS.Recruit.Api.Models;
 
@@ -21,7 +22,7 @@ public record VacancyReview
     public string? ManualQaComment { get; init; }
     public required List<string> ManualQaFieldIndicators { get; init; }
     public string? AutomatedQaOutcome { get; init; }
-    public string? AutomatedQaOutcomeIndicators { get; init; }
+    public List<RuleOutcome> AutomatedQaOutcomeIndicators { get; init; } = [];
     public required List<string> DismissedAutomatedQaOutcomeIndicators { get; init; }
     public required List<string> UpdatedFieldIdentifiers { get; init; }
     public required string VacancySnapshot { get; init; }

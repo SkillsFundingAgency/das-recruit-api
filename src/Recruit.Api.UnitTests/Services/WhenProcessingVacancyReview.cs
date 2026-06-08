@@ -36,7 +36,9 @@ public class WhenProcessingVacancyReview
         // assert
         entity.Status.Should().Be(ReviewStatus.New);
         entity.AutomatedQaOutcome.Should().Be(nameof(RuleSetDecision.Refer));
-        entity.AutomatedQaOutcomeIndicators.Should().Be("True");
+        var indicators = JsonSerializer.Deserialize<List<RuleOutcome>>(entity.AutomatedQaOutcomeIndicators);
+        indicators.Should().NotBeNullOrEmpty();
+        indicators.Should().HaveCount(1);
     }
     
     [Test, MoqAutoData]
@@ -55,6 +57,8 @@ public class WhenProcessingVacancyReview
         // assert
         entity.Status.Should().Be(ReviewStatus.New);
         entity.AutomatedQaOutcome.Should().Be(nameof(RuleSetDecision.Approve));
-        entity.AutomatedQaOutcomeIndicators.Should().Be("False");
+        
+        var indicators = JsonSerializer.Deserialize<List<RuleOutcome>>(entity.AutomatedQaOutcomeIndicators);
+        indicators.Should().BeEmpty();
     }
 }
