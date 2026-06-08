@@ -25,7 +25,8 @@ using UserType = SFA.DAS.Recruit.Api.Domain.Enums.UserType;
 namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController, Route($"{RouteNames.Vacancies}")]
-public class VacancyController([FromServices] IUserRepository userRepository) : Controller
+public class VacancyController(ILogger<VacancyController> logger,
+    [FromServices] IUserRepository userRepository) : Controller
 {
     [HttpGet, Route("{vacancyId:guid}")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
@@ -348,6 +349,7 @@ public class VacancyController([FromServices] IUserRepository userRepository) : 
         entity.CreatedDate = DateTime.UtcNow;
         
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
+        logger.LogInformation("Vacancy with id '{VacancyId}' created with status '{VacancyStatus}'", result.Entity.Id, result.Entity.Status);
         await eventsService.HandleVacancyStatusChange(result);
         
         return TypedResults.Created($"/{RouteNames.Vacancies}/{result.Entity.Id}", result.Entity.ToPostResponse());
