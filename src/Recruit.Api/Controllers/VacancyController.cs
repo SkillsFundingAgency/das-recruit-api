@@ -25,7 +25,7 @@ using UserType = SFA.DAS.Recruit.Api.Domain.Enums.UserType;
 namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController, Route($"{RouteNames.Vacancies}")]
-public class VacancyController([FromServices] IUserRepository userRepository) : Controller
+public class VacancyController : Controller
 {
     [HttpGet, Route("{vacancyId:guid}")]
     [ProducesResponseType(typeof(Vacancy), StatusCodes.Status200OK)]
@@ -315,7 +315,7 @@ public class VacancyController([FromServices] IUserRepository userRepository) : 
             return TypedResults.Created($"/{RouteNames.Vacancies}/{entity.Id}", entity.ToPostResponse());
         }
         
-        entity.SubmittedByUserId = await ResolveSubmittedByUserIdAsync(request, cancellationToken);
+        entity.SubmittedByUserId = await ResolveSubmittedByUserIdAsync(userRepository, request, cancellationToken);
 
         // This lookup should eventually be removed once we've migrated away from Mongo
         // We do this because currently the submitted user id is not the SQL user id, but could match
@@ -529,7 +529,8 @@ public class VacancyController([FromServices] IUserRepository userRepository) : 
         return TypedResults.Ok(new DataResponse<Dictionary<long, ApplicationReviewsStats>>(applicationReviewStatsDict));
     }
 
-    private async Task<Guid> ResolveSubmittedByUserIdAsync(VacancyRequest request, CancellationToken ct)
+    private async Task<Guid> ResolveSubmittedByUserIdAsync(IUserRepository userRepository,
+        VacancyRequest request, CancellationToken ct)
     {
         var userType = request.OwnerType == OwnerType.Employer
             ? UserType.Employer

@@ -1,4 +1,4 @@
-// ReSharper disable once CheckNamespace - This is required for backwards compaitibility
+// ReSharper disable once CheckNamespace - This is required for backwards compatibility
 namespace Esfa.Recruit.Vacancies.Client.Domain.Events;
 
 public class VacancyApprovedEvent

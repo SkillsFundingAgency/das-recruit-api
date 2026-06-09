@@ -34,8 +34,8 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
         {
             case ReviewStatus.New:
                 logger.LogInformation("Publishing VacancyReviewCreatedEvent, vacancyReviewId='{VacancyReviewId}, vacancyId='{VacancyId}' ", result.Entity.Id, snapshot!.Id);
-                var isResubmission = result.Entity.SubmissionCount > 1;
-                var hasPassedAutoQaChecks = string.Equals(result.Entity.AutomatedQaOutcome, nameof(RuleSetDecision.Approve), StringComparison.InvariantCultureIgnoreCase);
+                bool isResubmission = result.Entity.SubmissionCount > 1;
+                bool hasPassedAutoQaChecks = string.Equals(result.Entity.AutomatedQaOutcome, nameof(RuleSetDecision.Approve), StringComparison.InvariantCultureIgnoreCase);
                 await messageSession.Publish(new VacancyReviewCreatedEvent(snapshot.Id, result.Entity.Id, isResubmission, hasPassedAutoQaChecks));
                 break;
             case ReviewStatus.Closed:
@@ -59,12 +59,15 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
         switch (result.Entity.Status)
         {
             case VacancyStatus.Live:
+                logger.LogInformation("Publishing VacancyLiveEvent, vacancyId='{VacancyId}' ", result.Entity.Id);
                 await messageSession.Publish(new VacancyLiveEvent(result.Entity.Id, result.Entity.VacancyReference!.Value));
                 break;
             case VacancyStatus.Closed:
+                logger.LogInformation("Publishing VacancyClosedEvent, vacancyId='{VacancyId}' ", result.Entity.Id); 
                 await messageSession.Publish(new VacancyClosedEvent { VacancyId = result.Entity.Id, VacancyReference = result.Entity.VacancyReference!.Value });
                 break;
             case VacancyStatus.Approved:
+                logger.LogInformation("Publishing VacancyApprovedEvent, vacancyId='{VacancyId}' ", result.Entity.Id);
                 await messageSession.Publish(new VacancyApprovedEvent
                 {
                     AccountLegalEntityPublicHashedId = encodingService.Encode(result.Entity.AccountLegalEntityId!.Value, EncodingType.PublicAccountLegalEntityId),
@@ -74,7 +77,16 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
                 });
                 break;
             case VacancyStatus.Submitted:
+                logger.LogInformation("Publishing VacancySubmittedEvent, vacancyId='{VacancyId}' ", result.Entity.Id);
                 await messageSession.Publish(new VacancySubmittedEvent(result.Entity.Id));
+                break;
+            case VacancyStatus.Referred:
+                logger.LogInformation("Publishing VacancyReferredEvent, vacancyId='{VacancyId}' ", result.Entity.Id);
+                await messageSession.Publish(new VacancyReferredEvent
+                {
+                    VacancyId = result.Entity.Id,
+                    VacancyReference = result.Entity.VacancyReference!.GetValueOrDefault()
+                });
                 break;
         }
     }
