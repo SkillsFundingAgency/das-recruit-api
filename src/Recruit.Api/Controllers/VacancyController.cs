@@ -416,6 +416,7 @@ public class VacancyController(ILogger<VacancyController> logger,
         }
 
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
+        logger.LogInformation("Vacancy with id '{VacancyId}' created with status '{VacancyStatus}'", result.Entity.Id, result.Entity.Status);
         await eventsService.HandleVacancyStatusChange(result);
 
         return result.Created
