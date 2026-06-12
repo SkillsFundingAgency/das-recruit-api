@@ -2073,17 +2073,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetBatchByDateResponse"
+                  "$ref": "#/components/schemas/GetNotificationsBatchByDateResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetBatchByDateResponse"
+                  "$ref": "#/components/schemas/GetNotificationsBatchByDateResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetBatchByDateResponse"
+                  "$ref": "#/components/schemas/GetNotificationsBatchByDateResponse"
                 }
               }
             }
@@ -2137,17 +2137,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetBatchByDateResponse"
+                  "$ref": "#/components/schemas/GetNotificationsBatchByUserStatusResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetBatchByDateResponse"
+                  "$ref": "#/components/schemas/GetNotificationsBatchByUserStatusResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetBatchByDateResponse"
+                  "$ref": "#/components/schemas/GetNotificationsBatchByUserStatusResponse"
                 }
               }
             }
@@ -2201,33 +2201,7 @@
         ],
         "responses": {
           "204": {
-            "description": "No Content",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -7152,7 +7126,20 @@
         },
         "additionalProperties": false
       },
-      "GetBatchByDateResponse": {
+      "GetNotificationsBatchByDateResponse": {
+        "type": "object",
+        "properties": {
+          "emails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationEmail"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetNotificationsBatchByUserStatusResponse": {
         "type": "object",
         "properties": {
           "emails": {

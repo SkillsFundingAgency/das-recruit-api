@@ -189,19 +189,19 @@ public class PatchEmployerProfilesByAccountLegalEntityIdAddressesByIdApiRequest 
     public Microsoft.AspNetCore.JsonPatch.SystemTextJson.JsonPatchDocument<JsonPatchDocument> Data { get; set; } = default!;
 }
 
-/// <summary>GET /api/notifications/batch/by/date &#x2192; <see cref="GetBatchByDateResponse"/></summary>
+/// <summary>GET /api/notifications/batch/by/date &#x2192; <see cref="GetNotificationsBatchByDateResponse"/></summary>
 public record GetNotificationsBatchByDateApiRequest(System.DateTime DateTime) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/notifications/batch/by/date", new Dictionary<string, string?> { ["dateTime"] = DateTime.ToString("s") });
 }
 
-/// <summary>GET /api/notifications/batch/by/userstatus &#x2192; <see cref="GetBatchByDateResponse"/></summary>
+/// <summary>GET /api/notifications/batch/by/userstatus &#x2192; <see cref="GetNotificationsBatchByUserStatusResponse"/></summary>
 public record GetNotificationsBatchByUserstatusApiRequest(UserStatus? Status) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/notifications/batch/by/userstatus", new Dictionary<string, string?> { ["status"] = Status?.ToString() });
 }
 
-/// <summary>DELETE /api/notifications &#x2192; List&lt;string&gt;</summary>
+/// <summary>DELETE /api/notifications</summary>
 public record DeleteNotificationsApiRequest(List<long>? Ids) : IDeleteApiRequest
 {
     public string DeleteUrl => QueryHelpers.AddQueryString($"api/notifications",
