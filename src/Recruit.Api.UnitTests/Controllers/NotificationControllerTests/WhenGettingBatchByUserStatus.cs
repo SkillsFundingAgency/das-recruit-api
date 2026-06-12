@@ -24,9 +24,9 @@ internal class WhenGettingBatchByUserStatus
             .ReturnsAsync(entities);
 
         //Act
-        var result = await sut.GetBatchByUserStatus(UserStatus.Inactive, repository.Object, emailFactory.Object, token);
-        result.Should().BeOfType<Ok<GetBatchByUserStatusResponse>>();
-        var okResult = result as Ok<GetBatchByUserStatusResponse>;
+        var result = await sut.GetNotificationsBatchByUserStatus(UserStatus.Inactive, repository.Object, emailFactory.Object, token);
+        result.Should().BeOfType<Ok<GetNotificationsBatchByUserStatusResponse>>();
+        var okResult = result as Ok<GetNotificationsBatchByUserStatusResponse>;
         okResult.Should().NotBeNull();
         okResult.Value!.Emails.Count().Should().Be(entities.Count);
     }
@@ -40,7 +40,7 @@ internal class WhenGettingBatchByUserStatus
         CancellationToken token)
     {
         //Act
-        var result = await sut.GetBatchByUserStatus(UserStatus.Active, repository.Object, emailFactory.Object, token);
+        var result = await sut.GetNotificationsBatchByUserStatus(UserStatus.Active, repository.Object, emailFactory.Object, token);
         result.Should().BeOfType<BadRequest<string>>($"Only '{UserStatus.Inactive}' status is supported.");
     }
 }

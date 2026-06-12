@@ -62,7 +62,7 @@ public class WhenGettingNotificationEmailsBySendWhen : BaseFixture
 
         // act
         var response = await Client.GetAsync(new GetNotificationsBatchByDateApiRequest(DateTime.Now).GetUrl);
-        var results = await response.Content.ReadAsAsync<GetBatchByDateResponse>();
+        var results = await response.Content.ReadAsAsync<GetNotificationsBatchByDateResponse>();
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);

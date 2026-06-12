@@ -17,9 +17,9 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 public class NotificationController : ControllerBase
 {
     [HttpGet, Route("batch/by/date")]
-    [ProducesResponseType(typeof(GetBatchByDateResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetNotificationsBatchByDateResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IResult> GetBatchByDate(
+    public async Task<IResult> GetNotificationsBatchByDate(
         [FromQuery, Required] DateTime? dateTime,
         [FromServices] INotificationsRepository repository,
         [FromServices] IEmailFactory emailFactory,
@@ -27,13 +27,13 @@ public class NotificationController : ControllerBase
     {
         var recruitNotifications = await repository.GetBatchByDateAsync(dateTime!.Value, cancellationToken);
         var results = emailFactory.CreateFrom(recruitNotifications);
-        return TypedResults.Ok(new GetBatchByDateResponse(results));
+        return TypedResults.Ok(new GetNotificationsBatchByDateResponse(results));
     }
 
     [HttpGet, Route("batch/by/userStatus")]
-    [ProducesResponseType(typeof(GetBatchByDateResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetNotificationsBatchByUserStatusResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IResult> GetBatchByUserStatus(
+    public async Task<IResult> GetNotificationsBatchByUserStatus(
         [FromQuery] UserStatus status,
         [FromServices] INotificationsRepository repository,
         [FromServices] IEmailFactory emailFactory,
@@ -45,13 +45,13 @@ public class NotificationController : ControllerBase
         }
         var recruitNotifications = await repository.GetBatchByUserInactiveStatusAsync(cancellationToken);
         var results = emailFactory.CreateFrom(recruitNotifications);
-        return TypedResults.Ok(new GetBatchByUserStatusResponse(results));
+        return TypedResults.Ok(new GetNotificationsBatchByUserStatusResponse(results));
     }
 
     [HttpDelete]
-    [ProducesResponseType(typeof(IEnumerable<string>), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IResult> DeleteMany(
+    public async Task<IResult> DeleteManyNotifications(
         [FromQuery] List<long> ids,
         [FromServices] INotificationsRepository repository,
         CancellationToken cancellationToken)
