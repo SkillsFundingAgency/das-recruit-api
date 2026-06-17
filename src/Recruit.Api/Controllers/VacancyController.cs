@@ -346,7 +346,8 @@ public class VacancyController : Controller
         var vacancyReference = await repository.GetNextVacancyReferenceAsync(cancellationToken);
         entity.VacancyReference = vacancyReference.Value;
         entity.CreatedDate = DateTime.UtcNow;
-        
+        entity.ArchiveType = null; // Reset archive type when creating a new vacancy. Interim solution until we have a patch the contracts.
+
         var result = await repository.UpsertOneAsync(entity, cancellationToken);
         await eventsService.HandleVacancyStatusChange(result);
         
