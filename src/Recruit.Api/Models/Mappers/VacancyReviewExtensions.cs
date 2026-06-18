@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
 using SFA.DAS.Recruit.Api.Validators.Rules;
 
@@ -20,6 +21,9 @@ public static class VacancyReviewExtensions
             ManualOutcome = entity.ManualOutcome,
             ManualQaComment = entity.ManualQaComment,
             ManualQaFieldIndicators = JsonSerializer.Deserialize<List<string>>(entity.ManualQaFieldIndicators, JsonConfig.Options) ?? [],
+            ManualQaEditFieldIndicators = string.IsNullOrWhiteSpace(entity.ManualQaEditFieldIndicators) 
+                ? []
+                : JsonSerializer.Deserialize<List<ManualQaEditFieldIndicator>>(entity.ManualQaEditFieldIndicators, JsonConfig.Options) ?? [],
             ReviewedByUserEmail = entity.ReviewedByUserEmail,
             ReviewedDate = entity.ReviewedDate,
             SlaDeadLine = entity.SlaDeadLine,
@@ -112,6 +116,7 @@ public static class VacancyReviewExtensions
             ManualOutcome = request.ManualOutcome,
             ManualQaComment = request.ManualQaComment,
             ManualQaFieldIndicators = JsonSerializer.Serialize(request.ManualQaFieldIndicators, JsonConfig.Options),
+            ManualQaEditFieldIndicators = request.ManualQaEditFieldIndicators is { Count: >0 } ? JsonSerializer.Serialize(request.ManualQaEditFieldIndicators, JsonConfig.Options) : null,
             AutomatedQaOutcome = request.AutomatedQaOutcome,
             AutomatedQaOutcomeIndicators = JsonSerializer.Serialize(request.AutomatedQaOutcomeIndicators ?? []),
             DismissedAutomatedQaOutcomeIndicators = JsonSerializer.Serialize(request.DismissedAutomatedQaOutcomeIndicators, JsonConfig.Options),

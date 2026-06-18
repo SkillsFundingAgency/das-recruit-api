@@ -21,6 +21,7 @@ public class PutVacancyReviewRequest
     public string? ManualOutcome { get; init; }
     public string? ManualQaComment { get; init; }
     public List<string>? ManualQaFieldIndicators { get; init; } = [];
+    public List<ManualQaEditFieldIndicator>? ManualQaEditFieldIndicators { get; init; }
     public string? AutomatedQaOutcome { get; init; }
     public List<RuleOutcome> AutomatedQaOutcomeIndicators { get; init; } = [];
     public List<string>? DismissedAutomatedQaOutcomeIndicators { get; init; } = [];

@@ -25,6 +25,7 @@ public class VacancyReviewEntity
     public string? ManualOutcome { get; set; }
     public string? ManualQaComment { get; init; }
     public required string ManualQaFieldIndicators { get; init; }
+    public string? ManualQaEditFieldIndicators { get; init; }
     public string? AutomatedQaOutcome { get; set; }
     [MaxLength(20)]
     public string? AutomatedQaOutcomeIndicators { get; set; }
