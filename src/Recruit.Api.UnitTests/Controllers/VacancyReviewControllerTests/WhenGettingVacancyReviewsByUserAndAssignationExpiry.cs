@@ -19,6 +19,7 @@ internal class WhenGettingVacancyReviewsByUserAndAssignationExpiry
         foreach (var entity in entities)
         {
             entity.AutomatedQaOutcomeIndicators = "[]";
+            entity.ManualQaEditFieldIndicators = null;
         }
         var userId = "someone@example.com";
         DateTime? assignationExpiry = DateTime.UtcNow;
@@ -48,6 +49,7 @@ internal class WhenGettingVacancyReviewsByUserAndAssignationExpiry
         foreach (var entity in entities)
         {
             entity.AutomatedQaOutcomeIndicators = "[]";
+            entity.ManualQaEditFieldIndicators = null;
         }
         var userId = "someone@example.com";
         DateTime? assignationExpiry = null;

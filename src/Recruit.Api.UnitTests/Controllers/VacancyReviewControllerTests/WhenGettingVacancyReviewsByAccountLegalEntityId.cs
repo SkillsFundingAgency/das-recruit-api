@@ -19,6 +19,7 @@ internal class WhenGettingVacancyReviewsByAccountLegalEntityId
         foreach (var entity in entities)
         {
             entity.AutomatedQaOutcomeIndicators = "[]";
+            entity.ManualQaEditFieldIndicators = null;
         }
 
         repository

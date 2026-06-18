@@ -85,6 +85,7 @@ public class WhenPatchingVacancyReview: BaseFixture
         foreach (var item in items)
         {
             item.AutomatedQaOutcomeIndicators = "[]";
+            item.ManualQaEditFieldIndicators = null;
         }
         
         var itemsClone = items.JsonClone();

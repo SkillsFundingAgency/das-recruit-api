@@ -11,26 +11,33 @@ public static class VacancyReviewExtensions
 {
     private static VacancyReview ToResponseDto(this VacancyReviewEntity entity)
     {
+        var automatedQaOutcome = ParseAutomatedQaOutcome(entity);
+        var automatedQaOutcomeIndicators = ParseAutomatedQaIndicators(entity.AutomatedQaOutcomeIndicators);
+        var dismissedAutomatedQaOutcomeIndicators = JsonSerializer.Deserialize<List<string>>(entity.DismissedAutomatedQaOutcomeIndicators, JsonConfig.Options) ?? [];
+        var manualQaFieldIndicators = JsonSerializer.Deserialize<List<string>>(entity.ManualQaFieldIndicators, JsonConfig.Options) ?? [];
+        var manualQaEditFieldIndicators = string.IsNullOrWhiteSpace(entity.ManualQaEditFieldIndicators)
+            ? []
+            : JsonSerializer.Deserialize<List<ManualQaEditFieldIndicator>>(entity.ManualQaEditFieldIndicators, JsonConfig.Options) ?? [];
+        var updatedFieldIdentifiers = JsonSerializer.Deserialize<List<string>>(entity.UpdatedFieldIdentifiers, JsonConfig.Options) ?? [];
+        
         return new VacancyReview {
-            AutomatedQaOutcome = ParseAutomatedQaOutcome(entity),
-            AutomatedQaOutcomeIndicators = ParseAutomatedQaIndicators(entity.AutomatedQaOutcomeIndicators),
+            AutomatedQaOutcome = automatedQaOutcome,
+            AutomatedQaOutcomeIndicators = automatedQaOutcomeIndicators,
             ClosedDate = entity.ClosedDate,
             CreatedDate = entity.CreatedDate,
-            DismissedAutomatedQaOutcomeIndicators = JsonSerializer.Deserialize<List<string>>(entity.DismissedAutomatedQaOutcomeIndicators, JsonConfig.Options) ?? [],
+            DismissedAutomatedQaOutcomeIndicators = dismissedAutomatedQaOutcomeIndicators,
             Id = entity.Id,
             ManualOutcome = entity.ManualOutcome,
             ManualQaComment = entity.ManualQaComment,
-            ManualQaFieldIndicators = JsonSerializer.Deserialize<List<string>>(entity.ManualQaFieldIndicators, JsonConfig.Options) ?? [],
-            ManualQaEditFieldIndicators = string.IsNullOrWhiteSpace(entity.ManualQaEditFieldIndicators) 
-                ? []
-                : JsonSerializer.Deserialize<List<ManualQaEditFieldIndicator>>(entity.ManualQaEditFieldIndicators, JsonConfig.Options) ?? [],
+            ManualQaFieldIndicators = manualQaFieldIndicators,
+            ManualQaEditFieldIndicators = manualQaEditFieldIndicators,
             ReviewedByUserEmail = entity.ReviewedByUserEmail,
             ReviewedDate = entity.ReviewedDate,
             SlaDeadLine = entity.SlaDeadLine,
             Status = entity.Status,
             SubmissionCount = entity.SubmissionCount,
             SubmittedByUserEmail = entity.SubmittedByUserEmail,
-            UpdatedFieldIdentifiers = JsonSerializer.Deserialize<List<string>>(entity.UpdatedFieldIdentifiers, JsonConfig.Options) ?? [],
+            UpdatedFieldIdentifiers = updatedFieldIdentifiers,
             VacancyReference = entity.VacancyReference,
             VacancySnapshot = entity.VacancySnapshot,
             VacancyTitle = entity.VacancyTitle,
