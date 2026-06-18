@@ -895,6 +895,23 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class ManualQaEditFieldIndicator
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("fieldIdentifier")]
+        [Newtonsoft.Json.JsonProperty("fieldIdentifier", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? FieldIdentifier { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("beforeEdit")]
+        [Newtonsoft.Json.JsonProperty("beforeEdit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? BeforeEdit { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("afterEdit")]
+        [Newtonsoft.Json.JsonProperty("afterEdit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? AfterEdit { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class NotificationEmail
     {
         [System.Text.Json.Serialization.JsonPropertyName("templateId")]
@@ -2281,6 +2298,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [Newtonsoft.Json.JsonProperty("manualQaFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string>? ManualQaFieldIndicators { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("manualQaEditFieldIndicators")]
+        [Newtonsoft.Json.JsonProperty("manualQaEditFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<ManualQaEditFieldIndicator>? ManualQaEditFieldIndicators { get; set; } = default!;
+
         [System.Text.Json.Serialization.JsonPropertyName("automatedQaOutcome")]
         [Newtonsoft.Json.JsonProperty("automatedQaOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AutomatedQaOutcome { get; set; } = default!;
@@ -3371,6 +3392,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("manualQaFieldIndicators")]
         [Newtonsoft.Json.JsonProperty("manualQaFieldIndicators", Required = Newtonsoft.Json.Required.AllowNull)]
         public System.Collections.Generic.ICollection<string>? ManualQaFieldIndicators { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("manualQaEditFieldIndicators")]
+        [Newtonsoft.Json.JsonProperty("manualQaEditFieldIndicators", Required = Newtonsoft.Json.Required.AllowNull)]
+        public System.Collections.Generic.ICollection<ManualQaEditFieldIndicator>? ManualQaEditFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("automatedQaOutcome")]
         [Newtonsoft.Json.JsonProperty("automatedQaOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
