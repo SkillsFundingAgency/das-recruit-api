@@ -46,7 +46,9 @@
 
     <PackageReference Include="SFA.DAS.VacancyServices.Wage" Version="1.0.45" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.0">
+      <GeneratePathProperty>true</GeneratePathProperty>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.4" />
     <PackageReference Include="System.Text.Json" Version="10.0.0" />
     <PackageReference Include="HtmlSanitizer" Version="9.0.892" />
@@ -66,7 +68,7 @@
     </Content>
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TF_BUILD)' != 'True'">
+  <PropertyGroup>
     <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
     <OpenApiDocumentsDirectory>$(MSBuildThisFileDirectory)</OpenApiDocumentsDirectory>
   </PropertyGroup>

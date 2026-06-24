@@ -7057,6 +7057,21 @@
           ]
         }
       },
+      "ManualQaEditFieldIndicator": {
+        "type": "object",
+        "properties": {
+          "fieldIdentifier": {
+            "type": "string"
+          },
+          "beforeEdit": {
+            "type": "string"
+          },
+          "afterEdit": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "NotificationEmail": {
         "required": [
           "templateId",
@@ -9124,6 +9139,15 @@
               "type": "string"
             }
           },
+          "manualQaEditFieldIndicators": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/ManualQaEditFieldIndicator"
+            }
+          },
           "automatedQaOutcome": {
             "type": [
               "null",
@@ -10401,6 +10425,7 @@
           "slaDeadLine",
           "status",
           "manualQaFieldIndicators",
+          "manualQaEditFieldIndicators",
           "dismissedAutomatedQaOutcomeIndicators",
           "updatedFieldIdentifiers",
           "vacancySnapshot"
@@ -10479,6 +10504,12 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "manualQaEditFieldIndicators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManualQaEditFieldIndicator"
             }
           },
           "automatedQaOutcome": {

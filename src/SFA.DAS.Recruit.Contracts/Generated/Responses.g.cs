@@ -866,16 +866,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class ManualQaEditFieldIndicator
     {
         [System.Text.Json.Serialization.JsonPropertyName("fieldIdentifier")]
-        [Newtonsoft.Json.JsonProperty("fieldIdentifier", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? FieldIdentifier { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("fieldIdentifier", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string FieldIdentifier { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("beforeEdit")]
-        [Newtonsoft.Json.JsonProperty("beforeEdit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? BeforeEdit { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("beforeEdit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string BeforeEdit { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("afterEdit")]
-        [Newtonsoft.Json.JsonProperty("afterEdit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? AfterEdit { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("afterEdit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AfterEdit { get; set; } = default!;
 
     }
 
@@ -2492,6 +2495,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Collections.Generic.ICollection<string>? ManualQaFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaEditFieldIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("manualQaEditFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<ManualQaEditFieldIndicator>? ManualQaEditFieldIndicators { get; set; } = default!;
 
@@ -3661,8 +3665,8 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Collections.Generic.ICollection<string> ManualQaFieldIndicators { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaEditFieldIndicators")]
-        [Newtonsoft.Json.JsonProperty("manualQaEditFieldIndicators", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<ManualQaEditFieldIndicator>? ManualQaEditFieldIndicators { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("manualQaEditFieldIndicators", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<ManualQaEditFieldIndicator> ManualQaEditFieldIndicators { get; set; } = new System.Collections.ObjectModel.Collection<ManualQaEditFieldIndicator>();
 
         [System.Text.Json.Serialization.JsonPropertyName("automatedQaOutcome")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
