@@ -21,7 +21,8 @@ CREATE TABLE dbo.[VacancyReview] (
     [AccountId]                                 BIGINT              NOT NULL DEFAULT(0),
     [AccountLegalEntityId]                      BIGINT              NOT NULL DEFAULT(0),
     [Ukprn]                                     BIGINT              NOT NULL DEFAULT(0),
-    [OwnerType]                                 tinyint             NOT NULL DEFAULT(3)
+    [OwnerType]                                 tinyint             NOT NULL DEFAULT(3),
+    [ManualQaEditFieldIndicators]               nvarchar(max)       NULL
     CONSTRAINT [PK_VacancyReview] PRIMARY KEY (Id),
     INDEX [IX_VacancyReview_VacancyReference] NONCLUSTERED(VacancyReference),
     INDEX [IX_VacancyReview_VacancyReferenceStatus] NONCLUSTERED(VacancyReference,Status),

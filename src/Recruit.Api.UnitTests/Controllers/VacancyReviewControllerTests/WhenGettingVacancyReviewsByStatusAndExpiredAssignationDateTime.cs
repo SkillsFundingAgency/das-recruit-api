@@ -19,6 +19,7 @@ internal class WhenGettingVacancyReviewsByStatusAndExpiredAssignationDateTime
         foreach (var entity in entities)
         {
             entity.AutomatedQaOutcomeIndicators = "[]";
+            entity.ManualQaEditFieldIndicators = null;
         }
         var statuses = new List<ReviewStatus> { ReviewStatus.PendingReview, ReviewStatus.UnderReview };
         var cutoff = DateTime.UtcNow;
