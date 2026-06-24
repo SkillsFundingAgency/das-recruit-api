@@ -66,7 +66,7 @@
     </Content>
   </ItemGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(TF_BUILD)' != 'True'">
     <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
     <OpenApiDocumentsDirectory>$(MSBuildThisFileDirectory)</OpenApiDocumentsDirectory>
   </PropertyGroup>
