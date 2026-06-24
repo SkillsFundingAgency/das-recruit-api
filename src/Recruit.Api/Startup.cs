@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 using Asp.Versioning;
 using HotChocolate.AspNetCore;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
@@ -14,7 +13,6 @@ using SFA.DAS.Recruit.Api.AppStart;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Models;
-using SFA.DAS.Recruit.Api.Filters;
 
 namespace SFA.DAS.Recruit.Api;
 
@@ -77,6 +75,11 @@ internal class Startup
         services.AddSingleton(cfg => cfg.GetService<IOptions<ConnectionStrings>>()!.Value);
         var connectionStrings = Configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
 
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+
         services
             .AddMvc(o =>
             {
@@ -98,16 +101,39 @@ internal class Startup
         services.AddDatabaseRegistration(connectionStrings!, Configuration["EnvironmentName"]);
         services.AddOpenTelemetryRegistration(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]!);
         services.ConfigureHealthChecks();
+        services.AddTransient<VersionHeaderTransformer>();
+        services.AddTransient<JsonPatchDocumentTypeTransformer>();
+        services.AddTransient<JsonPatchDocumentTransformer>();
+        services.AddTransient<HealthChecksTransformer>();
+        services.AddTransient<FlagsEnumSchemaTransformer>();
+        services.AddTransient<StringEnumSchemaTransformer>();
+        services.AddTransient<NumericTypeSchemaTransformer>();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen(c =>
+        services.AddOpenApi("swagger", options =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Recruit.Api", Version = "v1" });
-            c.OperationFilter<SwaggerVersionHeaderFilter>();
-            c.OperationFilter<JsonPatchDocumentTypeFilter>();
-            c.DocumentFilter<JsonPatchDocumentFilter>();
-            c.DocumentFilter<HealthChecksFilter>();
-            c.MapType<VacancyReference>(() => new OpenApiSchema { Type = "string" });
-            c.SchemaFilter<FlagsEnumSchemaFilter>();
+            options.ShouldInclude = _ => true;
+            options.AddOperationTransformer<VersionHeaderTransformer>();
+            options.AddOperationTransformer<JsonPatchDocumentTypeTransformer>();
+            options.AddDocumentTransformer<JsonPatchDocumentTransformer>();
+            options.AddDocumentTransformer<HealthChecksTransformer>();
+            options.AddSchemaTransformer<FlagsEnumSchemaTransformer>();
+            options.AddSchemaTransformer<StringEnumSchemaTransformer>();
+            options.AddSchemaTransformer<NumericTypeSchemaTransformer>();
+            options.AddSchemaTransformer((schema, context, _) =>
+            {
+                if (context.JsonTypeInfo.Type == typeof(VacancyReference))
+                {
+                    schema.Type = Microsoft.OpenApi.JsonSchemaType.String;
+                    schema.Properties?.Clear();
+                }
+                return Task.CompletedTask;
+            });
+            options.AddSchemaTransformer((schema, context, _) =>
+            {
+                if (schema.Properties?.Count > 0)
+                    schema.AdditionalPropertiesAllowed = false;
+                return Task.CompletedTask;
+            });
         });
         services.AddApiVersioning(opt =>
         {
@@ -142,10 +168,9 @@ internal class Startup
         
         app.UseAuthentication();
             
-        app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "SFA.DAS.Recruit.Api v1");
+            options.SwaggerEndpoint("/openapi/swagger.json", "SFA.DAS.Recruit.Api v1");
             options.RoutePrefix = string.Empty;
         });
         app.UseHealthChecks();
@@ -154,6 +179,7 @@ internal class Startup
         app.UseAuthorization();
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapOpenApi();
             endpoints.MapControllers();
             var graphQlBuilder = endpoints
                 .MapGraphQL()

@@ -30,30 +30,36 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class Address
     {
         [System.Text.Json.Serialization.JsonPropertyName("addressLine1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine3")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine3 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine4")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine4", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine4 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("postcode")]
-        [Newtonsoft.Json.JsonProperty("postcode", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? Postcode { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("postcode", Required = Newtonsoft.Json.Required.Always)]
+        public string Postcode { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("latitude")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Latitude { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("longitude")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Longitude { get; set; } = default!;
 
@@ -86,34 +92,41 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ApplicationId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyTitle")]
-        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? VacancyTitle { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string VacancyTitle { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? WithdrawnDate { get; set; } = default!;
 
@@ -122,6 +135,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid CandidateId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legacyApplicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("legacyApplicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? LegacyApplicationId { get; set; } = default!;
 
@@ -147,59 +161,36 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ApplicationReviewStatus Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("temporaryReviewStatus")]
-        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApplicationReviewStatus TemporaryReviewStatus { get; set; } = default!;
+        public ApplicationReviewStatus? TemporaryReviewStatus { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("candidateFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? CandidateFeedback { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerFeedback { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ApplicationReviewJsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<ApplicationReviewOperation>? Operations { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ApplicationReviewOperation
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("path")]
-        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Path { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("op")]
-        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Op { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("from")]
-        [Newtonsoft.Json.JsonProperty("from", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? From { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? Value { get; set; } = default!;
 
     }
 
@@ -219,14 +210,17 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public long VacancyReference { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyTitle")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? VacancyTitle { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingProviderName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("trainingProviderName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TrainingProviderName { get; set; } = default!;
 
@@ -235,71 +229,38 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int ProgrammeId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyClosingDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("vacancyClosingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? VacancyClosingDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationSubmittedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationSubmittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ApplicationSubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("availableWhere")]
-        [Newtonsoft.Json.JsonProperty("availableWhere", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("availableWhere", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public AvailableWhere AvailableWhere { get; set; } = default!;
+        public AvailableWhere? AvailableWhere { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationStatus")]
         [Newtonsoft.Json.JsonProperty("applicationStatus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ApplicationReviewStatus ApplicationStatus { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("apprenticeshipType")]
         [Newtonsoft.Json.JsonProperty("apprenticeshipType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ApprenticeshipTypes ApprenticeshipType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("numberOfDaysApplicationAtThisStatus")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("numberOfDaysApplicationAtThisStatus", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? NumberOfDaysApplicationAtThisStatus { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
-    public enum ApplicationReviewStatus
-    {
-
-        [System.Runtime.Serialization.EnumMember(Value = @"New")]
-        New = 0,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"Successful")]
-        Successful = 1,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"Unsuccessful")]
-        Unsuccessful = 2,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"Shared")]
-        Shared = 3,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"InReview")]
-        InReview = 4,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"Interviewing")]
-        Interviewing = 5,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"EmployerInterviewing")]
-        EmployerInterviewing = 6,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"EmployerUnsuccessful")]
-        EmployerUnsuccessful = 7,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"PendingShared")]
-        PendingShared = 8,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"PendingToMakeUnsuccessful")]
-        PendingToMakeUnsuccessful = 9,
-
-        [System.Runtime.Serialization.EnumMember(Value = @"AllShared")]
-        AllShared = 10,
 
     }
 
@@ -307,12 +268,12 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class ApplicationReviewsResponse
     {
         [System.Text.Json.Serialization.JsonPropertyName("pageInfo")]
-        [Newtonsoft.Json.JsonProperty("pageInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public PageInfo PageInfo { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("pageInfo", Required = Newtonsoft.Json.Required.Always)]
+        public PageInfo PageInfo { get; set; } = new PageInfo();
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationReviews")]
-        [Newtonsoft.Json.JsonProperty("applicationReviews", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<ApplicationReview>? ApplicationReviews { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("applicationReviews", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<ApplicationReview> ApplicationReviews { get; set; } = new System.Collections.ObjectModel.Collection<ApplicationReview>();
 
     }
 
@@ -371,6 +332,46 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    public enum ApplicationReviewStatus
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"New")]
+        New = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Successful")]
+        Successful = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Unsuccessful")]
+        Unsuccessful = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Shared")]
+        Shared = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"InReview")]
+        InReview = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Interviewing")]
+        Interviewing = 5,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EmployerInterviewing")]
+        EmployerInterviewing = 6,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EmployerUnsuccessful")]
+        EmployerUnsuccessful = 7,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"PendingShared")]
+        PendingShared = 8,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"PendingToMakeUnsuccessful")]
+        PendingToMakeUnsuccessful = 9,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"AllShared")]
+        AllShared = 10,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum ApprenticeshipTypes
     {
 
@@ -415,12 +416,14 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class BlockedProviderAlertModel
     {
         [System.Text.Json.Serialization.JsonPropertyName("closedVacancies")]
-        [Newtonsoft.Json.JsonProperty("closedVacancies", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string>? ClosedVacancies { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("closedVacancies", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> ClosedVacancies { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("blockedProviderNames")]
-        [Newtonsoft.Json.JsonProperty("blockedProviderNames", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string>? BlockedProviderNames { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("blockedProviderNames", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> BlockedProviderNames { get; set; } = default!;
 
     }
 
@@ -453,16 +456,28 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class ContactDetail
     {
         [System.Text.Json.Serialization.JsonPropertyName("name")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Name { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("email")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Email { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("phone")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("phone", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Phone { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class DataResponseOfint
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
+        [Newtonsoft.Json.JsonProperty("data", Required = Newtonsoft.Json.Required.Always)]
+        public int Data { get; set; } = default!;
 
     }
 
@@ -486,77 +501,24 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class EmployerAlertsModel
     {
         [System.Text.Json.Serialization.JsonPropertyName("employerRevokedTransferredVacanciesAlert")]
-        [Newtonsoft.Json.JsonProperty("employerRevokedTransferredVacanciesAlert", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public EmployerTransferredVacanciesAlertModel EmployerRevokedTransferredVacanciesAlert { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("employerRevokedTransferredVacanciesAlert", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public EmployerTransferredVacanciesAlertModel? EmployerRevokedTransferredVacanciesAlert { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("blockedProviderTransferredVacanciesAlert")]
-        [Newtonsoft.Json.JsonProperty("blockedProviderTransferredVacanciesAlert", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public EmployerTransferredVacanciesAlertModel BlockedProviderTransferredVacanciesAlert { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("blockedProviderTransferredVacanciesAlert", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public EmployerTransferredVacanciesAlertModel? BlockedProviderTransferredVacanciesAlert { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("blockedProviderAlert")]
-        [Newtonsoft.Json.JsonProperty("blockedProviderAlert", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public BlockedProviderAlertModel BlockedProviderAlert { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("blockedProviderAlert", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public BlockedProviderAlertModel? BlockedProviderAlert { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withDrawnByQaVacanciesAlert")]
-        [Newtonsoft.Json.JsonProperty("withDrawnByQaVacanciesAlert", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public WithdrawnVacanciesAlertModel WithDrawnByQaVacanciesAlert { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class EmployerDashboardModel
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("newApplicationsCount")]
-        [Newtonsoft.Json.JsonProperty("newApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int NewApplicationsCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("employerReviewedApplicationsCount")]
-        [Newtonsoft.Json.JsonProperty("employerReviewedApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int EmployerReviewedApplicationsCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("successfulApplicationsCount")]
-        [Newtonsoft.Json.JsonProperty("successfulApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int SuccessfulApplicationsCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("unsuccessfulApplicationsCount")]
-        [Newtonsoft.Json.JsonProperty("unsuccessfulApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int UnsuccessfulApplicationsCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("sharedApplicationsCount")]
-        [Newtonsoft.Json.JsonProperty("sharedApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int SharedApplicationsCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("allSharedApplicationsCount")]
-        [Newtonsoft.Json.JsonProperty("allSharedApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int AllSharedApplicationsCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("hasNoApplications")]
-        [Newtonsoft.Json.JsonProperty("hasNoApplications", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public bool HasNoApplications { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesCount")]
-        [Newtonsoft.Json.JsonProperty("closedVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ClosedVacanciesCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("draftVacanciesCount")]
-        [Newtonsoft.Json.JsonProperty("draftVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int DraftVacanciesCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("reviewVacanciesCount")]
-        [Newtonsoft.Json.JsonProperty("reviewVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ReviewVacanciesCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("referredVacanciesCount")]
-        [Newtonsoft.Json.JsonProperty("referredVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int ReferredVacanciesCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("liveVacanciesCount")]
-        [Newtonsoft.Json.JsonProperty("liveVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int LiveVacanciesCount { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("submittedVacanciesCount")]
-        [Newtonsoft.Json.JsonProperty("submittedVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int SubmittedVacanciesCount { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("withDrawnByQaVacanciesAlert", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public WithdrawnVacanciesAlertModel? WithDrawnByQaVacanciesAlert { get; set; } = default!;
 
     }
 
@@ -580,24 +542,24 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class EmployerProfile
     {
         [System.Text.Json.Serialization.JsonPropertyName("accountLegalEntityId")]
-        [Newtonsoft.Json.JsonProperty("accountLegalEntityId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("accountLegalEntityId", Required = Newtonsoft.Json.Required.Always)]
         public long AccountLegalEntityId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("accountId")]
-        [Newtonsoft.Json.JsonProperty("accountId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("accountId", Required = Newtonsoft.Json.Required.Always)]
         public long AccountId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("aboutOrganisation")]
-        [Newtonsoft.Json.JsonProperty("aboutOrganisation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("aboutOrganisation", Required = Newtonsoft.Json.Required.AllowNull)]
         public string? AboutOrganisation { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("tradingName")]
-        [Newtonsoft.Json.JsonProperty("tradingName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("tradingName", Required = Newtonsoft.Json.Required.AllowNull)]
         public string? TradingName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addresses")]
-        [Newtonsoft.Json.JsonProperty("addresses", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<EmployerProfileAddress>? Addresses { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("addresses", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<EmployerProfileAddress> Addresses { get; set; } = new System.Collections.ObjectModel.Collection<EmployerProfileAddress>();
 
     }
 
@@ -605,35 +567,35 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class EmployerProfileAddress
     {
         [System.Text.Json.Serialization.JsonPropertyName("id")]
-        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
         public int Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine1")]
-        [Newtonsoft.Json.JsonProperty("addressLine1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? AddressLine1 { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("addressLine1", Required = Newtonsoft.Json.Required.Always)]
+        public string AddressLine1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine2")]
-        [Newtonsoft.Json.JsonProperty("addressLine2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("addressLine2", Required = Newtonsoft.Json.Required.AllowNull)]
         public string? AddressLine2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine3")]
-        [Newtonsoft.Json.JsonProperty("addressLine3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("addressLine3", Required = Newtonsoft.Json.Required.AllowNull)]
         public string? AddressLine3 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine4")]
-        [Newtonsoft.Json.JsonProperty("addressLine4", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("addressLine4", Required = Newtonsoft.Json.Required.AllowNull)]
         public string? AddressLine4 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("postcode")]
-        [Newtonsoft.Json.JsonProperty("postcode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Postcode { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("postcode", Required = Newtonsoft.Json.Required.Always)]
+        public string Postcode { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("latitude")]
-        [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.AllowNull)]
         public double? Latitude { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("longitude")]
-        [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.AllowNull)]
         public double? Longitude { get; set; } = default!;
 
     }
@@ -646,8 +608,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int TransferredVacanciesCount { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredVacanciesProviderNames")]
-        [Newtonsoft.Json.JsonProperty("transferredVacanciesProviderNames", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string>? TransferredVacanciesProviderNames { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("transferredVacanciesProviderNames", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> TransferredVacanciesProviderNames { get; set; } = default!;
 
     }
 
@@ -748,34 +711,41 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ApplicationId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyTitle")]
-        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? VacancyTitle { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string VacancyTitle { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? WithdrawnDate { get; set; } = default!;
 
@@ -784,6 +754,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid CandidateId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legacyApplicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("legacyApplicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? LegacyApplicationId { get; set; } = default!;
 
@@ -809,27 +780,34 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ApplicationReviewStatus Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("temporaryReviewStatus")]
-        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApplicationReviewStatus TemporaryReviewStatus { get; set; } = default!;
+        public ApplicationReviewStatus? TemporaryReviewStatus { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("candidateFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? CandidateFeedback { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerFeedback { get; set; } = default!;
 
@@ -839,8 +817,8 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class GetNotificationsBatchByDateResponse
     {
         [System.Text.Json.Serialization.JsonPropertyName("emails")]
-        [Newtonsoft.Json.JsonProperty("emails", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<NotificationEmail>? Emails { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("emails", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<NotificationEmail> Emails { get; set; } = new System.Collections.ObjectModel.Collection<NotificationEmail>();
 
     }
 
@@ -848,8 +826,8 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class GetNotificationsBatchByUserStatusResponse
     {
         [System.Text.Json.Serialization.JsonPropertyName("emails")]
-        [Newtonsoft.Json.JsonProperty("emails", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<NotificationEmail>? Emails { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("emails", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<NotificationEmail> Emails { get; set; } = new System.Collections.ObjectModel.Collection<NotificationEmail>();
 
     }
 
@@ -857,8 +835,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class GetQaReportResponse
     {
         [System.Text.Json.Serialization.JsonPropertyName("qaReports")]
-        [Newtonsoft.Json.JsonProperty("qaReports", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<QaReport>? QaReports { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("qaReports", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<QaReport> QaReports { get; set; } = default!;
 
     }
 
@@ -866,31 +845,20 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class GetUserRequest
     {
         [System.Text.Json.Serialization.JsonPropertyName("email")]
-        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? Email { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
+        public string Email { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("userType")]
         [Newtonsoft.Json.JsonProperty("userType", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public UserType UserType { get; set; } = default!;
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Int32DataResponse
+    public partial class JsonPatchDocument : System.Collections.ObjectModel.Collection<Anonymous>
     {
-        [System.Text.Json.Serialization.JsonPropertyName("data")]
-        [Newtonsoft.Json.JsonProperty("data", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Data { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class JsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Operation>? Operations { get; set; } = default!;
 
     }
 
@@ -898,16 +866,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class ManualQaEditFieldIndicator
     {
         [System.Text.Json.Serialization.JsonPropertyName("fieldIdentifier")]
-        [Newtonsoft.Json.JsonProperty("fieldIdentifier", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? FieldIdentifier { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("fieldIdentifier", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string FieldIdentifier { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("beforeEdit")]
-        [Newtonsoft.Json.JsonProperty("beforeEdit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? BeforeEdit { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("beforeEdit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string BeforeEdit { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("afterEdit")]
-        [Newtonsoft.Json.JsonProperty("afterEdit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? AfterEdit { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("afterEdit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string AfterEdit { get; set; } = default!;
 
     }
 
@@ -919,14 +890,15 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid TemplateId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("recipientAddress")]
-        [Newtonsoft.Json.JsonProperty("recipientAddress", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? RecipientAddress { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("recipientAddress", Required = Newtonsoft.Json.Required.Always)]
+        public string RecipientAddress { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("tokens")]
-        [Newtonsoft.Json.JsonProperty("tokens", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.IDictionary<string, string>? Tokens { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("tokens", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.IDictionary<string, string> Tokens { get; set; } = new System.Collections.Generic.Dictionary<string, string>();
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceIds")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("sourceIds", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<long>? SourceIds { get; set; } = default!;
 
@@ -958,21 +930,24 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class NotificationPreference
     {
         [System.Text.Json.Serialization.JsonPropertyName("event")]
-        [Newtonsoft.Json.JsonProperty("event", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("event", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public NotificationTypes Event { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("method")]
-        [Newtonsoft.Json.JsonProperty("method", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Method { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("method", Required = Newtonsoft.Json.Required.Always)]
+        public string Method { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("scope")]
-        [Newtonsoft.Json.JsonProperty("scope", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("scope", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public NotificationScope Scope { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("frequency")]
-        [Newtonsoft.Json.JsonProperty("frequency", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("frequency", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public NotificationFrequency Frequency { get; set; } = default!;
 
@@ -982,8 +957,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class NotificationPreferences
     {
         [System.Text.Json.Serialization.JsonPropertyName("eventPreferences")]
-        [Newtonsoft.Json.JsonProperty("eventPreferences", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<NotificationPreference>? EventPreferences { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("eventPreferences", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<NotificationPreference> EventPreferences { get; set; } = default!;
 
     }
 
@@ -1032,27 +1008,6 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class Operation
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("path")]
-        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Path { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("op")]
-        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Op { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("from")]
-        [Newtonsoft.Json.JsonProperty("from", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? From { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? Value { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum OwnerType
     {
@@ -1068,6 +1023,32 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Runtime.Serialization.EnumMember(Value = @"Unknown")]
         Unknown = 3,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class PagedResponseOfVacancy
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("pageInfo")]
+        [Newtonsoft.Json.JsonProperty("pageInfo", Required = Newtonsoft.Json.Required.Always)]
+        public PageInfo PageInfo { get; set; } = new PageInfo();
+
+        [System.Text.Json.Serialization.JsonPropertyName("items")]
+        [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<Vacancy> Items { get; set; } = new System.Collections.ObjectModel.Collection<Vacancy>();
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class PagedResponseOfVacancySummary
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("pageInfo")]
+        [Newtonsoft.Json.JsonProperty("pageInfo", Required = Newtonsoft.Json.Required.Always)]
+        public PageInfo PageInfo { get; set; } = new PageInfo();
+
+        [System.Text.Json.Serialization.JsonPropertyName("items")]
+        [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<VacancySummary> Items { get; set; } = new System.Collections.ObjectModel.Collection<VacancySummary>();
 
     }
 
@@ -1108,34 +1089,41 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ApplicationId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyTitle")]
-        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? VacancyTitle { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string VacancyTitle { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? WithdrawnDate { get; set; } = default!;
 
@@ -1144,6 +1132,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid CandidateId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legacyApplicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("legacyApplicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? LegacyApplicationId { get; set; } = default!;
 
@@ -1169,27 +1158,34 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ApplicationReviewStatus Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("temporaryReviewStatus")]
-        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApplicationReviewStatus TemporaryReviewStatus { get; set; } = default!;
+        public ApplicationReviewStatus? TemporaryReviewStatus { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("candidateFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? CandidateFeedback { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerFeedback { get; set; } = default!;
 
@@ -1207,10 +1203,12 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public long AccountId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("aboutOrganisation")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("aboutOrganisation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AboutOrganisation { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("tradingName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("tradingName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TradingName { get; set; } = default!;
 
@@ -1220,8 +1218,8 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class PostClosedVacanciesRequest
     {
         [System.Text.Json.Serialization.JsonPropertyName("vacancyReferences")]
-        [Newtonsoft.Json.JsonProperty("vacancyReferences", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<long>? VacancyReferences { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("vacancyReferences", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<long> VacancyReferences { get; set; } = new System.Collections.ObjectModel.Collection<long>();
 
     }
 
@@ -1233,14 +1231,17 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public string AddressLine1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine3")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine3 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine4")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine4", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine4 { get; set; } = default!;
 
@@ -1249,10 +1250,12 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public string Postcode { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("latitude")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Latitude { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("longitude")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Longitude { get; set; } = default!;
 
@@ -1266,16 +1269,16 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("name")]
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? Name { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+        public string Name { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("userId")]
-        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? UserId { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
+        public string UserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdBy")]
-        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? CreatedBy { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.Always)]
+        public string CreatedBy { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("fromDate")]
         [Newtonsoft.Json.JsonProperty("fromDate", Required = Newtonsoft.Json.Required.Always)]
@@ -1286,16 +1289,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.DateTime ToDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ukprn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("ukprn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Ukprn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
         [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReportOwnerType OwnerType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("type")]
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReportType Type { get; set; } = default!;
 
@@ -1305,84 +1311,107 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class PostVacancyRequest
     {
         [System.Text.Json.Serialization.JsonPropertyName("accountId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("accountId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? AccountId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.AllowNull)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public VacancyStatus Status { get; set; } = default!;
+        public VacancyStatus? Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("apprenticeshipType")]
-        [Newtonsoft.Json.JsonProperty("apprenticeshipType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("apprenticeshipType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApprenticeshipTypes ApprenticeshipType { get; set; } = default!;
+        public ApprenticeshipTypes? ApprenticeshipType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("title")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
-        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.AllowNull)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public OwnerType OwnerType { get; set; } = default!;
+        public OwnerType? OwnerType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceOrigin")]
-        [Newtonsoft.Json.JsonProperty("sourceOrigin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("sourceOrigin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public SourceOrigin SourceOrigin { get; set; } = default!;
+        public SourceOrigin? SourceOrigin { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceType")]
-        [Newtonsoft.Json.JsonProperty("sourceType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("sourceType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public SourceType SourceType { get; set; } = default!;
+        public SourceType? SourceType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("archiveType")]
-        [Newtonsoft.Json.JsonProperty("archiveType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("archiveType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ArchiveType ArchiveType { get; set; } = default!;
+        public ArchiveType? ArchiveType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceVacancyReference")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("sourceVacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? SourceVacancyReference { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("approvedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("approvedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ApprovedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastUpdatedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("lastUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LastUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewRequestedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewRequestedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("deletedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("deletedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DeletedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("liveDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("liveDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LiveDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("startDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? StartDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosingDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("archivedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("archivedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ArchivedDate { get; set; } = default!;
 
@@ -1391,175 +1420,222 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int ReviewCount { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationUrl")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ApplicationUrl { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationMethod")]
-        [Newtonsoft.Json.JsonProperty("applicationMethod", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("applicationMethod", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApplicationMethod ApplicationMethod { get; set; } = default!;
+        public ApplicationMethod? ApplicationMethod { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationInstructions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationInstructions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ApplicationInstructions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("shortDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("shortDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ShortDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("description")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Description { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("anonymousReason")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("anonymousReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AnonymousReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("disabilityConfident")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("disabilityConfident", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? DisabilityConfident { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("contact")]
-        [Newtonsoft.Json.JsonProperty("contact", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public ContactDetail Contact { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("contact", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public ContactDetail? Contact { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerLocations")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerLocations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Address>? EmployerLocations { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerLocationOption")]
-        [Newtonsoft.Json.JsonProperty("employerLocationOption", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("employerLocationOption", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public AvailableWhere EmployerLocationOption { get; set; } = default!;
+        public AvailableWhere? EmployerLocationOption { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerLocationInformation")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerLocationInformation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerLocationInformation { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerNameOption")]
-        [Newtonsoft.Json.JsonProperty("employerNameOption", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("employerNameOption", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public EmployerNameOption EmployerNameOption { get; set; } = default!;
+        public EmployerNameOption? EmployerNameOption { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerRejectedReason")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerRejectedReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerRejectedReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legalEntityName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("legalEntityName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? LegalEntityName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerWebsiteUrl")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerWebsiteUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerWebsiteUrl { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("geoCodeMethod")]
-        [Newtonsoft.Json.JsonProperty("geoCodeMethod", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("geoCodeMethod", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public GeoCodeMethod GeoCodeMethod { get; set; } = default!;
+        public GeoCodeMethod? GeoCodeMethod { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("accountLegalEntityId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("accountLegalEntityId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? AccountLegalEntityId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("numberOfPositions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("numberOfPositions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? NumberOfPositions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("outcomeDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("outcomeDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? OutcomeDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("programmeId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("programmeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ProgrammeId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("skills")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("skills", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string>? Skills { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("qualifications")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("qualifications", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Qualification>? Qualifications { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("thingsToConsider")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("thingsToConsider", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ThingsToConsider { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("trainingDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TrainingDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalTrainingDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalTrainingDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalTrainingDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingProvider")]
-        [Newtonsoft.Json.JsonProperty("trainingProvider", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TrainingProvider TrainingProvider { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("trainingProvider", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public TrainingProvider? TrainingProvider { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("wage")]
-        [Newtonsoft.Json.JsonProperty("wage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Wage Wage { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("wage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Wage? Wage { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closureReason")]
-        [Newtonsoft.Json.JsonProperty("closureReason", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("closureReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ClosureReason ClosureReason { get; set; } = default!;
+        public ClosureReason? ClosureReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferInfo")]
-        [Newtonsoft.Json.JsonProperty("transferInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TransferInfo TransferInfo { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("transferInfo", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public TransferInfo? TransferInfo { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasSubmittedAdditionalQuestions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasSubmittedAdditionalQuestions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasSubmittedAdditionalQuestions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasChosenProviderContactDetails")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasChosenProviderContactDetails", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasChosenProviderContactDetails { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasOptedToAddQualifications")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasOptedToAddQualifications", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasOptedToAddQualifications { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerReviewFieldIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerReviewFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<ReviewFieldIndicator>? EmployerReviewFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("providerReviewFieldIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("providerReviewFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<ReviewFieldIndicator>? ProviderReviewFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? SubmittedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewRequestedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ReviewRequestedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("archivedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("archivedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ArchivedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("id")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? Id { get; set; } = default!;
 
@@ -1569,34 +1645,29 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class ProblemDetails
     {
         [System.Text.Json.Serialization.JsonPropertyName("type")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Type { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("title")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("detail")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Detail { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("instance")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Instance { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
 
     }
 
@@ -1674,22 +1745,27 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class PutApplicationReviewRequest
     {
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? WithdrawnDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
@@ -1698,10 +1774,12 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid CandidateId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ApplicationId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legacyApplicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("legacyApplicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? LegacyApplicationId { get; set; } = default!;
 
@@ -1727,31 +1805,39 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ApplicationReviewStatus Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("temporaryReviewStatus")]
-        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApplicationReviewStatus TemporaryReviewStatus { get; set; } = default!;
+        public ApplicationReviewStatus? TemporaryReviewStatus { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyTitle")]
-        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? VacancyTitle { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string VacancyTitle { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("candidateFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? CandidateFeedback { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerFeedback { get; set; } = default!;
 
@@ -1765,34 +1851,41 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ApplicationId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyTitle")]
-        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? VacancyTitle { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string VacancyTitle { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSharedWithEmployer")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("dateSharedWithEmployer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DateSharedWithEmployer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("statusUpdatedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("statusUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? StatusUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("withdrawnDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("withdrawnDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? WithdrawnDate { get; set; } = default!;
 
@@ -1801,6 +1894,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid CandidateId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legacyApplicationId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("legacyApplicationId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? LegacyApplicationId { get; set; } = default!;
 
@@ -1826,27 +1920,34 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ApplicationReviewStatus Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("temporaryReviewStatus")]
-        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("temporaryReviewStatus", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApplicationReviewStatus TemporaryReviewStatus { get; set; } = default!;
+        public ApplicationReviewStatus? TemporaryReviewStatus { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("candidateFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("candidateFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? CandidateFeedback { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerFeedback")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerFeedback", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerFeedback { get; set; } = default!;
 
@@ -1856,14 +1957,16 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class PutEmployerProfileRequest
     {
         [System.Text.Json.Serialization.JsonPropertyName("accountId")]
-        [Newtonsoft.Json.JsonProperty("accountId", Required = Newtonsoft.Json.Required.Always)]
-        public long AccountId { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("accountId", Required = Newtonsoft.Json.Required.AllowNull)]
+        public long? AccountId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("aboutOrganisation")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("aboutOrganisation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AboutOrganisation { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("tradingName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("tradingName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TradingName { get; set; } = default!;
 
@@ -1881,10 +1984,12 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public long AccountId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("aboutOrganisation")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("aboutOrganisation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AboutOrganisation { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("tradingName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("tradingName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TradingName { get; set; } = default!;
 
@@ -1894,13 +1999,15 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class PutUserRequest
     {
         [System.Text.Json.Serialization.JsonPropertyName("idamsUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("idamsUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? IdamsUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("userType")]
-        [Newtonsoft.Json.JsonProperty("userType", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userType", Required = Newtonsoft.Json.Required.AllowNull)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public UserType UserType { get; set; } = default!;
+        public UserType? UserType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("name")]
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
@@ -1915,38 +2022,47 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastSignedInDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("lastSignedInDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LastSignedInDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerAccountIds")]
-        [Newtonsoft.Json.JsonProperty("employerAccountIds", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<long>? EmployerAccountIds { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("employerAccountIds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<long> EmployerAccountIds { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ukprn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("ukprn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? Ukprn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredVacanciesEmployerRevokedPermissionAlertDismissedOn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("transferredVacanciesEmployerRevokedPermissionAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesBlockedProviderAlertDismissedOn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedVacanciesBlockedProviderAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredVacanciesBlockedProviderAlertDismissedOn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("transferredVacanciesBlockedProviderAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? TransferredVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesWithdrawnByQaAlertDismissedOn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedVacanciesWithdrawnByQaAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedVacanciesWithdrawnByQaAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("notificationPreferences")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("notificationPreferences", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public NotificationPreferences NotificationPreferences { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dfEUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("dfEUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? DfEUserId { get; set; } = default!;
 
@@ -1956,7 +2072,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class PutUserResponse
     {
         [System.Text.Json.Serialization.JsonPropertyName("id")]
-        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Always)]
         public System.Guid Id { get; set; } = default!;
 
     }
@@ -1965,93 +2081,126 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class PutVacancyAnalyticsRequest
     {
         [System.Text.Json.Serialization.JsonPropertyName("analyticsData")]
-        [Newtonsoft.Json.JsonProperty("analyticsData", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<VacancyAnalytics>? AnalyticsData { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("analyticsData", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<VacancyAnalytics> AnalyticsData { get; set; } = new System.Collections.ObjectModel.Collection<VacancyAnalytics>();
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PutVacancyRequest
     {
+        [System.Text.Json.Serialization.JsonPropertyName("vacancyReference")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("vacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long? VacancyReference { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? CreatedDate { get; set; } = default!;
+
         [System.Text.Json.Serialization.JsonPropertyName("accountId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("accountId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? AccountId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.AllowNull)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public VacancyStatus Status { get; set; } = default!;
+        public VacancyStatus? Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("apprenticeshipType")]
-        [Newtonsoft.Json.JsonProperty("apprenticeshipType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("apprenticeshipType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApprenticeshipTypes ApprenticeshipType { get; set; } = default!;
+        public ApprenticeshipTypes? ApprenticeshipType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("title")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
-        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.AllowNull)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public OwnerType OwnerType { get; set; } = default!;
+        public OwnerType? OwnerType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceOrigin")]
-        [Newtonsoft.Json.JsonProperty("sourceOrigin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("sourceOrigin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public SourceOrigin SourceOrigin { get; set; } = default!;
+        public SourceOrigin? SourceOrigin { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceType")]
-        [Newtonsoft.Json.JsonProperty("sourceType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("sourceType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public SourceType SourceType { get; set; } = default!;
+        public SourceType? SourceType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("archiveType")]
-        [Newtonsoft.Json.JsonProperty("archiveType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("archiveType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ArchiveType ArchiveType { get; set; } = default!;
+        public ArchiveType? ArchiveType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceVacancyReference")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("sourceVacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? SourceVacancyReference { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("approvedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("approvedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ApprovedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastUpdatedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("lastUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LastUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewRequestedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewRequestedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("deletedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("deletedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DeletedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("liveDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("liveDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LiveDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("startDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? StartDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosingDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("archivedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("archivedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ArchivedDate { get; set; } = default!;
 
@@ -2060,185 +2209,224 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int ReviewCount { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationUrl")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ApplicationUrl { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationMethod")]
-        [Newtonsoft.Json.JsonProperty("applicationMethod", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("applicationMethod", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApplicationMethod ApplicationMethod { get; set; } = default!;
+        public ApplicationMethod? ApplicationMethod { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationInstructions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationInstructions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ApplicationInstructions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("shortDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("shortDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ShortDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("description")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Description { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("anonymousReason")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("anonymousReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AnonymousReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("disabilityConfident")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("disabilityConfident", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? DisabilityConfident { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("contact")]
-        [Newtonsoft.Json.JsonProperty("contact", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public ContactDetail Contact { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("contact", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public ContactDetail? Contact { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerLocations")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerLocations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Address>? EmployerLocations { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerLocationOption")]
-        [Newtonsoft.Json.JsonProperty("employerLocationOption", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("employerLocationOption", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public AvailableWhere EmployerLocationOption { get; set; } = default!;
+        public AvailableWhere? EmployerLocationOption { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerLocationInformation")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerLocationInformation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerLocationInformation { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerNameOption")]
-        [Newtonsoft.Json.JsonProperty("employerNameOption", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("employerNameOption", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public EmployerNameOption EmployerNameOption { get; set; } = default!;
+        public EmployerNameOption? EmployerNameOption { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerRejectedReason")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerRejectedReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerRejectedReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legalEntityName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("legalEntityName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? LegalEntityName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerWebsiteUrl")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerWebsiteUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerWebsiteUrl { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("geoCodeMethod")]
-        [Newtonsoft.Json.JsonProperty("geoCodeMethod", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("geoCodeMethod", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public GeoCodeMethod GeoCodeMethod { get; set; } = default!;
+        public GeoCodeMethod? GeoCodeMethod { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("accountLegalEntityId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("accountLegalEntityId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? AccountLegalEntityId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("numberOfPositions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("numberOfPositions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? NumberOfPositions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("outcomeDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("outcomeDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? OutcomeDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("programmeId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("programmeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ProgrammeId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("skills")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("skills", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string>? Skills { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("qualifications")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("qualifications", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Qualification>? Qualifications { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("thingsToConsider")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("thingsToConsider", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ThingsToConsider { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("trainingDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TrainingDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalTrainingDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalTrainingDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalTrainingDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingProvider")]
-        [Newtonsoft.Json.JsonProperty("trainingProvider", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TrainingProvider TrainingProvider { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("trainingProvider", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public TrainingProvider? TrainingProvider { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("wage")]
-        [Newtonsoft.Json.JsonProperty("wage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Wage Wage { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("wage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Wage? Wage { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closureReason")]
-        [Newtonsoft.Json.JsonProperty("closureReason", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("closureReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ClosureReason ClosureReason { get; set; } = default!;
+        public ClosureReason? ClosureReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferInfo")]
-        [Newtonsoft.Json.JsonProperty("transferInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TransferInfo TransferInfo { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("transferInfo", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public TransferInfo? TransferInfo { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasSubmittedAdditionalQuestions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasSubmittedAdditionalQuestions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasSubmittedAdditionalQuestions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasChosenProviderContactDetails")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasChosenProviderContactDetails", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasChosenProviderContactDetails { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasOptedToAddQualifications")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasOptedToAddQualifications", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasOptedToAddQualifications { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerReviewFieldIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerReviewFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<ReviewFieldIndicator>? EmployerReviewFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("providerReviewFieldIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("providerReviewFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<ReviewFieldIndicator>? ProviderReviewFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? SubmittedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewRequestedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ReviewRequestedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("archivedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("archivedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ArchivedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("id")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? Id { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("vacancyReference")]
-        [Newtonsoft.Json.JsonProperty("vacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long? VacancyReference { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
-        [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime? CreatedDate { get; set; } = default!;
 
     }
 
@@ -2246,12 +2434,12 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class PutVacancyReviewRequest
     {
         [System.Text.Json.Serialization.JsonPropertyName("vacancyReference")]
-        [Newtonsoft.Json.JsonProperty("vacancyReference", Required = Newtonsoft.Json.Required.Always)]
-        public string VacancyReference { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("vacancyReference", Required = Newtonsoft.Json.Required.AllowNull)]
+        public string? VacancyReference { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyTitle")]
-        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? VacancyTitle { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Always)]
+        public string VacancyTitle { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.AllowNull)]
@@ -2262,11 +2450,13 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.DateTime? SlaDeadLine { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReviewStatus Status { get; set; } = default!;
 
@@ -2275,52 +2465,63 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int? SubmissionCount { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedByUserEmail")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedByUserEmail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ReviewedByUserEmail { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedByUserEmail")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedByUserEmail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? SubmittedByUserEmail { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualOutcome")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("manualOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ManualOutcome { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaComment")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("manualQaComment", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ManualQaComment { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaFieldIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("manualQaFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string>? ManualQaFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaEditFieldIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("manualQaEditFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<ManualQaEditFieldIndicator>? ManualQaEditFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("automatedQaOutcome")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("automatedQaOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AutomatedQaOutcome { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("automatedQaOutcomeIndicators")]
-        [Newtonsoft.Json.JsonProperty("automatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<RuleOutcome>? AutomatedQaOutcomeIndicators { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("automatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<RuleOutcome> AutomatedQaOutcomeIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dismissedAutomatedQaOutcomeIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("dismissedAutomatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string>? DismissedAutomatedQaOutcomeIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("updatedFieldIdentifiers")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("updatedFieldIdentifiers", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string>? UpdatedFieldIdentifiers { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancySnapshot")]
-        [Newtonsoft.Json.JsonProperty("vacancySnapshot", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? VacancySnapshot { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("vacancySnapshot", Required = Newtonsoft.Json.Required.Always)]
+        public string VacancySnapshot { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ukprn")]
         [Newtonsoft.Json.JsonProperty("ukprn", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2336,10 +2537,12 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
         [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public OwnerType OwnerType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? SubmittedByUserId { get; set; } = default!;
 
@@ -2374,6 +2577,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class QaReport
     {
         [System.Text.Json.Serialization.JsonPropertyName("vacancyTitle")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? VacancyTitle { get; set; } = default!;
 
@@ -2386,22 +2590,27 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int SubmissionNumber { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dateSubmitted")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("dateSubmitted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DateSubmitted { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("slaDeadline")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("slaDeadline", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SlaDeadline { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewStarted")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewStarted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewStarted { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewCompleted")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewCompleted", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewCompleted { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("outcome")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("outcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Outcome { get; set; } = default!;
 
@@ -2410,52 +2619,64 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int NumberOfIssuesReported { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancySubmittedBy")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("vacancySubmittedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? VacancySubmittedBy { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancySubmittedByUser")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("vacancySubmittedByUser", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? VacancySubmittedByUser { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employer")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employer", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Employer { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("displayName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("displayName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? DisplayName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingProvider")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("trainingProvider", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TrainingProvider { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyPostcode")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("vacancyPostcode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? VacancyPostcode { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("programmeId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("programmeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ProgrammeId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("referredFields")]
-        [Newtonsoft.Json.JsonProperty("referredFields", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string>? ReferredFields { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("referredFields", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> ReferredFields { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedBy")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ReviewedBy { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewerComment")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewerComment", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ReviewerComment { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("slaExceededByHours")]
-        [Newtonsoft.Json.JsonProperty("slaExceededByHours", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? SlaExceededByHours { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("slaExceededByHours", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string SlaExceededByHours { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("timeTakenToReview")]
-        [Newtonsoft.Json.JsonProperty("timeTakenToReview", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? TimeTakenToReview { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("timeTakenToReview", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string TimeTakenToReview { get; set; } = default!;
 
     }
 
@@ -2463,27 +2684,34 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class Qualification
     {
         [System.Text.Json.Serialization.JsonPropertyName("qualificationType")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("qualificationType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? QualificationType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("subject")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("subject", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Subject { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("grade")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("grade", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Grade { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("level")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("level", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Level { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("weighting")]
-        [Newtonsoft.Json.JsonProperty("weighting", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("weighting", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public QualificationWeighting Weighting { get; set; } = default!;
+        public QualificationWeighting? Weighting { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("otherQualificationName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("otherQualificationName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? OtherQualificationName { get; set; } = default!;
 
@@ -2510,15 +2738,18 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("idamsUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("idamsUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? IdamsUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dfEUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("dfEUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? DfEUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("userType")]
         [Newtonsoft.Json.JsonProperty("userType", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public UserType UserType { get; set; } = default!;
 
@@ -2527,78 +2758,57 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("updatedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("updatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? UpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastSignedInDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("lastSignedInDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LastSignedInDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("name")]
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? Name { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+        public string Name { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("email")]
-        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? Email { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
+        public string Email { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerAccountIds")]
-        [Newtonsoft.Json.JsonProperty("employerAccountIds", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<long>? EmployerAccountIds { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("employerAccountIds", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<long> EmployerAccountIds { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ukprn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("ukprn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? Ukprn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredVacanciesEmployerRevokedPermissionAlertDismissedOn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("transferredVacanciesEmployerRevokedPermissionAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? TransferredVacanciesEmployerRevokedPermissionAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesBlockedProviderAlertDismissedOn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedVacanciesBlockedProviderAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredVacanciesBlockedProviderAlertDismissedOn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("transferredVacanciesBlockedProviderAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? TransferredVacanciesBlockedProviderAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesWithdrawnByQaAlertDismissedOn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedVacanciesWithdrawnByQaAlertDismissedOn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedVacanciesWithdrawnByQaAlertDismissedOn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("notificationPreferences")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("notificationPreferences", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public NotificationPreferences NotificationPreferences { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class RecruitUserJsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<RecruitUserOperation>? Operations { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class RecruitUserOperation
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("path")]
-        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Path { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("op")]
-        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Op { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("from")]
-        [Newtonsoft.Json.JsonProperty("from", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? From { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? Value { get; set; } = default!;
 
     }
 
@@ -2610,20 +2820,24 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("userId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? UserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("name")]
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Name { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Name { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("type")]
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReportType Type { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
         [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReportOwnerType OwnerType { get; set; } = default!;
 
@@ -2632,6 +2846,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.DateTime CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdBy")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("createdBy", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? CreatedBy { get; set; } = default!;
 
@@ -2640,8 +2855,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int DownloadCount { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dynamicCriteria")]
-        [Newtonsoft.Json.JsonProperty("dynamicCriteria", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? DynamicCriteria { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("dynamicCriteria", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DynamicCriteria { get; set; } = default!;
 
     }
 
@@ -2675,8 +2891,8 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class ReviewFieldIndicator
     {
         [System.Text.Json.Serialization.JsonPropertyName("fieldIdentifier")]
-        [Newtonsoft.Json.JsonProperty("fieldIdentifier", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? FieldIdentifier { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("fieldIdentifier", Required = Newtonsoft.Json.Required.Always)]
+        public string FieldIdentifier { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("isChangeRequested")]
         [Newtonsoft.Json.JsonProperty("isChangeRequested", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2727,11 +2943,13 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("details")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("details", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<RuleOutcome>? Details { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ruleId")]
         [Newtonsoft.Json.JsonProperty("ruleId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public RuleId RuleId { get; set; } = default!;
 
@@ -2740,16 +2958,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int Score { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("narrative")]
-        [Newtonsoft.Json.JsonProperty("narrative", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Narrative { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("narrative", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Narrative { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("data")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("data", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Data { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("target")]
-        [Newtonsoft.Json.JsonProperty("target", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Target { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("target", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Target { get; set; } = default!;
 
     }
 
@@ -2806,7 +3027,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     {
         [System.Text.Json.Serialization.JsonPropertyName("totalPositionsAvailable")]
         [Newtonsoft.Json.JsonProperty("totalPositionsAvailable", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int TotalPositionsAvailable { get; set; } = default!;
+        public int TotalPositionsAvailable { get; set; } = 0;
 
     }
 
@@ -2814,16 +3035,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class TrainingProvider
     {
         [System.Text.Json.Serialization.JsonPropertyName("ukprn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("ukprn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? Ukprn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("name")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Name { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("address")]
-        [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TrainingProviderAddress Address { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("address", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public TrainingProviderAddress? Address { get; set; } = default!;
 
     }
 
@@ -2831,30 +3055,37 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class TrainingProviderAddress
     {
         [System.Text.Json.Serialization.JsonPropertyName("addressLine1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine3")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine3 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("addressLine4")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("addressLine4", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AddressLine4 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("postcode")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("postcode", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Postcode { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("latitude")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("latitude", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Latitude { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("longitude")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("longitude", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Longitude { get; set; } = default!;
 
@@ -2868,12 +3099,14 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public long Ukprn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("providerName")]
-        [Newtonsoft.Json.JsonProperty("providerName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? ProviderName { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("providerName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string ProviderName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legalEntityName")]
-        [Newtonsoft.Json.JsonProperty("legalEntityName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? LegalEntityName { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("legalEntityName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string LegalEntityName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferredDate")]
         [Newtonsoft.Json.JsonProperty("transferredDate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -2881,6 +3114,7 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("reason")]
         [Newtonsoft.Json.JsonProperty("reason", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public TransferReason Reason { get; set; } = default!;
 
@@ -2933,92 +3167,118 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyReference")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("vacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? VacancyReference { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("accountId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("accountId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? AccountId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public VacancyStatus Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("apprenticeshipType")]
-        [Newtonsoft.Json.JsonProperty("apprenticeshipType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("apprenticeshipType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApprenticeshipTypes ApprenticeshipType { get; set; } = default!;
+        public ApprenticeshipTypes? ApprenticeshipType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("title")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
-        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public OwnerType OwnerType { get; set; } = default!;
+        public OwnerType? OwnerType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceOrigin")]
-        [Newtonsoft.Json.JsonProperty("sourceOrigin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("sourceOrigin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public SourceOrigin SourceOrigin { get; set; } = default!;
+        public SourceOrigin? SourceOrigin { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceType")]
-        [Newtonsoft.Json.JsonProperty("sourceType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("sourceType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public SourceType SourceType { get; set; } = default!;
+        public SourceType? SourceType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("archiveType")]
-        [Newtonsoft.Json.JsonProperty("archiveType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("archiveType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ArchiveType ArchiveType { get; set; } = default!;
+        public ArchiveType? ArchiveType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("archivedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("archivedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ArchivedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceVacancyReference")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("sourceVacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? SourceVacancyReference { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("approvedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("approvedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ApprovedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("lastUpdatedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("lastUpdatedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LastUpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? SubmittedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewRequestedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewRequestedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("deletedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("deletedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? DeletedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("liveDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("liveDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? LiveDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("startDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? StartDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosingDate { get; set; } = default!;
 
@@ -3027,171 +3287,217 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int ReviewCount { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationUrl")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ApplicationUrl { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationMethod")]
-        [Newtonsoft.Json.JsonProperty("applicationMethod", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("applicationMethod", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApplicationMethod ApplicationMethod { get; set; } = default!;
+        public ApplicationMethod? ApplicationMethod { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationInstructions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("applicationInstructions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ApplicationInstructions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("shortDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("shortDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ShortDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("description")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("description", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Description { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("anonymousReason")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("anonymousReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AnonymousReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("disabilityConfident")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("disabilityConfident", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? DisabilityConfident { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("contact")]
-        [Newtonsoft.Json.JsonProperty("contact", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public ContactDetail Contact { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("contact", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public ContactDetail? Contact { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerLocations")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerLocations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<Address>? EmployerLocations { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerLocationOption")]
-        [Newtonsoft.Json.JsonProperty("employerLocationOption", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("employerLocationOption", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public AvailableWhere EmployerLocationOption { get; set; } = default!;
+        public AvailableWhere? EmployerLocationOption { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerLocationInformation")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerLocationInformation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerLocationInformation { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerNameOption")]
-        [Newtonsoft.Json.JsonProperty("employerNameOption", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("employerNameOption", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public EmployerNameOption EmployerNameOption { get; set; } = default!;
+        public EmployerNameOption? EmployerNameOption { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerRejectedReason")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerRejectedReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerRejectedReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legalEntityName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("legalEntityName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? LegalEntityName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerWebsiteUrl")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerWebsiteUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerWebsiteUrl { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("geoCodeMethod")]
-        [Newtonsoft.Json.JsonProperty("geoCodeMethod", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("geoCodeMethod", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public GeoCodeMethod GeoCodeMethod { get; set; } = default!;
+        public GeoCodeMethod? GeoCodeMethod { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("accountLegalEntityId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("accountLegalEntityId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? AccountLegalEntityId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("numberOfPositions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("numberOfPositions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? NumberOfPositions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("outcomeDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("outcomeDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? OutcomeDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("programmeId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("programmeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ProgrammeId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("skills")]
-        [Newtonsoft.Json.JsonProperty("skills", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string>? Skills { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("skills", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> Skills { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("qualifications")]
-        [Newtonsoft.Json.JsonProperty("qualifications", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Qualification>? Qualifications { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("qualifications", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<Qualification> Qualifications { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("thingsToConsider")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("thingsToConsider", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ThingsToConsider { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("trainingDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TrainingDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalTrainingDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalTrainingDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalTrainingDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingProvider")]
-        [Newtonsoft.Json.JsonProperty("trainingProvider", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TrainingProvider TrainingProvider { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("trainingProvider", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public TrainingProvider? TrainingProvider { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("wage")]
-        [Newtonsoft.Json.JsonProperty("wage", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Wage Wage { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("wage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Wage? Wage { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closureReason")]
-        [Newtonsoft.Json.JsonProperty("closureReason", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("closureReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ClosureReason ClosureReason { get; set; } = default!;
+        public ClosureReason? ClosureReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferInfo")]
-        [Newtonsoft.Json.JsonProperty("transferInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public TransferInfo TransferInfo { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("transferInfo", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public TransferInfo? TransferInfo { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion1")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion1", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion1 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("additionalQuestion2")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("additionalQuestion2", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AdditionalQuestion2 { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasSubmittedAdditionalQuestions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasSubmittedAdditionalQuestions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasSubmittedAdditionalQuestions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasChosenProviderContactDetails")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasChosenProviderContactDetails", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasChosenProviderContactDetails { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasOptedToAddQualifications")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasOptedToAddQualifications", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasOptedToAddQualifications { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerReviewFieldIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerReviewFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<ReviewFieldIndicator>? EmployerReviewFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("providerReviewFieldIndicators")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("providerReviewFieldIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<ReviewFieldIndicator>? ProviderReviewFieldIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? SubmittedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewRequestedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewRequestedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ReviewRequestedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("archivedByUserId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("archivedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ArchivedByUserId { get; set; } = default!;
 
@@ -3234,8 +3540,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.DateTime UpdatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("analytics")]
-        [Newtonsoft.Json.JsonProperty("analytics", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<VacancyAnalytics>? Analytics { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("analytics", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<VacancyAnalytics> Analytics { get; set; } = default!;
 
     }
 
@@ -3243,12 +3550,12 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class VacancyDashboardResponse
     {
         [System.Text.Json.Serialization.JsonPropertyName("info")]
-        [Newtonsoft.Json.JsonProperty("info", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public PageInfo Info { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("info", Required = Newtonsoft.Json.Required.Always)]
+        public PageInfo Info { get; set; } = new PageInfo();
 
         [System.Text.Json.Serialization.JsonPropertyName("items")]
-        [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<VacancyDetail>? Items { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<VacancyDetail> Items { get; set; } = new System.Collections.ObjectModel.Collection<VacancyDetail>();
 
     }
 
@@ -3278,53 +3585,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyJsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<VacancyOperation>? Operations { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyOperation
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("path")]
-        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Path { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("op")]
-        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Op { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("from")]
-        [Newtonsoft.Json.JsonProperty("from", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? From { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? Value { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyPagedResponse
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("pageInfo")]
-        [Newtonsoft.Json.JsonProperty("pageInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public PageInfo PageInfo { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("items")]
-        [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<Vacancy>? Items { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class VacancyReferenceResponse
     {
         [System.Text.Json.Serialization.JsonPropertyName("nextVacancyReference")]
-        [Newtonsoft.Json.JsonProperty("nextVacancyReference", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("nextVacancyReference", Required = Newtonsoft.Json.Required.Always)]
         public long NextVacancyReference { get; set; } = default!;
 
     }
@@ -3341,8 +3605,8 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public string VacancyReference { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyTitle")]
-        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? VacancyTitle { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("vacancyTitle", Required = Newtonsoft.Json.Required.Always)]
+        public string VacancyTitle { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.Always)]
@@ -3353,11 +3617,13 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.DateTime SlaDeadLine { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ReviewedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ReviewStatus Status { get; set; } = default!;
 
@@ -3366,10 +3632,12 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public int SubmissionCount { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("reviewedByUserEmail")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("reviewedByUserEmail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ReviewedByUserEmail { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("submittedByUserEmail")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("submittedByUserEmail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? SubmittedByUserEmail { get; set; } = default!;
 
@@ -3378,44 +3646,49 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid SubmittedByUserId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualOutcome")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("manualOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ManualOutcome { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaComment")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("manualQaComment", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ManualQaComment { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaFieldIndicators")]
-        [Newtonsoft.Json.JsonProperty("manualQaFieldIndicators", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string>? ManualQaFieldIndicators { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("manualQaFieldIndicators", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<string> ManualQaFieldIndicators { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaEditFieldIndicators")]
-        [Newtonsoft.Json.JsonProperty("manualQaEditFieldIndicators", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<ManualQaEditFieldIndicator>? ManualQaEditFieldIndicators { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("manualQaEditFieldIndicators", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<ManualQaEditFieldIndicator> ManualQaEditFieldIndicators { get; set; } = new System.Collections.ObjectModel.Collection<ManualQaEditFieldIndicator>();
 
         [System.Text.Json.Serialization.JsonPropertyName("automatedQaOutcome")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("automatedQaOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AutomatedQaOutcome { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("automatedQaOutcomeIndicators")]
-        [Newtonsoft.Json.JsonProperty("automatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<RuleOutcome>? AutomatedQaOutcomeIndicators { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("automatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<RuleOutcome> AutomatedQaOutcomeIndicators { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("dismissedAutomatedQaOutcomeIndicators")]
-        [Newtonsoft.Json.JsonProperty("dismissedAutomatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string>? DismissedAutomatedQaOutcomeIndicators { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("dismissedAutomatedQaOutcomeIndicators", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<string> DismissedAutomatedQaOutcomeIndicators { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
         [System.Text.Json.Serialization.JsonPropertyName("updatedFieldIdentifiers")]
-        [Newtonsoft.Json.JsonProperty("updatedFieldIdentifiers", Required = Newtonsoft.Json.Required.AllowNull)]
-        public System.Collections.Generic.ICollection<string>? UpdatedFieldIdentifiers { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("updatedFieldIdentifiers", Required = Newtonsoft.Json.Required.Always)]
+        public System.Collections.Generic.ICollection<string> UpdatedFieldIdentifiers { get; set; } = new System.Collections.ObjectModel.Collection<string>();
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancySnapshot")]
-        [Newtonsoft.Json.JsonProperty("vacancySnapshot", Required = Newtonsoft.Json.Required.AllowNull)]
-        public string? VacancySnapshot { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("vacancySnapshot", Required = Newtonsoft.Json.Required.Always)]
+        public string VacancySnapshot { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("accountId")]
         [Newtonsoft.Json.JsonProperty("accountId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3431,43 +3704,14 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
         [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public OwnerType OwnerType { get; set; } = default!;
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyReviewJsonPatchDocument
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("operations")]
-        [Newtonsoft.Json.JsonProperty("operations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<VacancyReviewOperation>? Operations { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyReviewOperation
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("path")]
-        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Path { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("op")]
-        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Op { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("from")]
-        [Newtonsoft.Json.JsonProperty("from", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? From { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("value")]
-        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public object? Value { get; set; } = default!;
-
-    }
-
     /// <summary>
-    /// Flags enum — combine values with bitwise OR, or pass comma-separated names (e.g. ShortDescription,Title).
+    /// Flags enum — combine values with bitwise OR, or pass comma-separated names.
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [System.Flags]
@@ -3612,103 +3856,131 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public System.Guid Id { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("title")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("vacancyReference")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("vacancyReference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? VacancyReference { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("legalEntityName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("legalEntityName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? LegalEntityName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("accountLegalEntityId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("accountLegalEntityId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? AccountLegalEntityId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerAccountId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerAccountId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerAccountId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("employerName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("employerName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? EmployerName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ukprn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("ukprn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? Ukprn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("createdDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("createdDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? CreatedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public VacancyStatus Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closingDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closingDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosingDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("duration")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("duration", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Duration { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("durationUnit")]
-        [Newtonsoft.Json.JsonProperty("durationUnit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("durationUnit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public DurationUnit DurationUnit { get; set; } = default!;
+        public DurationUnit? DurationUnit { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closedDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("closedDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? ClosedDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("closureReason")]
-        [Newtonsoft.Json.JsonProperty("closureReason", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("closureReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ClosureReason ClosureReason { get; set; } = default!;
+        public ClosureReason? ClosureReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("applicationMethod")]
-        [Newtonsoft.Json.JsonProperty("applicationMethod", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("applicationMethod", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApplicationMethod ApplicationMethod { get; set; } = default!;
+        public ApplicationMethod? ApplicationMethod { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("programmeId")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("programmeId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? ProgrammeId { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("startDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("startDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? StartDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingTitle")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("trainingTitle", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TrainingTitle { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferInfo")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("transferInfo", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TransferInfo { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferInfoUkprn")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("transferInfoUkprn", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public long? TransferInfoUkprn { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferInfoProviderName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("transferInfoProviderName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TransferInfoProviderName { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferInfoReason")]
-        [Newtonsoft.Json.JsonProperty("transferInfoReason", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("transferInfoReason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public TransferReason TransferInfoReason { get; set; } = default!;
+        public TransferReason? TransferInfoReason { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("transferInfoTransferredDate")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("transferInfoTransferredDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTime? TransferInfoTransferredDate { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("trainingProviderName")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("trainingProviderName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? TrainingProviderName { get; set; } = default!;
 
@@ -3749,40 +4021,35 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public bool IsTaskListCompleted { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasChosenProviderContactDetails")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasChosenProviderContactDetails", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasChosenProviderContactDetails { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("hasSubmittedAdditionalQuestions")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("hasSubmittedAdditionalQuestions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? HasSubmittedAdditionalQuestions { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("apprenticeshipType")]
-        [Newtonsoft.Json.JsonProperty("apprenticeshipType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("apprenticeshipType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public ApprenticeshipTypes ApprenticeshipType { get; set; } = default!;
+        public ApprenticeshipTypes? ApprenticeshipType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceOrigin")]
-        [Newtonsoft.Json.JsonProperty("sourceOrigin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("sourceOrigin", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public SourceOrigin SourceOrigin { get; set; } = default!;
+        public SourceOrigin? SourceOrigin { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
-        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public OwnerType OwnerType { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancySummaryPagedResponse
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("pageInfo")]
-        [Newtonsoft.Json.JsonProperty("pageInfo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public PageInfo PageInfo { get; set; } = default!;
-
-        [System.Text.Json.Serialization.JsonPropertyName("items")]
-        [Newtonsoft.Json.JsonProperty("items", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<VacancySummary>? Items { get; set; } = default!;
+        public OwnerType? OwnerType { get; set; } = default!;
 
     }
 
@@ -3790,38 +4057,34 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class ValidationProblemDetails
     {
         [System.Text.Json.Serialization.JsonPropertyName("type")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Type { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("title")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("status")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Status { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("detail")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("detail", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Detail { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("instance")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("instance", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Instance { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("errors")]
-        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.IDictionary<string, System.Collections.Generic.ICollection<string>>? Errors { get; set; } = default!;
-
-        private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        [Newtonsoft.Json.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("errors", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.IDictionary<string, System.Collections.Generic.ICollection<string>> Errors { get; set; } = default!;
 
     }
 
@@ -3829,60 +4092,76 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class Wage
     {
         [System.Text.Json.Serialization.JsonPropertyName("duration")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("duration", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Duration { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("durationUnit")]
-        [Newtonsoft.Json.JsonProperty("durationUnit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("durationUnit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public DurationUnit DurationUnit { get; set; } = default!;
+        public DurationUnit? DurationUnit { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("workingWeekDescription")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("workingWeekDescription", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? WorkingWeekDescription { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("weeklyHours")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("weeklyHours", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? WeeklyHours { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("wageType")]
-        [Newtonsoft.Json.JsonProperty("wageType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("wageType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public WageType WageType { get; set; } = default!;
+        public WageType? WageType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("fixedWageYearlyAmount")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("fixedWageYearlyAmount", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? FixedWageYearlyAmount { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("wageAdditionalInformation")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("wageAdditionalInformation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? WageAdditionalInformation { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("companyBenefitsInformation")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("companyBenefitsInformation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? CompanyBenefitsInformation { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("apprenticeMinimumWage")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("apprenticeMinimumWage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? ApprenticeMinimumWage { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("under18NationalMinimumWage")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("under18NationalMinimumWage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Under18NationalMinimumWage { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("between18AndUnder21NationalMinimumWage")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("between18AndUnder21NationalMinimumWage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Between18AndUnder21NationalMinimumWage { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("between21AndUnder25NationalMinimumWage")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("between21AndUnder25NationalMinimumWage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Between21AndUnder25NationalMinimumWage { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("over25NationalMinimumWage")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("over25NationalMinimumWage", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? Over25NationalMinimumWage { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("wageText")]
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("wageText", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? WageText { get; set; } = default!;
 
@@ -3914,8 +4193,28 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     public partial class WithdrawnVacanciesAlertModel
     {
         [System.Text.Json.Serialization.JsonPropertyName("closedVacancies")]
-        [Newtonsoft.Json.JsonProperty("closedVacancies", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<string>? ClosedVacancies { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        [Newtonsoft.Json.JsonProperty("closedVacancies", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> ClosedVacancies { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class Anonymous
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("op")]
+        [Newtonsoft.Json.JsonProperty("op", Required = Newtonsoft.Json.Required.Always)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public Op Op { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("path")]
+        [Newtonsoft.Json.JsonProperty("path", Required = Newtonsoft.Json.Required.Always)]
+        public string Path { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("value")]
+        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Always)]
+        public object Value { get; set; } = default!;
 
     }
 
@@ -3936,6 +4235,22 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Runtime.Serialization.EnumMember(Value = @"Unhealthy")]
         Unhealthy = 0,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    public enum Op
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"add")]
+        Add = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"replace")]
+        Replace = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"test")]
+        Test = 2,
 
     }
 
