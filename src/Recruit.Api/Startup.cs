@@ -128,6 +128,12 @@ internal class Startup
                 }
                 return Task.CompletedTask;
             });
+            options.AddSchemaTransformer((schema, context, _) =>
+            {
+                if (schema.Properties?.Count > 0)
+                    schema.AdditionalPropertiesAllowed = false;
+                return Task.CompletedTask;
+            });
         });
         services.AddApiVersioning(opt =>
         {
