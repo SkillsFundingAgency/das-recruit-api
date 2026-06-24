@@ -7206,6 +7206,24 @@
         },
         "additionalProperties": false
       },
+      "ManualQaEditFieldIndicator": {
+        "type": "object",
+        "properties": {
+          "fieldIdentifier": {
+            "type": "string",
+            "nullable": true
+          },
+          "beforeEdit": {
+            "type": "string",
+            "nullable": true
+          },
+          "afterEdit": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "NotificationEmail": {
         "required": [
           "recipientAddress",
@@ -8651,6 +8669,13 @@
             },
             "nullable": true
           },
+          "manualQaEditFieldIndicators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManualQaEditFieldIndicator"
+            },
+            "nullable": true
+          },
           "automatedQaOutcome": {
             "type": "string",
             "nullable": true
@@ -9686,6 +9711,7 @@
         "required": [
           "createdDate",
           "dismissedAutomatedQaOutcomeIndicators",
+          "manualQaEditFieldIndicators",
           "manualQaFieldIndicators",
           "slaDeadLine",
           "status",
@@ -9756,6 +9782,13 @@
             "type": "array",
             "items": {
               "type": "string"
+            },
+            "nullable": true
+          },
+          "manualQaEditFieldIndicators": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManualQaEditFieldIndicator"
             },
             "nullable": true
           },

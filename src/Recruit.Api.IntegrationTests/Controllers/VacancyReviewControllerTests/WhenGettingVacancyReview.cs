@@ -17,6 +17,7 @@ public class WhenGettingVacancyReview: BaseFixture
         foreach (var item in items)
         {
             item.AutomatedQaOutcomeIndicators = "[]";
+            item.ManualQaEditFieldIndicators = null;
         }
         var expected = items[1];
         Server.DataContext.Setup(x => x.VacancyReviewEntities).ReturnsDbSet(items);
@@ -32,12 +33,14 @@ public class WhenGettingVacancyReview: BaseFixture
             .Excluding(x => x.UpdatedFieldIdentifiers)
             .Excluding(x => x.DismissedAutomatedQaOutcomeIndicators)
             .Excluding(x => x.AutomatedQaOutcomeIndicators)
+            .Excluding(x => x.ManualQaEditFieldIndicators)
         );
 
         vacancyReview.ManualQaFieldIndicators.Should().BeEquivalentTo(JsonSerializer.Deserialize<List<string>>(expected.ManualQaFieldIndicators));
         vacancyReview.UpdatedFieldIdentifiers.Should().BeEquivalentTo(JsonSerializer.Deserialize<List<string>>(expected.UpdatedFieldIdentifiers));
         vacancyReview.DismissedAutomatedQaOutcomeIndicators.Should().BeEquivalentTo(JsonSerializer.Deserialize<List<string>>(expected.DismissedAutomatedQaOutcomeIndicators));
         vacancyReview.AutomatedQaOutcomeIndicators.Should().BeEquivalentTo(JsonSerializer.Deserialize<List<string>>(expected.AutomatedQaOutcomeIndicators));
+        vacancyReview.ManualQaEditFieldIndicators.Should().BeEmpty();
     }
     
     [Test]
@@ -63,6 +66,7 @@ public class WhenGettingVacancyReview: BaseFixture
         foreach (var item in items)
         {
             item.AutomatedQaOutcomeIndicators = "[]";
+            item.ManualQaEditFieldIndicators = null;
         }
         items[2].VacancyReference = vacancyReference;
         items[3].VacancyReference = vacancyReference;
@@ -83,6 +87,7 @@ public class WhenGettingVacancyReview: BaseFixture
             .Excluding(x => x.UpdatedFieldIdentifiers)
             .Excluding(x => x.DismissedAutomatedQaOutcomeIndicators)
             .Excluding(x => x.AutomatedQaOutcomeIndicators)
+            .Excluding(x => x.ManualQaEditFieldIndicators)
         );
     }
     

@@ -22,6 +22,7 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
         foreach (var entity in entities)
         {
             entity.AutomatedQaOutcomeIndicators = "[]";
+            entity.ManualQaEditFieldIndicators = null;
         }
         var statuses = new List<ReviewStatus> { ReviewStatus.PendingReview };
 
