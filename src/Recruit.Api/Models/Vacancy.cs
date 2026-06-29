@@ -11,7 +11,7 @@ public class Vacancy
     public required VacancyStatus Status { get; init; }
     public ApprenticeshipTypes? ApprenticeshipType { get; init; }
     public string? Title { get; init; }
-    public OwnerType? OwnerType { get; init; }
+    public OwnerType OwnerType { get; init; }
     public SourceOrigin? SourceOrigin { get; init; }
     public SourceType? SourceType { get; init; }
     public ArchiveType? ArchiveType { get; init; }

@@ -7571,14 +7571,7 @@
             ]
           },
           "ownerType": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/OwnerType"
-              }
-            ]
+            "$ref": "#/components/schemas/OwnerType"
           },
           "sourceOrigin": {
             "oneOf": [
@@ -8609,14 +8602,7 @@
             ]
           },
           "ownerType": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/OwnerType"
-              }
-            ]
+            "$ref": "#/components/schemas/OwnerType"
           },
           "sourceOrigin": {
             "oneOf": [
@@ -9863,14 +9849,7 @@
             ]
           },
           "ownerType": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/OwnerType"
-              }
-            ]
+            "$ref": "#/components/schemas/OwnerType"
           },
           "sourceOrigin": {
             "oneOf": [

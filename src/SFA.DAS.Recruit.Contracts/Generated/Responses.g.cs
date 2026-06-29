@@ -1334,10 +1334,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
-        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.Always)]
         [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public OwnerType? OwnerType { get; set; } = default!;
+        public OwnerType OwnerType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceOrigin")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
@@ -2123,10 +2123,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
-        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.Always)]
         [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public OwnerType? OwnerType { get; set; } = default!;
+        public OwnerType OwnerType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceOrigin")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
@@ -3195,11 +3195,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         public string? Title { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("ownerType")]
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
-        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("ownerType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public OwnerType? OwnerType { get; set; } = default!;
+        public OwnerType OwnerType { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("sourceOrigin")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
