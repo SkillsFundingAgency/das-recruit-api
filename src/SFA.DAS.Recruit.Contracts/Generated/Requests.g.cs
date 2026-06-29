@@ -3,6 +3,7 @@
 
 #nullable enable
 #pragma warning disable CS1591 // Missing XML comment
+#pragma warning disable CS8601 // Possible null reference assignment
 #pragma warning disable CS8618 // Non-nullable property uninitialized
 #pragma warning disable CS8767 // Nullability mismatch on interface implementation
 
@@ -21,11 +22,12 @@ public record GetApplicationreviewsByApplicationIdApiRequest(System.Guid Applica
 }
 
 /// <summary>PUT /api/applicationreviews/{applicationId} &#x2192; <see cref="PutApplicationReviewResponse"/></summary>
-public class PutApplicationreviewsByApplicationIdApiRequest : IPutApiRequest<PutApplicationReviewRequest>
+public class PutApplicationreviewsByApplicationIdApiRequest : IPutApiRequest<PutApplicationReviewRequest>, IPutApiRequest
 {
     public required System.Guid ApplicationId { get; init; }
     public string PutUrl => $"api/applicationreviews/{ApplicationId}";
     public PutApplicationReviewRequest Data { get; set; } = default!;
+    object? IPutApiRequest<object>.Data { get => Data; set => Data = value as PutApplicationReviewRequest; }
 }
 
 /// <summary>PATCH /api/applicationreviews/{applicationId} &#x2192; <see cref="PatchApplicationReviewResponse"/></summary>
@@ -133,11 +135,12 @@ public record GetEmployerProfilesByAccountLegalEntityIdApiRequest(long AccountLe
 }
 
 /// <summary>PUT /api/employer/profiles/{accountLegalEntityId} &#x2192; <see cref="PutEmployerProfileResponse"/></summary>
-public class PutEmployerProfilesByAccountLegalEntityIdApiRequest : IPutApiRequest<PutEmployerProfileRequest>
+public class PutEmployerProfilesByAccountLegalEntityIdApiRequest : IPutApiRequest<PutEmployerProfileRequest>, IPutApiRequest
 {
     public required long AccountLegalEntityId { get; init; }
     public string PutUrl => $"api/employer/profiles/{AccountLegalEntityId}";
     public PutEmployerProfileRequest Data { get; set; } = default!;
+    object? IPutApiRequest<object>.Data { get => Data; set => Data = value as PutEmployerProfileRequest; }
 }
 
 /// <summary>DELETE /api/employer/profiles/{accountLegalEntityId}</summary>
@@ -294,11 +297,12 @@ public record GetUserByIdApiRequest(System.Guid Id) : IGetApiRequest
 }
 
 /// <summary>PUT /api/user/{id} &#x2192; <see cref="PutUserResponse"/></summary>
-public class PutUserByIdApiRequest : IPutApiRequest<PutUserRequest>
+public class PutUserByIdApiRequest : IPutApiRequest<PutUserRequest>, IPutApiRequest
 {
     public required System.Guid Id { get; init; }
     public string PutUrl => $"api/user/{Id}";
     public PutUserRequest Data { get; set; } = default!;
+    object? IPutApiRequest<object>.Data { get => Data; set => Data = value as PutUserRequest; }
 }
 
 /// <summary>PATCH /api/user/{id} &#x2192; <see cref="RecruitUser"/></summary>
@@ -347,11 +351,12 @@ public record GetVacancyanalyticsByVacancyReferenceApiRequest(long VacancyRefere
 }
 
 /// <summary>PUT /api/vacancyanalytics/{vacancyReference} &#x2192; <see cref="VacancyAnalyticsResponse"/></summary>
-public class PutVacancyanalyticsByVacancyReferenceApiRequest : IPutApiRequest<PutVacancyAnalyticsRequest>
+public class PutVacancyanalyticsByVacancyReferenceApiRequest : IPutApiRequest<PutVacancyAnalyticsRequest>, IPutApiRequest
 {
     public required long VacancyReference { get; init; }
     public string PutUrl => $"api/vacancyanalytics/{VacancyReference}";
     public PutVacancyAnalyticsRequest Data { get; set; } = default!;
+    object? IPutApiRequest<object>.Data { get => Data; set => Data = value as PutVacancyAnalyticsRequest; }
 }
 
 /// <summary>GET /api/vacancies/{vacancyId} &#x2192; <see cref="Vacancy"/></summary>
@@ -361,13 +366,14 @@ public record GetVacanciesByVacancyIdApiRequest(System.Guid VacancyId) : IGetApi
 }
 
 /// <summary>PUT /api/vacancies/{vacancyId} &#x2192; <see cref="Vacancy"/></summary>
-public class PutVacanciesByVacancyIdApiRequest : IPutApiRequest<PutVacancyRequest>
+public class PutVacanciesByVacancyIdApiRequest : IPutApiRequest<PutVacancyRequest>, IPutApiRequest
 {
     public required System.Guid VacancyId { get; init; }
     public VacancyRuleSet? RuleSet { get; set; }
     public bool? ValidateOnly { get; set; }
     public string PutUrl => QueryHelpers.AddQueryString($"api/vacancies/{VacancyId}", new Dictionary<string, string?> { ["ruleSet"] = RuleSet?.ToString()?.Replace(" ", ""), ["validateOnly"] = ValidateOnly?.ToString() });
     public PutVacancyRequest Data { get; set; } = default!;
+    object? IPutApiRequest<object>.Data { get => Data; set => Data = value as PutVacancyRequest; }
 }
 
 /// <summary>DELETE /api/vacancies/{vacancyId}</summary>
@@ -477,11 +483,12 @@ public record GetVacancyreviewsByIdApiRequest(System.Guid Id) : IGetApiRequest
 }
 
 /// <summary>PUT /api/vacancyreviews/{id} &#x2192; <see cref="VacancyReview"/></summary>
-public class PutVacancyreviewsByIdApiRequest : IPutApiRequest<PutVacancyReviewRequest>
+public class PutVacancyreviewsByIdApiRequest : IPutApiRequest<PutVacancyReviewRequest>, IPutApiRequest
 {
     public required System.Guid Id { get; init; }
     public string PutUrl => $"api/vacancyreviews/{Id}";
     public PutVacancyReviewRequest Data { get; set; } = default!;
+    object? IPutApiRequest<object>.Data { get => Data; set => Data = value as PutVacancyReviewRequest; }
 }
 
 /// <summary>DELETE /api/vacancyreviews/{id}</summary>
