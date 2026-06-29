@@ -10,4 +10,5 @@ CREATE TABLE dbo.EmployerProfileAddress (
     [Longitude]             float NULL,
     CONSTRAINT [PK_EmployerProfileAddress] PRIMARY KEY (Id),
     CONSTRAINT [FK_EmployerProfileAddress_EmployerProfile] FOREIGN KEY (AccountLegalEntityId) REFERENCES [EmployerProfile](AccountLegalEntityId),
+    INDEX [IX_EmployerProfileAddress_AccountLegalEntityId] NONCLUSTERED([AccountLegalEntityId]) INCLUDE ([AddressLine1], [AddressLine2], [AddressLine3], [AddressLine4], [Latitude], [Longitude], [Postcode])
 )
