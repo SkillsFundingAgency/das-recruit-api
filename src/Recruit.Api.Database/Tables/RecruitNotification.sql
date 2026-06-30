@@ -8,4 +8,5 @@
     [DynamicData]           nvarchar(max)       NOT NULL,                   -- Data that will be collated in an email
     CONSTRAINT [PK_RecruitNotifications] PRIMARY KEY (Id),
     INDEX [IX_PK_RecruitNotifications_SendWhen] NONCLUSTERED(SendWhen),
+    INDEX [IX_RecruitNotification_UserIdSendWhen] NONCLUSTERED([UserId], [SendWhen]) INCLUDE ([DynamicData], [EmailTemplateId], [StaticData])
 )
