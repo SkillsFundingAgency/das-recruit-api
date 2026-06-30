@@ -872,13 +872,13 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
 
         [System.Text.Json.Serialization.JsonPropertyName("beforeEdit")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
-        [Newtonsoft.Json.JsonProperty("beforeEdit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string BeforeEdit { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("beforeEdit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? BeforeEdit { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("afterEdit")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
-        [Newtonsoft.Json.JsonProperty("afterEdit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string AfterEdit { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("afterEdit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? AfterEdit { get; set; } = default!;
 
     }
 

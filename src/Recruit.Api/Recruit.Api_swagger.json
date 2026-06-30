@@ -7064,10 +7064,16 @@
             "type": "string"
           },
           "beforeEdit": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "afterEdit": {
-            "type": "string"
+            "type": [
+              "null",
+              "string"
+            ]
           }
         },
         "additionalProperties": false
