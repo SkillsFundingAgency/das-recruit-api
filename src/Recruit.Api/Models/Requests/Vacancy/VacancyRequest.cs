@@ -12,7 +12,7 @@ public class VacancyRequest
     public ApprenticeshipTypes? ApprenticeshipType { get; init; }
     public string? Title { get; init; }
     [BindRequired]
-    public required OwnerType? OwnerType { get; init; }
+    public required OwnerType OwnerType { get; init; }
     public SourceOrigin? SourceOrigin { get; init; }
     public SourceType? SourceType { get; init; }
     public ArchiveType? ArchiveType { get; init; }

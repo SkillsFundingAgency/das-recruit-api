@@ -1,0 +1,19 @@
+<Project>
+  <Target Name="GenerateOpenApiDocuments"
+          Inputs="$(TargetPath)"
+          Outputs="$(_OpenApiDocumentsCache)"
+          Condition="'$(OpenApiGenerateDocumentsOnBuild)' == 'true'">
+    <PropertyGroup>
+      <_DotNetGetDocumentOutputPath>$([System.IO.Path]::GetFullPath('$(OpenApiDocumentsDirectory)').TrimEnd('\'))</_DotNetGetDocumentOutputPath>
+      <_DotNetGetDocumentCommand>dotnet "$(PkgMicrosoft_Extensions_ApiDescription_Server)/tools/dotnet-getdocument.dll" --assembly "$(TargetPath)"</_DotNetGetDocumentCommand>
+      <_DotNetGetDocumentCommand>$(_DotNetGetDocumentCommand) --file-list "$(_OpenApiDocumentsCache)" --framework "$(TargetFrameworkMoniker)"</_DotNetGetDocumentCommand>
+      <_DotNetGetDocumentCommand>$(_DotNetGetDocumentCommand) --output "$(_DotNetGetDocumentOutputPath)" --project "$(MSBuildProjectName)"</_DotNetGetDocumentCommand>
+      <_DotNetGetDocumentCommand Condition="'$(ProjectAssetsFile)' != ''">$(_DotNetGetDocumentCommand) --assets-file "$(ProjectAssetsFile)"</_DotNetGetDocumentCommand>
+      <_DotNetGetDocumentCommand Condition="'$(PlatformTarget)' != ''">$(_DotNetGetDocumentCommand) --platform "$(PlatformTarget)"</_DotNetGetDocumentCommand>
+      <_DotNetGetDocumentCommand Condition="'$(PlatformTarget)' == '' AND '$(Platform)' != ''">$(_DotNetGetDocumentCommand) --platform "$(Platform)"</_DotNetGetDocumentCommand>
+      <_DotNetGetDocumentCommand Condition="'$(RuntimeIdentifier)' != ''">$(_DotNetGetDocumentCommand) --runtime "$(RuntimeIdentifier) --self-contained"</_DotNetGetDocumentCommand>
+      <_DotNetGetDocumentCommand>$(_DotNetGetDocumentCommand) $(OpenApiGenerateDocumentsOptions)</_DotNetGetDocumentCommand>
+    </PropertyGroup>
+    <Exec Command="$(_DotNetGetDocumentCommand)" LogStandardErrorAsError="true" ContinueOnError="WarnAndContinue" />
+  </Target>
+</Project>

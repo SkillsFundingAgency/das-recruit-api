@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>SFA.DAS.Recruit.Contracts</RootNamespace>
     <AssemblyName>SFA.DAS.Recruit.Contracts</AssemblyName>
-    <ApiContractsSwaggerJsonPath>$(MSBuildThisFileDirectory)..\Recruit.Api\swagger.json</ApiContractsSwaggerJsonPath>
+    <ApiContractsSwaggerJsonPath>$(MSBuildThisFileDirectory)..\Recruit.Api\Recruit.Api_swagger.json</ApiContractsSwaggerJsonPath>
     <ApiContractsNamespace>SFA.DAS.Recruit.Contracts</ApiContractsNamespace>
     <ApiContractsOutputDirectory>$(MSBuildThisFileDirectory)Generated</ApiContractsOutputDirectory>
     <ApiContractsClientName>RecruitApi</ApiContractsClientName>
@@ -20,9 +20,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.193-prerelease-3" />
-    <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.189" />
-    <PackageReference Include="Microsoft.AspNetCore.JsonPatch.SystemTextJson" Version="10.0.8" />
+    <PackageReference Include="SFA.DAS.ApiContracts.Build" Version="17.1.196" />
+    <PackageReference Include="SFA.DAS.Apim.Shared" Version="17.1.195" />
+    <PackageReference Include="Microsoft.AspNetCore.JsonPatch.SystemTextJson" Version="10.0.9" />
   </ItemGroup>
     
   <PropertyGroup>

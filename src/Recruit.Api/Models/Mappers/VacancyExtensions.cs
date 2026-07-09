@@ -143,7 +143,7 @@ public static class VacancyExtensions
             LiveDate = entity.LiveDate,
             NumberOfPositions = entity.NumberOfPositions,
             OutcomeDescription = entity.OutcomeDescription,
-            OwnerType = entity.OwnerType,
+            OwnerType = entity.OwnerType ?? OwnerType.Unknown,
             ProgrammeId = entity.ProgrammeId,
             ProviderReviewFieldIndicators = ApiUtils.DeserializeOrNull<List<ReviewFieldIndicator>>(entity.ProviderReviewFieldIndicators),
             Qualifications = ApiUtils.DeserializeOrNull<List<Qualification>>(entity.Qualifications) ?? [],

@@ -1,4 +1,5 @@
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Extensions;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
@@ -136,7 +137,7 @@ internal static class VacancyMapper
             LiveDate = vacancyEntity.LiveDate,
             NumberOfPositions = vacancyEntity.NumberOfPositions,
             OutcomeDescription = vacancyEntity.OutcomeDescription,
-            OwnerType = vacancyEntity.OwnerType,
+            OwnerType = vacancyEntity.OwnerType ?? OwnerType.Unknown,
             ProgrammeId = vacancyEntity.ProgrammeId,
             ProviderReviewFieldIndicators = ApiUtils.DeserializeOrNull<List<ReviewFieldIndicator>>(vacancyEntity.ProviderReviewFieldIndicators),
             Qualifications = ApiUtils.DeserializeOrNull<List<Qualification>>(vacancyEntity.Qualifications),
