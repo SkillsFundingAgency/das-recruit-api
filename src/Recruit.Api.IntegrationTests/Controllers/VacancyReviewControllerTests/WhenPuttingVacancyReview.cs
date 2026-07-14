@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
@@ -84,6 +85,29 @@ public class WhenPuttingVacancyReview: BaseFixture
         updatedItem.SubmittedByUserEmail = targetItem.SubmittedByUserEmail;
         Server.DataContext.Verify(x => x.SetValues(targetItem, ItIs.EquivalentTo(updatedItem)), Times.Once());
         Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+    
+    [Test]
+    public async Task Then_The_VacancyReview_Is_Not_Replaced_If_Already_Bypassed()
+    {
+        // arrange
+        var items = Fixture.CreateMany<VacancyReviewEntity>(1).ToList();
+        var targetItem = items[0];
+        targetItem.ManualOutcome = nameof(ManualQaOutcome.Bypassed);
+        Server.DataContext
+            .Setup(x => x.VacancyReviewEntities)
+            .ReturnsDbSet(items);
+
+        var request = Fixture.Create<PutVacancyReviewRequest>();
+        
+        // act
+        var response = await Client.PutAsJsonAsync(new PutVacancyreviewsByIdApiRequest { Id = targetItem.Id }.PutUrl, request);
+        
+        // assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        
+        Server.DataContext.Verify(x => x.SetValues(It.IsAny<VacancyReviewEntity>(), It.IsAny<VacancyReviewEntity>()), Times.Never());
+        Server.DataContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Test]

@@ -45,6 +45,13 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
             return UpsertResult.Create(entity, true, true);
         }
         
+        // To cover scenario where the LLM process the vacancy review twice and gives
+        // a different result
+        if(existingEntity.ManualOutcome == nameof(ManualQaOutcome.Bypassed))
+        {
+            return UpsertResult.Create(entity, false, false);
+        }
+        
         var oldStatus = existingEntity.Status;
         existingEntity.SubmittedByUserEmail = entity.SubmittedByUserEmail;
 

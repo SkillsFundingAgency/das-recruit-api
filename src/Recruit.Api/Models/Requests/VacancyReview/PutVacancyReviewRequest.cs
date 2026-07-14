@@ -18,7 +18,7 @@ public class PutVacancyReviewRequest
     public string? ReviewedByUserEmail { get; init; }
     public string? SubmittedByUserEmail { get; set; }
     public DateTime? ClosedDate { get; init; }
-    public string? ManualOutcome { get; init; }
+    public string? ManualOutcome { get; set; }
     public string? ManualQaComment { get; init; }
     public List<string>? ManualQaFieldIndicators { get; init; } = [];
     public List<ManualQaEditFieldIndicator>? ManualQaEditFieldIndicators { get; init; }
