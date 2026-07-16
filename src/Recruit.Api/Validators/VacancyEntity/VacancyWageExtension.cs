@@ -42,7 +42,7 @@ public static class VacancyWageExtension
             .ChildRules(x =>
             {
                 x.RuleFor(y => y.WageAdditionalInformation)
-                    .MaximumLength(250)
+                    .MaximumLength(500)
                     .WithMessage("Information about pay must be {MaxLength} characters or less")
                     .WithErrorCode("44")
                     .WithState(_ => VacancyRuleSet.Wage)
@@ -60,7 +60,7 @@ public static class VacancyWageExtension
             .ChildRules(x =>
             {
                 x.RuleFor(w => w!.CompanyBenefitsInformation)
-                    .MaximumLength(250)
+                    .MaximumLength(500)
                     .WithMessage("Company benefits must be {MaxLength} characters or less")
                     .WithErrorCode("44")
                     .WithState(_ => VacancyRuleSet.Wage)
