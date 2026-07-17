@@ -144,12 +144,12 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     }
 
     [Test]
-    public void WageAdditionalInfoMustBeLessThan251Characters()
+    public void WageAdditionalInfoMustBeLessThan501Characters()
     {
         var vacancy = new VacancyRequest {
             Wage = new Wage {
                 WageType = WageType.NationalMinimumWage,
-                WageAdditionalInformation = new string('a', 252)
+                WageAdditionalInformation = new string('a', 501)
             },
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
@@ -220,14 +220,14 @@ public class WhenValidatingWage : VacancyValidationTestsBase
     }
 
     [Test]
-    public void WageCompanyBenefitsInfoMustBeLessThan251Characters()
+    public void WageCompanyBenefitsInfoMustBeLessThan501Characters()
     {
         var vacancy = new VacancyRequest 
         {
             Wage = new Wage 
             {
                 WageType = WageType.NationalMinimumWage,
-                CompanyBenefitsInformation = new string('a', 252)
+                CompanyBenefitsInformation = new string('a', 501)
             },
             Status = VacancyStatus.Draft,
             OwnerType = OwnerType.Employer
