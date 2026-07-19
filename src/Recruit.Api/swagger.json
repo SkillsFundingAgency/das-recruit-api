@@ -6895,6 +6895,14 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          },
+          "closingSoonWithNoApplications": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "closingSoonVacanciesCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -7980,6 +7988,14 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          },
+          "closingSoonWithNoApplications": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "closingSoonVacanciesCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

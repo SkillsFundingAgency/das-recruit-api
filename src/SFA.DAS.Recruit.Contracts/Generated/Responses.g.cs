@@ -520,6 +520,14 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [Newtonsoft.Json.JsonProperty("withDrawnByQaVacanciesAlert", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public WithdrawnVacanciesAlertModel? WithDrawnByQaVacanciesAlert { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("closingSoonWithNoApplications")]
+        [Newtonsoft.Json.JsonProperty("closingSoonWithNoApplications", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ClosingSoonWithNoApplications { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("closingSoonVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("closingSoonVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ClosingSoonVacanciesCount { get; set; } = default!;
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -1738,6 +1746,14 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("submittedVacanciesCount")]
         [Newtonsoft.Json.JsonProperty("submittedVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int SubmittedVacanciesCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("closingSoonWithNoApplications")]
+        [Newtonsoft.Json.JsonProperty("closingSoonWithNoApplications", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ClosingSoonWithNoApplications { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("closingSoonVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("closingSoonVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ClosingSoonVacanciesCount { get; set; } = default!;
 
     }
 
