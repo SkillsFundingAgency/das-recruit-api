@@ -104,13 +104,14 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
     [ProducesResponseType(typeof(List<GetApplicationReviewResponse>), StatusCodes.Status200OK)]
     public async Task<IResult> GetManyByVacancyId(
         [FromRoute][Required] Guid vacancyId,
+        [FromQuery] List<ApplicationReviewStatus>? statuses,
         CancellationToken token)
     {
         try
         {
             logger.LogInformation("Recruit API: Received query to get all application reviews by vacancyId : {Id}", vacancyId);
 
-            var response = await provider.GetAllByVacancyId(vacancyId, token);
+            var response = await provider.GetAllByVacancyId(vacancyId, statuses, token);
 
             return response is null or { Count: 0 }
                 ? Results.NotFound()

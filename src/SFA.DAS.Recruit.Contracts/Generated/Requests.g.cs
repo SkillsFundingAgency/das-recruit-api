@@ -64,9 +64,10 @@ public record GetVacanciesByrefByVacancyReferenceApplicationreviewsApiRequest(lo
 }
 
 /// <summary>GET /api/vacancies/byid/{vacancyId}/applicationreviews &#x2192; List&lt;<see cref="GetApplicationReviewResponse"/>&gt;</summary>
-public record GetVacanciesByidByVacancyIdApplicationreviewsApiRequest(System.Guid VacancyId) : IGetApiRequest
+public record GetVacanciesByidByVacancyIdApplicationreviewsApiRequest(System.Guid VacancyId, List<ApplicationReviewStatus>? Statuses) : IGetApiRequest
 {
-    public string GetUrl => $"api/vacancies/byid/{VacancyId}/applicationreviews";
+    public string GetUrl => QueryHelpers.AddQueryString($"api/vacancies/byid/{VacancyId}/applicationreviews",
+        (Statuses ?? []).Select(v => new KeyValuePair<string, string?>("statuses", v.ToString())));
 }
 
 /// <summary>GET /api/applicationreviews/{vacancyReference}/candidate/{candidateId} &#x2192; <see cref="GetApplicationReviewResponse"/></summary>

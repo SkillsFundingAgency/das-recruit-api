@@ -2,6 +2,7 @@
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
@@ -14,15 +15,16 @@ internal class WhenGettingTheApplicationReviewsByVacancyId
     public async Task Get_ReturnsOk_WhenApplicationReviewExists(
         Guid vacancyId,
         List<ApplicationReviewEntity> mockResponse,
+        List<ApplicationReviewStatus>? statuses,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
         [Greedy] ApplicationReviewController controller,
         CancellationToken token)
     {
         // Arrange
-        provider.Setup(p => p.GetAllByVacancyId(vacancyId, token)).ReturnsAsync(mockResponse);
+        provider.Setup(p => p.GetAllByVacancyId(vacancyId, statuses, token)).ReturnsAsync(mockResponse);
 
         // Act
-        var result = await controller.GetManyByVacancyId(vacancyId, token);
+        var result = await controller.GetManyByVacancyId(vacancyId, statuses, token);
 
         // Assert
         result.Should().BeOfType<Ok<List<GetApplicationReviewResponse>>>();
@@ -34,15 +36,16 @@ internal class WhenGettingTheApplicationReviewsByVacancyId
     public async Task Get_ReturnsNotFound_WhenApplicationReviewDoesNotExist(
         Guid vacancyId,
         List<ApplicationReviewEntity> mockResponse,
+        List<ApplicationReviewStatus>? statuses,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
         [Greedy] ApplicationReviewController controller,
         CancellationToken token)
     {
         // Arrange
-        provider.Setup(p => p.GetAllByVacancyId(vacancyId, token)).ReturnsAsync((List<ApplicationReviewEntity>)null!);
+        provider.Setup(p => p.GetAllByVacancyId(vacancyId, statuses,token)).ReturnsAsync((List<ApplicationReviewEntity>)null!);
 
         // Act
-        var result = await controller.GetManyByVacancyId(vacancyId, token);
+        var result = await controller.GetManyByVacancyId(vacancyId, statuses,token);
 
         // Assert
         result.Should().BeOfType<NotFound>();
@@ -52,15 +55,16 @@ internal class WhenGettingTheApplicationReviewsByVacancyId
     public async Task Get_ReturnsInternalServerException_WhenException_Thrown(
         Guid vacancyId,
         List<ApplicationReviewEntity> mockResponse,
+        List<ApplicationReviewStatus>? statuses,
         [Frozen] Mock<IApplicationReviewsProvider> provider,
         [Greedy] ApplicationReviewController controller,
         CancellationToken token)
     {
         // Arrange
-        provider.Setup(p => p.GetAllByVacancyId(vacancyId, token)).ThrowsAsync(new Exception());
+        provider.Setup(p => p.GetAllByVacancyId(vacancyId, statuses,token)).ThrowsAsync(new Exception());
 
         // Act
-        var result = await controller.GetManyByVacancyId(vacancyId, token);
+        var result = await controller.GetManyByVacancyId(vacancyId, statuses,token);
 
         // Assert
         result.Should().BeOfType<ProblemHttpResult>();
