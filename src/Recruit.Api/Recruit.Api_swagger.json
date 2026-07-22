@@ -611,6 +611,16 @@
             }
           },
           {
+            "name": "statuses",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/ApplicationReviewStatus"
+              }
+            }
+          },
+          {
             "name": "X-Version",
             "in": "header",
             "required": true,
