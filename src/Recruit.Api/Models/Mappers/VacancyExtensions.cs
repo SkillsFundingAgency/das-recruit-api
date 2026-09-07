@@ -181,6 +181,7 @@ public static class VacancyExtensions
                 WeeklyHours = entity.Wage_WeeklyHours,
                 WorkingWeekDescription = entity.Wage_WorkingWeekDescription,
             },
+            IsAnonymous = entity.EmployerNameOption == EmployerNameOption.Anonymous,
         };
     }
 

@@ -25,8 +25,8 @@ internal class WhenGettingDashboardCountByAccountId
     {
         // Arrange
         repositoryMock.Setup(x => x.GetSharedCountByAccountId(accountId, token)).ReturnsAsync(sharedCount);
-        repositoryMock.Setup(x => x.GetAllSharedCountByAccountId(accountId, token)).ReturnsAsync(allSharedCount);
-        repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, token))
+        repositoryMock.Setup(x => x.GetAllSharedCountByAccountId(accountId, new List<VacancyStatus> {VacancyStatus.Archived}, token)).ReturnsAsync(allSharedCount);
+        repositoryMock.Setup(repo => repo.GetAllByAccountId(accountId, new List<VacancyStatus> {VacancyStatus.Archived}, token))
             .ReturnsAsync([
                 new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.New,
@@ -59,7 +59,7 @@ internal class WhenGettingDashboardCountByAccountId
         result.SuccessfulApplicationsCount.Should().Be(successfulCount);
         result.SharedApplicationsCount.Should().Be(sharedCount);
         result.AllSharedApplicationsCount.Should().Be(allSharedCount);
-        repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, token), Times.Once);
+        repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, new List<VacancyStatus> {VacancyStatus.Archived}, token), Times.Once);
     }
         
 }

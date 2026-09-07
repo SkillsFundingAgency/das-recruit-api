@@ -19,6 +19,7 @@ public class VacancyExtensionTests
         entity.Qualifications = "[]";
         entity.Skills = "[]";
         entity.Ukprn = null;
+        entity.EmployerNameOption = EmployerNameOption.Anonymous;
         
         var actual = entity.ToGetResponse();
 
@@ -93,8 +94,7 @@ public class VacancyExtensionTests
             WeeklyHours = entity.Wage_WeeklyHours,
             WorkingWeekDescription = entity.Wage_WorkingWeekDescription,
         });
-
-
+        actual.IsAnonymous.Should().BeTrue();
     }
 
     [Test, RecursiveMoqInlineAutoData]
@@ -166,5 +166,27 @@ public class VacancyExtensionTests
         var actual = entity.ToGetResponse();
 
         actual.EmployerLocationOption.Should().Be(AvailableWhere.AcrossEngland);
+    }
+
+    [Test]
+    [RecursiveMoqInlineAutoData(EmployerNameOption.RegisteredName)]
+    [RecursiveMoqInlineAutoData(EmployerNameOption.TradingName)]
+    [RecursiveMoqInlineAutoData(null)]
+    public void Then_If_Null_For_EmployerNameOption_And_IsAnonymous_Be_False(EmployerNameOption? employerNameOption, VacancyEntity entity)
+    {
+        entity.Skills = null;
+        entity.Qualifications = null;
+        entity.EmployerLocations = null;
+        entity.EmployerReviewFieldIndicators = null;
+        entity.ProviderReviewFieldIndicators = null;
+        entity.TransferInfo = null;
+        entity.Ukprn = null;
+        entity.EmployerLocationOption = null;
+        entity.EmployerNameOption = employerNameOption;
+
+
+        var actual = entity.ToGetResponse();
+
+        actual.IsAnonymous.Should().BeFalse();
     }
 }

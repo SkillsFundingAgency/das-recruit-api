@@ -88,11 +88,39 @@ public record GetApplicationreviewsByVacancyReferenceTempStatusByStatusApiReques
     public string GetUrl => $"api/applicationreviews/{VacancyReference}/temp-status/{Status}";
 }
 
-/// <summary>GET /api/applicationreviews/requiring-feedback/by-vacancies &#x2192; List&lt;<see cref="VacancyApplicationsCountRequiringFeedback"/>&gt;</summary>
-public record GetApplicationreviewsRequiringFeedbackByVacanciesApiRequest(List<long>? VacancyReferences) : IGetApiRequest
+/// <summary>GET /api/employer/{accountId}/applicationreviews &#x2192; <see cref="ApplicationReviewsResponse"/></summary>
+public record GetEmployerByAccountIdApplicationreviewsApiRequest(long AccountId, int? PageNumber, int? PageSize, string? SortColumn, bool? IsAscending) : IGetApiRequest
 {
-    public string GetUrl => QueryHelpers.AddQueryString($"api/applicationreviews/requiring-feedback/by-vacancies",
-        (VacancyReferences ?? []).Select(v => new KeyValuePair<string, string?>("vacancyReferences", v.ToString())));
+    public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/applicationreviews", new Dictionary<string, string?> { ["pageNumber"] = PageNumber?.ToString(), ["pageSize"] = PageSize?.ToString(), ["sortColumn"] = SortColumn, ["isAscending"] = IsAscending?.ToString() });
+}
+
+/// <summary>GET /api/employer/{accountId}/applicationreviews/dashboard &#x2192; <see cref="EmployerDashboardModel"/></summary>
+public record GetEmployerByAccountIdApplicationreviewsDashboardApiRequest(long AccountId) : IGetApiRequest
+{
+    public string GetUrl => $"api/employer/{AccountId}/applicationreviews/dashboard";
+}
+
+/// <summary>GET /api/employer/{accountId}/alerts &#x2192; <see cref="EmployerAlertsModel"/></summary>
+public record GetEmployerByAccountIdAlertsApiRequest(long AccountId, string? UserId) : IGetApiRequest
+{
+    public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/alerts", new Dictionary<string, string?> { ["userId"] = UserId });
+}
+
+/// <summary>GET /api/employer/{accountId}/applicationreviews/dashboard/vacancies &#x2192; <see cref="VacancyDashboardResponse"/></summary>
+public record GetEmployerByAccountIdApplicationreviewsDashboardVacanciesApiRequest(long AccountId, int? PageNumber, int? PageSize, string? SortColumn, bool? IsAscending, List<ApplicationReviewStatus>? Status) : IGetApiRequest
+{
+    public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/applicationreviews/dashboard/vacancies",
+        new KeyValuePair<string, string?>[] { new("pageNumber", PageNumber?.ToString()), new("pageSize", PageSize?.ToString()), new("sortColumn", SortColumn?.ToString()), new("isAscending", IsAscending?.ToString()) }
+        .Concat((Status ?? []).Select(v => new KeyValuePair<string, string?>("status", v.ToString()))));
+}
+
+/// <summary>POST /api/employer/{accountId}/applicationreviews/count &#x2192; <see cref="ApplicationReviewsStats"/></summary>
+public class PostEmployerByAccountIdApplicationreviewsCountApiRequest : IPostApiRequest<System.Collections.Generic.List<long>>
+{
+    public required long AccountId { get; init; }
+    public string? ApplicationSharedFilteringStatus { get; set; }
+    public string PostUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/applicationreviews/count", new Dictionary<string, string?> { ["applicationSharedFilteringStatus"] = ApplicationSharedFilteringStatus });
+    public System.Collections.Generic.List<long> Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/employer/profiles/{accountLegalEntityId}/addresses &#x2192; List&lt;<see cref="EmployerProfileAddress"/>&gt;</summary>
@@ -206,13 +234,6 @@ public class PostVacanciesByIdCreateNotificationsByStatusApiRequest : IPostApiRe
     public required System.Guid Id { get; init; }
     public required VacancyStatus Status { get; init; }
     public string PostUrl => $"api/vacancies/{Id}/create-notifications/{Status}";
-    public object Data { get; set; } = default!;
-}
-
-/// <summary>POST /api/vacancies/requiring-feedback/create-notifications &#x2192; List&lt;<see cref="NotificationEmail"/>&gt;</summary>
-public class PostVacanciesRequiringFeedbackCreateNotificationsApiRequest : IPostApiRequest, IPostApiRequest<object>
-{
-    public string PostUrl => $"api/vacancies/requiring-feedback/create-notifications";
     public object Data { get; set; } = default!;
 }
 

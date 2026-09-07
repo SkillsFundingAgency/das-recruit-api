@@ -27,7 +27,7 @@ public interface IApplicationReviewsProvider
 
     Task<ApplicationReviewsDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default);
 
-    Task<ApplicationReviewsDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default);
+    Task<ApplicationReviewsDashboardModel> GetCountByUkprn(int ukprn, List<VacancyStatus>? excludeVacanciesInStatus = null, CancellationToken token = default);
 
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
 
@@ -201,9 +201,9 @@ internal class ApplicationReviewsProvider(
 
     public async Task<ApplicationReviewsDashboardModel> GetCountByAccountId(long accountId, CancellationToken token = default)
     {
-        var dashboardCount = await applicationReviewRepository.GetAllByAccountId(accountId, token);
+        var dashboardCount = await applicationReviewRepository.GetAllByAccountId(accountId, [VacancyStatus.Archived], token);
         int sharedApplicationReviewsCount = await applicationReviewRepository.GetSharedCountByAccountId(accountId, token);
-        int allSharedApplicationReviewsCount = await applicationReviewRepository.GetAllSharedCountByAccountId(accountId, token);
+        int allSharedApplicationReviewsCount = await applicationReviewRepository.GetAllSharedCountByAccountId(accountId, [VacancyStatus.Archived], token);
 
         var dashboardModel = (ApplicationReviewsDashboardModel)dashboardCount;
         dashboardModel.SharedApplicationsCount = sharedApplicationReviewsCount;
@@ -212,9 +212,9 @@ internal class ApplicationReviewsProvider(
         return dashboardModel;
     }
 
-    public async Task<ApplicationReviewsDashboardModel> GetCountByUkprn(int ukprn, CancellationToken token = default)
+    public async Task<ApplicationReviewsDashboardModel> GetCountByUkprn(int ukprn, List<VacancyStatus>? excludeVacanciesInStatus = null, CancellationToken token = default)
     {
-        return await applicationReviewRepository.GetAllByUkprn(ukprn, token);
+        return await applicationReviewRepository.GetAllByUkprn(ukprn, excludeVacanciesInStatus, token);
     }
 
     public async Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default)

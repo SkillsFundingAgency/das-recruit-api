@@ -22,7 +22,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
             CancellationToken token)
         {
             // Arrange
-            providerMock.Setup(p => p.GetCountByUkprn(ukprn, token))
+            providerMock.Setup(p => p.GetCountByUkprn(ukprn, new List<VacancyStatus> {VacancyStatus.Archived}, token))
                 .ReturnsAsync(mockApplicationReviewsDashboardModelResponse);
             vacancyMock.Setup(v => v.GetCountByUkprn(ukprn, token))
                 .ReturnsAsync(mockVacancyDashboardModelResponse);
@@ -61,7 +61,7 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ProviderAccountControllerTes
             CancellationToken token)
         {
             // Arrange
-            providerMock.Setup(p => p.GetCountByUkprn(ukprn, token))
+            providerMock.Setup(p => p.GetCountByUkprn(ukprn, new List<VacancyStatus> {VacancyStatus.Archived}, token))
                 .ThrowsAsync(new Exception());
 
             // Act

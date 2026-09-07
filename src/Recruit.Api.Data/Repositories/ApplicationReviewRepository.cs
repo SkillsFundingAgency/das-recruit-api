@@ -31,8 +31,7 @@ public interface IApplicationReviewRepository
         CancellationToken token = default);
     Task<int> GetSharedCountByAccountId(long accountId,
         CancellationToken token = default);
-    Task<int> GetAllSharedCountByAccountId(long accountId,
-        CancellationToken token = default);
+    Task<int> GetAllSharedCountByAccountId(long accountId, List<VacancyStatus>? excludeVacanciesInStatus, CancellationToken token = default);
     Task<PaginatedList<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId,
         int pageNumber = 1,
         int pageSize = 10,
@@ -48,8 +47,8 @@ public interface IApplicationReviewRepository
         CancellationToken token = default);
     Task<UpsertResult<ApplicationReviewEntity>> Upsert(ApplicationReviewEntity entity, CancellationToken token = default);
     Task<ApplicationReviewEntity?> Update(ApplicationReviewEntity entity, CancellationToken token = default);
-    Task<List<ApplicationReviewsDashboardCountModel>> GetAllByAccountId(long accountId, CancellationToken token = default);
-    Task<List<ApplicationReviewsDashboardCountModel>> GetAllByUkprn(int ukprn, CancellationToken token = default);
+    Task<List<ApplicationReviewsDashboardCountModel>> GetAllByAccountId(long accountId, List<VacancyStatus>? excludeVacanciesInStatus = null, CancellationToken token = default);
+    Task<List<ApplicationReviewsDashboardCountModel>> GetAllByUkprn(int ukprn, List<VacancyStatus>? excludeVacanciesInStatus = null, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetByUkprnAndVacancyReferencesAsync(int ukprn, List<long> vacancyReferences, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetByAccountIdAndVacancyReferencesAsync(long accountId, List<long> vacancyReferences, CancellationToken token = default);
     Task<ApplicationReviewEntity?> GetByApplicationId(Guid applicationId, CancellationToken token = default);
@@ -175,16 +174,33 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return await query.CountAsync(token);
     }
 
-    public async Task<int> GetAllSharedCountByAccountId(long accountId, CancellationToken token = default)
+    public async Task<int> GetAllSharedCountByAccountId(long accountId, List<VacancyStatus>? excludeVacanciesInStatus,  CancellationToken token = default)
     {
-        var query = recruitDataContext.ApplicationReviewEntities
+        if (excludeVacanciesInStatus is not { Count: > 0 })
+        {
+            var query = recruitDataContext.ApplicationReviewEntities
+                .AsNoTracking()
+                .Where(appReview =>
+                    appReview.AccountId == accountId &&
+                    appReview.DateSharedWithEmployer != null &&
+                    appReview.WithdrawnDate == null);
+
+            return await query.CountAsync(token);
+        }
+        
+        var innerQuery = recruitDataContext.VacancyEntities.AsNoTracking();
+        innerQuery = excludeVacanciesInStatus is { Count: > 0 }
+            ? innerQuery.Where(vacancy => vacancy.OwnerType == OwnerType.Provider && vacancy.AccountId == accountId && !excludeVacanciesInStatus.Contains(vacancy.Status))
+            : innerQuery.Where(vacancy => vacancy.OwnerType == OwnerType.Provider && vacancy.AccountId == accountId);
+
+        return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
-            .Where(appReview =>
+            .Where(appReview => 
                 appReview.AccountId == accountId &&
                 appReview.DateSharedWithEmployer != null &&
-                appReview.WithdrawnDate == null);
-
-        return await query.CountAsync(token);
+                appReview.WithdrawnDate == null)
+            .Join(innerQuery, appReview => appReview.VacancyReference, vacancy => vacancy.VacancyReference, (appReview, _) => appReview)
+            .CountAsync(token);
     }
 
     public async Task<List<ApplicationReviewEntity>> GetAllSharedByAccountId(long accountId, List<long> vacancyReferences,
@@ -329,18 +345,21 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
         return entity;
     }
 
-    public async Task<List<ApplicationReviewsDashboardCountModel>> GetAllByAccountId(long accountId, CancellationToken token = default)
+    public async Task<List<ApplicationReviewsDashboardCountModel>> GetAllByAccountId(long accountId, List<VacancyStatus>? excludeVacanciesInStatus = null, CancellationToken token = default)
     {
+        var innerQuery = recruitDataContext.VacancyEntities.AsNoTracking();
+        innerQuery = excludeVacanciesInStatus is { Count: > 0 }
+            ? innerQuery.Where(vacancy => vacancy.OwnerType == OwnerType.Employer && vacancy.AccountId == accountId && !excludeVacanciesInStatus.Contains(vacancy.Status))
+            : innerQuery.Where(vacancy => vacancy.OwnerType == OwnerType.Employer && vacancy.AccountId == accountId);
+
         return await recruitDataContext.ApplicationReviewEntities
             .AsNoTracking()
             .Where(appReview => appReview.AccountId == accountId && appReview.WithdrawnDate == null)
-            .Join(
-                recruitDataContext.VacancyEntities.AsNoTracking()
-                    .Where(vacancy => vacancy.OwnerType == OwnerType.Employer && vacancy.AccountId == accountId),
+            .Join(innerQuery,
                 appReview => appReview.VacancyReference,
                 vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview
-            ).GroupBy(c => c.Status).Select(g => 
+            ).GroupBy(c => c.Status).Select(g =>
                 new ApplicationReviewsDashboardCountModel
                 {
                     Status = Enum.Parse<ApplicationReviewStatus>(g.Key.ToString(), true),
@@ -349,14 +368,18 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .ToListAsync(token);
     }
 
-    public async Task<List<ApplicationReviewsDashboardCountModel>> GetAllByUkprn(int ukprn, CancellationToken token = default)
+    public async Task<List<ApplicationReviewsDashboardCountModel>> GetAllByUkprn(int ukprn, List<VacancyStatus>? excludeVacanciesInStatus = null, CancellationToken token = default)
     {
+        var innerQuery = recruitDataContext.VacancyEntities.AsNoTracking();
+        innerQuery = excludeVacanciesInStatus is { Count: > 0 }
+            ? innerQuery.Where(vacancy => vacancy.OwnerType == OwnerType.Provider && vacancy.Ukprn == ukprn && !excludeVacanciesInStatus.Contains(vacancy.Status))
+            : innerQuery.Where(vacancy => vacancy.OwnerType == OwnerType.Provider && vacancy.Ukprn == ukprn);
+        
         return await recruitDataContext.ApplicationReviewEntities
         .AsNoTracking()
             .Where(appReview => appReview.Ukprn == ukprn && appReview.WithdrawnDate == null)
             .Join(
-                recruitDataContext.VacancyEntities.AsNoTracking()
-                    .Where(vacancy => vacancy.OwnerType == OwnerType.Provider && vacancy.Ukprn == ukprn),
+                innerQuery,
                 appReview => appReview.VacancyReference,
                 vacancy => vacancy.VacancyReference,
                 (appReview, _) => appReview

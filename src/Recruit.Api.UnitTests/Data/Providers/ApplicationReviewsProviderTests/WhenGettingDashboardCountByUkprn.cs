@@ -20,7 +20,7 @@ internal class WhenGettingDashboardCountByUkprn
         [Greedy] ApplicationReviewsProvider provider)
     {
         // Arrange
-        repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, token))
+        repositoryMock.Setup(repo => repo.GetAllByUkprn(ukprn, new List<VacancyStatus> {VacancyStatus.Archived}, token))
             .ReturnsAsync([
                 new ApplicationReviewsDashboardCountModel {
                     Status = ApplicationReviewStatus.New,
@@ -36,7 +36,7 @@ internal class WhenGettingDashboardCountByUkprn
                 }
             ]);
         // Act
-        var result = await provider.GetCountByUkprn(ukprn, token);
+        var result = await provider.GetCountByUkprn(ukprn, new List<VacancyStatus> {VacancyStatus.Archived}, token);
         
         // Assert
         result.NewApplicationsCount.Should().Be(newCount);
@@ -44,6 +44,6 @@ internal class WhenGettingDashboardCountByUkprn
         result.UnsuccessfulApplicationsCount.Should().Be(unsuccessfulCount);
         result.SuccessfulApplicationsCount.Should().Be(successfulCount);
         result.SharedApplicationsCount.Should().Be(0);
-        repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, token), Times.Once);
+        repositoryMock.Verify(repo => repo.GetAllByUkprn(ukprn, new List<VacancyStatus> {VacancyStatus.Archived}, token), Times.Once);
     }
 }

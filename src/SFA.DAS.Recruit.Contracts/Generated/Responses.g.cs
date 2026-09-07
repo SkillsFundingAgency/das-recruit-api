@@ -523,6 +523,63 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class EmployerDashboardModel
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("newApplicationsCount")]
+        [Newtonsoft.Json.JsonProperty("newApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int NewApplicationsCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("employerReviewedApplicationsCount")]
+        [Newtonsoft.Json.JsonProperty("employerReviewedApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int EmployerReviewedApplicationsCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("successfulApplicationsCount")]
+        [Newtonsoft.Json.JsonProperty("successfulApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int SuccessfulApplicationsCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("unsuccessfulApplicationsCount")]
+        [Newtonsoft.Json.JsonProperty("unsuccessfulApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int UnsuccessfulApplicationsCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("sharedApplicationsCount")]
+        [Newtonsoft.Json.JsonProperty("sharedApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int SharedApplicationsCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("allSharedApplicationsCount")]
+        [Newtonsoft.Json.JsonProperty("allSharedApplicationsCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int AllSharedApplicationsCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("hasNoApplications")]
+        [Newtonsoft.Json.JsonProperty("hasNoApplications", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool HasNoApplications { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("closedVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("closedVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ClosedVacanciesCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("draftVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("draftVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int DraftVacanciesCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("reviewVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("reviewVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ReviewVacanciesCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("referredVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("referredVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ReferredVacanciesCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("liveVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("liveVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int LiveVacanciesCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("submittedVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("submittedVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int SubmittedVacanciesCount { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
     public enum EmployerNameOption
     {
@@ -3500,6 +3557,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [Newtonsoft.Json.JsonProperty("archivedByUserId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? ArchivedByUserId { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("isAnonymous")]
+        [Newtonsoft.Json.JsonProperty("isAnonymous", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool IsAnonymous { get; set; } = default!;
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -3524,6 +3585,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("applicationSubmittedCount")]
         [Newtonsoft.Json.JsonProperty("applicationSubmittedCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int ApplicationSubmittedCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("savedCount")]
+        [Newtonsoft.Json.JsonProperty("savedCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int SavedCount { get; set; } = default!;
 
     }
 

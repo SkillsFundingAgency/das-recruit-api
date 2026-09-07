@@ -69,6 +69,7 @@ public class Vacancy
     public Guid? SubmittedByUserId { get; init; }
     public Guid? ReviewRequestedByUserId { get; init; }
     public Guid? ArchivedByUserId { get; init; }
+    public bool IsAnonymous { get; set; }
 }
 
 public class Address

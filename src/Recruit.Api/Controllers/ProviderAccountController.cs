@@ -59,7 +59,7 @@ public class ProviderAccountController([FromServices] IApplicationReviewsProvide
         {
             logger.LogInformation("Recruit API: Received query to get dashboard stats by ukprn : {ukprn}", ukprn);
 
-            var applicationReviewsResponse = await applicationReviewsProvider.GetCountByUkprn(ukprn, token);
+            var applicationReviewsResponse = await applicationReviewsProvider.GetCountByUkprn(ukprn, [VacancyStatus.Archived], token);
 
             var vacancyResponse = await vacancyProvider.GetCountByUkprn(ukprn, token);
 

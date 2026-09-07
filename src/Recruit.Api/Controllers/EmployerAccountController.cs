@@ -11,7 +11,7 @@ using SFA.DAS.Recruit.Api.Models.Responses.ApplicationReview;
 
 namespace SFA.DAS.Recruit.Api.Controllers
 {
-    [Route($"{RouteNames.Employer}/{{accountId:long}}/")]
+    [ApiController, Route($"{RouteNames.Employer}/{{accountId:long}}/")]
     public class EmployerAccountController([FromServices] IApplicationReviewsProvider applicationReviewsProvider,
         [FromServices] IVacancyProvider vacancyProvider,
         [FromServices] IAlertsProvider alertsProvider,
