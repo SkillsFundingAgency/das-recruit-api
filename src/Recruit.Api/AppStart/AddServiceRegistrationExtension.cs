@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
+using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.FeedbackNudgeEmail;
 using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
 using SFA.DAS.Recruit.Api.Core.Email.TemplateHandlers;
 using SFA.DAS.Recruit.Api.Data;
@@ -86,10 +87,14 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<VacancyClosedNotificationFactory>();
         services.AddScoped<IVacancyNotificationStrategy, VacancyNotificationStrategy>();
         
+        // vacancy feedback nudge email
+        services.AddScoped<IVacancyFeedbackNotificationFactory, VacancyFeedbackNotificationFactory>();
+        
         // email template handlers
         services.AddScoped<IEmailTemplateHandler, StaticDataEmailHandler>();
         services.AddScoped<IEmailTemplateHandler, ApplicationSubmittedDelayedEmailHandler>();
         services.AddScoped<IEmailTemplateHandler, SharedApplicationReviewedByEmployerDelayedEmailHandler>();
+        services.AddScoped<IEmailTemplateHandler, VacancyFeedbackEmailHandler>();
         services.AddScoped<IEmailFactory, EmailFactory>();
         
         // services

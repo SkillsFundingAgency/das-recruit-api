@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
-using HotChocolate.AspNetCore;
+using ChilliCream.Nitro.App;
 using Microsoft.Extensions.Options;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Api.Common.AppStart;
@@ -183,12 +183,11 @@ internal class Startup
             endpoints.MapControllers();
             var graphQlBuilder = endpoints
                 .MapGraphQL()
-                .WithOptions(new GraphQLServerOptions {
-                    EnableSchemaRequests = IsEnvironmentLocalOrDev,
-                    Tool = {
-                        Enable = IsEnvironmentLocalOrDev,
-                        ServeMode = GraphQLToolServeMode.Embedded
-                    }
+                .WithOptions(options =>
+                {
+                    options.EnableSchemaRequests = IsEnvironmentLocalOrDev;
+                    options.Tool.Enable = IsEnvironmentLocalOrDev;
+                    options.Tool.ServeMode = ServeMode.Embedded;
                 });
             
             if (!IsEnvironmentLocalOrDev)

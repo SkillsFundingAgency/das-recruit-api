@@ -88,6 +88,13 @@ public record GetApplicationreviewsByVacancyReferenceTempStatusByStatusApiReques
     public string GetUrl => $"api/applicationreviews/{VacancyReference}/temp-status/{Status}";
 }
 
+/// <summary>GET /api/applicationreviews/requiring-feedback/by-vacancies &#x2192; List&lt;<see cref="VacancyApplicationsCountRequiringFeedback"/>&gt;</summary>
+public record GetApplicationreviewsRequiringFeedbackByVacanciesApiRequest(List<long>? VacancyReferences) : IGetApiRequest
+{
+    public string GetUrl => QueryHelpers.AddQueryString($"api/applicationreviews/requiring-feedback/by-vacancies",
+        (VacancyReferences ?? []).Select(v => new KeyValuePair<string, string?>("vacancyReferences", v.ToString())));
+}
+
 /// <summary>GET /api/employer/{accountId}/applicationreviews &#x2192; <see cref="ApplicationReviewsResponse"/></summary>
 public record GetEmployerByAccountIdApplicationreviewsApiRequest(long AccountId, int? PageNumber, int? PageSize, string? SortColumn, bool? IsAscending) : IGetApiRequest
 {
@@ -234,6 +241,13 @@ public class PostVacanciesByIdCreateNotificationsByStatusApiRequest : IPostApiRe
     public required System.Guid Id { get; init; }
     public required VacancyStatus Status { get; init; }
     public string PostUrl => $"api/vacancies/{Id}/create-notifications/{Status}";
+    public object Data { get; set; } = default!;
+}
+
+/// <summary>POST /api/vacancies/requiring-feedback/create-notifications &#x2192; List&lt;<see cref="NotificationEmail"/>&gt;</summary>
+public class PostVacanciesRequiringFeedbackCreateNotificationsApiRequest : IPostApiRequest, IPostApiRequest<object>
+{
+    public string PostUrl => $"api/vacancies/requiring-feedback/create-notifications";
     public object Data { get; set; } = default!;
 }
 

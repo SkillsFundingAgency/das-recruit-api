@@ -74,6 +74,7 @@ public interface IApplicationReviewsProvider
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status, CancellationToken token = default);
     Task<ApplicationReviewsStats> GetStatusCountByVacancyReference(long vacancyReference, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByVacancyId(Guid vacancyId, List<ApplicationReviewStatus>? statuses=null, CancellationToken token = default);
+    Task<Dictionary<long, int>> GetVacancyApplicationsCountRequiringFeedback(List<long> vacancyReferences, CancellationToken token = default);
 }
 
 internal class ApplicationReviewsProvider(
@@ -171,6 +172,11 @@ internal class ApplicationReviewsProvider(
     public async Task<List<ApplicationReviewEntity>> GetAllByVacancyId(Guid vacancyId, List<ApplicationReviewStatus>? statuses=null, CancellationToken token = default)
     {
         return await applicationReviewRepository.GetAllByVacancyId(vacancyId, statuses, token);
+    }
+
+    public async Task<Dictionary<long, int>> GetVacancyApplicationsCountRequiringFeedback(List<long> vacancyReferences, CancellationToken token = default)
+    {
+        return await applicationReviewRepository.GetVacancyApplicationsCountRequiringFeedback(vacancyReferences, token);
     }
 
     public async Task<PaginatedList<ApplicationReviewEntity>> GetPagedAccountIdAsync(long accountId,

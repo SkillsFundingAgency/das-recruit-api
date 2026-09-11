@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Core.Email;
 using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.ApplicationReview;
+using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.FeedbackNudgeEmail;
 using SFA.DAS.Recruit.Api.Core.Email.NotificationGenerators.Vacancy;
 using SFA.DAS.Recruit.Api.Core.Exceptions;
 using SFA.DAS.Recruit.Api.Core.Extensions;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Responses.Notifications;
@@ -181,5 +183,40 @@ public class NotificationController : ControllerBase
         {
             return ex.ToResponse();
         }
+    }
+    
+    [HttpPost, Route($"~/{RouteNames.Vacancies}/requiring-feedback/create-notifications")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(IEnumerable<NotificationEmail>), StatusCodes.Status200OK)]
+    public async Task<IResult> CreateVacancyRequiresFeedbackNotifications(
+        [FromBody] Dictionary<long, int>? data,
+        [FromServices] IVacancyRepository vacancyRepository,
+        [FromServices] IVacancyFeedbackNotificationFactory factory,
+        [FromServices] IEmailFactory emailFactory,
+        CancellationToken cancellationToken)
+    {
+        if (data is not { Count: > 0 })
+        {
+            return TypedResults.BadRequest("No vacancies specified for notification generation");
+        }
+
+        var notifications = new List<RecruitNotificationEntity>();
+        foreach (var vacancyInfo in data)
+        {
+            var vacancyData = new Dictionary<string, string> {
+                ["feedbackCount"] = vacancyInfo.Value.ToString()
+            };
+            
+            var vacancy = await vacancyRepository.GetOneByVacancyReferenceAsync(vacancyInfo.Key, cancellationToken);
+            var result = await factory.CreateAsync(vacancy!, vacancyData, cancellationToken);
+
+            if (result.Immediate.Count > 0)
+            {
+                notifications.AddRange(result.Immediate);
+            }
+        }
+
+        var emails = emailFactory.CreateFrom(notifications);
+        return TypedResults.Ok(emails);
     }
 }

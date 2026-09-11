@@ -60,6 +60,8 @@ public interface IApplicationReviewRepository
     Task<ApplicationReviewEntity?> GetByVacancyReferenceAndCandidateId(long vacancyReference, Guid candidateId, CancellationToken token = default);
     Task<List<ApplicationReviewEntity>> GetAllByVacancyReferenceAndTempStatus(long vacancyReference, ApplicationReviewStatus status,
         CancellationToken token = default);
+
+    Task<Dictionary<long, int>> GetVacancyApplicationsCountRequiringFeedback(List<long> vacancyReferences, CancellationToken token = default);
 }
 
 internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContext) : IApplicationReviewRepository
@@ -239,6 +241,20 @@ internal class ApplicationReviewRepository(IRecruitDataContext recruitDataContex
             .AsNoTracking()
             .Where(appReview => appReview.VacancyReference == vacancyReference && appReview.TemporaryReviewStatus == status)
             .ToListAsync(token);
+    }
+
+    public async Task<Dictionary<long, int>> GetVacancyApplicationsCountRequiringFeedback(List<long> vacancyReferences, CancellationToken token = default)
+    {
+        return await recruitDataContext.ApplicationReviewEntities
+            .AsNoTracking()
+            .Where(x => 
+                vacancyReferences.Contains(x.VacancyReference)
+                && x.WithdrawnDate == null
+                && x.Status != ApplicationReviewStatus.Successful
+                && x.Status != ApplicationReviewStatus.Unsuccessful)
+            .GroupBy(x => x.VacancyReference)
+            .Select(x => new KeyValuePair<long, int>(x.Key, x.Count()))
+            .ToDictionaryAsync(x => x.Key, x => x.Value, token);
     }
 
     public async Task<List<ApplicationReviewEntity>> GetNewSharedByAccountId(long accountId,List<long> vacancyReferences,

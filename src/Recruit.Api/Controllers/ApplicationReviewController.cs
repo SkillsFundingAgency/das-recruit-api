@@ -4,6 +4,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Core;
+using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Providers;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -292,5 +293,17 @@ public class ApplicationReviewController([FromServices] IApplicationReviewsProvi
             logger.LogError(e, "Unable to update application review : An error occurred");
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
+    }
+
+    [HttpGet]
+    [Route($"~/{RouteNames.ApplicationReview}/requiring-feedback/by-vacancies")]
+    [ProducesResponseType(typeof(List<VacancyApplicationsCountRequiringFeedback>), StatusCodes.Status200OK)]
+    public async Task<IResult> GetVacancyApplicationsCountRequiringFeedback(
+        [FromQuery][Required] List<long> vacancyReferences,
+        CancellationToken token = default)
+    {
+        var response = await provider.GetVacancyApplicationsCountRequiringFeedback(vacancyReferences, token);
+        var payload = response.Select(x => new VacancyApplicationsCountRequiringFeedback(x.Key, x.Value)).ToList();
+        return TypedResults.Ok(new DataResponse<List<VacancyApplicationsCountRequiringFeedback>>(payload));
     }
 }

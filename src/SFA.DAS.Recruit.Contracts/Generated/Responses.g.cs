@@ -3611,6 +3611,19 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class VacancyApplicationsCountRequiringFeedback
+    {
+        [System.Text.Json.Serialization.JsonPropertyName("vacancyReference")]
+        [Newtonsoft.Json.JsonProperty("vacancyReference", Required = Newtonsoft.Json.Required.Always)]
+        public long VacancyReference { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("applicationsRequiringFeedbackCount")]
+        [Newtonsoft.Json.JsonProperty("applicationsRequiringFeedbackCount", Required = Newtonsoft.Json.Required.Always)]
+        public int ApplicationsRequiringFeedbackCount { get; set; } = default!;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class VacancyDashboardResponse
     {
         [System.Text.Json.Serialization.JsonPropertyName("info")]

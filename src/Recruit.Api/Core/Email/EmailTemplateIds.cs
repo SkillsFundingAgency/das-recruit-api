@@ -19,6 +19,8 @@ public interface IEmailTemplateIds
     Guid ProviderVacancySentForEmployerReview { get; }
     Guid SharedApplicationReviewedByEmployer { get; }
     Guid VacancyWithdrawnByQa { get; }
+    Guid VacancyFeedbackRequired { get; }
+    Guid VacancyFeedbackRequiredBatched { get; }
 }
 
 public class ProductionEmailTemplateIds : IEmailTemplateIds
@@ -40,6 +42,8 @@ public class ProductionEmailTemplateIds : IEmailTemplateIds
     public Guid ProviderVacancySentForEmployerReview => new("2b69c0b2-bcc0-4988-82b6-868874e5617b");
     public Guid SharedApplicationReviewedByEmployer => new("2f1b70d4-c722-4815-85a0-80a080eac642");
     public Guid VacancyWithdrawnByQa => new("fb61e9bb-cb49-49c9-8f5d-609ff9d22ac5");
+    public Guid VacancyFeedbackRequired => new("157abcd6-ccf0-4aef-8158-95435391414a");
+    public Guid VacancyFeedbackRequiredBatched => new("ec6d8a0a-3d19-4477-988d-fe5608e3a853");
 }
 
 public class DevelopmentEmailTemplateIds : IEmailTemplateIds
@@ -61,4 +65,6 @@ public class DevelopmentEmailTemplateIds : IEmailTemplateIds
     public Guid ProviderVacancySentForEmployerReview => new("83f6cede-31c3-4dc9-b2ec-922856ba9bdc");
     public Guid SharedApplicationReviewedByEmployer => new("feb4191d-a373-4040-9bc6-93c09d8039b5");
     public Guid VacancyWithdrawnByQa => new("7e49460e-14fb-401d-981d-b0dd9510fd5e");
+    public Guid VacancyFeedbackRequired => new("9d58d177-9b7e-4d7c-887d-cf6c54d7afec");
+    public Guid VacancyFeedbackRequiredBatched => new("3b5b9e0d-e681-47a9-8905-23a118db725e");
 }
