@@ -8,7 +8,6 @@ using SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Data.Repositories.ReportRepositoryTests;
 
-[TestFixture]
 internal class WhenGettingManyByUkprn
 {
     [Test, RecursiveMoqAutoData]
