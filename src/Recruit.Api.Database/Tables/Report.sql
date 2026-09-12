@@ -10,6 +10,7 @@
     [DownloadCount]         INT                 NOT NULL DEFAULT(0),        -- Number of times the report has been downloaded
     [DynamicCriteria]       nvarchar(max)       NOT NULL,      
     [BlobStorageId]         uniqueidentifier    NULL,
+    [Status]                INT                 NULL,    
     CONSTRAINT [PK_Report] PRIMARY KEY (Id),
     INDEX [IX_PK_Report_UserId] NONCLUSTERED(UserId),
     INDEX [IX_Id_CreatedDate] NONCLUSTERED(Id, CreatedDate)
