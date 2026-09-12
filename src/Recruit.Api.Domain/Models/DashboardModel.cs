@@ -16,6 +16,8 @@
         public int ReferredVacanciesCount { get; }
         public int LiveVacanciesCount { get; }
         public int SubmittedVacanciesCount { get; }
+        public int ClosingSoonWithNoApplications { get; set; }
+        public int ClosingSoonVacanciesCount { get; set; }
 
         protected DashboardModel(
             ApplicationReviewsDashboardModel app,
@@ -35,6 +37,8 @@
             ReviewVacanciesCount = vac.ReviewVacanciesCount;
             ReferredVacanciesCount = vac.ReferredVacanciesCount;
             SubmittedVacanciesCount = vac.SubmittedVacanciesCount;
+            ClosingSoonVacanciesCount = vac.ClosingSoonVacanciesCount;
+            ClosingSoonWithNoApplications = vac.ClosingSoonWithNoApplications;
         }
     }
 }
