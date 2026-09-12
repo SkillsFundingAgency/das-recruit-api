@@ -3,6 +3,7 @@ using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Responses.Report;
+using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ReportControllerTests;
 
@@ -14,6 +15,7 @@ internal class WhenGeneratingQaReports
         Guid reportId,
         List<QaReport> entities,
         Mock<IReportRepository> repository,
+        [Frozen] Mock<IBlobStorageService> blobStorageService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {
@@ -39,6 +41,7 @@ internal class WhenGeneratingQaReports
     public async Task Then_An_Empty_List_Is_Returned_When_No_Report_Found(
         Guid reportId,
         Mock<IReportRepository> repository,
+        [Frozen] Mock<IBlobStorageService> blobStorageService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {
@@ -60,6 +63,7 @@ internal class WhenGeneratingQaReports
     public async Task Then_A_500_Is_Returned_When_An_Exception_Is_Thrown(
         Guid reportId,
         Mock<IReportRepository> repository,
+        [Frozen] Mock<IBlobStorageService> blobStorageService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {

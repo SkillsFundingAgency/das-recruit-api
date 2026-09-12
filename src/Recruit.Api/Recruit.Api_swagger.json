@@ -3389,6 +3389,26 @@
           "500": {
             "description": "Internal Server Error"
           },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request",
             "content": {
@@ -3414,17 +3434,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Report"
+                  "$ref": "#/components/schemas/GetQaReportResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Report"
+                  "$ref": "#/components/schemas/GetQaReportResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Report"
+                  "$ref": "#/components/schemas/GetQaReportResponse"
                 }
               }
             }
@@ -3703,33 +3723,7 @@
             }
           },
           "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApplicationReviewReport"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApplicationReviewReport"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApplicationReviewReport"
-                  }
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
@@ -6898,86 +6892,6 @@
               "null",
               "string"
             ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "ApplicationReviewReport": {
-        "type": "object",
-        "properties": {
-          "applicationId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "candidateId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "vacancyReference": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": "integer",
-            "format": "int64"
-          },
-          "vacancyTitle": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "employerName": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "trainingProviderName": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "programmeId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": "integer",
-            "format": "int32"
-          },
-          "vacancyClosingDate": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          },
-          "applicationSubmittedDate": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          },
-          "availableWhere": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "$ref": "#/components/schemas/AvailableWhere"
-              }
-            ]
-          },
-          "applicationStatus": {
-            "$ref": "#/components/schemas/ApplicationReviewStatus"
-          },
-          "apprenticeshipType": {
-            "$ref": "#/components/schemas/ApprenticeshipTypes"
-          },
-          "numberOfDaysApplicationAtThisStatus": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "null",
-              "integer"
-            ],
-            "format": "int32"
           }
         },
         "additionalProperties": false

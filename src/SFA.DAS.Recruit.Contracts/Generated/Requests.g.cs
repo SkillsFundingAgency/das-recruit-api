@@ -303,7 +303,7 @@ public record GetReferencedataCandidateQualificationsApiRequest() : IGetApiReque
     public string GetUrl => $"api/referencedata/candidate-qualifications";
 }
 
-/// <summary>GET /api/reports/{reportId} &#x2192; <see cref="Report"/></summary>
+/// <summary>GET /api/reports/{reportId} &#x2192; <see cref="GetQaReportResponse"/></summary>
 public record GetReportsByReportIdApiRequest(System.Guid ReportId) : IGetApiRequest
 {
     public string GetUrl => $"api/reports/{ReportId}";
@@ -328,7 +328,7 @@ public class PostReportsApiRequest(PostReportRequest postReportRequest) : IPostA
     public object Data { get; set; } = postReportRequest;
 }
 
-/// <summary>GET /api/reports/generate/{reportId} &#x2192; List&lt;<see cref="ApplicationReviewReport"/>&gt;</summary>
+/// <summary>GET /api/reports/generate/{reportId}</summary>
 public record GetReportsGenerateByReportIdApiRequest(System.Guid ReportId) : IGetApiRequest
 {
     public string GetUrl => $"api/reports/generate/{ReportId}";
