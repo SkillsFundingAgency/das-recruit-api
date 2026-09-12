@@ -10131,6 +10131,9 @@
           },
           "dynamicCriteria": {
             "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReportStatus"
           }
         },
         "additionalProperties": false
@@ -10139,6 +10142,15 @@
         "enum": [
           "Provider",
           "Qa"
+        ],
+        "type": "string"
+      },
+      "ReportStatus": {
+        "enum": [
+          "New",
+          "InProgress",
+          "Generated",
+          "Failed"
         ],
         "type": "string"
       },

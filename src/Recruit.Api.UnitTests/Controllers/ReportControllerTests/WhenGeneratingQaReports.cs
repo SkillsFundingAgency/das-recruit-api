@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Responses.Report;
 using SFA.DAS.Recruit.Api.Services;
@@ -33,6 +34,7 @@ internal class WhenGeneratingQaReports
         // assert
         repository.Verify(x => x.GenerateQa(reportId, token), Times.Once());
         repository.Verify(x => x.IncrementReportDownloadCountAsync(reportId, token), Times.Once());
+        repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Generated, It.IsAny<CancellationToken>()), Times.Once());
         payload.Should().NotBeNull();
         payload.QaReports.Should().BeEquivalentTo(entities, options => options.ExcludingMissingMembers());
     }
@@ -78,5 +80,6 @@ internal class WhenGeneratingQaReports
         // assert
         result.Should().BeOfType<ProblemHttpResult>();
         (result as ProblemHttpResult)!.ProblemDetails.Status.Should().Be(500);
+        repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Failed, It.IsAny<CancellationToken>()), Times.Once());
     }
 }

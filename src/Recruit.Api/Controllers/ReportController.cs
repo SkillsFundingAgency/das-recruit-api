@@ -137,12 +137,14 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
 
             await reportRepository.SetBlobStorageIdAsync(reportId, blobId, token);
             await reportRepository.IncrementReportDownloadCountAsync(reportId, token);
-
+            await reportRepository.SetStatusAsync(reportId, ReportStatus.Generated, token);
+            
             return TypedResults.Ok();
         }
         catch (Exception e)
         {
             logger.LogError(e, "Unable to generate report : An error occurred");
+            await SetReportStatusToFailed(reportRepository, reportId, token);
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
@@ -164,12 +166,14 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
             var reports = await reportRepository.GenerateQa(reportId, token);
 
             await reportRepository.IncrementReportDownloadCountAsync(reportId, token);
+            await reportRepository.SetStatusAsync(reportId, ReportStatus.Generated, token);
 
             return TypedResults.Ok(reports.ToGetQaResponse());
         }
         catch (Exception e)
         {
             logger.LogError(e, "Unable to generate QA report : An error occurred");
+            await SetReportStatusToFailed(reportRepository, reportId, token);
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
@@ -195,6 +199,18 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
         {
             logger.LogError(e, "Unable to create report : An error occurred");
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    private async Task SetReportStatusToFailed(IReportRepository reportRepository, Guid reportId, CancellationToken token)
+    {
+        try
+        {
+            await reportRepository.SetStatusAsync(reportId, ReportStatus.Failed, token);
+        }
+        catch (Exception statusEx)
+        {
+            logger.LogError(statusEx, "Unable to set report status to Failed for report Id: {ReportId}", reportId);
         }
     }
 }

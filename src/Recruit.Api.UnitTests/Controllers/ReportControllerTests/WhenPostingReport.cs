@@ -3,6 +3,7 @@ using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.Report;
 
@@ -55,5 +56,28 @@ internal class WhenPostingReport
         createdResult.Should().NotBeNull();
         createdResult.Value.Should().BeEquivalentTo(entity, options => options.ExcludingMissingMembers());
         createdResult.Location.Should().Be($"/api/reports/{entity.Id}");
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public async Task Then_The_Report_Entity_Is_Created_With_InProgress_Status(
+        Mock<IReportRepository> repository,
+        PostReportRequest request,
+        ReportEntity entity,
+        [Greedy] ReportController sut,
+        CancellationToken token)
+    {
+        // arrange
+        ReportEntity? capturedEntity = null;
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<ReportEntity>(), token))
+            .Callback((ReportEntity e, CancellationToken _) => capturedEntity = e)
+            .ReturnsAsync(UpsertResult.Create(entity, true));
+
+        // act
+        await sut.Create(repository.Object, request, token);
+
+        // assert
+        capturedEntity.Should().NotBeNull();
+        capturedEntity!.Status.Should().Be(ReportStatus.InProgress);
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Services;
 
@@ -35,6 +36,7 @@ internal class WhenGeneratingReports
         blobStorageService.Verify(x => x.UploadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
         repository.Verify(x => x.SetBlobStorageIdAsync(reportId, blobId, It.IsAny<CancellationToken>()), Times.Once());
         repository.Verify(x => x.IncrementReportDownloadCountAsync(reportId, It.IsAny<CancellationToken>()), Times.Once());
+        repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Generated, It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Test, RecursiveMoqAutoData]
@@ -56,5 +58,6 @@ internal class WhenGeneratingReports
         // assert
         result.Should().BeOfType<ProblemHttpResult>();
         (result as ProblemHttpResult)!.ProblemDetails.Status.Should().Be(500);
+        repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Failed, It.IsAny<CancellationToken>()), Times.Once());
     }
 }
