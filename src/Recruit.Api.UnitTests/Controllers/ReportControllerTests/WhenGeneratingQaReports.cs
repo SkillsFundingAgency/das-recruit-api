@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Responses.Report;
+using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ReportControllerTests;
 
@@ -14,6 +16,7 @@ internal class WhenGeneratingQaReports
         Guid reportId,
         List<QaReport> entities,
         Mock<IReportRepository> repository,
+        [Frozen] Mock<IBlobStorageService> blobStorageService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {
@@ -31,6 +34,7 @@ internal class WhenGeneratingQaReports
         // assert
         repository.Verify(x => x.GenerateQa(reportId, token), Times.Once());
         repository.Verify(x => x.IncrementReportDownloadCountAsync(reportId, token), Times.Once());
+        repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Generated, It.IsAny<CancellationToken>()), Times.Once());
         payload.Should().NotBeNull();
         payload.QaReports.Should().BeEquivalentTo(entities, options => options.ExcludingMissingMembers());
     }
@@ -39,6 +43,7 @@ internal class WhenGeneratingQaReports
     public async Task Then_An_Empty_List_Is_Returned_When_No_Report_Found(
         Guid reportId,
         Mock<IReportRepository> repository,
+        [Frozen] Mock<IBlobStorageService> blobStorageService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {
@@ -60,6 +65,7 @@ internal class WhenGeneratingQaReports
     public async Task Then_A_500_Is_Returned_When_An_Exception_Is_Thrown(
         Guid reportId,
         Mock<IReportRepository> repository,
+        [Frozen] Mock<IBlobStorageService> blobStorageService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {
@@ -74,5 +80,6 @@ internal class WhenGeneratingQaReports
         // assert
         result.Should().BeOfType<ProblemHttpResult>();
         (result as ProblemHttpResult)!.ProblemDetails.Status.Should().Be(500);
+        repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Failed, It.IsAny<CancellationToken>()), Times.Once());
     }
 }

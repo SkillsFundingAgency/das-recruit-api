@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models.Requests.Report;
 using SFA.DAS.Recruit.Api.Models.Responses.Report;
 
@@ -34,6 +35,7 @@ public static class ReportExtensions
             UserId = request.UserId,
             Id = request.Id,
             DownloadCount = 0,
+            Status = ReportStatus.InProgress,
             DynamicCriteria = System.Text.Json.JsonSerializer.Serialize(new Domain.Models.ReportCriteria
             {
                 FromDate = request.FromDate,
@@ -55,7 +57,8 @@ public static class ReportExtensions
             UserId = entity.UserId,
             CreatedBy = entity.CreatedBy,
             DownloadCount = entity.DownloadCount,
-            DynamicCriteria = entity.DynamicCriteria
+            DynamicCriteria = entity.DynamicCriteria,
+            Status = entity.Status ?? ReportStatus.Generated
         };
     }
 }
