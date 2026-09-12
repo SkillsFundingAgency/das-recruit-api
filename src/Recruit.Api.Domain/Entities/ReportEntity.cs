@@ -17,6 +17,7 @@ public class ReportEntity
     public ReportOwnerType OwnerType { get; set; }
     public required DateTime CreatedDate { get; set; }
     public int DownloadCount { get; set; } = 0;
+    public Guid? BlobStorageId { get; set; }
     [MaxLength(1000)] 
     public required string DynamicCriteria { get; set; } = null!;
     private bool TryGetCriteria(out ReportCriteria? criteria)

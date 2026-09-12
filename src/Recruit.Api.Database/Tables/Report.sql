@@ -8,7 +8,8 @@
     [CreatedDate]           DATETIME            NOT NULL,                   -- Date at which this should be created    
     [CreatedBy]             nvarchar(50)        NULL,                       -- Name of the Report requestor    
     [DownloadCount]         INT                 NOT NULL DEFAULT(0),        -- Number of times the report has been downloaded
-    [DynamicCriteria]       nvarchar(max)       NOT NULL,                  
+    [DynamicCriteria]       nvarchar(max)       NOT NULL,      
+    [BlobStorageId]         uniqueidentifier    NULL,
     CONSTRAINT [PK_Report] PRIMARY KEY (Id),
     INDEX [IX_PK_Report_UserId] NONCLUSTERED(UserId),
     INDEX [IX_Id_CreatedDate] NONCLUSTERED(Id, CreatedDate)
