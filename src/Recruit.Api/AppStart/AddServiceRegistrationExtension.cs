@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Azure.Storage.Blobs;
 using FluentValidation;
 using HotChocolate.Execution.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -100,6 +101,8 @@ public static class AddServiceRegistrationExtension
         // services
         services.AddScoped<IEventsService, EventsService>();
         services.AddScoped<IAutomatedReviewService, AutomatedReviewService>();
+        services.AddSingleton(sp => new BlobServiceClient(sp.GetRequiredService<BlobStorageConfiguration>().ConnectionString));
+        services.AddScoped<IBlobStorageService, BlobStorageService>();
     }
 
     public static void AddDatabaseRegistration(

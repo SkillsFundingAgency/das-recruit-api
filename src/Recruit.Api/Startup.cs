@@ -75,6 +75,9 @@ internal class Startup
         services.AddSingleton(cfg => cfg.GetService<IOptions<ConnectionStrings>>()!.Value);
         var connectionStrings = Configuration.GetSection(nameof(ConnectionStrings)).Get<ConnectionStrings>();
 
+        services.Configure<BlobStorageConfiguration>(Configuration.GetSection(nameof(BlobStorageConfiguration)));
+        services.AddSingleton(cfg => cfg.GetService<IOptions<BlobStorageConfiguration>>()!.Value);
+
         services.ConfigureHttpJsonOptions(options =>
         {
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
