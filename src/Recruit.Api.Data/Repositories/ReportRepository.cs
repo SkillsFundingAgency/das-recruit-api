@@ -16,6 +16,7 @@ public interface IReportRepository : IReadRepository<ReportEntity, Guid>, IWrite
     Task<List<ReportEntity>> GetManyByUkprn(int ukprn, CancellationToken token);
     Task<List<ReportEntity>> GetMany(ReportOwnerType ownerType, CancellationToken token);
     Task IncrementReportDownloadCountAsync(Guid reportId, CancellationToken token);
+    Task SetBlobStorageIdAsync(Guid reportId, Guid blobId, CancellationToken token);
 }
 public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportRepository
 {
@@ -195,6 +196,16 @@ public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportR
             .AsNoTracking()
             .Where(r => r.OwnerType == ownerType)
             .ToListAsync(token);
+    }
+
+    public async Task SetBlobStorageIdAsync(Guid reportId, Guid blobId, CancellationToken cancellationToken)
+    {
+        var existingEntity = await GetOneAsync(reportId, cancellationToken);
+        if (existingEntity is not null)
+        {
+            existingEntity.BlobStorageId = blobId;
+            await recruitDataContext.SaveChangesAsync(cancellationToken);
+        }
     }
 
     public async Task IncrementReportDownloadCountAsync(Guid reportId, CancellationToken cancellationToken)
