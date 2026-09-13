@@ -17,7 +17,7 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController]
 [Route($"{RouteNames.Reports}")]
-public class ReportController(ILogger<ReportController> logger, IBlobStorageService blobStorageService)
+public class ReportController(ILogger<ReportController> logger, IBlobStorageService blobStorageService, IEventsService eventsService)
     : ControllerBase
 {
     [HttpGet]
@@ -192,6 +192,8 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
             logger.LogInformation("Recruit API: Received request to create report for user Id: {UserId}", request.UserId);
 
             var result = await reportRepository.UpsertOneAsync(request.ToEntity(), token);
+
+            await eventsService.PublishReportCreatedEvent(result.Entity);
 
             return TypedResults.Created($"/{RouteNames.Reports}/{result.Entity.Id}", result.Entity.ToResponse());
         }

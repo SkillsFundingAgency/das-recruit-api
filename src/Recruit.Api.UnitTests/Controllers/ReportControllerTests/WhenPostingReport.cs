@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Models;
 using SFA.DAS.Recruit.Api.Data.Repositories;
@@ -6,8 +6,10 @@ using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Requests.Report;
+using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ReportControllerTests;
+
 [TestFixture]
 internal class WhenPostingReport
 {
@@ -16,6 +18,7 @@ internal class WhenPostingReport
         Mock<IReportRepository> repository,
         PostReportRequest request,
         ReportEntity entity,
+        [Frozen] Mock<IEventsService> eventsService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {
@@ -39,6 +42,7 @@ internal class WhenPostingReport
         Mock<IReportRepository> repository,
         PostReportRequest request,
         ReportEntity entity,
+        [Frozen] Mock<IEventsService> eventsService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {
@@ -63,6 +67,7 @@ internal class WhenPostingReport
         Mock<IReportRepository> repository,
         PostReportRequest request,
         ReportEntity entity,
+        [Frozen] Mock<IEventsService> eventsService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {
@@ -79,5 +84,26 @@ internal class WhenPostingReport
         // assert
         capturedEntity.Should().NotBeNull();
         capturedEntity!.Status.Should().Be(ReportStatus.InProgress);
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public async Task Then_ReportCreatedEvent_Is_Published(
+        Mock<IReportRepository> repository,
+        PostReportRequest request,
+        ReportEntity entity,
+        [Frozen] Mock<IEventsService> eventsService,
+        [Greedy] ReportController sut,
+        CancellationToken token)
+    {
+        // arrange
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<ReportEntity>(), token))
+            .ReturnsAsync(UpsertResult.Create(entity, true));
+
+        // act
+        await sut.Create(repository.Object, request, token);
+
+        // assert
+        eventsService.Verify(x => x.PublishReportCreatedEvent(entity), Times.Once);
     }
 }
