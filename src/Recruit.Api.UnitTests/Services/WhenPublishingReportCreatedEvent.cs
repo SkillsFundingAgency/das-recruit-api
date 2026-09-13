@@ -17,9 +17,7 @@ public class WhenPublishingReportCreatedEvent
 
         messageSession.Verify(x => x.Publish(
             It.Is<ReportCreatedEvent>(e =>
-                e.ReportId == entity.Id &&
-                e.UserId == entity.UserId &&
-                e.OwnerType == entity.OwnerType),
+                e.ReportId == entity.Id),
             It.IsAny<PublishOptions>()), Times.Once);
     }
 }

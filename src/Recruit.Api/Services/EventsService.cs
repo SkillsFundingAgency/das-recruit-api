@@ -95,6 +95,6 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
     public async Task PublishReportCreatedEvent(ReportEntity entity)
     {
         logger.LogInformation("Publishing ReportCreatedEvent, reportId='{ReportId}'", entity.Id);
-        await messageSession.Publish(new ReportCreatedEvent(entity.Id, entity.UserId, entity.OwnerType));
+        await messageSession.Publish(new ReportCreatedEvent(entity.Id));
     }
 }
