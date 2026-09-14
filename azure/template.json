@@ -76,6 +76,10 @@
             "type": "string",
             "defaultValue": "[utcNow()]"
         },
+        "minimumTlsVersion": {
+            "type": "string",
+            "defaultValue": "TLS1_2"
+        },
         "deployPrivateLinkedScopedResource": {
             "type": "bool"
         },
@@ -92,6 +96,7 @@
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
         "databaseName": "[concat(replace(variables('resourceNamePrefix'), 'api', ''), '-db')]",
+        "storageAccountName": "[toLower(concat('das', parameters('resourceEnvironmentName'), parameters('serviceName'), 'str'))]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
         "privateLinkScopeName": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-shared-ampls'))]",
         "configNames": "SFA.DAS.Recruit.Api_2.0,SFA.DAS.Encoding_1.0"
@@ -149,6 +154,36 @@
                     },
                     "logAnalyticsWorkspaceId": {
                         "value": "[resourceId(parameters('logAnalyticsSubscriptionId'),parameters('sharedManagementResourceGroup'),'Microsoft.OperationalInsights/workspaces',parameters('logAnalyticsWorkspaceName'))]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('resourceGroupName')]"
+            ]
+        },
+        {
+            "apiVersion": "2020-10-01",
+            "name": "[concat(variables('appServiceName'), '-storage-account-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'storage-account-arm.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "storageAccountName": {
+                        "value": "[variables('storageAccountName')]"
+                    },
+                    "storageKind": {
+                        "value": "StorageV2"
+                    },
+                    "allowSharedKeyAccess": {
+                        "value": true
+                    },
+                    "minimumTlsVersion": {
+                        "value": "[parameters('minimumTlsVersion')]"
                     }
                 }
             },
