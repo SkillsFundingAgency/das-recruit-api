@@ -55,6 +55,7 @@ internal class WhenGettingOne
         repository.Verify(x => x.Generate(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never());
         payload.Should().NotBeNull();
         payload.Should().BeEquivalentTo(expectedResponse);
+        repository.Verify(x => x.IncrementReportDownloadCountAsync(reportId, It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Test, RecursiveMoqAutoData]

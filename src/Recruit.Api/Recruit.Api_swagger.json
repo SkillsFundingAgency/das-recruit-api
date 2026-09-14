@@ -3677,7 +3677,7 @@
       }
     },
     "/api/reports/generate/{reportId}": {
-      "get": {
+      "post": {
         "tags": [
           "Report"
         ],

@@ -38,9 +38,10 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
 
             var reportEntity = await reportRepository.GetOneAsync(reportId, token);
             if (reportEntity == null) return TypedResults.NotFound();
-
+            
             if (reportEntity.BlobStorageId.HasValue)
             {
+                await reportRepository.IncrementReportDownloadCountAsync(reportId, token);
                 var json = await blobStorageService.DownloadAsync(reportEntity.BlobStorageId.Value, token);
                 if (reportEntity.Type == ReportType.QaApplications)
                 {
@@ -117,7 +118,7 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
         }
     }
     
-    [HttpGet]
+    [HttpPost]
     [Route("generate/{reportId:guid}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
@@ -136,7 +137,7 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
             var blobId = await blobStorageService.UploadAsync(json, token);
 
             await reportRepository.SetBlobStorageIdAsync(reportId, blobId, token);
-            await reportRepository.IncrementReportDownloadCountAsync(reportId, token);
+            
             await reportRepository.SetStatusAsync(reportId, ReportStatus.Generated, token);
             
             return TypedResults.Ok();

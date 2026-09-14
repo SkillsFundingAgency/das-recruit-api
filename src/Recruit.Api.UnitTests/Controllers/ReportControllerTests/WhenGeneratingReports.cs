@@ -35,7 +35,6 @@ internal class WhenGeneratingReports
         result.Should().BeOfType<Ok>();
         blobStorageService.Verify(x => x.UploadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
         repository.Verify(x => x.SetBlobStorageIdAsync(reportId, blobId, It.IsAny<CancellationToken>()), Times.Once());
-        repository.Verify(x => x.IncrementReportDownloadCountAsync(reportId, It.IsAny<CancellationToken>()), Times.Once());
         repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Generated, It.IsAny<CancellationToken>()), Times.Once());
     }
 

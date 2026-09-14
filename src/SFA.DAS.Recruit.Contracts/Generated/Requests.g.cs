@@ -328,10 +328,12 @@ public class PostReportsApiRequest(PostReportRequest postReportRequest) : IPostA
     public object Data { get; set; } = postReportRequest;
 }
 
-/// <summary>GET /api/reports/generate/{reportId}</summary>
-public record GetReportsGenerateByReportIdApiRequest(System.Guid ReportId) : IGetApiRequest
+/// <summary>POST /api/reports/generate/{reportId}</summary>
+public class PostReportsGenerateByReportIdApiRequest : IPostApiRequest
 {
-    public string GetUrl => $"api/reports/generate/{ReportId}";
+    public required System.Guid ReportId { get; init; }
+    public string PostUrl => $"api/reports/generate/{ReportId}";
+    public object Data { get; set; } = default!;
 }
 
 /// <summary>GET /api/reports/generate-qa/{reportId} &#x2192; <see cref="GetQaReportResponse"/></summary>
