@@ -47,6 +47,8 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.EmployerAccountControllerTes
             okResult.Value.ReviewVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.ReviewVacanciesCount);
             okResult.Value.ReferredVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.ReferredVacanciesCount);
             okResult.Value.SubmittedVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.SubmittedVacanciesCount);
+            okResult.Value.ClosingSoonVacanciesCount!.Should().Be(mockVacancyDashboardModelResponse.ClosingSoonVacanciesCount);
+            okResult.Value.ClosingSoonWithNoApplications!.Should().Be(mockVacancyDashboardModelResponse.ClosingSoonWithNoApplications);
         }
 
         [Test, MoqAutoData]
