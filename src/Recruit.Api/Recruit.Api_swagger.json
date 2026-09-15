@@ -3723,6 +3723,95 @@
             }
           },
           "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApplicationReviewReportResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApplicationReviewReportResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetApplicationReviewReportResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reports/generate/{reportId}/upload": {
+      "post": {
+        "tags": [
+          "Report"
+        ],
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Version",
+            "in": "header",
+            "required": true,
+            "example": "1.0"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostUploadApplicationSummaryReportRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostUploadApplicationSummaryReportRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostUploadApplicationSummaryReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
             "description": "OK"
           }
         }
@@ -6896,6 +6985,86 @@
         },
         "additionalProperties": false
       },
+      "ApplicationReviewReport": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "candidateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vacancyReference": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": "integer",
+            "format": "int64"
+          },
+          "vacancyTitle": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "employerName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "trainingProviderName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "programmeId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": "integer",
+            "format": "int32"
+          },
+          "vacancyClosingDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "applicationSubmittedDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "availableWhere": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AvailableWhere"
+              }
+            ]
+          },
+          "applicationStatus": {
+            "$ref": "#/components/schemas/ApplicationReviewStatus"
+          },
+          "apprenticeshipType": {
+            "$ref": "#/components/schemas/ApprenticeshipTypes"
+          },
+          "numberOfDaysApplicationAtThisStatus": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ApplicationReviewsResponse": {
         "required": [
           "pageInfo",
@@ -6994,6 +7163,137 @@
           "AllShared"
         ],
         "type": "string"
+      },
+      "ApplicationSummaryReport": {
+        "type": "object",
+        "properties": {
+          "candidateName": {
+            "type": "string"
+          },
+          "candidateId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "addressLine1": {
+            "type": "string"
+          },
+          "addressLine2": {
+            "type": "string"
+          },
+          "town": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "postcode": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "telephone": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string"
+          },
+          "vacancyReferenceNumber": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": "integer",
+            "format": "int64"
+          },
+          "vacancyTitle": {
+            "type": "string"
+          },
+          "courseName": {
+            "type": "string"
+          },
+          "courseStatus": {
+            "type": "string"
+          },
+          "apprenticeshipLevel": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": "integer",
+            "format": "int32"
+          },
+          "apprenticeshipType": {
+            "$ref": "#/components/schemas/ApprenticeshipTypes"
+          },
+          "employer": {
+            "type": "string"
+          },
+          "vacancyPostcode": {
+            "type": "string"
+          },
+          "learningProvider": {
+            "type": "string"
+          },
+          "applicationDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "vacancyClosingDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "applicationStatus": {
+            "$ref": "#/components/schemas/ApplicationReviewStatus"
+          },
+          "numberOfDaysApplicationAtThisStatus": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": "integer",
+            "format": "int32"
+          },
+          "interviewAssistance": {
+            "type": "string"
+          },
+          "recruitingNationally": {
+            "type": "boolean"
+          },
+          "workplace1": {
+            "type": "string"
+          },
+          "workplace2": {
+            "type": "string"
+          },
+          "workplace3": {
+            "type": "string"
+          },
+          "workplace4": {
+            "type": "string"
+          },
+          "workplace5": {
+            "type": "string"
+          },
+          "workplace6": {
+            "type": "string"
+          },
+          "workplace7": {
+            "type": "string"
+          },
+          "workplace8": {
+            "type": "string"
+          },
+          "workplace9": {
+            "type": "string"
+          },
+          "workplace10": {
+            "type": "string"
+          },
+          "courseId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
       },
       "ApprenticeshipTypes": {
         "enum": [
@@ -7368,6 +7668,18 @@
           "FailedToGeoCode"
         ],
         "type": "string"
+      },
+      "GetApplicationReviewReportResponse": {
+        "type": "object",
+        "properties": {
+          "applicationReviewReports": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationReviewReport"
+            }
+          }
+        },
+        "additionalProperties": false
       },
       "GetApplicationReviewResponse": {
         "type": "object",
@@ -8105,6 +8417,18 @@
           },
           "type": {
             "$ref": "#/components/schemas/ReportType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PostUploadApplicationSummaryReportRequest": {
+        "type": "object",
+        "properties": {
+          "reports": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationSummaryReport"
+            }
           }
         },
         "additionalProperties": false

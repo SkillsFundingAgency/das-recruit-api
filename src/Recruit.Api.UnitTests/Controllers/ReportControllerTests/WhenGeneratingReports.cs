@@ -3,6 +3,8 @@ using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
+using SFA.DAS.Recruit.Api.Models.Requests.Report;
+using SFA.DAS.Recruit.Api.Models.Responses.Report;
 using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ReportControllerTests;
@@ -11,31 +13,24 @@ namespace SFA.DAS.Recruit.Api.UnitTests.Controllers.ReportControllerTests;
 internal class WhenGeneratingReports
 {
     [Test, RecursiveMoqAutoData]
-    public async Task Then_Data_Is_Uploaded_To_Blob_Storage_And_BlobId_Is_Saved(
+    public async Task Then_Base_Report_Data_Is_Returned(
         Guid reportId,
-        Guid blobId,
         List<ApplicationReviewReport> entities,
         Mock<IReportRepository> repository,
         [Frozen] Mock<IBlobStorageService> blobStorageService,
         [Greedy] ReportController sut,
         CancellationToken token)
     {
-        // arrange
         repository
             .Setup(x => x.Generate(reportId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(entities);
-        blobStorageService
-            .Setup(x => x.UploadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(blobId);
 
-        // act
         var result = await sut.Generate(repository.Object, reportId, token);
 
-        // assert
-        result.Should().BeOfType<Ok>();
-        blobStorageService.Verify(x => x.UploadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
-        repository.Verify(x => x.SetBlobStorageIdAsync(reportId, blobId, It.IsAny<CancellationToken>()), Times.Once());
-        repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Generated, It.IsAny<CancellationToken>()), Times.Once());
+        result.Should().BeOfType<Ok<GetApplicationReviewReportResponse>>();
+        var ok = (Ok<GetApplicationReviewReportResponse>)result;
+        ok.Value!.ApplicationReviewReports.Should().BeEquivalentTo(entities);
+        blobStorageService.Verify(x => x.UploadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Test, RecursiveMoqAutoData]
@@ -46,15 +41,12 @@ internal class WhenGeneratingReports
         [Greedy] ReportController sut,
         CancellationToken token)
     {
-        // arrange
         repository
             .Setup(x => x.Generate(reportId, It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Something went wrong"));
 
-        // act
         var result = await sut.Generate(repository.Object, reportId, token);
 
-        // assert
         result.Should().BeOfType<ProblemHttpResult>();
         (result as ProblemHttpResult)!.ProblemDetails.Status.Should().Be(500);
         repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Failed, It.IsAny<CancellationToken>()), Times.Once());

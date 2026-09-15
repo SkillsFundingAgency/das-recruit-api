@@ -11,6 +11,7 @@ using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.Report;
 using SFA.DAS.Recruit.Api.Models.Responses.Report;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
@@ -48,6 +49,9 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
                     var qaResponse = JsonSerializer.Deserialize<GetQaReportResponse>(json, JsonConfig.Options);
                     return TypedResults.Ok(qaResponse);
                 }
+                var summaryResponse = JsonSerializer.Deserialize<GetApplicationSummaryReportResponse>(json, JsonConfig.Options);
+                if (summaryResponse?.Reports.Count > 0)
+                    return TypedResults.Ok(summaryResponse);
                 var response = JsonSerializer.Deserialize<GetApplicationReviewReportResponse>(json, JsonConfig.Options);
                 return TypedResults.Ok(response);
             }
@@ -122,7 +126,7 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
     [Route("generate/{reportId:guid}")]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetApplicationReviewReportResponse), StatusCodes.Status200OK)]
     public async Task<IResult> Generate(
         [FromServices] IReportRepository reportRepository,
         [FromRoute, Required] Guid reportId,
@@ -133,18 +137,44 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
             logger.LogInformation("Recruit API: Received request to generate report for report Id: {ReportId}", reportId);
 
             var reports = await reportRepository.Generate(reportId, token);
-            var json = JsonSerializer.Serialize(reports.ToGetResponse(), JsonConfig.Options);
-            var blobId = await blobStorageService.UploadAsync(json, token);
 
-            await reportRepository.SetBlobStorageIdAsync(reportId, blobId, token);
-            
-            await reportRepository.SetStatusAsync(reportId, ReportStatus.Generated, token);
-            
-            return TypedResults.Ok();
+            return TypedResults.Ok(reports.ToGetResponse());
         }
         catch (Exception e)
         {
             logger.LogError(e, "Unable to generate report : An error occurred");
+            await SetReportStatusToFailed(reportRepository, reportId, token);
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpPost]
+    [Route("generate/{reportId:guid}/upload")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IResult> Upload(
+        [FromServices] IReportRepository reportRepository,
+        [FromRoute, Required] Guid reportId,
+        [FromBody] PostUploadApplicationSummaryReportRequest request,
+        CancellationToken token = default)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received request to upload enriched report for report Id: {ReportId}", reportId);
+
+            var response = new GetApplicationSummaryReportResponse { Reports = request.Reports };
+            var json = JsonSerializer.Serialize(response, JsonConfig.Options);
+            var blobId = await blobStorageService.UploadAsync(json, token);
+
+            await reportRepository.SetBlobStorageIdAsync(reportId, blobId, token);
+            await reportRepository.SetStatusAsync(reportId, ReportStatus.Generated, token);
+
+            return TypedResults.Ok();
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to upload report : An error occurred");
             await SetReportStatusToFailed(reportRepository, reportId, token);
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
