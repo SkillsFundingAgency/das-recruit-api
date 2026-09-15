@@ -10,8 +10,9 @@ public interface IBlobStorageService
     Task<string> DownloadAsync(Guid blobId, CancellationToken cancellationToken = default);
 }
 
-public class BlobStorageService(BlobServiceClient blobServiceClient, BlobStorageConfiguration config) : IBlobStorageService
+public class BlobStorageService(BlobServiceClient blobServiceClient) : IBlobStorageService
 {
+    private const string ContainerName = "provider-application-reports";
     private BlobContainerClient? _containerClient;
 
     public async Task<Guid> UploadAsync(string json, CancellationToken cancellationToken = default)
@@ -43,7 +44,7 @@ public class BlobStorageService(BlobServiceClient blobServiceClient, BlobStorage
         {
             return _containerClient;
         }
-        _containerClient = blobServiceClient.GetBlobContainerClient(config.ReportsContainerName);
+        _containerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
         await _containerClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
         return _containerClient;
     }

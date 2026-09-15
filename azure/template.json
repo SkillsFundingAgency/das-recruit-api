@@ -249,6 +249,10 @@
                                 {
                                     "name": "ResourceEnvironmentName",
                                     "value": "[parameters('resourceEnvironmentName')]"
+                                },
+                                {
+                                    "name": "BlobStorageConfiguration__ConnectionString",
+                                    "value": "[reference(concat(variables('appServiceName'), '-storage-account-', parameters('utcValue'))).outputs.storageConnectionString.value]"
                                 }
                             ]
                         }

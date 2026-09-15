@@ -1,7 +1,6 @@
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.UnitTests.Services;
@@ -10,7 +9,6 @@ public class WhenUsingBlobStorageService
 {
     [Test, MoqAutoData]
     public async Task UploadAsync_ReturnsNonEmptyGuid(
-        BlobStorageConfiguration config,
         Mock<BlobClient> blobClient,
         Mock<BlobContainerClient> containerClient,
         Mock<BlobServiceClient> blobServiceClient)
@@ -19,7 +17,7 @@ public class WhenUsingBlobStorageService
         blobClient
             .Setup(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobUploadOptions>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Mock.Of<Response<BlobContentInfo>>());
-        var sut = new BlobStorageService(blobServiceClient.Object, config);
+        var sut = new BlobStorageService(blobServiceClient.Object);
 
         var result = await sut.UploadAsync("{\"test\": true}");
 
@@ -28,7 +26,6 @@ public class WhenUsingBlobStorageService
 
     [Test, MoqAutoData]
     public async Task UploadAsync_SetsContentTypeToJson(
-        BlobStorageConfiguration config,
         Mock<BlobClient> blobClient,
         Mock<BlobContainerClient> containerClient,
         Mock<BlobServiceClient> blobServiceClient)
@@ -37,7 +34,7 @@ public class WhenUsingBlobStorageService
         blobClient
             .Setup(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobUploadOptions>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Mock.Of<Response<BlobContentInfo>>());
-        var sut = new BlobStorageService(blobServiceClient.Object, config);
+        var sut = new BlobStorageService(blobServiceClient.Object);
 
         await sut.UploadAsync("{\"test\": true}");
 
@@ -49,7 +46,6 @@ public class WhenUsingBlobStorageService
 
     [Test, MoqAutoData]
     public async Task UploadAsync_UsesBlobNameDerivedFromReturnedGuid(
-        BlobStorageConfiguration config,
         Mock<BlobClient> blobClient,
         Mock<BlobContainerClient> containerClient,
         Mock<BlobServiceClient> blobServiceClient)
@@ -63,7 +59,7 @@ public class WhenUsingBlobStorageService
         blobClient
             .Setup(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobUploadOptions>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Mock.Of<Response<BlobContentInfo>>());
-        var sut = new BlobStorageService(blobServiceClient.Object, config);
+        var sut = new BlobStorageService(blobServiceClient.Object);
 
         var blobId = await sut.UploadAsync("{}");
 
@@ -73,7 +69,6 @@ public class WhenUsingBlobStorageService
     [Test, MoqAutoData]
     public async Task DownloadAsync_ReturnsContent(
         string expectedContent,
-        BlobStorageConfiguration config,
         Mock<BlobClient> blobClient,
         Mock<BlobContainerClient> containerClient,
         Mock<BlobServiceClient> blobServiceClient)
@@ -83,7 +78,7 @@ public class WhenUsingBlobStorageService
         blobClient
             .Setup(x => x.DownloadContentAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(Response.FromValue(downloadResult, Mock.Of<Response>()));
-        var sut = new BlobStorageService(blobServiceClient.Object, config);
+        var sut = new BlobStorageService(blobServiceClient.Object);
 
         var result = await sut.DownloadAsync(Guid.NewGuid());
 
@@ -93,7 +88,6 @@ public class WhenUsingBlobStorageService
     [Test, MoqAutoData]
     public async Task DownloadAsync_UsesGuidAsBlobName(
         Guid blobId,
-        BlobStorageConfiguration config,
         Mock<BlobClient> blobClient,
         Mock<BlobContainerClient> containerClient,
         Mock<BlobServiceClient> blobServiceClient)
@@ -103,7 +97,7 @@ public class WhenUsingBlobStorageService
         blobClient
             .Setup(x => x.DownloadContentAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(Response.FromValue(downloadResult, Mock.Of<Response>()));
-        var sut = new BlobStorageService(blobServiceClient.Object, config);
+        var sut = new BlobStorageService(blobServiceClient.Object);
 
         await sut.DownloadAsync(blobId);
 
@@ -112,7 +106,6 @@ public class WhenUsingBlobStorageService
 
     [Test, MoqAutoData]
     public async Task ContainerClient_IsCreatedOnce_AcrossMultipleCalls(
-        BlobStorageConfiguration config,
         Mock<BlobClient> blobClient,
         Mock<BlobContainerClient> containerClient,
         Mock<BlobServiceClient> blobServiceClient)
@@ -121,7 +114,7 @@ public class WhenUsingBlobStorageService
         blobClient
             .Setup(x => x.UploadAsync(It.IsAny<Stream>(), It.IsAny<BlobUploadOptions>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Mock.Of<Response<BlobContentInfo>>());
-        var sut = new BlobStorageService(blobServiceClient.Object, config);
+        var sut = new BlobStorageService(blobServiceClient.Object);
 
         await sut.UploadAsync("{}");
         await sut.UploadAsync("{}");
