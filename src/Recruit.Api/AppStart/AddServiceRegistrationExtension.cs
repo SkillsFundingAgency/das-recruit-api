@@ -102,7 +102,7 @@ public static class AddServiceRegistrationExtension
         services.AddScoped<IEventsService, EventsService>();
         services.AddScoped<IAutomatedReviewService, AutomatedReviewService>();
         services.AddSingleton(sp => new BlobServiceClient(sp.GetRequiredService<BlobStorageConfiguration>().ConnectionString));
-        services.AddScoped<IBlobStorageService, BlobStorageService>();
+        services.AddSingleton<IBlobStorageService, BlobStorageService>();
     }
 
     public static void AddDatabaseRegistration(
