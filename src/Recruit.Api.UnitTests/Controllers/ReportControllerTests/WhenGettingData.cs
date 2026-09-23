@@ -100,6 +100,40 @@ internal class WhenGettingData
     }
 
     [Test, RecursiveMoqAutoData]
+    public async Task Then_When_BlobStorageId_Is_Set_And_Reports_Is_Empty_Returns_Empty_Summary_Response(
+        Guid reportId,
+        Guid blobId,
+        ReportEntity reportEntity,
+        Mock<IReportRepository> repository,
+        [Frozen] Mock<IBlobStorageService> blobStorageService,
+        [Greedy] ReportController sut,
+        CancellationToken token)
+    {
+        // arrange
+        reportEntity.Id = reportId;
+        reportEntity.BlobStorageId = blobId;
+        reportEntity.Type = ReportType.ProviderApplications;
+
+        var json = System.Text.Json.JsonSerializer.Serialize(
+            new GetApplicationSummaryReportResponse { Reports = [] }, JsonConfig.Options);
+
+        repository
+            .Setup(x => x.GetOneAsync(reportId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(reportEntity);
+        blobStorageService
+            .Setup(x => x.DownloadAsync(blobId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(json);
+
+        // act
+        var result = await sut.GetData(repository.Object, reportId, token);
+        var payload = (result as Ok<GetApplicationSummaryReportResponse>)?.Value;
+
+        // assert
+        payload.Should().NotBeNull();
+        payload!.Reports.Should().BeEmpty();
+    }
+
+    [Test, RecursiveMoqAutoData]
     public async Task Then_When_BlobStorageId_Is_Null_Falls_Back_To_On_The_Fly_Generation(
         Guid reportId,
         ReportEntity reportEntity,

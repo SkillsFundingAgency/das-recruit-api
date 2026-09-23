@@ -74,9 +74,12 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
                     var qaResponse = JsonSerializer.Deserialize<GetQaReportResponse>(json, JsonConfig.Options);
                     return TypedResults.Ok(qaResponse);
                 }
-                var summaryResponse = JsonSerializer.Deserialize<GetApplicationSummaryReportResponse>(json, JsonConfig.Options);
-                if (summaryResponse?.Reports.Count > 0)
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("reports", out _))
+                {
+                    var summaryResponse = JsonSerializer.Deserialize<GetApplicationSummaryReportResponse>(json, JsonConfig.Options);
                     return TypedResults.Ok(summaryResponse);
+                }
                 var response = JsonSerializer.Deserialize<GetApplicationReviewReportResponse>(json, JsonConfig.Options);
                 return TypedResults.Ok(response);
             }

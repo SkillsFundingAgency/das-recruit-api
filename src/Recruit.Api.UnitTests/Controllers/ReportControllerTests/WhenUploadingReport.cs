@@ -35,6 +35,28 @@ internal class WhenUploadingReport
     }
 
     [Test, RecursiveMoqAutoData]
+    public async Task Then_Empty_Reports_Still_Uploads_Blob_And_Marks_As_Generated(
+        Guid reportId,
+        Guid blobId,
+        Mock<IReportRepository> repository,
+        [Frozen] Mock<IBlobStorageService> blobStorageService,
+        [Greedy] ReportController sut,
+        CancellationToken token)
+    {
+        var request = new PostUploadApplicationSummaryReportRequest { Reports = [] };
+        blobStorageService
+            .Setup(x => x.UploadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(blobId);
+
+        var result = await sut.Upload(repository.Object, reportId, request, token);
+
+        result.Should().BeOfType<Ok>();
+        blobStorageService.Verify(x => x.UploadAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
+        repository.Verify(x => x.SetBlobStorageIdAsync(reportId, blobId, It.IsAny<CancellationToken>()), Times.Once());
+        repository.Verify(x => x.SetStatusAsync(reportId, ReportStatus.Generated, It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Test, RecursiveMoqAutoData]
     public async Task Then_A_500_Is_Returned_When_An_Exception_Is_Thrown(
         Guid reportId,
         List<ApplicationSummaryReport> reports,
