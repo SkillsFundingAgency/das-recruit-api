@@ -6,12 +6,10 @@ using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Enums;
-using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.Report;
 using SFA.DAS.Recruit.Api.Models.Responses.Report;
-using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Services;
 
 namespace SFA.DAS.Recruit.Api.Controllers;
@@ -26,8 +24,7 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(GetApplicationReviewReportResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(GetQaReportResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Report), StatusCodes.Status200OK)]
     public async Task<IResult> GetOne(
         [FromServices] IReportRepository reportRepository,
         [FromRoute, Required] Guid reportId,
@@ -35,11 +32,39 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
     {
         try
         {
-            logger.LogInformation("Recruit API: Received request to get report for report Id: {ReportId}", reportId);
+            logger.LogInformation("Recruit API: Received request to get report entity for report Id: {ReportId}", reportId);
 
             var reportEntity = await reportRepository.GetOneAsync(reportId, token);
             if (reportEntity == null) return TypedResults.NotFound();
-            
+
+            return TypedResults.Ok(reportEntity.ToResponse());
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Unable to get report : An error occurred");
+            return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
+    [Route("{reportId:guid}/data")]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetApplicationReviewReportResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetQaReportResponse), StatusCodes.Status200OK)]
+    public async Task<IResult> GetData(
+        [FromServices] IReportRepository reportRepository,
+        [FromRoute, Required] Guid reportId,
+        CancellationToken token = default)
+    {
+        try
+        {
+            logger.LogInformation("Recruit API: Received request to get report data for report Id: {ReportId}", reportId);
+
+            var reportEntity = await reportRepository.GetOneAsync(reportId, token);
+            if (reportEntity == null) return TypedResults.NotFound();
+
             if (reportEntity.BlobStorageId.HasValue)
             {
                 await reportRepository.IncrementReportDownloadCountAsync(reportId, token);
@@ -68,7 +93,7 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Unable to get report : An error occurred");
+            logger.LogError(e, "Unable to get report data : An error occurred");
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }

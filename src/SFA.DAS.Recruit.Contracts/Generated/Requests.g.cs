@@ -303,10 +303,16 @@ public record GetReferencedataCandidateQualificationsApiRequest() : IGetApiReque
     public string GetUrl => $"api/referencedata/candidate-qualifications";
 }
 
-/// <summary>GET /api/reports/{reportId} &#x2192; <see cref="GetQaReportResponse"/></summary>
+/// <summary>GET /api/reports/{reportId} &#x2192; <see cref="Report"/></summary>
 public record GetReportsByReportIdApiRequest(System.Guid ReportId) : IGetApiRequest
 {
     public string GetUrl => $"api/reports/{ReportId}";
+}
+
+/// <summary>GET /api/reports/{reportId}/data &#x2192; <see cref="GetQaReportResponse"/></summary>
+public record GetReportsByReportIdDataApiRequest(System.Guid ReportId) : IGetApiRequest
+{
+    public string GetUrl => $"api/reports/{ReportId}/data";
 }
 
 /// <summary>GET /api/reports/{ukprn}/provider &#x2192; List&lt;<see cref="Report"/>&gt;</summary>
