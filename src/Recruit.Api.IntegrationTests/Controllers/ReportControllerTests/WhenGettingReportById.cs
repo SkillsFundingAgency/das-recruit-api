@@ -11,6 +11,7 @@ internal class WhenGettingReportById : BaseFixture
     {
         // arrange
         var items = Fixture.CreateMany<ReportEntity>(10).ToList();
+        items[1].BlobStorageId = null;
         var expected = items[1];
         Server.DataContext.Setup(x => x.ReportEntities).ReturnsDbSet(items);
 

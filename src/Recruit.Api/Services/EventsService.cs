@@ -1,4 +1,4 @@
-﻿using Esfa.Recruit.Vacancies.Client.Domain.Events;
+using Esfa.Recruit.Vacancies.Client.Domain.Events;
 using NServiceBus;
 using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Core.Events;
@@ -17,9 +17,10 @@ public interface IEventsService
 {
     Task HandleVacancyReviewStatusChange(UpsertResult<VacancyReviewEntity> result);
     Task HandleVacancyStatusChange(UpsertResult<VacancyEntity> result);
+    Task PublishReportCreatedEvent(ReportEntity entity);
 }
 
-public class EventsService(ILogger<EventsService> logger, IMessageSession messageSession, IEncodingService encodingService): IEventsService
+public class EventsService(ILogger<EventsService> logger, IMessageSession messageSession, IEncodingService encodingService) : IEventsService
 {
     public async Task HandleVacancyReviewStatusChange(UpsertResult<VacancyReviewEntity> result)
     {
@@ -89,5 +90,11 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
                 });
                 break;
         }
+    }
+
+    public async Task PublishReportCreatedEvent(ReportEntity entity)
+    {
+        logger.LogInformation("Publishing ReportCreatedEvent, reportId='{ReportId}'", entity.Id);
+        await messageSession.Publish(new ReportCreatedEvent(entity.Id));
     }
 }

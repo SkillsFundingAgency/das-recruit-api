@@ -309,6 +309,12 @@ public record GetReportsByReportIdApiRequest(System.Guid ReportId) : IGetApiRequ
     public string GetUrl => $"api/reports/{ReportId}";
 }
 
+/// <summary>GET /api/reports/{reportId}/data &#x2192; <see cref="GetQaReportResponse"/></summary>
+public record GetReportsByReportIdDataApiRequest(System.Guid ReportId) : IGetApiRequest
+{
+    public string GetUrl => $"api/reports/{ReportId}/data";
+}
+
 /// <summary>GET /api/reports/{ukprn}/provider &#x2192; List&lt;<see cref="Report"/>&gt;</summary>
 public record GetReportsByUkprnProviderApiRequest(int Ukprn) : IGetApiRequest
 {
@@ -328,10 +334,20 @@ public class PostReportsApiRequest(PostReportRequest postReportRequest) : IPostA
     public object Data { get; set; } = postReportRequest;
 }
 
-/// <summary>GET /api/reports/generate/{reportId} &#x2192; List&lt;<see cref="ApplicationReviewReport"/>&gt;</summary>
-public record GetReportsGenerateByReportIdApiRequest(System.Guid ReportId) : IGetApiRequest
+/// <summary>POST /api/reports/generate/{reportId} &#x2192; <see cref="GetApplicationReviewReportResponse"/></summary>
+public class PostReportsGenerateByReportIdApiRequest : IPostApiRequest
 {
-    public string GetUrl => $"api/reports/generate/{ReportId}";
+    public required System.Guid ReportId { get; init; }
+    public string PostUrl => $"api/reports/generate/{ReportId}";
+    public object Data { get; set; } = default!;
+}
+
+/// <summary>POST /api/reports/generate/{reportId}/upload</summary>
+public class PostReportsGenerateByReportIdUploadApiRequest(PostUploadApplicationSummaryReportRequest postUploadApplicationSummaryReportRequest) : IPostApiRequest
+{
+    public required System.Guid ReportId { get; init; }
+    public string PostUrl => $"api/reports/generate/{ReportId}/upload";
+    public object Data { get; set; } = postUploadApplicationSummaryReportRequest;
 }
 
 /// <summary>GET /api/reports/generate-qa/{reportId} &#x2192; <see cref="GetQaReportResponse"/></summary>

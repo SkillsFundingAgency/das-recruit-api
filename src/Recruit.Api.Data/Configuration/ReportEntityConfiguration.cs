@@ -23,6 +23,8 @@ internal class ReportEntityConfiguration : IEntityTypeConfiguration<ReportEntity
         builder.Property(x => x.CreatedBy).HasColumnName("CreatedBy").HasColumnType("nvarchar(50)");
         builder.Property(x => x.DownloadCount).HasColumnName("DownloadCount").HasColumnType("int").HasDefaultValue(0).IsRequired();
         builder.Property(x => x.DynamicCriteria).HasColumnName("DynamicCriteria").HasColumnType("nvarchar(max)").IsRequired();
+        builder.Property(x => x.BlobStorageId).HasColumnName("BlobStorageId").HasColumnType("uniqueidentifier");
+        builder.Property(x => x.Status).HasColumnName("Status").HasColumnType("int");
 
         builder
             .HasIndex(a => new { a.UserId })
