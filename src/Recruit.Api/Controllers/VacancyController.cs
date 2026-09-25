@@ -328,6 +328,14 @@ public class VacancyController : Controller
                 entity.ReviewRequestedByUserId = userId;
             }
         }
+        else
+        {
+            if (request.Status == VacancyStatus.Review)
+            {
+                entity.ReviewRequestedDate ??= DateTime.UtcNow ;
+                entity.ReviewRequestedByUserId ??= entity.SubmittedByUserId;
+            }
+        }
         
         //If vacancy exists then throw error - this is mainly to cover being submitted from the external Vacancies Manage API
         if (request.Id != null)

@@ -20,7 +20,7 @@ public class VacancyRequest
     public DateTime? ApprovedDate { get; init; }
     public DateTime? LastUpdatedDate { get; init; }
     public DateTime? SubmittedDate { get; init; }
-    public DateTime? ReviewRequestedDate { get; init; }
+    public DateTime? ReviewRequestedDate { get; set; }
     public DateTime? ClosedDate { get; init; }
     public DateTime? DeletedDate { get; init; }
     public DateTime? LiveDate { get; init; }
