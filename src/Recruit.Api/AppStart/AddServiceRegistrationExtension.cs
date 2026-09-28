@@ -119,8 +119,9 @@ public static class AddServiceRegistrationExtension
         }
         else
         {
-            services.AddDbContext<RecruitDataContext>(options =>
-                options.UseSqlServer(config.SqlConnectionString), ServiceLifetime.Transient);
+            services.AddDbContext<RecruitDataContext>(
+                options => options.UseSqlServer(config.SqlConnectionString, sqlOptions => sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null)),
+                ServiceLifetime.Transient);
             services.AddDbContextFactory<GraphQlDataContext>(options => options.UseSqlServer(config.SqlConnectionString), ServiceLifetime.Scoped);
         }
 

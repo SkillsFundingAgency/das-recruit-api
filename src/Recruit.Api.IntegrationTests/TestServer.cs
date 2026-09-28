@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NServiceBus;
 using SFA.DAS.Encoding;
 using SFA.DAS.Recruit.Api.Data;
 
@@ -11,6 +12,7 @@ public class TestServer : WebApplicationFactory<Program>
 {
     public Mock<IRecruitDataContext> DataContext { get; } = new ();
     public Mock<IEncodingService> EncodingService { get; } = new ();
+    public Mock<IMessageSession> MessageSession { get; } = new ();
 
     protected override IHost CreateHost(IHostBuilder builder)
     {
@@ -21,6 +23,7 @@ public class TestServer : WebApplicationFactory<Program>
             {
                 services.AddTransient<IRecruitDataContext>(x => DataContext.Object);
                 services.AddTransient<IEncodingService>(x => EncodingService.Object);
+                services.AddTransient<IMessageSession>(x => MessageSession.Object);
             });
         
         return base.CreateHost(builder);
