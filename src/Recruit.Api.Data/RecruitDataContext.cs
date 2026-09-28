@@ -1,12 +1,9 @@
 ﻿using System.Data;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.Options;
 using SFA.DAS.Recruit.Api.Data.Configuration;
-using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Entities;
 using SFA.DAS.Recruit.Api.Domain.Models;
 
@@ -34,7 +31,7 @@ public interface IRecruitDataContext
 }
 
 [ExcludeFromCodeCoverage]
-internal class RecruitDataContext : DbContext, IRecruitDataContext
+internal class RecruitDataContext(DbContextOptions<RecruitDataContext> options) : DbContext(options), IRecruitDataContext
 {
     public DbSet<ApplicationReviewEntity> ApplicationReviewEntities { get; set; }
     public DbSet<ProhibitedContentEntity> ProhibitedContentEntities { get; set; }
@@ -47,14 +44,6 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
     public DbSet<RecruitNotificationEntity> RecruitNotifications { get; set; }
     public DbSet<ReportEntity> ReportEntities { get; set; }
     public DbSet<VacancyAnalyticsEntity> VacancyAnalyticsEntities { get; set; }
-
-    private readonly ConnectionStrings? _configuration;
-    public RecruitDataContext() {}
-    public RecruitDataContext(DbContextOptions<RecruitDataContext> options) : base(options) {}
-    public RecruitDataContext(IOptions<ConnectionStrings> config, DbContextOptions<RecruitDataContext> options) : base(options)
-    {
-        _configuration = config.Value;
-    }
 
     public async Task Ping(CancellationToken cancellationToken)
     {
@@ -77,8 +66,6 @@ internal class RecruitDataContext : DbContext, IRecruitDataContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connection = new SqlConnection { ConnectionString = _configuration!.SqlConnectionString, };
-        optionsBuilder.UseSqlServer(connection, options => options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(20), null));
         optionsBuilder.UseLazyLoadingProxies();
         
         // Note: useful to keep here

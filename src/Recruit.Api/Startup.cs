@@ -51,7 +51,8 @@ internal class Startup
 
     private bool IsEnvironmentLocalOrDev =>
         _environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase)
-        || _environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase);
+        || _environmentName.Equals("DEV", StringComparison.CurrentCultureIgnoreCase)
+        || _environmentName.Equals("INTEGRATION", StringComparison.CurrentCultureIgnoreCase);
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -203,6 +204,10 @@ internal class Startup
     
     public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
     {
+        if (IsEnvironmentLocalOrDev)
+        {
+            return;
+        }
         serviceProvider.StartNServiceBus(Configuration);
     }
 }

@@ -9,7 +9,8 @@
         <IsTestProject>true</IsTestProject>
         <AssemblyName>SFA.DAS.Recruit.Api.IntegrationTests</AssemblyName>
         <RootNamespace>SFA.DAS.Recruit.Api.IntegrationTests</RootNamespace>
-    </PropertyGroup>
+      <UserSecretsId>23745b2c-fa5c-41d5-a45d-c8a5e5df474b</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="10.0.1">
