@@ -101,4 +101,118 @@ public class WhenPostingVacancy
         // assert
         result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
     }
+
+    [Test, RecruitAutoData]
+    public async Task Then_ReviewRequestedDate_And_ReviewRequestedByUserId_Are_Set_When_Status_Is_Review_And_No_ReviewRequestedByUserId_In_Request(
+        Guid resolvedUserId,
+        PostVacancyRequest request,
+        VacancyEntity updatedEntity,
+        Mock<IVacancyRepository> repository,
+        Mock<IEventsService> eventsService,
+        Mock<IUserRepository> userRepository,
+        Mock<IValidator<VacancyRequest>> validator,
+        [Greedy] VacancyController sut,
+        CancellationToken token)
+    {
+        // arrange
+        request.Id = null;
+        request.Status = VacancyStatus.Review;
+        request.ReviewRequestedByUserId = null;
+        request.ReviewRequestedDate = null;
+        userRepository
+            .Setup(x => x.FindIdByUserIdAsync(request.SubmittedByUserId!, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(resolvedUserId);
+        updatedEntity.Status = VacancyStatus.Review;
+
+        VacancyEntity? capturedEntity = null;
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyEntity>(), token))
+            .Callback<VacancyEntity, CancellationToken>((e, _) => capturedEntity = e)
+            .ReturnsAsync(UpsertResult.Create(updatedEntity, true));
+
+        // act
+        var result = await sut.PostOne(repository.Object, userRepository.Object, eventsService.Object, validator.Object, request, null, false, token);
+
+        // assert
+        result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
+        capturedEntity.Should().NotBeNull();
+        capturedEntity!.ReviewRequestedByUserId.Should().Be(resolvedUserId);
+        capturedEntity.ReviewRequestedDate.Should().BeCloseTo(DateTime.UtcNow, new TimeSpan(0,0,0,1));
+    }
+    
+    [Test, RecruitAutoData]
+    public async Task Then_ReviewRequestedDate_And_ReviewRequestedByUserId_Are_Not_Set_When_Status_Is_Not_Review_In_Request(
+        Guid resolvedUserId,
+        PostVacancyRequest request,
+        VacancyEntity updatedEntity,
+        Mock<IVacancyRepository> repository,
+        Mock<IEventsService> eventsService,
+        Mock<IUserRepository> userRepository,
+        Mock<IValidator<VacancyRequest>> validator,
+        [Greedy] VacancyController sut,
+        CancellationToken token)
+    {
+        // arrange
+        request.Id = null;
+        request.Status = VacancyStatus.Submitted;
+        request.ReviewRequestedByUserId = null;
+        request.ReviewRequestedDate = null;
+        userRepository
+            .Setup(x => x.FindIdByUserIdAsync(request.SubmittedByUserId!, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(resolvedUserId);
+        updatedEntity.Status = VacancyStatus.Submitted;
+
+        VacancyEntity? capturedEntity = null;
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyEntity>(), token))
+            .Callback<VacancyEntity, CancellationToken>((e, _) => capturedEntity = e)
+            .ReturnsAsync(UpsertResult.Create(updatedEntity, true));
+
+        // act
+        var result = await sut.PostOne(repository.Object, userRepository.Object, eventsService.Object, validator.Object, request, null, false, token);
+
+        // assert
+        result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
+        capturedEntity.Should().NotBeNull();
+        capturedEntity!.ReviewRequestedByUserId.Should().BeNull();
+        capturedEntity.ReviewRequestedDate.Should().BeNull();
+    }
+
+    [Test, RecruitAutoData]
+    public async Task Then_Existing_ReviewRequestedDate_Is_Not_Overwritten_When_Status_Is_Review(
+        Guid resolvedUserId,
+        PostVacancyRequest request,
+        VacancyEntity updatedEntity,
+        Mock<IVacancyRepository> repository,
+        Mock<IEventsService> eventsService,
+        Mock<IUserRepository> userRepository,
+        Mock<IValidator<VacancyRequest>> validator,
+        [Greedy] VacancyController sut,
+        CancellationToken token)
+    {
+        // arrange
+        var existingDate = DateTime.UtcNow.AddDays(-1);
+        request.Id = null;
+        request.Status = VacancyStatus.Review;
+        request.ReviewRequestedByUserId = null;
+        request.ReviewRequestedDate = existingDate;
+        userRepository
+            .Setup(x => x.FindIdByUserIdAsync(request.SubmittedByUserId!, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(resolvedUserId);
+        updatedEntity.Status = VacancyStatus.Review;
+
+        VacancyEntity? capturedEntity = null;
+        repository
+            .Setup(x => x.UpsertOneAsync(It.IsAny<VacancyEntity>(), token))
+            .Callback<VacancyEntity, CancellationToken>((e, _) => capturedEntity = e)
+            .ReturnsAsync(UpsertResult.Create(updatedEntity, true));
+
+        // act
+        var result = await sut.PostOne(repository.Object, userRepository.Object, eventsService.Object, validator.Object, request, null, false, token);
+
+        // assert
+        result.Should().BeOfType<Created<SFA.DAS.Recruit.Api.Models.Vacancy>>();
+        capturedEntity.Should().NotBeNull();
+        capturedEntity!.ReviewRequestedDate.Should().Be(existingDate);
+    }
 }
