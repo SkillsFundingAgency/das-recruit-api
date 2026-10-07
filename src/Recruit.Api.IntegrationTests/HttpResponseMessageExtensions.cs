@@ -3,19 +3,25 @@ using System.Text.Json.Serialization;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests;
 
-public static class HttpResponseMessageExtensions
+internal static class HttpResponseMessageExtensions
 {
-    public static async Task<TEntity?> ReadAsAsync<TEntity>(this HttpContent? content)
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
-        ArgumentNullException.ThrowIfNull(content);
+        PropertyNameCaseInsensitive = true,
+        Converters = { new JsonStringEnumConverter() }
+    };
+    
+    extension(HttpResponseMessage message)
+    {
+        public HttpResponseAssertions Is => new(message);
 
-        var options = new JsonSerializerOptions 
+        public async Task<TEntity?> ReadContentAsAsync<TEntity>()
         {
-            PropertyNameCaseInsensitive = true,
-            Converters = { new JsonStringEnumConverter() }
-        };
+            ArgumentNullException.ThrowIfNull(message);
+            ArgumentNullException.ThrowIfNull(message.Content);
 
-        string json = await content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<TEntity>(json, options);
+            string json = await message.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<TEntity>(json, JsonOptions);
+        }
     }
 }

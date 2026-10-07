@@ -1,43 +1,40 @@
-using System.Net;
 using SFA.DAS.Recruit.Api.Domain.Entities;
-using SFA.DAS.Recruit.Api.Models;
+using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Contracts.ApiRequests;
+using SFA.DAS.Recruit.Contracts.ApiResponses;
 
 namespace SFA.DAS.Recruit.Api.IntegrationTests.Controllers.VacancyControllerTests;
 
-public class WhenGettingVacancy: BaseFixture
+public class WhenGettingVacancy: MsSqlBaseFixture
 {
     [Test]
     public async Task Then_The_Vacancy_Is_Returned()
     {
         // arrange
-        var items = Fixture.CreateMany<VacancyEntity>(10).ToList();
-        var expected = items[1];
-        Server.DataContext.Setup(x => x.VacancyEntities).ReturnsDbSet(items);
+        var items = await DbData.CreateMany<VacancyEntity>(10);
+        var expected = items[new Random().Next(items.Count)];
 
         // act
-        var request = new GetVacanciesByVacancyIdApiRequest(expected.Id);
-        var response = await Client.GetAsync(request.GetUrl);
-        var vacancy = await response.Content.ReadAsAsync<Vacancy>();
+        var response = await Measure.ThisAsync(async () => await Client.GetAsync(new GetVacanciesByVacancyIdApiRequest(expected.Id).GetUrl));
+        response.EnsureSuccessStatusCode();
+        var vacancy = await response.ReadContentAsAsync<Vacancy>();
 
         // assert
-        response.EnsureSuccessStatusCode();
+        response.Is.Ok();
         vacancy.Should().NotBeNull();
+        vacancy.Should().BeEquivalentTo(expected.ToGetResponse());
     }
     
     [Test]
     public async Task Then_The_Vacancy_Is_NotFound()
     {
         // arrange
-        Server.DataContext
-            .Setup(x => x.VacancyEntities)
-            .ReturnsDbSet(Fixture.CreateMany<VacancyEntity>(10).ToList());
+        await DbData.CreateMany<VacancyEntity>(10);
 
         // act
-        var request = new GetVacanciesByVacancyIdApiRequest(Guid.NewGuid());
-        var response = await Client.GetAsync(request.GetUrl);
+        var response = await Measure.ThisAsync(async () => await Client.GetAsync(new GetVacanciesByVacancyIdApiRequest(Guid.NewGuid()).GetUrl));
 
         // assert
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.Is.NotFound();
     }
 }
