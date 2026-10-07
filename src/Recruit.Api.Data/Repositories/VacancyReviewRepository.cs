@@ -8,7 +8,6 @@ namespace SFA.DAS.Recruit.Api.Data.Repositories;
 
 public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, Guid>, IWriteRepository<VacancyReviewEntity, Guid>
 {
-    Task<List<VacancyReviewEntity>> GetManyByVacancyReference(long vacancyReference, CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(long vacancyReference, IReadOnlyCollection<ReviewStatus> statuses, IReadOnlyCollection<string>? manualOutcome, bool includeNoStatus, CancellationToken cancellationToken);
     Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByStatusAndExpiredAssignationDateTime(
@@ -71,15 +70,6 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
         dataContext.VacancyReviewEntities.Remove(entity);
         await dataContext.SaveChangesAsync(cancellationToken);
         return true;
-    }
-    
-    public async Task<List<VacancyReviewEntity>> GetManyByVacancyReference(long vacancyReference, CancellationToken cancellationToken)
-    {
-        return await dataContext.VacancyReviewEntities
-            .AsNoTracking()
-            .Where(x => x.VacancyReference == vacancyReference)
-            .OrderBy(x => x.CreatedDate)
-            .ToListAsync(cancellationToken);
     }
 
     public Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(
