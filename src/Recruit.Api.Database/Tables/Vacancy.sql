@@ -3,7 +3,7 @@
 
 CREATE TABLE dbo.[Vacancy] (
     [Id]	                                    uniqueidentifier    NOT NULL default NEWSEQUENTIALID(),
-    [VacancyReference]                          bigint              NULL DEFAULT (NEXT VALUE FOR dbo.VacancyReference), -- default next value for VacancyReference,
+    [VacancyReference]                          bigint              NULL, -- default next value for VacancyReference,
     [AccountId]                                 bigint              NULL, -- converted from EmployerAccountId e.g. MEZSGQ
     [Status]                                    nvarchar(20)        NOT NULL default 'Draft', -- max is currently 9 chars
     [ApprenticeshipType]                        nvarchar(30)        NOT NULL default 'Standard', -- max is currently 10 chars
