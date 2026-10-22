@@ -5,6 +5,7 @@
         <SqlServerVersion>SqlAzure</SqlServerVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PreDeploy Include="Pre-Deployment\VacancyReference.sql" />
         <None Include="Database.publish.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
