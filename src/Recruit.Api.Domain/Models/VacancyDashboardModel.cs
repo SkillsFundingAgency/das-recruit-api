@@ -12,6 +12,7 @@ public sealed record VacancyDashboardModel
     public int SubmittedVacanciesCount { get; init; }
     public int ClosingSoonVacanciesCount { get; set; }
     public int ClosingSoonWithNoApplications { get; set; }
+    public int ArchivedVacanciesCount { get; set; }
 
 
     public static implicit operator VacancyDashboardModel(List<VacancyDashboardCountModel> source)
@@ -28,6 +29,7 @@ public sealed record VacancyDashboardModel
                                      + counts.GetValueOrDefault(VacancyStatus.Rejected),
             LiveVacanciesCount = counts.GetValueOrDefault(VacancyStatus.Live),
             SubmittedVacanciesCount = counts.GetValueOrDefault(VacancyStatus.Submitted),
+            ArchivedVacanciesCount = counts.GetValueOrDefault(VacancyStatus.Archived)
         };
     }
 }
