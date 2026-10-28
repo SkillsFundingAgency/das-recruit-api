@@ -25,7 +25,8 @@ internal class WhenGettingDashboardCountByAccountId
                         new VacancyDashboardCountModel { Status = VacancyStatus.Referred, Count = 1 },
                         new VacancyDashboardCountModel { Status = VacancyStatus.Rejected, Count = 1 },
                         new VacancyDashboardCountModel { Status = VacancyStatus.Submitted, Count = 1 },
-                        new VacancyDashboardCountModel { Status = VacancyStatus.Live, Count = 2 }
+                        new VacancyDashboardCountModel { Status = VacancyStatus.Live, Count = 2 },
+                        new VacancyDashboardCountModel { Status = VacancyStatus.Archived, Count = 3 }
                     ]
                 );
         vacancyRepositoryMock
@@ -46,6 +47,7 @@ internal class WhenGettingDashboardCountByAccountId
         result.SubmittedVacanciesCount.Should().Be(1);
         result.ClosingSoonVacanciesCount.Should().Be(15); // Only one Live within 5 days
         result.ClosingSoonWithNoApplications.Should().Be(5); // ApplicationMethod == ThroughFindAnApprenticeship
+        result.ArchivedVacanciesCount.Should().Be(3);
     }
 
     [Test, MoqAutoData]
@@ -76,5 +78,6 @@ internal class WhenGettingDashboardCountByAccountId
         result.SubmittedVacanciesCount.Should().Be(0);
         result.ClosingSoonVacanciesCount.Should().Be(0);
         result.ClosingSoonWithNoApplications.Should().Be(0);
+        result.ArchivedVacanciesCount.Should().Be(0);
     }
 }
