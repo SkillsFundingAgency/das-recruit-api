@@ -5895,43 +5895,6 @@
         }
       }
     },
-    "/api/vacancyreference": {
-      "get": {
-        "tags": [
-          "VacancyReference"
-        ],
-        "parameters": [
-          {
-            "name": "X-Version",
-            "in": "header",
-            "required": true,
-            "example": "1.0"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/VacancyReferenceResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VacancyReferenceResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VacancyReferenceResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/vacancyreviews": {
       "get": {
         "tags": [
@@ -11415,20 +11378,6 @@
       "VacancyReference": {
         "type": "string"
       },
-      "VacancyReferenceResponse": {
-        "required": [
-          "nextVacancyReference"
-        ],
-        "type": "object",
-        "properties": {
-          "nextVacancyReference": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": "integer",
-            "format": "int64"
-          }
-        },
-        "additionalProperties": false
-      },
       "VacancyReview": {
         "required": [
           "vacancyReference",
@@ -12163,9 +12112,6 @@
     },
     {
       "name": "Vacancy"
-    },
-    {
-      "name": "VacancyReference"
     },
     {
       "name": "VacancyReview"
