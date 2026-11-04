@@ -37,7 +37,7 @@ internal class WhenGettingAllByAccountId
     }
 
     [Test, MoqAutoData]
-    public void GetAllByAccountId_ShouldThrowException_WhenRepositoryThrowsException(
+    public async Task GetAllByAccountId_ShouldThrowException_WhenRepositoryThrowsException(
         long accountId,
         int pageNumber,
         int pageSize,
@@ -55,7 +55,7 @@ internal class WhenGettingAllByAccountId
             .ThrowsAsync(new Exception("Repository exception"));
 
         // Act & Assert
-        Assert.ThrowsAsync<Exception>(() => provider.GetPagedAccountIdAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, token));
+        await Assert.ThrowsAsync<Exception>(() => provider.GetPagedAccountIdAsync(accountId, pageNumber, pageSize, sortColumn, isAscending, token));
 
         repositoryMock.Verify(repo => repo.GetAllByAccountId(accountId, pageNumber, pageSize, sortColumn, isAscending, token), Times.Once);
     }
