@@ -16,8 +16,10 @@ namespace SFA.DAS.Recruit.Api.Controllers;
 
 [ApiController]
 [Route($"{RouteNames.Reports}")]
-public class ReportController(ILogger<ReportController> logger, IBlobStorageService blobStorageService, IEventsService eventsService)
-    : ControllerBase
+public class ReportController(
+    ILogger<ReportController> logger,
+    IBlobStorageService blobStorageService,
+    IEventsService eventsService) : ControllerBase
 {
     [HttpGet]
     [Route("{reportId:guid}")]
@@ -262,7 +264,16 @@ public class ReportController(ILogger<ReportController> logger, IBlobStorageServ
             return Results.Problem(statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
-
+    
+    [HttpPost]
+    [Route("cleanup")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IResult> Cleanup([FromServices] IReportRepository reportRepository, CancellationToken cancellationToken = default)
+    {
+        await reportRepository.DeleteManyByAgeAsync(ReportOwnerType.Provider, ReportType.ProviderApplications, days: 7, cancellationToken);
+        return TypedResults.Ok();
+    }
+    
     private async Task SetReportStatusToFailed(IReportRepository reportRepository, Guid reportId, CancellationToken token)
     {
         try
