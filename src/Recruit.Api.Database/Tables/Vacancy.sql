@@ -79,7 +79,7 @@ CREATE TABLE dbo.[Vacancy] (
     [ProviderReviewFieldIndicators]             nvarchar(max)       NULL, -- json serialised
 
     CONSTRAINT [PK_Vacancy] PRIMARY KEY (Id),
-    INDEX [IX_Vacancy_VacancyReference] NONCLUSTERED(VacancyReference),
+    INDEX [IX_Vacancy_VacancyReference] UNIQUE NONCLUSTERED(VacancyReference) WHERE VacancyReference IS NOT NULL,
 
     INDEX [IX_Vacancy_Live_ClosingDate] NONCLUSTERED(Status, ClosingDate) INCLUDE (NumberOfPositions) WHERE Status = 'Live',
        
