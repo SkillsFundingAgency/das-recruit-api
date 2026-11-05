@@ -18,6 +18,7 @@ public interface IReportRepository : IReadRepository<ReportEntity, Guid>, IWrite
     Task IncrementReportDownloadCountAsync(Guid reportId, CancellationToken token);
     Task SetBlobStorageIdAsync(Guid reportId, Guid blobId, CancellationToken token);
     Task SetStatusAsync(Guid reportId, ReportStatus status, CancellationToken cancellationToken);
+    Task DeleteManyByAgeAsync(ReportOwnerType reportOwnerType, ReportType reportType, int days, CancellationToken cancellationToken);
 }
 public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportRepository
 {
@@ -217,6 +218,15 @@ public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportR
             existingEntity.Status = status;
             await recruitDataContext.SaveChangesAsync(cancellationToken);
         }
+    }
+
+    public async Task DeleteManyByAgeAsync(ReportOwnerType reportOwnerType, ReportType reportType, int days, CancellationToken cancellationToken)
+    {
+        recruitDataContext.ReportEntities.RemoveRange(recruitDataContext.ReportEntities.Where(x =>
+            x.CreatedDate < DateTime.UtcNow.AddDays(-days)
+            && x.OwnerType == reportOwnerType
+            && x.Type == reportType));
+        await recruitDataContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task IncrementReportDownloadCountAsync(Guid reportId, CancellationToken cancellationToken)

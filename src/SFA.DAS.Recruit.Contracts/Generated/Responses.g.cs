@@ -3888,15 +3888,6 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class VacancyReferenceResponse
-    {
-        [System.Text.Json.Serialization.JsonPropertyName("nextVacancyReference")]
-        [Newtonsoft.Json.JsonProperty("nextVacancyReference", Required = Newtonsoft.Json.Required.Always)]
-        public long NextVacancyReference { get; set; } = default!;
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class VacancyReview
     {
         [System.Text.Json.Serialization.JsonPropertyName("id")]

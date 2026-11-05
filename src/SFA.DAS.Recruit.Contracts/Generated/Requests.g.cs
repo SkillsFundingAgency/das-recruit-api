@@ -356,6 +356,13 @@ public record GetReportsGenerateQaByReportIdApiRequest(System.Guid ReportId) : I
     public string GetUrl => $"api/reports/generate-qa/{ReportId}";
 }
 
+/// <summary>POST /api/reports/cleanup</summary>
+public class PostReportsCleanupApiRequest : IPostApiRequest
+{
+    public string PostUrl => $"api/reports/cleanup";
+    public object Data { get; set; } = default!;
+}
+
 /// <summary>GET /api/user/{id} &#x2192; <see cref="RecruitUser"/></summary>
 public record GetUserByIdApiRequest(System.Guid Id) : IGetApiRequest
 {
@@ -526,12 +533,6 @@ public record GetEmployerByAccountIdVacanciesStatsApiRequest(long AccountId, Lis
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/employer/{AccountId}/vacancies/stats",
         (VacancyReferences ?? []).Select(v => new KeyValuePair<string, string?>("vacancyReferences", v.ToString())));
-}
-
-/// <summary>GET /api/vacancyreference &#x2192; <see cref="VacancyReferenceResponse"/></summary>
-public record GetVacancyreferenceApiRequest() : IGetApiRequest
-{
-    public string GetUrl => $"api/vacancyreference";
 }
 
 /// <summary>GET /api/vacancyreviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>
