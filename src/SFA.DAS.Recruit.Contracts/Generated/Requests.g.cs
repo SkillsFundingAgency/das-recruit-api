@@ -528,12 +528,6 @@ public record GetEmployerByAccountIdVacanciesStatsApiRequest(long AccountId, Lis
         (VacancyReferences ?? []).Select(v => new KeyValuePair<string, string?>("vacancyReferences", v.ToString())));
 }
 
-/// <summary>GET /api/vacancyreference &#x2192; <see cref="VacancyReferenceResponse"/></summary>
-public record GetVacancyreferenceApiRequest() : IGetApiRequest
-{
-    public string GetUrl => $"api/vacancyreference";
-}
-
 /// <summary>GET /api/vacancyreviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>
 public record GetVacancyreviewsApiRequest(List<ReviewStatus>? ReviewStatus, System.DateTime? ExpiredAssignationDateTime) : IGetApiRequest
 {
