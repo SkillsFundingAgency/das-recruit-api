@@ -14,5 +14,6 @@
     <Content Remove="Scripts\PostDeployment\RecalibrateSequence.sql" />
     <!-- Re-add explicitly as a PostDeploy script -->
     <PostDeploy Include="Scripts\PostDeployment\RecalibrateSequence.sql" />
+    <Content Remove="Tables\VacancyReference.sql" />
   </ItemGroup>
 </Project>
