@@ -5,7 +5,14 @@
         <TargetDatabaseName>[TargetDatabaseName]</TargetDatabaseName>
         <DeployScriptFileName>SFA.DAS.Recruit.sql</DeployScriptFileName>
         <ProfileVersionNumber>1</ProfileVersionNumber>
-        <ExcludeObjectTypes>Sequences</ExcludeObjectTypes>
         <TargetConnectionString>Data Source=[DBServer];Persist Security Info=True;User ID=[DBUser];Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True</TargetConnectionString>
+        <!-- Prevent DACPAC from resetting sequences -->
+        <DoNotAlterChangeDataCaptureObjects>True</DoNotAlterChangeDataCaptureObjects>
+        <DoNotAlterReplicatedObjects>True</DoNotAlterReplicatedObjects>
+        <!-- Exclude sequences from schema drift correction -->
+        <ExcludeObjectTypes>Sequences</ExcludeObjectTypes>
+        <!-- Safety guards -->
+        <BlockOnPossibleDataLoss>True</BlockOnPossibleDataLoss>
+        <DropObjectsNotInSource>False</DropObjectsNotInSource>
     </PropertyGroup>
 </Project>
