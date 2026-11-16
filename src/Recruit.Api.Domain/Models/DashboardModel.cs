@@ -16,6 +16,7 @@
         public int ReferredVacanciesCount { get; }
         public int LiveVacanciesCount { get; }
         public int SubmittedVacanciesCount { get; }
+        public int ArchivedVacanciesCount { get; set; }
 
         protected DashboardModel(
             ApplicationReviewsDashboardModel app,
@@ -35,6 +36,7 @@
             ReviewVacanciesCount = vac.ReviewVacanciesCount;
             ReferredVacanciesCount = vac.ReferredVacanciesCount;
             SubmittedVacanciesCount = vac.SubmittedVacanciesCount;
+            ArchivedVacanciesCount = vac.ArchivedVacanciesCount;
         }
     }
 }

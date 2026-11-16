@@ -758,6 +758,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [Newtonsoft.Json.JsonProperty("submittedVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int SubmittedVacanciesCount { get; set; } = default!;
 
+        [System.Text.Json.Serialization.JsonPropertyName("archivedVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("archivedVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ArchivedVacanciesCount { get; set; } = default!;
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -1996,6 +2000,10 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("submittedVacanciesCount")]
         [Newtonsoft.Json.JsonProperty("submittedVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int SubmittedVacanciesCount { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("archivedVacanciesCount")]
+        [Newtonsoft.Json.JsonProperty("archivedVacanciesCount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int ArchivedVacanciesCount { get; set; } = default!;
 
     }
 
