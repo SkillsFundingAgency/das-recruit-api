@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Recruit.Api.Domain.Models;
+﻿using SFA.DAS.Recruit.Api.Domain.Enums;
+using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models.Mappers;
 using SFA.DAS.Recruit.Api.Models.Requests.VacancyReview;
 
@@ -26,7 +27,7 @@ public class WhenMappingVacancyReview
             AutomatedQaOutcome = "automatedQaOutcome",
             AutomatedQaOutcomeIndicators = [],
             ClosedDate = DateTime.Now.AddDays(1),
-            ManualOutcome = "manualOutcome",
+            ManualOutcome = ManualQaOutcome.Approved,
             ManualQaComment = "manualQaComment",
             ReviewedByUserEmail = "foo@af23fwdfwef_wefw3f_F23f23!.com",
             ReviewedDate = DateTime.Now,

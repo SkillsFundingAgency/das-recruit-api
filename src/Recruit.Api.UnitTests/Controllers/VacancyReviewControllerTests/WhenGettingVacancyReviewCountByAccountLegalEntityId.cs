@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Enums;
@@ -15,7 +14,7 @@ internal class WhenGettingVacancyReviewCountByAccountLegalEntityId
         int resultCount,
         long accountLegalEntityId,
         List<ReviewStatus> statuses,
-        List<string> manualOutcomes,
+        List<ManualQaOutcome?> manualOutcomes,
         EmployerNameOption? employerNameOption,
         [Frozen] Mock<IVacancyReviewRepository> repository,
         [Greedy] VacancyReviewController sut,

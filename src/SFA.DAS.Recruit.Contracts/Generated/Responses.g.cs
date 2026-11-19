@@ -1135,6 +1135,28 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+    public enum ManualQaOutcome
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Approved")]
+        Approved = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Referred")]
+        Referred = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Transferred")]
+        Transferred = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Blocked")]
+        Blocked = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"Bypassed")]
+        Bypassed = 4,
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class NotificationEmail
     {
         [System.Text.Json.Serialization.JsonPropertyName("templateId")]
@@ -2748,7 +2770,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("manualOutcome")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("manualOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? ManualOutcome { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ManualQaOutcome? ManualOutcome { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaComment")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
@@ -2878,7 +2902,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("outcome")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("outcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Outcome { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ManualQaOutcome? Outcome { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("numberOfIssuesReported")]
         [Newtonsoft.Json.JsonProperty("numberOfIssuesReported", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -3955,7 +3981,9 @@ namespace SFA.DAS.Recruit.Contracts.ApiResponses
         [System.Text.Json.Serialization.JsonPropertyName("manualOutcome")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
         [Newtonsoft.Json.JsonProperty("manualOutcome", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? ManualOutcome { get; set; } = default!;
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ManualQaOutcome? ManualOutcome { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("manualQaComment")]
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]

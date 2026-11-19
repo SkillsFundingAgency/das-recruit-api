@@ -18,7 +18,7 @@ public record VacancyReview
     public string? SubmittedByUserEmail { get; init; }
     public Guid SubmittedByUserId { get; init; }
     public DateTime? ClosedDate { get; init; }
-    public string? ManualOutcome { get; init; }
+    public ManualQaOutcome? ManualOutcome { get; init; }
     public string? ManualQaComment { get; init; }
     public required List<string> ManualQaFieldIndicators { get; init; }
     public required List<ManualQaEditFieldIndicator> ManualQaEditFieldIndicators { get; init; } = [];

@@ -94,7 +94,7 @@ public class ReportRepository(IRecruitDataContext recruitDataContext) : IReportR
 
         var rawData = await recruitDataContext.VacancyReviewEntities
             .AsNoTracking()
-            .Where(r => r.CreatedDate >= criteria.FromDate && r.CreatedDate <= criteria.ToDate && r.ManualOutcome != nameof(ManualQaOutcome.Bypassed))
+            .Where(r => r.CreatedDate >= criteria.FromDate && r.CreatedDate <= criteria.ToDate && r.ManualOutcome != ManualQaOutcome.Bypassed)
             .Join(
                 recruitDataContext.VacancyEntities.AsNoTracking(),
                 r => r.VacancyReference,

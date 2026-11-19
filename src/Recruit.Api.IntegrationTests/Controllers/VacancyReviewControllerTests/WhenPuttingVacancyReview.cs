@@ -93,7 +93,7 @@ public class WhenPuttingVacancyReview: BaseFixture
         // arrange
         var items = Fixture.CreateMany<VacancyReviewEntity>(1).ToList();
         var targetItem = items[0];
-        targetItem.ManualOutcome = nameof(ManualQaOutcome.Bypassed);
+        targetItem.ManualOutcome = ManualQaOutcome.Bypassed;
         Server.DataContext
             .Setup(x => x.VacancyReviewEntities)
             .ReturnsDbSet(items);
