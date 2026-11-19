@@ -166,7 +166,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
         [FromServices] IVacancyReviewRepository repository,
         [FromRoute] VacancyReference vacancyReference,
         [FromQuery] List<ReviewStatus>? status,
-        [FromQuery] List<string>? manualOutcome,
+        [FromQuery] List<ManualQaOutcome?>? manualOutcome,
         [FromQuery] bool? includeNoStatus,
         CancellationToken cancellationToken)
     {
@@ -196,7 +196,7 @@ public class VacancyReviewController(ILogger<VacancyReviewController> logger): C
         [FromServices] IVacancyReviewRepository repository,
         [FromRoute] long accountLegalEntityId,
         [FromQuery] List<ReviewStatus>? status,
-        [FromQuery] List<string>? manualOutcome,
+        [FromQuery] List<ManualQaOutcome?>? manualOutcome,
         [FromQuery] EmployerNameOption? employerNameOption,
         CancellationToken cancellationToken)
     {

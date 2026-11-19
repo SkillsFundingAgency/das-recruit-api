@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using SFA.DAS.Recruit.Api.Controllers;
 using SFA.DAS.Recruit.Api.Data.Repositories;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 
@@ -12,7 +13,7 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
     [Test, RecruitAutoData]
     public async Task Then_The_List_Of_VacancyReviews_Is_Returned_With_Status_Filter(
         bool includeNoStatus,
-        List<string> manualOutcome,
+        List<ManualQaOutcome?> manualOutcome,
         VacancyReference vacancyReference,
         List<SFA.DAS.Recruit.Api.Domain.Entities.VacancyReviewEntity> entities,
         Mock<IVacancyReviewRepository> repository,
@@ -51,7 +52,7 @@ internal class WhenGettingVacancyReviewsByVacancyReferenceAndOptionalStatus
             .Setup(x => x.GetManyByVacancyReferenceAndStatus(
                 It.IsAny<long>(),
                 It.IsAny<IReadOnlyCollection<ReviewStatus>>(),
-                It.IsAny<IReadOnlyCollection<string>>(),
+                It.IsAny<IReadOnlyCollection<ManualQaOutcome?>>(),
                 It.IsAny<bool>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(empty);

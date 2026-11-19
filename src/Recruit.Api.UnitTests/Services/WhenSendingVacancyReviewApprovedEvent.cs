@@ -40,7 +40,7 @@ public class WhenSendingVacancyReviewApprovedEvent
             Id = vacancyReviewId,
             Status = ReviewStatus.Closed,
             VacancySnapshot = $"{{\"id\": \"{vacancyId}\"}}",
-            ManualOutcome = manualQaOutcome.ToString(),
+            ManualOutcome = manualQaOutcome,
             SubmissionCount = 1
         };
 
@@ -78,7 +78,7 @@ public class WhenSendingVacancyReviewApprovedEvent
             Id = vacancyReviewId,
             Status = ReviewStatus.Closed,
             VacancySnapshot = $"{{\"id\": \"{vacancyId}\"}}",
-            ManualOutcome = nameof(ManualQaOutcome.Referred),
+            ManualOutcome = ManualQaOutcome.Referred,
             SubmissionCount = 1
         };
 

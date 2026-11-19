@@ -6331,7 +6331,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string"
+                "$ref": "#/components/schemas/ManualQaOutcome"
               }
             }
           },
@@ -6510,7 +6510,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string"
+                "$ref": "#/components/schemas/ManualQaOutcome"
               }
             }
           },
@@ -8020,6 +8020,16 @@
           }
         },
         "additionalProperties": false
+      },
+      "ManualQaOutcome": {
+        "enum": [
+          "Approved",
+          "Referred",
+          "Transferred",
+          "Blocked",
+          "Bypassed"
+        ],
+        "type": "string"
       },
       "NotificationEmail": {
         "required": [
@@ -10071,9 +10081,13 @@
             "format": "date-time"
           },
           "manualOutcome": {
-            "type": [
-              "null",
-              "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ManualQaOutcome"
+              }
             ]
           },
           "manualQaComment": {
@@ -10239,9 +10253,13 @@
             "format": "date-time"
           },
           "outcome": {
-            "type": [
-              "null",
-              "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ManualQaOutcome"
+              }
             ]
           },
           "numberOfIssuesReported": {
@@ -11460,9 +11478,13 @@
             "format": "date-time"
           },
           "manualOutcome": {
-            "type": [
-              "null",
-              "string"
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ManualQaOutcome"
+              }
             ]
           },
           "manualQaComment": {

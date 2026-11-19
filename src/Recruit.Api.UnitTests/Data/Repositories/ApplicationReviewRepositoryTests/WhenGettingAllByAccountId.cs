@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Data.Repositories;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.UnitTests.Data.DatabaseMock;
 
@@ -35,7 +36,7 @@ internal class WhenGettingAllByAccountId
         {
             vacancyReview.VacancyReference = vacancyReference;
             vacancyReview.Status = ReviewStatus.Closed;
-            vacancyReview.ManualOutcome = "Approved";
+            vacancyReview.ManualOutcome = ManualQaOutcome.Approved;
         }
 
         context.Setup(x => x.ApplicationReviewEntities)

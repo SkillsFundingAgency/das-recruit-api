@@ -40,7 +40,7 @@ public class EventsService(ILogger<EventsService> logger, IMessageSession messag
                 await messageSession.Publish(new VacancyReviewCreatedEvent(snapshot.Id, result.Entity.Id, isResubmission, hasPassedAutoQaChecks));
                 break;
             case ReviewStatus.Closed:
-                if (result is { Entity.ManualOutcome: nameof(ManualQaOutcome.Approved) or nameof(ManualQaOutcome.Bypassed) })
+                if (result is { Entity.ManualOutcome: ManualQaOutcome.Approved or ManualQaOutcome.Bypassed })
                 {
                     logger.LogInformation("Publishing VacancyReviewApprovedEvent, vacancyReviewId='{VacancyReviewId}, vacancyId='{VacancyId}' ", result.Entity.Id, snapshot!.Id);
                     await messageSession.Publish(new VacancyReviewApprovedEvent(result.Entity.Id, snapshot.Id));
