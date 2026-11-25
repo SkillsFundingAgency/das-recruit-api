@@ -356,6 +356,13 @@ public record GetReportsGenerateQaByReportIdApiRequest(System.Guid ReportId) : I
     public string GetUrl => $"api/reports/generate-qa/{ReportId}";
 }
 
+/// <summary>POST /api/reports/cleanup</summary>
+public class PostReportsCleanupApiRequest : IPostApiRequest
+{
+    public string PostUrl => $"api/reports/cleanup";
+    public object Data { get; set; } = default!;
+}
+
 /// <summary>GET /api/user/{id} &#x2192; <see cref="RecruitUser"/></summary>
 public record GetUserByIdApiRequest(System.Guid Id) : IGetApiRequest
 {
