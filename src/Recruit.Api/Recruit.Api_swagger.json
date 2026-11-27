@@ -6815,7 +6815,6 @@
         ],
         "responses": {
           "200": {
-            "description": null,
             "content": {
               "text/plain": {
                 "schema": {
@@ -6828,7 +6827,6 @@
             }
           },
           "503": {
-            "description": null,
             "content": {
               "text/plain": {
                 "schema": {
