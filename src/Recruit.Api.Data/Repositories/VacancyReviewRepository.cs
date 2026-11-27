@@ -9,7 +9,11 @@ namespace SFA.DAS.Recruit.Api.Data.Repositories;
 public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, Guid>, IWriteRepository<VacancyReviewEntity, Guid>
 {
     Task<List<VacancyReviewEntity>> GetManyByVacancyReference(long vacancyReference, CancellationToken cancellationToken);
-    Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(long vacancyReference, IReadOnlyCollection<ReviewStatus> statuses, IReadOnlyCollection<string>? manualOutcome, bool includeNoStatus, CancellationToken cancellationToken);
+    Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(long vacancyReference,
+        IReadOnlyCollection<ReviewStatus> statuses,
+        IReadOnlyCollection<ManualQaOutcome?>? manualOutcome,
+        bool includeNoStatus,
+        CancellationToken cancellationToken);
     Task<QaDashboard> GetQaDashboard(CancellationToken cancellationToken);
     Task<List<VacancyReviewEntity>> GetManyByStatusAndExpiredAssignationDateTime(
         IReadOnlyCollection<ReviewStatus> statuses,
@@ -21,7 +25,7 @@ public interface IVacancyReviewRepository: IReadRepository<VacancyReviewEntity, 
     Task<int> GetCountByAccountLegalEntityId(
         long accountLegalEntityId,
         IReadOnlyCollection<ReviewStatus>? statuses,
-        IReadOnlyCollection<string>? manualOutcome,
+        IReadOnlyCollection<ManualQaOutcome?>? manualOutcome,
         EmployerNameOption? employerNameOption,
         CancellationToken cancellationToken);
 }
@@ -47,7 +51,7 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
         
         // To cover scenario where the LLM process the vacancy review twice and gives
         // a different result
-        if(existingEntity.ManualOutcome == nameof(ManualQaOutcome.Bypassed))
+        if(existingEntity.ManualOutcome == ManualQaOutcome.Bypassed)
         {
             return UpsertResult.Create(entity, false, false);
         }
@@ -85,7 +89,7 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
     public Task<List<VacancyReviewEntity>> GetManyByVacancyReferenceAndStatus(
         long vacancyReference,
         IReadOnlyCollection<ReviewStatus> statuses,
-        IReadOnlyCollection<string>? manualOutcome,
+        IReadOnlyCollection<ManualQaOutcome?>? manualOutcome,
         bool includeNoStatus,
         CancellationToken cancellationToken)
     {
@@ -96,20 +100,14 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
 
         if (statuses is { Count: > 0 })
         {
-            query = query.Where(x => statuses.Contains(x.Status));    
+            query = query.Where(x => statuses.Contains(x.Status));
         }
 
         if (manualOutcome is { Count: > 0 })
         {
-            if (includeNoStatus)
-            {
-                query = query.Where(x => x.ManualOutcome == null || manualOutcome.Contains(x.ManualOutcome));
-            }
-            else
-            {
-                query = query.Where(x => manualOutcome.Contains(x.ManualOutcome));    
-            }
-            
+            query = includeNoStatus 
+                ? query.Where(x => x.ManualOutcome == null || manualOutcome.Contains(x.ManualOutcome))
+                : query.Where(x => manualOutcome.Contains(x.ManualOutcome));
         }
 
         return query
@@ -190,7 +188,7 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
     public Task<int> GetCountByAccountLegalEntityId(
         long accountLegalEntityId,
         IReadOnlyCollection<ReviewStatus>? statuses,
-        IReadOnlyCollection<string>? manualOutcome,
+        IReadOnlyCollection<ManualQaOutcome?>? manualOutcome,
         EmployerNameOption? employerNameOption,
         CancellationToken cancellationToken)
     {
@@ -257,11 +255,11 @@ public class VacancyReviewRepository(IRecruitDataContext dataContext): IVacancyR
 
         if (approvedFirstTime is true)
         {
-            query = query.Where(x => x.SubmissionCount == 1 && x.Status == ReviewStatus.Closed && x.ManualOutcome == "Approved");
+            query = query.Where(x => x.SubmissionCount == 1 && x.Status == ReviewStatus.Closed && x.ManualOutcome == ManualQaOutcome.Approved);
         }
         else if (approvedFirstTime is false)
         {
-            query = query.Where(x => !(x.SubmissionCount == 1 && x.Status == ReviewStatus.Closed && x.ManualOutcome == "Approved"));
+            query = query.Where(x => !(x.SubmissionCount == 1 && x.Status == ReviewStatus.Closed && x.ManualOutcome == ManualQaOutcome.Approved));
         }
 
         return query.CountAsync(cancellationToken);

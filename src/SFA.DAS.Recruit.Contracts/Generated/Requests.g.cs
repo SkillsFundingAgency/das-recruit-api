@@ -566,12 +566,12 @@ public class PatchVacancyreviewsByIdApiRequest : IPatchApiRequest<Microsoft.AspN
 }
 
 /// <summary>GET /api/vacancies/{vacancyReference}/reviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>
-public record GetVacanciesByVacancyReferenceReviewsApiRequest(string VacancyReference, List<ReviewStatus>? Status, List<string>? ManualOutcome, bool? IncludeNoStatus) : IGetApiRequest
+public record GetVacanciesByVacancyReferenceReviewsApiRequest(string VacancyReference, List<ReviewStatus>? Status, List<ManualQaOutcome>? ManualOutcome, bool? IncludeNoStatus) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/vacancies/{VacancyReference}/reviews",
         new KeyValuePair<string, string?>[] { new("includeNoStatus", IncludeNoStatus?.ToString()) }
         .Concat((Status ?? []).Select(v => new KeyValuePair<string, string?>("status", v.ToString())))
-        .Concat((ManualOutcome ?? []).Select(v => new KeyValuePair<string, string?>("manualOutcome", v))));
+        .Concat((ManualOutcome ?? []).Select(v => new KeyValuePair<string, string?>("manualOutcome", v.ToString()))));
 }
 
 /// <summary>GET /api/accounts/{accountLegalEntityId}/vacancyreviews &#x2192; List&lt;<see cref="VacancyReview"/>&gt;</summary>
@@ -581,12 +581,12 @@ public record GetAccountsByAccountLegalEntityIdVacancyreviewsApiRequest(long Acc
 }
 
 /// <summary>GET /api/accounts/{accountLegalEntityId}/vacancyreviews/count &#x2192; int</summary>
-public record GetAccountsByAccountLegalEntityIdVacancyreviewsCountApiRequest(long AccountLegalEntityId, List<ReviewStatus>? Status, List<string>? ManualOutcome, EmployerNameOption? EmployerNameOption) : IGetApiRequest
+public record GetAccountsByAccountLegalEntityIdVacancyreviewsCountApiRequest(long AccountLegalEntityId, List<ReviewStatus>? Status, List<ManualQaOutcome>? ManualOutcome, EmployerNameOption? EmployerNameOption) : IGetApiRequest
 {
     public string GetUrl => QueryHelpers.AddQueryString($"api/accounts/{AccountLegalEntityId}/vacancyreviews/count",
         new KeyValuePair<string, string?>[] { new("employerNameOption", EmployerNameOption?.ToString()) }
         .Concat((Status ?? []).Select(v => new KeyValuePair<string, string?>("status", v.ToString())))
-        .Concat((ManualOutcome ?? []).Select(v => new KeyValuePair<string, string?>("manualOutcome", v))));
+        .Concat((ManualOutcome ?? []).Select(v => new KeyValuePair<string, string?>("manualOutcome", v.ToString()))));
 }
 
 /// <summary>GET /api/vacancyreviews/qa/dashboard &#x2192; <see cref="QaDashboard"/></summary>

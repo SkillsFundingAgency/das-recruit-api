@@ -1,3 +1,5 @@
+using SFA.DAS.Recruit.Api.Domain.Enums;
+
 namespace SFA.DAS.Recruit.Api.Domain.Models;
 
 public record QaReport
@@ -9,7 +11,7 @@ public record QaReport
     public DateTime? SlaDeadline { get; set; }
     public DateTime? ReviewStarted { get; set; }
     public DateTime? ReviewCompleted { get; set; }
-    public string? Outcome { get; set; }
+    public ManualQaOutcome? Outcome { get; set; }
     public int NumberOfIssuesReported { get; set; }
     public string? VacancySubmittedBy { get; set; }
     public string? VacancySubmittedByUser { get; set; }

@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.JsonPatch.SystemTextJson;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Recruit.Api.Domain.Entities;
+using SFA.DAS.Recruit.Api.Domain.Enums;
 using SFA.DAS.Recruit.Api.Domain.Models;
 using SFA.DAS.Recruit.Api.Models;
 using SFA.DAS.Recruit.Api.UnitTests;
@@ -21,7 +22,7 @@ public class WhenPatchingVacancyReview: BaseFixture
             .ReturnsDbSet(Fixture.CreateMany<VacancyReviewEntity>(10).ToList());
 
         var patchDocument = new JsonPatchDocument<VacancyReview>();
-        patchDocument.Add(x => x.ManualOutcome, "manualOutcome");
+        patchDocument.Add(x => x.ManualOutcome, ManualQaOutcome.Approved);
         
         // act
         var response = await Client.PatchAsJsonAsync(new PatchVacancyreviewsByIdApiRequest { Id = Guid.NewGuid() }.PatchUrl, patchDocument);
@@ -98,7 +99,7 @@ public class WhenPatchingVacancyReview: BaseFixture
             .ReturnsDbSet(itemsClone);
 
         var patchDocument = new JsonPatchDocument<VacancyReview>();
-        patchDocument.Add(x => x.ManualOutcome, "manualOutcome");
+        patchDocument.Add(x => x.ManualOutcome, ManualQaOutcome.Approved);
         
         // act
         var response = await Client.PatchAsJsonAsync(new PatchVacancyreviewsByIdApiRequest { Id = targetItem.Id }.PatchUrl, patchDocument);
