@@ -4,12 +4,14 @@ using Asp.Versioning;
 using ChilliCream.Nitro.App;
 using Microsoft.Extensions.Options;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
+using Scalar.AspNetCore;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Api.Common.Middleware;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Recruit.Api.AppStart;
+using SFA.DAS.Recruit.Api.Core;
 using SFA.DAS.Recruit.Api.Data;
 using SFA.DAS.Recruit.Api.Domain.Configuration;
 using SFA.DAS.Recruit.Api.Domain.Models;
@@ -171,19 +173,33 @@ internal class Startup
         app.UseMiddleware<SecurityHeadersMiddleware>();
         
         app.UseAuthentication();
-            
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/openapi/swagger.json", "SFA.DAS.Recruit.Api v1");
-            options.RoutePrefix = string.Empty;
-        });
         app.UseHealthChecks();
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthorization();
+
+        if (IsEnvironmentLocalOrDev)
+        {
+            app.UseScalar();
+        }
+        
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapOpenApi();
+            if (IsEnvironmentLocalOrDev) 
+            {
+                endpoints.MapScalarApiReference(options => options
+                    .WithOpenApiRoutePattern("/openapi/swagger.json")
+                    .DisableAgent()
+                    .DisableDefaultFonts()
+                    .DisableMcp()
+                    .DisableTelemetry()
+                    .WithClassicLayout()
+                    .ExpandAllTags()
+                    .HideDeveloperTools()
+                    .WithTitle("Recruit Inner API")
+                );
+            }
             endpoints.MapControllers();
             var graphQlBuilder = endpoints
                 .MapGraphQL()
